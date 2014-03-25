@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xfdf xmlns="http://ns.adobe.com/xfdf/" xml:space="preserve">
+<fields>
+<field name="bill_id">
+<value>260</value>
+</field>
+<field name="eid">
+<value>24</value>
+</field>
+<field name="pid">
+<value>1</value>
+</field>
+<field name="insurance_id_1">
+<value>1</value>
+</field>
+<field name="insurance_id_2">
+<value>0</value>
+</field>
+<field name="bill_date">
+<value>2014-03-20 23:55:55</value>
+</field>
+<field name="bill_complex">
+<value></value>
+</field>
+<field name="bill_Box11C">
+<value>MODA                         </value>
+</field>
+<field name="bill_payor_id">
+<value>39103</value>
+</field>
+<field name="bill_ins_add1">
+<value>11015 HELICOPTER             </value>
+</field>
+<field name="bill_ins_add2">
+<value>PORTLAND, OR 97202           </value>
+</field>
+<field name="bill_Box1">
+<value>                                            X</value>
+</field>
+<field name="bill_Box1P">
+<value>Other</value>
+</field>
+<field name="bill_Box1A">
+<value>1231                         </value>
+</field>
+<field name="bill_Box2">
+<value>KLOWN, KRUSTY               </value>
+</field>
+<field name="bill_Box3A">
+<value>05 13 2010</value>
+</field>
+<field name="bill_Box3B">
+<value>X     </value>
+</field>
+<field name="bill_Box3BP">
+<value>M</value>
+</field>
+<field name="bill_Box4">
+<value>KLOWN, KRUSTY                </value>
+</field>
+<field name="bill_Box5A">
+<value>123 MAIN STREET             </value>
+</field>
+<field name="bill_Box6">
+<value>         X     </value>
+</field>
+<field name="bill_Box6P">
+<value>Child</value>
+</field>
+<field name="bill_Box7A">
+<value>123 MAIN STREET              </value>
+</field>
+<field name="bill_Box5B">
+<value>PORTLAND                </value>
+</field>
+<field name="bill_Box5C">
+<value>OR </value>
+</field>
+<field name="bill_Box8A">
+<value>      X      </value>
+</field>
+<field name="bill_Box8AP">
+<value>Married</value>
+</field>
+<field name="bill_Box7B">
+<value>PORTLAND               </value>
+</field>
+<field name="bill_Box7C">
+<value>OR  </value>
+</field>
+<field name="bill_Box5D">
+<value>97202       </value>
+</field>
+<field name="bill_Box5E">
+<value>(503) 234-1120</value>
+</field>
+<field name="bill_Box8B">
+<value>X            </value>
+</field>
+<field name="bill_Box8BP">
+<value>EmployedBox8</value>
+</field>
+<field name="bill_Box7D">
+<value>97202       </value>
+</field>
+<field name="bill_Box7E">
+<value></value>
+</field>
+<field name="bill_Box9">
+<value>                            </value>
+</field>
+<field name="bill_Box11">
+<value>12412                        </value>
+</field>
+<field name="bill_Box9A">
+<value>                            </value>
+</field>
+<field name="bill_Box10">
+<value>                   </value>
+</field>
+<field name="bill_Box10A">
+<value>      X</value>
+</field>
+<field name="bill_Box10AP">
+<value>No</value>
+</field>
+<field name="bill_Box11A1">
+<value>05 13 2010</value>
+</field>
+<field name="bill_Box11A2">
+<value>X       </value>
+</field>
+<field name="bill_Box11A2P">
+<value>M</value>
+</field>
+<field name="bill_Box9B1">
+<value>          </value>
+</field>
+<field name="bill_Box9B2">
+<value>       </value>
+</field>
+<field name="bill_Box9B2P">
+<value></value>
+</field>
+<field name="bill_Box10B1">
+<value>      X</value>
+</field>
+<field name="bill_Box10B1P">
+<value>No</value>
+</field>
+<field name="bill_Box10B2">
+<value>   </value>
+</field>
+<field name="bill_Box11B">
+<value>AWEFWEF                      </value>
+</field>
+<field name="bill_Box9C">
+<value>                            </value>
+</field>
+<field name="bill_Box10C">
+<value>      X</value>
+</field>
+<field name="bill_Box10CP">
+<value>No</value>
+</field>
+<field name="bill_Box9D">
+<value>                            </value>
+</field>
+<field name="bill_Box11D">
+<value>     X</value>
+</field>
+<field name="bill_Box11DP">
+<value>No</value>
+</field>
+<field name="bill_Box17">
+<value>                          </value>
+</field>
+<field name="bill_Box17A">
+<value>                 </value>
+</field>
+<field name="bill_Box21_1">
+<value>123.0   </value>
+</field>
+<field name="bill_Box21_2">
+<value>        </value>
+</field>
+<field name="bill_Box21_3">
+<value>        </value>
+</field>
+<field name="bill_Box21_4">
+<value>        </value>
+</field>
+<field name="bill_DOS1F">
+<value>03 20 2014</value>
+</field>
+<field name="bill_DOS1T">
+<value>03 20 2014</value>
+</field>
+<field name="bill_DOS2F">
+<value>          </value>
+</field>
+<field name="bill_DOS2T">
+<value>          </value>
+</field>
+<field name="bill_DOS3F">
+<value>          </value>
+</field>
+<field name="bill_DOS3T">
+<value>          </value>
+</field>
+<field name="bill_DOS4F">
+<value>          </value>
+</field>
+<field name="bill_DOS4T">
+<value>          </value>
+</field>
+<field name="bill_DOS5F">
+<value>          </value>
+</field>
+<field name="bill_DOS5T">
+<value>          </value>
+</field>
+<field name="bill_DOS6F">
+<value>          </value>
+</field>
+<field name="bill_DOS6T">
+<value>          </value>
+</field>
+<field name="bill_Box24B1">
+<value>11   </value>
+</field>
+<field name="bill_Box24B2">
+<value>     </value>
+</field>
+<field name="bill_Box24B3">
+<value>     </value>
+</field>
+<field name="bill_Box24B4">
+<value>     </value>
+</field>
+<field name="bill_Box24B5">
+<value>     </value>
+</field>
+<field name="bill_Box24B6">
+<value>     </value>
+</field>
+<field name="bill_Box24D1">
+<value>99213 </value>
+</field>
+<field name="bill_Box24D2">
+<value>      </value>
+</field>
+<field name="bill_Box24D3">
+<value>      </value>
+</field>
+<field name="bill_Box24D4">
+<value>      </value>
+</field>
+<field name="bill_Box24D5">
+<value>      </value>
+</field>
+<field name="bill_Box24D6">
+<value>      </value>
+</field>
+<field name="bill_Modifier1">
+<value>           </value>
+</field>
+<field name="bill_Modifier2">
+<value>           </value>
+</field>
+<field name="bill_Modifier3">
+<value>           </value>
+</field>
+<field name="bill_Modifier4">
+<value>           </value>
+</field>
+<field name="bill_Modifier5">
+<value>           </value>
+</field>
+<field name="bill_Modifier6">
+<value>           </value>
+</field>
+<field name="bill_Box24E1">
+<value>1   </value>
+</field>
+<field name="bill_Box24E2">
+<value>    </value>
+</field>
+<field name="bill_Box24E3">
+<value>    </value>
+</field>
+<field name="bill_Box24E4">
+<value>    </value>
+</field>
+<field name="bill_Box24E5">
+<value>    </value>
+</field>
+<field name="bill_Box24E6">
+<value>    </value>
+</field>
+<field name="bill_Box24F1">
+<value>100 00</value>
+</field>
+<field name="bill_Box24F2">
+<value>0 00</value>
+</field>
+<field name="bill_Box24F3">
+<value>0 00</value>
+</field>
+<field name="bill_Box24F4">
+<value>0 00</value>
+</field>
+<field name="bill_Box24F5">
+<value>0 00</value>
+</field>
+<field name="bill_Box24F6">
+<value>0 00</value>
+</field>
+<field name="bill_Box24G1">
+<value>1    </value>
+</field>
+<field name="bill_Box24G2">
+<value>     </value>
+</field>
+<field name="bill_Box24G3">
+<value>     </value>
+</field>
+<field name="bill_Box24G4">
+<value>     </value>
+</field>
+<field name="bill_Box24G5">
+<value>     </value>
+</field>
+<field name="bill_Box24G6">
+<value>     </value>
+</field>
+<field name="bill_Box24J1">
+<value>1023005410 </value>
+</field>
+<field name="bill_Box24J2">
+<value>           </value>
+</field>
+<field name="bill_Box24J3">
+<value>           </value>
+</field>
+<field name="bill_Box24J4">
+<value>           </value>
+</field>
+<field name="bill_Box24J5">
+<value>           </value>
+</field>
+<field name="bill_Box24J6">
+<value>           </value>
+</field>
+<field name="bill_Box25">
+<value>78-7878787     </value>
+</field>
+<field name="bill_Box26">
+<value>1             </value>
+</field>
+<field name="bill_Box27">
+<value>X     </value>
+</field>
+<field name="bill_Box27P">
+<value>Yes</value>
+</field>
+<field name="bill_Box28">
+<value>100 00</value>
+</field>
+<field name="bill_Box29">
+<value>0 00</value>
+</field>
+<field name="bill_Box30">
+<value>100 00</value>
+</field>
+<field name="bill_Box31">
+<value>MICHAEL CHEN, MD     </value>
+</field>
+<field name="bill_Box32A">
+<value>TEST CLINIC               </value>
+</field>
+<field name="bill_Box32B">
+<value>3835 SE CENTER ST.        </value>
+</field>
+<field name="bill_Box32C">
+<value>PORTLAND, OR 97202        </value>
+</field>
+<field name="bill_Box32D">
+<value>1030320203</value>
+</field>
+<field name="bill_Box33A">
+<value>(503) 234-1120</value>
+</field>
+<field name="bill_Box33B">
+<value>MICHAEL CHEN, MD             </value>
+</field>
+<field name="bill_Box33C">
+<value>3835 SE CENTER ST.           </value>
+</field>
+<field name="bill_Box33D">
+<value>PORTLAND, OR 97202           </value>
+</field>
+<field name="bill_Box33E">
+<value>1030320203</value>
+</field>
+<field name="Date">
+<value>03/21/2014</value>
+</field>
+<field name="Date2">
+<value>03/21/14</value>
+</field>
+</fields>
+<ids original="827bbdb8884178f672e510c34b4d862b" modified="1395384956" />
+<f href="/var/www/nosh/hcfa1500.pdf" />
+</xfdf>
