@@ -3,6 +3,14 @@
 	"description": "NOSH ChartingSystem.",
 	"keywords": ["nosh", "laravel", "medical", "jquery", "javascript", "php", "health", "ehr", "emr"],
 	"license": "AGPL-3.0",
+	"authors": [
+		{
+			"name": "Michael Shihjay Chen",
+			"email": "shihjay2@gmail.com",
+			"homepage": "http://noshemr.wordpress.com",
+			"role": "Developer"
+		}
+	],
 	"require": {
 		"laravel/framework": "4.1.*",
 		"raahul/larryfour": "1.*",
