@@ -1,5 +1,16 @@
 <?php
-
+$database = '';
+$username = '';
+$password = '';
+if (isset($_ENV['mysql_database'])) {
+	$database = $_ENV['mysql_database'];
+}
+if (isset($_ENV['mysql_username'])) {
+	$username = $_ENV['mysql_username'];
+}
+if (isset($_ENV['mysql_password'])) {
+	$password = $_ENV['mysql_password'];
+}
 return array(
 
 	/*
@@ -55,9 +66,9 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => $_ENV['mysql_database'],
-			'username'  => $_ENV['mysql_username'],
-			'password'  => $_ENV['mysql_password'],
+			'database'  => $database,
+			'username'  => $username,
+			'password'  => $password,
 			'charset'   => 'utf8',
 			'collation' => 'utf8_general_ci',
 			'prefix'    => '',
