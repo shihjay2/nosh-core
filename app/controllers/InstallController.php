@@ -26,7 +26,7 @@ class InstallController extends BaseController {
 	
 	public function codeigniter_migrate()
 	{
-		$codeigniter = '/var/www/laravel/.codeigniter.php';
+		$codeigniter = __DIR__."/../../.codeigniter.php";
 		if (file_exists($codeigniter)) {
 			include($codeigniter);
 			$db_name = 'nosh';
@@ -34,7 +34,7 @@ class InstallController extends BaseController {
 			$db_password = $db['default']['password'];
 			$connect = mysqli_connect('localhost', $db_username, $db_password);
 			if ($connect) {
-				$database_filename = "/var/laravel/.env.php";
+				$database_filename = __DIR__."/../../.env.php";
 				$database_config['mysql_database'] = $db_name;
 				$database_config['mysql_username'] = $db_username;
 				$database_config['mysql_password'] = $db_password;

@@ -1,2 +1,16 @@
 #!/bin/sh
-wget --no-check-certificate -O - -q -t 1 localhost/nosh/index.php/backup
+wget --no-check-certificate -O - -q -t 1 localhost/nosh/backup
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR
+composer update
+# setting wget options
+:> wgetrc
+echo "noclobber = off" >> wgetrc
+echo "dir_prefix = ." >> wgetrc
+echo "dirstruct = off" >> wgetrc
+echo "progress = dot:mega" >> wgetrc
+echo "tries = 2" >> wgetrc
+log_only "Running NOSH update..."
+WGETRC=wgetrc wget --continue --no-check-certificate -O /dev/null -q -t 1  localhost/nosh/ \
+	|| log_only "Unable to process update.  Perform manually by pointing your browser to https://localhost/nosh"
+log_only "Update completed"
