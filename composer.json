@@ -1,8 +1,8 @@
 {
-	"name": "laravel/laravel",
-	"description": "The Laravel Framework.",
-	"keywords": ["framework", "laravel"],
-	"license": "MIT",
+	"name": "nosh-cs/nosh-cs",
+	"description": "NOSH ChartingSystem.",
+	"keywords": ["nosh", "laravel", "medical", "jquery", "javascript", "php", "health", "ehr", "emr"],
+	"license": "AGPL-3.0",
 	"require": {
 		"laravel/framework": "4.1.*",
 		"raahul/larryfour": "1.*",

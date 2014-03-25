@@ -1,7 +1,7 @@
 # NOSH ChartingSystem Installation Instructions
 
 ## Preparation:
-You'll need to have the following programs installed on your system prior to installation
+You'll need to have the following applications/packages installed on your system prior to installation
 of NOSH ChartingSystem
 
 ##### 1. Apache web server (needs to be running)
@@ -47,22 +47,22 @@ is /usr/share/nosh).
 NOSH is built around the Laravel PHP Framework, which is a models/controllers/views (MCV) framework.
 Documentation for the entire framework can be found on the [Laravel website](http://laravel.com/docs).
 
-## routes
-	The routes.php file dictate where the URL command goes to.  Looking at the file, you'll notice that the controllers are
-	categorized by an access control list (ACL) based on the type of user priviledges a user has when he/she is logged in to NOSH.
-	  
-## controllers
-	As is standard with the Laravel framework, main guts of the system lie in the ../app/controllers directory.  Looking at the
-	routes.php file, you'll notice that the type of controllers are categorized between AJAX and non-AJAX functions (hence they 
-	are named with a prefix of Ajax).
+## Routes
+The routes.php file dictate where the URL command goes to.  Looking at the file, you'll notice that the controllers are
+categorized by an access control list (ACL) based on the type of user priviledges a user has when he/she is logged in to NOSH.
 
-## views
-	The view files, PDF, and email template files are in the ../app/views directory.  The view files are essentially "modules" that
-	are added on depending on the needs of the view layout.
-	The corresponding javascript files (named the same as the view file, but with a .js extension) are in the ../public/js directory.
+## Controllers
+As is standard with the Laravel framework, main guts of the system lie in the ../app/controllers directory.  Looking at the
+routes.php file, you'll notice that the type of controllers are categorized between AJAX and non-AJAX functions (hence they 
+are named with a prefix of Ajax).
 
-	If you see the javascript, you will notice that jQuery is used heavily here.  There are numerous plugins for jQuery that are 
-	referenced in the header file.  Below is a list of the major jQuery plugins that are used:
+## Views
+The view files, PDF, and email template files are in the ../app/views directory.  The view files are essentially "modules" that
+are added on depending on the needs of the view layout.
+The corresponding javascript files (named the same as the view file, but with a .js extension) are in the ../public/js directory.
+
+If you see the javascript, you will notice that jQuery is used heavily here.  There are numerous plugins for jQuery that are 
+referenced in the header file.  Below is a list of the major jQuery plugins that are used:
 ##### Javascript user interface: JQuery UI (dialog, tabs, accordion, autocomplete)
 ##### Calendar system: FullCalendar
 ##### Tables and grids: jqGrid
@@ -72,17 +72,17 @@ Documentation for the entire framework can be found on the [Laravel website](htt
 ##### Form input masking: Masked Input
 ##### Date/time input: Time entry
 
-## model
-	This is where php code pertaining to MySQL database functions reside.  The controllers frequently point to code in this 
-	directory.
+## Models
+This is where php code pertaining to MySQL database functions reside.  The controllers frequently point to code in this 
+directory.
 
-## assets
-	Images indicated in the view files reside in the ../public/images directory.
-	Imported files are usually downloaded via script in the ../import directory.
+## Assets
+Images indicated in the view files reside in the ../public/images directory.
+Imported files are usually downloaded via script in the ../import directory.
 
 ## Database schema
-	Below are the list of database tables that are installed for NOSH.  Some table names are self explainatory, but those that are not
-	will be explained here.
+Below are the list of database tables that are installed for NOSH.  Some table names are self explainatory, but those that are not
+will be explained here.
 	addressbook
 	alerts
 	allergies
