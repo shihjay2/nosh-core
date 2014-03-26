@@ -2,7 +2,8 @@
 
 ## Preparation:
 You'll need to have the following applications/packages installed on your system prior to installation
-of NOSH ChartingSystem
+of NOSH ChartingSystem.  If you have a LAMP (Linux-Apache-mySQL-PHP) or MAMP (Mac-Apache-mySQL-PHP) server
+already set up, you are golden!
 
 ##### 1. Apache web server (needs to be running)
 ##### 2. MySQL database.  Make sure you remember the root password.  This will be asked during the
@@ -13,29 +14,27 @@ mysql, imap, mcrypt, imagick, gd, cli, curl, soap, pear
 ##### 5. PERL
 ##### 6. Imagemagick
 ##### 7. PDF ToolKit (pdftk)
+##### 8. cURL
 
-## Install the package:
-Installing NOSH is very easy.  Like Laravel, NOSH now utilizes [Composer](http://getcomposer.org) to manage its 
-PHP dependencies.  Composer is automatically installed when you use the installation script (it is located in /usr/local/bin/composer).
+## Installation
+Installing NOSH ChartingSystem is very easy to install.  If you use Ubuntu, it is even easier as NOSH can be installed from its own 
+Personal Package Archive (PPA).  With the [PPA method](https://github.com/shihjay2/nosh-cs/wiki/Installation#ubuntu-ppa), you do not 
+have to worry about installing dependencies.  If you have access to a terminal shell for your server (any distro for Linux or 
+Mac OS-X), you can install NOSH with the [Manual Method](https://github.com/shihjay2/nosh-cs/wiki/Installation#manual-method).  
+The installation script automatically adds scheduled task commands (cron files) and web server configuration files to make NOSH 
+work seamlessly the first time.  The script also determines if your system meets all the package dependencies before installation.
+For detailed information, go to the [Wiki link](https://github.com/shihjay2/nosh-cs/wiki/Installation#ubuntu-ppa).
 
-##### 1. Unzip the installation file in a directory of your choice.  Go to the "nosh-cs" directory.
-##### 2. Open a terminal window and go to the "nosh-cs" directory.
-##### 3. Type "sh install.sh" to run the installation script.
-##### 4. Follow the instructions on the prompt.
-##### 5. Go to your web browser and type, "http://localhost/nosh" to begin the second stage of
-installation.
-##### 6. Wait for installation to complete.
-##### 7. Login to NOSH ChartingSystem as admin and configure your users and clinic parameters.
-It's important to do this first before any other users use NOSH ChartingSystem; otherwise, 
+If this is the first time using NOSH, make sure you login to NOSH ChartingSystem as admin and configure your users and clinic 
+parameters.  It's important to do this first before any other users use NOSH ChartingSystem; otherwise, 
 some features such as scheduling will not work correctly!
 
-The installation script automatically adds scheduled task commands (cron files) and web server configuration files to make NOSH 
-work seamlessly the first time.  The scrapt also determines if your system meets all the package dependencies before installation.
-
-## Updating the package:
-##### 1. Open a terminal window and go to the NOSH installation directory (the default in the script
-is /usr/share/nosh).
-##### 2. As a root user (sudo in Ubuntu/Debian), type in "sh update.sh" to run the update script.
+## Updates
+Like Laravel, NOSH now utilizes [Composer](http://getcomposer.org) to manage its PHP dependencies.  
+Composer is automatically installed when you use the installation script (it is located in /usr/local/bin/composer).
+Because the [core NOSH files](https://github.com/shihjay2/nosh-core/) are now served on GitHub, NOSH is self-updating daily
+whenever a new commit (updated files) is uploaded.  There is no more user intervention anymore, and you get the latest and greatest 
+NOSH version at your fingertips!
 
 ## Uninstall the package:
 ##### 1. Open a terminal window and go to the NOSH installation directory (the default in the script

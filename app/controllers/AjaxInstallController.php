@@ -887,6 +887,22 @@ class AjaxInstallController extends BaseController {
 				DB::table('encounters')->where('eid', '=', $encounter->eid)->update($data);
 			}
 		}
+		DB::table('meds_full')->truncate();
+		$meds_sql_file = "/var/www/nosh/import/meds_full.sql";
+		$meds_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $meds_sql_file;
+		system($meds_command);
+		DB::table('meds_full_package')->truncate();
+		$meds1_sql_file = "/var/www/nosh/import/meds_full_package.sql";
+		$meds1_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $meds1_sql_file;
+		system($meds1_command);
+		DB::table('supplements_list')->truncate();
+		$supplements_file = "/var/www/nosh/import/supplements_list.sql";
+		$supplements_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $supplements_file;
+		system($supplements_command);
+		DB::table('icd9')->truncate();
+		$icd_file = "/var/www/nosh/import/icd9.sql";
+		$icd_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $icd_file;
+		system($icd_command);
 		// Update version
 		DB::table('practiceinfo')->update(array('version' => '1.8.0'));
 	}
