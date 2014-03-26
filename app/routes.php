@@ -30,7 +30,7 @@ Route::get('update', array('as' => 'update', 'uses' => 'AjaxInstallController@up
 Route::get('update_system', array('as' => 'update_system', 'uses' => 'BackupController@update_system'));
 Route::get('set_version', array('as' => 'set_version', 'uses' => 'AjaxInstallController@set_version'));
 Route::get('bluebutton/{id}', array('as' => 'bluebutton', 'before' => 'auth', 'uses' => 'AjaxCommonController@bluebutton'));
-Route::group(['before' => 'csrf_header'], function() {
+Route::group(array('before' => 'csrf_header'), function() {
 	Route::controller('ajaxinstall', 'AjaxInstallController');
 	Route::controller('ajaxlogin', 'AjaxLoginController');
 	Route::controller('ajaxdashboard', 'AjaxDashboardController');
@@ -38,19 +38,19 @@ Route::group(['before' => 'csrf_header'], function() {
 	Route::controller('ajaxmessaging', 'AjaxMessagingController');
 	Route::controller('ajaxcommon', 'AjaxCommonController');
 });
-Route::group(['before' => 'csrf_header|session_check|acl1'], function() {
+Route::group(array('before' => 'csrf_header|session_check|acl1'), function() {
 	Route::controller('ajaxchart', 'AjaxChartController');
 	Route::controller('ajaxschedule', 'AjaxScheduleController');
 	Route::controller('ajaxfinancial', 'AjaxFinancialController');
 	Route::controller('ajaxoffice', 'AjaxOfficeController');
 });
-Route::group(['before' => 'csrf_header|session_check|acl2'], function() {
+Route::group(array('before' => 'csrf_header|session_check|acl2'), function() {
 	Route::controller('ajaxencounter', 'AjaxEncounterController');
 });
-Route::group(['before' => 'csrf_header|session_check|acl5'], function() {
+Route::group(array('before' => 'csrf_header|session_check|acl5'), function() {
 	Route::controller('ajaxsetup', 'AjaxSetupController');
 });
-Route::group(['before' => 'acl1'], function() {
+Route::group(array('before' => 'acl1'), function() {
 	Route::get('chart', array('as' => 'chart', 'uses' => 'ChartController@main'));
 	Route::get('messaging', array('as' => 'messaging', 'uses' => 'HomeController@showWelcome'));
 	Route::get('schedule', array('as' => 'schedule', 'uses' => 'HomeController@showWelcome'));
@@ -91,7 +91,7 @@ Route::group(['before' => 'acl1'], function() {
 	Route::get('financial_query_print/{id}', array('as' => 'financial_query_print', 'uses' => 'ChartController@financial_query_print'));
 	Route::get('export_demographics/{type}', array('as' => 'export_demographics', 'uses' => 'ChartController@export_demographics'));
 });
-Route::group(['before' => 'acl2'], function() {
+Route::group(array('before' => 'acl2'), function() {
 	Route::get('encounter', array('as' => 'encounter', function()
 	{
 		Session::put('encounter_active', 'y');
@@ -105,9 +105,9 @@ Route::group(['before' => 'acl2'], function() {
 	Route::get('csv_immunization', array('as' => 'csv_immunization', 'uses' => 'ChartController@csv_immunization'));
 	Route::get('print_plan', array('as' => 'print_plan', 'uses' => 'AjaxEncounterController@print_plan'));
 });
-Route::group(['before' => 'acl4'], function() {
+Route::group(array('before' => 'acl4'), function() {
 });
-Route::group(['before' => 'acl5'], function() {
+Route::group(array('before' => 'acl5'), function() {
 	Route::post('practicelogoupload', array('as' => 'practicelogoupload', 'uses' => 'AjaxSetupController@practicelogoupload'));
 	Route::post('cpt_update', array('as' => 'cpt_update', 'uses' => 'AjaxSetupController@cpt_update'));
 });
