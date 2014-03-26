@@ -111,8 +111,7 @@ return array(
 		'Barryvdh\Snappy\ServiceProvider',
 		'Jenssegers\Date\DateServiceProvider',
 		'Yangqi\Htmldom\HtmldomServiceProvider',
-		'Chumper\Zipper\ZipperServiceProvider',
-		'Way\Generators\GeneratorsServiceProvider'
+		'Chumper\Zipper\ZipperServiceProvider'
 	),
 
 	/*
