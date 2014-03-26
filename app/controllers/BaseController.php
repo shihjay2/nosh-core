@@ -5345,4 +5345,32 @@ class BaseController extends Controller {
 			//return $ndc['ndcGroup']['ndcList']['ndc'][0];
 		//}
 	}
+	
+	protected function github_all()
+	{
+		$client = new \Github\Client(
+			new \Github\HttpClient\CachedHttpClient(array('cache_dir' => '/tmp/github-api-cache'))
+		);
+		$client = new \Github\HttpClient\CachedHttpClient();
+		$client->setCache(
+			new \Github\HttpClient\Cache\FilesystemCache('/tmp/github-api-cache')
+		);
+		$client = new \Github\Client($client);
+		$result = $client->api('repo')->commits()->all('shihjay2', 'nosh-core', array('sha' => 'master'));
+		return $result;
+	}
+	
+	protected function github_single($sha)
+	{
+		$client = new \Github\Client(
+			new \Github\HttpClient\CachedHttpClient(array('cache_dir' => '/tmp/github-api-cache'))
+		);
+		$client = new \Github\HttpClient\CachedHttpClient();
+		$client->setCache(
+			new \Github\HttpClient\Cache\FilesystemCache('/tmp/github-api-cache')
+		);
+		$client = new \Github\Client($client);
+		$result = $commit = $client->api('repo')->commits()->show('shihjay2', 'nosh-core', $sha);
+		return $result;
+	}
 }

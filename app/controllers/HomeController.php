@@ -220,9 +220,4 @@ class HomeController extends BaseController {
 		$file_path = $result->filePath;
 		return Response::download($file_path);
 	}
-	
-	public function showWelcome()
-	{
-		return View::make('hello');
-	}
 }

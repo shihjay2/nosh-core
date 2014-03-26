@@ -4,10 +4,10 @@ class BackupController extends BaseController
 {
 
 	/**
-	* NOSH ChartingSystem Backup System, to be run as a cron job
+	* NOSH ChartingSystem Backup and Updating System, to be run as a cron job
 	*/
 	
-	function backup()
+	public function backup()
 	{
 		$config_file = __DIR__."/../.env.php";
 		$config = require($config_file);
@@ -26,8 +26,41 @@ class BackupController extends BaseController
 			}
 		}
 		DB::delete('delete from extensions_log where DATE_SUB(CURDATE(), INTERVAL 30 DAY) >= timestamp');
-		File::cleanDirectory('/var/www/nosh/public/temp');
-		//$extensions_prune = $this->db->query("DELETE FROM extensions_log WHERE DATE_SUB(CURDATE(), INTERVAL 30 DAY) >= timestamp");
-		exit (0);
+		File::cleanDirectory(__DIR__."/../../public/temp");
+	}
+	
+	public function update_system()
+	{
+		$current_version = File::get(__DIR__."/../../.version");
+		$result = $this->github_all();
+		if ($current_version != $result[0]['sha']) {
+			$arr = array();
+			foreach($result as $row) {
+				$arr[] = $row['sha'];
+				if ($current_version == $row['sha']) {
+					break;
+				}
+			}
+			$arr2 = array_reverse($arr);
+			foreach($arr2 as $sha)
+				$result1 = $this->github_single($sha);
+				if (isset($result1['files'])) {
+					foreach($result1['files'] as $row1) {
+						$filename = __DIR__."/../../" . $row1['filename'];
+						if ($row1['status'] == 'added' || $row1['status'] == 'modified') {
+							$file = file_get_contents($row1['raw_url']);
+							file_put_contents($filename, $file);
+						}
+						if ($row1['status'] == 'removed') {
+							unlink($filename);
+						}
+					}
+				}
+			}
+			File::put(__DIR__."/../../.version", $result[0]['sha']);
+			echo "System Updated with version " . $result[0]['sha'];
+		} else {
+			echo "No update needed";
+		}
 	}
 }

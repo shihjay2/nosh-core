@@ -21,7 +21,8 @@
 		"jenssegers/date": "*",
 		"yangqi/htmldom": "dev-master",
 		"Chumper/Zipper": "dev-master",
-		"way/generators": "dev-master"
+		"way/generators": "dev-master",
+		"knplabs/github-api": "*"
 	},
 	"autoload": {
 		"classmap": [

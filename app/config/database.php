@@ -1,6 +1,6 @@
 <?php
-$database = '';
-$username = '';
+$database = 'database';
+$username = 'root';
 $password = '';
 if (isset($_ENV['mysql_database'])) {
 	$database = $_ENV['mysql_database'];

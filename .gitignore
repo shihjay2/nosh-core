@@ -4,5 +4,8 @@ composer.phar
 composer.lock
 .env.local.php
 .env.php
+.noshdir
+.version
+.codeigniter
 .DS_Store
 Thumbs.db

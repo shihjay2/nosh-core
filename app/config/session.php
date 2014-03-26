@@ -1,5 +1,9 @@
 <?php
-
+if (isset($_ENV['mysql_database'])) {
+	$driver = 'database';
+} else {
+	$driver = 'file';
+}
 return array(
 
 	/*
@@ -16,7 +20,7 @@ return array(
 	|
 	*/
 
-	'driver' => 'database',
+	'driver' => $driver,
 
 	/*
 	|--------------------------------------------------------------------------

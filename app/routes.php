@@ -25,8 +25,10 @@ Route::get('start/{practicehandle}', function($practicehandle = null)
 });
 Route::get('install', array('as' => 'install', 'before' => 'noinstall|installfix', 'uses' => 'InstallController@view'));
 Route::get('install_fix', array('as' => 'install_fix', 'uses' => 'InstallController@install_fix'));
-Route::get('codeigniter_migrate', array('as' => 'codeigniter_migrate', 'uses' => 'InstallController@codeigniter_migrate'));
-Route::get('update', array('as' => 'update', 'uses' => 'InstallController@update'));
+Route::get('codeigniter_migrate', array('as' => 'codeigniter_migrate', 'uses' => 'AjaxInstallController@codeigniter_migrate'));
+Route::get('update', array('as' => 'update', 'uses' => 'AjaxInstallController@update'));
+Route::get('update_system', array('as' => 'update_system', 'uses' => 'BackupController@update_system'));
+Route::get('set_version', array('as' => 'set_version', 'uses' => 'AjaxInstallController@set_version'));
 Route::get('bluebutton/{id}', array('as' => 'bluebutton', 'before' => 'auth', 'uses' => 'AjaxCommonController@bluebutton'));
 Route::group(['before' => 'csrf_header'], function() {
 	Route::controller('ajaxinstall', 'AjaxInstallController');
@@ -144,7 +146,6 @@ Route::post('backuprestore', array('as' => 'backuprestore', 'uses' => 'BackupCon
 Route::filter('needinstall', function()
 {
 	$config_file = __DIR__."/../.env.php";
-	$config = require($config_file);
 	$codeigniter = __DIR__."/../.codeigniter.php";
 	if (!file_exists($config_file)) {
 		if (file_exists($codeigniter)) {
@@ -153,6 +154,7 @@ Route::filter('needinstall', function()
 			return Redirect::to('install');
 		}
 	} else {
+		$config = require($config_file);
 		$connect = mysqli_connect('localhost', $config['mysql_username'], $config['mysql_password']);
 		$db = mysqli_select_db($connect, $config['mysql_database']);
 		if (!$db) {
@@ -166,25 +168,29 @@ Route::filter('needinstall', function()
 Route::filter('noinstall', function()
 {
 	$config_file = __DIR__."/../.env.php";
-	$config = require($config_file);
-	$connect = mysqli_connect('localhost', $config['mysql_username'], $config['mysql_password']);
-	$db = mysqli_select_db($connect, $config['mysql_database']);
-	if ($db) {
+	if (file_exists($config_file)) {
+		$config = require($config_file);
+		$connect = mysqli_connect('localhost', $config['mysql_username'], $config['mysql_password']);
+		$db = mysqli_select_db($connect, $config['mysql_database']);
+		if ($db) {
+			mysqli_close($connect);
+			return Redirect::to('/');
+		}
 		mysqli_close($connect);
-		return Redirect::to('/');
 	}
-	mysqli_close($connect);
 });
 
 Route::filter('installfix', function()
 {
 	$config_file = __DIR__."/../.env.php";
-	$config = require($config_file);
-	$connect = mysqli_connect('localhost', $config['mysql_username'], $config['mysql_password']);
-	if (!$connect) {
-		return Redirect::to('install_fix');
+	if (file_exists($config_file)) {
+		$config = require($config_file);
+		$connect = mysqli_connect('localhost', $config['mysql_username'], $config['mysql_password']);
+		if (!$connect) {
+			return Redirect::to('install_fix');
+		}
+		mysqli_close($connect);
 	}
-	mysqli_close($connect);
 });
 
 Route::filter('update', function()

@@ -13,7 +13,10 @@
 			var noshdata = {
 				'url': '<?php echo route('home'); ?>',
 				'images': '<?php echo url('images'); ?>/',
-				'documents': '<?php echo File::get(__DIR__ . '/../../../.noshdir'); ?>/'
+				'documents': '<?php echo trim(File::get(__DIR__ . '/../../../.noshdir')); ?>',
+				'error': '<?php echo route('home'); ?>',
+				'logout_url': '<?php echo route('logout'); ?>',
+				'images': '<?php echo url('images'); ?>/'
 			};
 		</script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
