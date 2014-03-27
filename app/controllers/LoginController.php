@@ -51,9 +51,7 @@ class LoginController extends BaseController {
 			$attempts = $_COOKIE['login_attempts'] + 1;
 			setcookie("login_attempts", $attempts, time()+900, '/');
 			$data["errors"] = new MessageBag(array(
-				"password" => [
-					"Username and/or password invalid."
-				]
+				"password" => "Username and/or password invalid."
 			));
 			$data["username"] = Input::get("username");
 			return Redirect::to("login")->withInput($data);

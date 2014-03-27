@@ -25,10 +25,10 @@
 							<br><?php echo HTML::image('images/kdisknav.png', 'Restore the database', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="restore_database_link">Restore the database</a>
 						<?php }?>
 						<?php if(Session::get('practice_active') == 'Y' && route('home') == 'https://noshchartingsystem.com/nosh') { ?>
-							<br><?php echo HTML::image('images/cancel.png', 'Cancel subscription', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="https://noshchartingsystem/registerpractice/cancel/' . Session::get('practice_id') . '">Cancel Subscriptions</a>
+							<br><?php echo HTML::image('images/cancel.png', 'Cancel subscription', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="https://noshchartingsystem/registerpractice/cancel_subscription/' . Session::get('practice_id') . '">Cancel Subscriptions</a>
 						<?php }?>
 						<?php if(Session::get('practice_active') == 'N' && route('home') == 'https://noshchartingsystem.com/nosh') { ?>
-							<br><?php echo HTML::image('images/button_accept.png', 'Restart subscription', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="https://noshchartingsystem/registerpractice/restart/' . Session::get('practice_id') . '">Restart Subscriptions</a>
+							<br><?php echo HTML::image('images/button_accept.png', 'Restart subscription', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="https://noshchartingsystem/registerpractice/restart_subscription/' . Session::get('practice_id') . '">Restart Subscriptions</a>
 						<?php }?>
 					<?php }?>
 					<?php if(Session::get('group_id') == '2') {?>

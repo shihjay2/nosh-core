@@ -5,9 +5,10 @@ class ReminderController extends BaseController {
 	/**
 	* NOSH ChartingSystem Reminder System, to be run as a cron job
 	*/
-	//public function test()
-	//{
-	//}
+	public function test()
+	{
+		echo PHP_INT_SIZE;
+	}
 	
 	public function reminder()
 	{

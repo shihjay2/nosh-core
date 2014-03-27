@@ -18,7 +18,7 @@ Route::get('start/{practicehandle}', function($practicehandle = null)
 	if ($practicehandle != null) {
 		$practice = Practiceinfo::where('practicehandle', '=', $practicehandle)->first();
 		if ($practice) {
-			return $practice->practice_id;
+			Session::put('practice_id', $practice->practice_id);
 		}
 	}
 	return Redirect::to('/');
@@ -285,4 +285,4 @@ Route::get('test', array('as' => 'test', function()
 	echo route('home');
 }));
 
-//Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));
+Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));
