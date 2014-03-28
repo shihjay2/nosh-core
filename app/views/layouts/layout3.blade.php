@@ -59,6 +59,8 @@
 				'financial': '',
 				'type': '',
 				'filename': '',
+				'pending_orders_id': '',
+				'pending_orders_id1': '',
 				'item_present': '<?php echo HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '15', 'width' => '15', 'style' => 'vertical-align:middle;'));?>',
 				'item_empty': '<?php echo HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '15', 'width' => '15', 'style' => 'vertical-align:middle;'));?>'
 			};

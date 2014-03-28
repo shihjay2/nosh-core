@@ -31,7 +31,7 @@ $(document).ready(function() {
 			jQuery("#messages_rad_list").jqGrid('GridUnload');
 			jQuery("#messages_rad_list").jqGrid({
 				url: "ajaxchart/orders-list/radiology",
-				postData: {t_messages_id: function(){return $("#messages_rad_t_messages_id").val();}},
+				postData: {t_messages_id: function(){return $("#messages_rad_t_messages_id_origin").val();}},
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Tests','Diagnosis','Location1','Location','Insurance','Provider','Order Date'],
@@ -51,47 +51,10 @@ $(document).ready(function() {
 				sortname: 'orders_id',
 			 	viewrecords: true,
 			 	sortorder: "desc",
-			 	caption:"Imaging Orders - Click on Location to get full description",
+			 	caption:"Imaging Orders",
 			 	height: "100%",
-			 	jsonReader: { repeatitems : false, id: "0" },
-			 	onCellSelect: function(rowid,iCol,cellcontent,e){
-			 		if (iCol == 'address_id') {
-				 		$.ajax({
-							url: "ajaxchart/addressdefine",
-							type: "POST",
-							data: "address_id=" + cellcontent,
-							dataType: 'json',
-							success: function(data){
-								$.jGrowl(data.item, {sticky:true});
-							}
-						});
-			 		}
-				}
+			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#messages_rad_list_pager',{search:false,edit:false,add:false,del:false});
-			$("#messages_rad_location").removeOption(/./);
-			$.ajax({
-				url: "ajaxsearch/orders-provider/Radiology",
-				dataType: "json",
-				type: "POST",
-				success: function(data){
-					if(data.response =='true'){
-						$("#messages_rad_location").addOption({"":"Add imaging provider."});
-						$("#messages_rad_location").addOption(data.message);
-					} else {
-						$("#messages_rad_location").addOption({"":"No imaging provider.  Click Add."});
-					}
-				}
-			});
-			$("#messages_rad_provider_list").removeOption(/./);
-			$.ajax({
-				url: "ajaxsearch/provider-select",
-				dataType: "json",
-				type: "POST",
-				success: function(data){
-					$("#messages_rad_provider_list").addOption({"":"Select a provider for the order."});
-					$("#messages_rad_provider_list").addOption(data);
-				}
-			});
 		},
 		buttons: {
 			'Save': function() {
@@ -132,15 +95,15 @@ $(document).ready(function() {
 	});
 	
 	$("#messages_add_rad").click(function(){
+		load_outside_providers('rad','add');
 		var a = $("#messages_rad_t_messages_id_origin").val();
-		$("#messages_rad_t_messages_id").val(a);
+		if (a == '') {
+			$("#messages_rad_eid").val(noshdata.eid);
+		} else {
+			$("#messages_rad_t_messages_id").val(a);
+		}
 		$("#messages_rad_status").html('');
 		$("#messages_rad_location").val('');
-		if (noshdata.group_id == '2') {
-			$("#messages_rad_provider_list").val(noshdata.user_id);
-		} else {
-			$("#messages_rad_provider_list").val('');
-		}
 		var currentDate = getCurrentDate();
 		$('#messages_rad_orders_pending_date').val(currentDate);
 		$("#messages_rad_edit_fields").dialog("option", "title", "Add Imaging Order");
@@ -149,7 +112,8 @@ $(document).ready(function() {
 	$("#messages_edit_rad").click(function(){
 		var item = jQuery("#messages_rad_list").getGridParam('selrow');
 		if(item){
-			jQuery("#messages_rad_list").GridToForm(item,"#edit_message_rad_form");
+			load_outside_providers('rad','edit');
+			jQuery("#messages_rad_list").GridToForm(item,"#edit_messages_rad_form");
 			var status = 'Details for Radiology Order #' + item;
 			$("#messages_rad_status").html(status);
 			if ($("#messages_rad_provider_list").val() == '' && noshdata.group_id == '2') {
@@ -158,6 +122,12 @@ $(document).ready(function() {
 			var date = $('#messages_rad_orders_pending_date').val();
 			var edit_date = editDate1(date);
 			$('#messages_rad_orders_pending_date').val(edit_date);
+			var a = $("#messages_rad_t_messages_id_origin").val();
+			if (a == '') {
+				$("#messages_rad_eid").val(noshdata.eid);
+			} else {
+				$("#messages_rad_t_messages_id").val(a);
+			}
 			$("#messages_rad_edit_fields").dialog("option", "title", "Edit Imaging Order");
 			$("#messages_rad_edit_fields").dialog('open');
 		} else {
@@ -358,14 +328,14 @@ $(document).ready(function() {
 		buttons: {
 			'Save': function() {
 				var bValid = true;
-				$("#edit_message_rad_form").find("[required]").each(function() {
+				$("#edit_messages_rad_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
 					var id1 = $("#" + input_id); 
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
 				if (bValid) {
-					var str = $("#edit_message_rad_form").serialize();
+					var str = $("#edit_messages_rad_form").serialize();
 					$.ajax({
 						type: "POST",
 						url: "ajaxchart/add-orders/radiology",
@@ -375,17 +345,35 @@ $(document).ready(function() {
 							$.jGrowl(data.message);
 							$('#messages_rad_choice').html(data.choice);
 							$("#messages_rad_action_dialog").dialog('open');
-							$("#edit_message_rad_form").clearForm();
+							$("#edit_messages_rad_form").clearForm();
 							$("#messages_rad_orders_id").val(data.id);
 							$("#messages_rad_edit_fields").dialog('close');
 							reload_grid("alerts");
 							reload_grid("messages_rad_list");
+							if(noshdata.pending_orders_id != '') {
+								var old = $("#situation").val();
+								if (old != '') {
+									var b = old + '\n\n' + data.pending;
+								} else {
+									var b = data.pending;
+								}
+								$("#situation").val(b);
+								$.ajax({
+									type: "POST",
+									url: "ajaxchart/complete-alert-order/" + noshdata.pending_orders_id,
+									success: function(data){
+										$.jGrowl(data);
+										noshdata.pending_orders_id = '';
+										reload_grid("alerts_pending");
+									}
+								});
+							}
 						}
 					});
 				}
 			},
 			Cancel: function() {
-				$("#edit_message_rad_form").clearForm();
+				$("#edit_messages_rad_form").clearForm();
 				$("#messages_rad_edit_fields").dialog('close');
 			}
 		},
@@ -554,11 +542,11 @@ $(document).ready(function() {
 									type: "POST",
 									success: function(data1){
 										if(data1.response =='true'){
-											$("#messages_rad_location").addOption({"":"Add imaging provider."});
-											$("#messages_rad_location").addOption(data1.message);
+											$("#messages_rad_location").addOption({"":"Add imaging provider."}, false);
+											$("#messages_rad_location").addOption(data1.message, false);
 											$("#messages_rad_location").val(data.id);
 										} else {
-											$("#messages_rad_location").addOption({"":"No imaging provider.  Click Add."});
+											$("#messages_rad_location").addOption({"":"No imaging provider.  Click Add."}, false);
 										}
 									}
 								});
@@ -577,7 +565,7 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	var user_id = noshdata.user_id;
-	$("#messages_rad_orders_type").addOption({"0":'Global',user_id:'Personal'});
+	$("#messages_rad_orders_type").addOption({"0":'Global',user_id:'Personal'}, false);
 	$("#add_test_cpt1").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 

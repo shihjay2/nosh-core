@@ -1,5 +1,5 @@
 <div id="messages_list_dialog" title="Messages">
-	<button type="button" id="new_telephone_message" class="nosh_button_add">New Message</button> 
+	<button type="button" class="nosh_button_add new_telephone_message">New Message</button> 
 	<br><br>
 	<table id="messages" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="messages_pager" class="scroll" style="text-align:center;"></div><br>

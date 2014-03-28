@@ -68,8 +68,8 @@ $(document).ready(function() {
 				url: "ajaxencounter/pe-template-select-list/" + parent_id,
 				dataType: "json",
 				success: function(data){
-					$('#'+parent_id+'_template').addOption({"":"*Select a template"});
-					$('#'+parent_id+'_template').addOption(data.options);
+					$('#'+parent_id+'_template').addOption({"":"*Select a template"}, false);
+					$('#'+parent_id+'_template').addOption(data.options, false);
 					$('#'+parent_id+'_template').sortOptions();
 					$('#'+parent_id+'_template').val("");
 					if ($('#'+parent_id+'_form').html() == '') {

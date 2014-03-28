@@ -2215,6 +2215,28 @@ class AjaxChartController extends BaseController {
 		}
 	}
 	
+	public function postCompleteAlertOrder($orders_id)
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$query = DB::table('alerts')->where('orders_id', '=', $orders_id)->where('alert', 'LIKE', "%NEED TO OBTAIN%")->first();
+			if ($query) {
+				$data = array(
+					'alert_date_complete' => date('Y-m-d H:i:s')
+				);
+				DB::table('alerts')->where('alert_id', '=', $query->alert_id)->update($data);
+				$this->audit('Update');
+				echo "Alert/Task marked completed!";
+			} else {
+				echo "No alert associated with this order.";
+			}
+		}
+	}
+	
 	public function postAlertsPending()
 	{
 		$pid = Session::get('pid');
@@ -3397,19 +3419,6 @@ class AjaxChartController extends BaseController {
 		$id = Input::get('billing_core_id');
 		$query = Billing_core::find($id);
 		$icd_array = Input::get('icd_pointer');
-		$billing_group = "1";
-		if (in_array("5", $icd_array)) {
-			$billing_group = "2";
-		}
-		if (in_array("6", $icd_array)) {
-			$billing_group = "2";
-		}
-		if (in_array("7", $icd_array)) {
-			$billing_group = "2";
-		}
-		if (in_array("8", $icd_array)) {
-			$billing_group = "2";
-		}
 		$icd_pointer = implode("", $icd_array);
 		$data = array(
 			'eid' => $eid,
@@ -3422,7 +3431,7 @@ class AjaxChartController extends BaseController {
 			'dos_f' => Input::get('dos_f'),
 			'dos_t' => Input::get('dos_t'),
 			'payment' => '0',
-			'billing_group' => $billing_group,
+			'billing_group' => '1',
 			'practice_id' => Session::get('practice_id')
 		);
 		if ($query) {
@@ -3567,30 +3576,42 @@ class AjaxChartController extends BaseController {
 		if ($data) {
 			$data1['message'] = "OK";
 			if ($data->assessment_1 != '') {
-				$data1['1'] = "1 - " . $data->assessment_1;
+				$data1['A'] = "A - " . $data->assessment_1;
 			} else {
 				$data1['message'] = "No diagnoses available.";
 			}
 			if ($data->assessment_2 != '') {
-				$data1['2'] = "2 - " . $data->assessment_2;
+				$data1['B'] = "B - " . $data->assessment_2;
 			}
 			if ($data->assessment_3 != '') {
-				$data1['3'] = "3 - " . $data->assessment_3;
+				$data1['C'] = "C - " . $data->assessment_3;
 			}
 			if ($data->assessment_4 != '') {
-				$data1['4'] = "4 - " . $data->assessment_4;
+				$data1['D'] = "D - " . $data->assessment_4;
 			}
 			if ($data->assessment_5 != '') {
-				$data1['5'] = "5 - " . $data->assessment_5;
+				$data1['E'] = "E - " . $data->assessment_5;
 			}
 			if ($data->assessment_6 != '') {
-				$data1['6'] = "6 - " . $data->assessment_6;
+				$data1['F'] = "F - " . $data->assessment_6;
 			}
 			if ($data->assessment_7 != '') {
-				$data1['7'] = "7 - " . $data->assessment_7;
+				$data1['G'] = "G - " . $data->assessment_7;
 			}
 			if ($data->assessment_8 != '') {
-				$data1['8'] = "8 - " . $data->assessment_8;
+				$data1['H'] = "H - " . $data->assessment_8;
+			}
+			if ($data->assessment_9 != '') {
+				$data1['I'] = "I - " . $data->assessment_9;
+			}
+			if ($data->assessment_10 != '') {
+				$data1['J'] = "J - " . $data->assessment_10;
+			}
+			if ($data->assessment_11 != '') {
+				$data1['K'] = "K - " . $data->assessment_11;
+			}
+			if ($data->assessment_12 != '') {
+				$data1['L'] = "L - " . $data->assessment_12;
 			}
 		} else {
 			$data1['message'] = "No diagnoses available.";
@@ -3968,27 +3989,22 @@ class AjaxChartController extends BaseController {
 		if ($t_messages_id == '') {
 			$t_messages_id = '0';
 		}
-		if ($t_messages_id != '0') {
-			$query = DB::table('orders')
-				->join('addressbook', 'orders.address_id', '=', 'addressbook.address_id')
-				->where('pid', '=', $pid)
-				->where('orders_' . $type, '!=', '')
-				->where('t_messages_id', '=', $t_messages_id)
-				->get();
+		$query = DB::table('orders')
+			->join('addressbook', 'orders.address_id', '=', 'addressbook.address_id')
+			->where('pid', '=', $pid)
+			->where('orders_' . $type, '!=', '');
+		if ($t_messages_id != '0' || $t_messages_id != 'all') {
+			$query->where('t_messages_id', '=', $t_messages_id);
 		} else {
 			$eid = Session::get('eid');
 			if ($eid == FALSE) {
 				$eid = '0';
 			}
-			$query = DB::table('orders')
-				->join('addressbook', 'orders.address_id', '=', 'addressbook.address_id')
-				->where('pid', '=', $pid)
-				->where('orders_' . $type, '!=', '')
-				->where('eid', '=', $eid)
-				->get();
+			$query->where('eid', '=', $eid);
 		}
-		if($query) { 
-			$count = count($query);
+		$result = $query->get();
+		if($result) { 
+			$count = count($result);
 			$total_pages = ceil($count/$limit); 
 		} else { 
 			$count = 0;
@@ -3997,27 +4013,10 @@ class AjaxChartController extends BaseController {
 		if ($page > $total_pages) $page=$total_pages;
 		$start = $limit*$page - $limit;
 		if($start < 0) $start = 0;
-		if ($t_messages_id != '0') {
-			$query1 = DB::table('orders')
-				->join('addressbook', 'orders.address_id', '=', 'addressbook.address_id')
-				->where('pid', '=', $pid)
-				->where('orders_' . $type, '!=', '')
-				->where('t_messages_id', '=', $t_messages_id)
-				->orderBy($sidx, $sord)
-				->skip($start)
-				->take($limit)
-				->get();
-		} else {
-			$query1 = DB::table('orders')
-				->join('addressbook', 'orders.address_id', '=', 'addressbook.address_id')
-				->where('pid', '=', $pid)
-				->where('orders_' . $type, '!=', '')
-				->where('eid', '=', $eid)
-				->orderBy($sidx, $sord)
-				->skip($start)
-				->take($limit)
-				->get();
-		}
+		$query1 = $query->orderBy($sidx, $sord)
+			->skip($start)
+			->take($limit)
+			->get();
 		$response['page'] = $page;
 		$response['total'] = $total_pages;
 		$response['records'] = $count;
@@ -4027,6 +4026,21 @@ class AjaxChartController extends BaseController {
 			$response['rows'] = '';
 		}
 		echo json_encode($response);
+	}
+	
+	public function postOrderType($id)
+	{
+		$data = Orders::find($id)->toArray();
+		if ($data['orders_labs'] != '') {
+			$data['label'] = 'messages_lab';
+		}
+		if ($data['orders_radiology'] != '') {
+			$data['label'] = 'messages_rad';
+		}
+		if ($data['orders_cp'] != '') {
+			$data['label'] = 'messages_cp';
+		}
+		echo json_encode($data);
 	}
 	
 	public function postAddressdefine()
@@ -4074,12 +4088,7 @@ class AjaxChartController extends BaseController {
 	{
 		$pid = Session::get('pid');
 		$t_messages_id = Input::get('t_messages_id');
-		if ($t_messages_id == '') {
-			$eid = Session::get('eid');
-			$t_messages_id = '';
-		} else {
-			$eid = '';
-		}
+		$eid = Input::get('eid');
 		if ($type == 'labs') {
 			$type1 = 'Laboratory';
 			$type2 = 'Laboratory results pending';
@@ -4151,6 +4160,7 @@ class AjaxChartController extends BaseController {
 			$result['message'] = $type1 . " orders saved!";
 			$result['id'] = $add;
 			$result['choice'] = 'Choose an action for the order, reference number ' . $add;
+			$result['pending'] = $description;
 		} else {
 			DB::table('orders')->where('orders_id', '=', $orders_id)->update($data);
 			$this->audit('Update');
@@ -4170,6 +4180,7 @@ class AjaxChartController extends BaseController {
 			$result['message'] = $type1 . " orders updated!";
 			$result['id'] = $orders_id;
 			$result['choice'] = 'Choose an action for the order, reference number ' . $orders_id;
+			$result['pending'] = $description;
 		}
 		echo json_encode($result);
 	}

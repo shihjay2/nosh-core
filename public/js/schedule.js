@@ -231,8 +231,8 @@ $(document).ready(function() {
 				dataType: "json",
 				type: "POST",
 				success: function(data){
-					$("#provider_list2").addOption({"":"Select a provider."});
-					$("#provider_list2").addOption(data);
+					$("#provider_list2").addOption({"":"Select a provider."}, false);
+					$("#provider_list2").addOption(data, false);
 					if (noshdata.group_id == '2' || noshdata.group_id == '3') {
 						$.ajax({
 							type: "POST",
@@ -261,9 +261,9 @@ $(document).ready(function() {
 				type: "POST",
 				success: function(data){
 					if (data.response == 'true') {
-						$("#visit_type").addOption(data.message);
+						$("#visit_type").addOption(data.message, false);
 					} else {
-						$("#visit_type").addOption({"":"No visit types available."});
+						$("#visit_type").addOption({"":"No visit types available."}, false);
 					}
 				}
 			});
@@ -443,8 +443,8 @@ $(document).ready(function() {
 		}],
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#status").addOption({"":"None.","Pending":"Pending","Reminder Sent":"Reminder Sent","Attended":"Attended","LMC":"Last Minute Cancellation","DNKA":"Did Not Keep Appointment"});
-	$("#repeat").addOption({"":"None.","86400":"Every Day","604800":"Every Week","1209600":"Every Other Week"});
+	$("#status").addOption({"":"None.","Pending":"Pending","Reminder Sent":"Reminder Sent","Attended":"Attended","LMC":"Last Minute Cancellation","DNKA":"Did Not Keep Appointment"}, false);
+	$("#repeat").addOption({"":"None.","86400":"Every Day","604800":"Every Week","1209600":"Every Other Week"}, false);
 	$('#patient_appt_button').click(function() {
 		$("#patient_appt").show();
 		$("#start_form").show();

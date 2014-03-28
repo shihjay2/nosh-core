@@ -2,7 +2,7 @@
 <xfdf xmlns="http://ns.adobe.com/xfdf/" xml:space="preserve">
 <fields>
 <field name="bill_id">
-<value>265</value>
+<value>267</value>
 </field>
 <field name="eid">
 <value>26</value>
@@ -17,7 +17,7 @@
 <value>0</value>
 </field>
 <field name="bill_date">
-<value>2014-03-26 16:06:38</value>
+<value>2014-03-27 16:28:04</value>
 </field>
 <field name="bill_complex">
 <value></value>
@@ -281,7 +281,7 @@
 <value>           </value>
 </field>
 <field name="bill_Box24E1">
-<value>13  </value>
+<value>AC  </value>
 </field>
 <field name="bill_Box24E2">
 <value>    </value>
@@ -403,13 +403,40 @@
 <field name="bill_Box33E">
 <value>1030320203</value>
 </field>
+<field name="bill_Box21_5">
+<value>        </value>
+</field>
+<field name="bill_Box21_6">
+<value>        </value>
+</field>
+<field name="bill_Box21_7">
+<value>        </value>
+</field>
+<field name="bill_Box21_8">
+<value>        </value>
+</field>
+<field name="bill_Box21_9">
+<value>        </value>
+</field>
+<field name="bill_Box21_10">
+<value>        </value>
+</field>
+<field name="bill_Box21_11">
+<value>        </value>
+</field>
+<field name="bill_Box21_12">
+<value>        </value>
+</field>
+<field name="bill_Box21A">
+<value>9</value>
+</field>
 <field name="Date">
-<value>03/26/2014</value>
+<value>03/27/2014</value>
 </field>
 <field name="Date2">
-<value>03/26/14</value>
+<value>03/27/14</value>
 </field>
 </fields>
-<ids original="d125f44b9bcfbd01ee59fc7f12d3ffce" modified="1395875198" />
+<ids original="d125f44b9bcfbd01ee59fc7f12d3ffce" modified="1395962885" />
 <f href="/home/mikey/Documents/NOSH/Laravel/nosh/app/controllers/../../public/hcfa1500.pdf" />
 </xfdf>

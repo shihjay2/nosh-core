@@ -31,7 +31,7 @@ $(document).ready(function() {
 			jQuery("#messages_ref_list").jqGrid('GridUnload');
 			jQuery("#messages_ref_list").jqGrid({
 				url: "ajaxchart/orders-list/referrals",
-				postData: {t_messages_id: function(){return $("#messages_ref_t_messages_id").val();}},
+				postData: {t_messages_id: function(){return $("#messages_ref_t_messages_id_origin").val();}},
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Referral','Diagnosis','Location1','Location','Insurance','Provider','Order Date'],
@@ -51,22 +51,9 @@ $(document).ready(function() {
 				sortname: 'orders_id',
 			 	viewrecords: true,
 			 	sortorder: "desc",
-			 	caption:"Referral Orders - Click on Location to get full description",
+			 	caption:"Referral Orders",
 			 	height: "100%",
-			 	jsonReader: { repeatitems : false, id: "0" },
-			 	onCellSelect: function(rowid,iCol,cellcontent,e){
-			 		if (iCol == 'address_id') {
-				 		$.ajax({
-							url: "ajaxchart/addressdefine",
-							type: "POST",
-							data: "address_id=" + cellcontent,
-							dataType: 'json',
-							success: function(data){
-								$.jGrowl(data.item, {sticky:true});
-							}
-						});
-			 		}
-				}
+			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#messages_ref_list_pager',{search:false,edit:false,add:false,del:false});
 			$("#messages_specialty_select").removeOption(/./);
 			$.ajax({
@@ -75,10 +62,10 @@ $(document).ready(function() {
 				type: "POST",
 				success: function(data){
 					if(data.response =='true'){
-						$("#messages_specialty_select").addOption({"":"All specialties."});
-						$("#messages_specialty_select").addOption(data.message);
+						$("#messages_specialty_select").addOption({"":"All specialties."}, false);
+						$("#messages_specialty_select").addOption(data.message, false);
 					} else {
-						$("#messages_specialty_select").addOption({"":"No specialties.  Click Add."});
+						$("#messages_specialty_select").addOption({"":"No specialties.  Click Add."}, false);
 					}
 				}
 			});
@@ -89,10 +76,10 @@ $(document).ready(function() {
 				type: "POST",
 				success: function(data){
 					if(data.response =='true'){
-						$("#messages_ref_location").addOption({"":"Add referral provider."});
-						$("#messages_ref_location").addOption(data.message);
+						$("#messages_ref_location").addOption({"":"Add referral provider."}, false);
+						$("#messages_ref_location").addOption(data.message, false);
 					} else {
-						$("#messages_ref_location").addOption({"":"No referral provider.  Click Add."});
+						$("#messages_ref_location").addOption({"":"No referral provider.  Click Add."}, false);
 					}
 				}
 			});
@@ -102,8 +89,8 @@ $(document).ready(function() {
 				dataType: "json",
 				type: "POST",
 				success: function(data){
-					$("#messages_ref_provider_list").addOption({"":"Select a provider for the order."});
-					$("#messages_ref_provider_list").addOption(data);
+					$("#messages_ref_provider_list").addOption({"":"Select a provider for the order."}, false);
+					$("#messages_ref_provider_list").addOption(data, false);
 				}
 			});
 		},
@@ -153,10 +140,10 @@ $(document).ready(function() {
 				type: "POST",
 				success: function(data){
 					if(data.response =='true'){
-						$("#messages_ref_location").addOption({"":"Add referral provider."});
-						$("#messages_ref_location").addOption(data.message);
+						$("#messages_ref_location").addOption({"":"Add referral provider."}, false);
+						$("#messages_ref_location").addOption(data.message, false);
 					} else {
-						$("#messages_ref_location").addOption({"":"No referral provider.  Click Add."});
+						$("#messages_ref_location").addOption({"":"No referral provider.  Click Add."}, false);
 					}
 				}
 			});
@@ -164,7 +151,11 @@ $(document).ready(function() {
 	});
 	$("#messages_add_ref").click(function(){
 		var a = $("#messages_ref_t_messages_id_origin").val();
-		$("#messages_ref_t_messages_id").val(a);
+		if (a == '') {
+			$("#messages_ref_eid").val(noshdata.eid);
+		} else {
+			$("#messages_ref_t_messages_id").val(a);
+		}
 		$("#messages_ref_status").html('');
 		$("#messages_ref_location").val('');
 		$("#messages_specialty_select").val('');
@@ -182,7 +173,7 @@ $(document).ready(function() {
 	$("#messages_edit_ref").click(function(){
 		var item = jQuery("#messages_ref_list").getGridParam('selrow');
 		if(item){
-			jQuery("#messages_ref_list").GridToForm(item,"#edit_message_ref_form");
+			jQuery("#messages_ref_list").GridToForm(item,"#edit_messages_ref_form");
 			var status = 'Details for Referral Order #' + item;
 			$("#messages_ref_status").html(status);
 			$("#messages_ref_template").val('');
@@ -190,7 +181,11 @@ $(document).ready(function() {
 				$("#messages_ref_provider_list").val(noshdata.user_id);
 			}
 			var a = $("#messages_ref_t_messages_id_origin").val();
-			$("#messages_ref_t_messages_id").val(a);
+			if (a == '') {
+				$("#messages_ref_eid").val(noshdata.eid);
+			} else {
+				$("#messages_ref_t_messages_id").val(a);
+			}
 			$("#messages_ref_edit_fields").dialog("option", "title", "Edit Referral");
 			$("#messages_ref_edit_fields").dialog('open');
 		} else {
@@ -311,8 +306,8 @@ $(document).ready(function() {
 				url: "ajaxchart/get-ref-templates-list",
 				dataType: "json",
 				success: function(data){
-					$('#messages_ref_template').addOption({"":"*Select a template"});
-					$('#messages_ref_template').addOption(data.options);
+					$('#messages_ref_template').addOption({"":"*Select a template"}, false);
+					$('#messages_ref_template').addOption(data.options, false);
 					$('#messages_ref_template').sortOptions();
 				}
 			});
@@ -359,14 +354,14 @@ $(document).ready(function() {
 		buttons: {
 			'Save': function() {
 				var bValid = true;
-				$("#edit_message_ref_form").find("[required]").each(function() {
+				$("#edit_messages_ref_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
 					var id1 = $("#" + input_id); 
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
 				if (bValid) {
-					var str = $("#edit_message_ref_form").serialize();
+					var str = $("#edit_messages_ref_form").serialize();
 					$.ajax({
 						type: "POST",
 						url: "ajaxchart/add-orders/referrals",
@@ -376,7 +371,7 @@ $(document).ready(function() {
 							$.jGrowl(data.message);
 							$('#messages_ref_choice').html(data.choice);
 							$("#messages_ref_action_dialog").dialog('open');
-							$("#edit_message_ref_form").clearForm();
+							$("#edit_messages_ref_form").clearForm();
 							$("#messages_ref_orders_id").val(data.id);
 							$("#messages_ref_edit_fields").dialog('close');
 							reload_grid("alerts");
@@ -386,7 +381,7 @@ $(document).ready(function() {
 				}
 			},
 			Cancel: function() {
-				$("#edit_message_ref_form").clearForm();
+				$("#edit_messages_ref_form").clearForm();
 				$("#messages_ref_edit_fields").dialog('close');
 			}
 		},
@@ -572,10 +567,10 @@ $(document).ready(function() {
 									success: function(data1){
 										if(data1.response =='true'){
 											$("#messages_ref_location").addOption({"":"Add referral provider."});
-											$("#messages_ref_location").addOption(data1.message);
+											$("#messages_ref_location").addOption(data1.message, false);
 											$("#messages_ref_location").val(data.id);
 										} else {
-											$("#messages_ref_location").addOption({"":"No referral provider.  Click Add."});
+											$("#messages_ref_location").addOption({"":"No referral provider.  Click Add."}, false);
 										}
 									}
 								});
@@ -594,7 +589,7 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	var user_id = noshdata.user_id;
-	$("#messages_ref_orders_type").addOption({"0":'Global',user_id:'Personal'});
+	$("#messages_ref_orders_type").addOption({"0":'Global',user_id:'Personal'}, false);
 	$("#add_test_cpt3").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 

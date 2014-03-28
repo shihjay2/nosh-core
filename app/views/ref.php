@@ -9,11 +9,12 @@
 	<button type="button" id="messages_delete_ref" class="nosh_button_delete">Delete</button>
 </div>
 <div id="messages_ref_edit_fields" title="">
-	<form id="edit_message_ref_form">
+	<form id="edit_messages_ref_form">
 		<div class="pure-form nosh_provider_exclude"><label for="messages_ref_provider_list">Provider:</label><select id ="messages_ref_provider_list" name="id" class="text" required></select></div>
-		<div style="float:right;" id="messages_ref_status"></div>
+		<div id="messages_ref_status"></div>
 		<input type="hidden" name="orders_id" id="messages_ref_orders_id"/>
 		<input type="hidden" name="t_messages_id" id="messages_ref_t_messages_id"/>
+		<input type="hidden" name="eid" id="messages_ref_eid"/>
 		<div id="messages_ref_accordion">
 			<h3><a href="#">Referral Reason</a></h3>
 			<div class="pure-g">

@@ -9,11 +9,12 @@
 	<button type="button" id="messages_delete_cp" class="nosh_button_delete">Delete</button>
 </div>
 <div id="messages_cp_edit_fields" title="">
-	<form id="edit_message_rad_form">
+	<form id="edit_messages_cp_form">
 		<div class="pure-form nosh_provider_exclude"><label for="messages_cp_provider_list">Provider:</label><select id ="messages_cp_provider_list" name="id" class="text" required></select></div>
-		<div style="float:right;" id="messages_cp_status"></div>
+		<div id="messages_cp_status"></div>
 		<input type="hidden" name="orders_id" id="messages_cp_orders_id"/>
 		<input type="hidden" name="t_messages_id" id="messages_cp_t_messages_id"/>
+		<input type="hidden" name="eid" id="messages_cp_eid"/>
 		<div id="messages_cp_accordion">
 			<h3><a href="#">Cardiopulmonary Tests</a></h3>
 			<div class="pure-g">

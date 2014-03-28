@@ -9,11 +9,12 @@
 	<button type="button" id="messages_delete_rad" class="nosh_button_delete">Delete</button>
 </div>
 <div id="messages_rad_edit_fields" title="">
-	<form id="edit_message_rad_form">
+	<form id="edit_messages_rad_form">
 		<div class="pure-form nosh_provider_exclude"><label for="messages_rad_provider_list">Provider:</label><select id ="messages_rad_provider_list" name="id" class="text" required></select></div>
-		<div style="float:right;" id="messages_rad_status"></div>
+		<div id="messages_rad_status"></div>
 		<input type="hidden" name="orders_id" id="messages_rad_orders_id"/>
 		<input type="hidden" name="t_messages_id" id="messages_rad_t_messages_id"/>
+		<input type="hidden" name="eid" id="messages_rad_eid"/>
 		<div id="messages_rad_accordion">
 			<h3><a href="#">Imaging Tests</a></h3>
 			<div class="pure-g">

@@ -31,7 +31,7 @@ $(document).ready(function() {
 			jQuery("#messages_cp_list").jqGrid('GridUnload');
 			jQuery("#messages_cp_list").jqGrid({
 				url: "ajaxchart/orders-list/cp",
-				postData: {t_messages_id: function(){return $("#messages_cp_t_messages_id").val();}},
+				postData: {t_messages_id: function(){return $("#messages_cp_t_messages_id_origin").val();}},
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Tests','Diagnosis','Location1','Location','Insurance','Provider','Order Date'],
@@ -51,47 +51,10 @@ $(document).ready(function() {
 				sortname: 'orders_id',
 			 	viewrecords: true,
 			 	sortorder: "desc",
-			 	caption:"Cardiopulmonary Orders - Click on Location to get full description",
+			 	caption:"Cardiopulmonary Orders",
 			 	height: "100%",
-			 	jsonReader: { repeatitems : false, id: "0" },
-			 	onCellSelect: function(rowid,iCol,cellcontent,e){
-			 		if (iCol == 'address_id') {
-				 		$.ajax({
-							url: "ajaxchart/addressdefine",
-							type: "POST",
-							data: "address_id=" + cellcontent,
-							dataType: 'json',
-							success: function(data){
-								$.jGrowl(data.item, {sticky:true});
-							}
-						});
-			 		}
-				}
+			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#messages_cp_list_pager',{search:false,edit:false,add:false,del:false});
-			$("#messages_cp_location").removeOption(/./);
-			$.ajax({
-				url: "ajaxsearch/orders-provider/Cardiopulmonary",
-				dataType: "json",
-				type: "POST",
-				success: function(data){
-					if(data.response =='true'){
-						$("#messages_cp_location").addOption({"":"Add cardiopulmonary provider."});
-						$("#messages_cp_location").addOption(data.message);
-					} else {
-						$("#messages_cp_location").addOption({"":"No cardiopulmonary provider.  Click Add."});
-					}
-				}
-			});
-			$("#messages_cp_provider_list").removeOption(/./);
-			$.ajax({
-				url: "ajaxsearch/provider-select",
-				dataType: "json",
-				type: "POST",
-				success: function(data){
-					$("#messages_cp_provider_list").addOption({"":"Select a provider for the order."});
-					$("#messages_cp_provider_list").addOption(data);
-				}
-			});
 		},
 		buttons: {
 			'Save': function() {
@@ -131,15 +94,15 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#messages_add_cp").click(function(){
+		load_outside_providers('cp','add');
 		var a = $("#messages_cp_t_messages_id_origin").val();
-		$("#messages_cp_t_messages_id").val(a);
+		if (a == '') {
+			$("#messages_cp_eid").val(noshdata.eid);
+		} else {
+			$("#messages_cp_t_messages_id").val(a);
+		}
 		$("#messages_cp_status").html('');
 		$("#messages_cp_location").val('');
-		if (noshdata.group_id == '2') {
-			$("#messages_cp_provider_list").val(noshdata.user_id);
-		} else {
-			$("#messages_cp_provider_list").val('');
-		}
 		var currentDate = getCurrentDate();
 		$('#messages_cp_orders_pending_date').val(currentDate);
 		$("#messages_cp_edit_fields").dialog("option", "title", "Add Cardiopulmonary Order");
@@ -148,7 +111,8 @@ $(document).ready(function() {
 	$("#messages_edit_cp").click(function(){
 		var item = jQuery("#messages_cp_list").getGridParam('selrow');
 		if(item){
-			jQuery("#messages_cp_list").GridToForm(item,"#edit_message_cp_form");
+			load_outside_providers('cp','edit');
+			jQuery("#messages_cp_list").GridToForm(item,"#edit_messages_cp_form");
 			var status = 'Details for Cardiopulmonary Order #' + item;
 			$("#messages_cp_status").html(status);
 			if ($("#messages_cp_provider_list").val() == '' && noshdata.group_id == '2') {
@@ -158,7 +122,11 @@ $(document).ready(function() {
 			var edit_date = editDate1(date);
 			$('#messages_cp_orders_pending_date').val(edit_date);
 			var a = $("#messages_cp_t_messages_id_origin").val();
-			$("#messages_cp_t_messages_id").val(a);
+			if (a == '') {
+				$("#messages_cp_eid").val(noshdata.eid);
+			} else {
+				$("#messages_cp_t_messages_id").val(a);
+			}
 			$("#messages_cp_edit_fields").dialog("option", "title", "Edit Cardiopulmonary Order");
 			$("#messages_cp_edit_fields").dialog('open');
 		} else {
@@ -357,14 +325,14 @@ $(document).ready(function() {
 		buttons: {
 			'Save': function() {
 				var bValid = true;
-				$("#edit_message_cp_form").find("[required]").each(function() {
+				$("#edit_messages_cp_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
 					var id1 = $("#" + input_id); 
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
 				if (bValid) {
-					var str = $("#edit_message_cp_form").serialize();
+					var str = $("#edit_messages_cp_form").serialize();
 					$.ajax({
 						type: "POST",
 						url: "ajaxchart/add-orders/cp",
@@ -374,17 +342,35 @@ $(document).ready(function() {
 							$.jGrowl(data.message);
 							$('#messages_cp_choice').html(data.choice);
 							$("#messages_cp_action_dialog").dialog('open');
-							$("#edit_message_cp_form").clearForm();
+							$("#edit_messages_cp_form").clearForm();
 							$("#messages_cp_orders_id").val(data.id);
 							$("#messages_cp_edit_fields").dialog('close');
 							reload_grid("alerts");
 							reload_grid("messages_cp_list");
+							if(noshdata.pending_orders_id1 != '') {
+								var old = $("#situation").val();
+								if (old != '') {
+									var b = old + '\n\n' + data.pending;
+								} else {
+									var b = data.pending;
+								}
+								$("#situation").val(b);
+								$.ajax({
+									type: "POST",
+									url: "ajaxchart/complete-alert-order/" + noshdata.pending_orders_id1,
+									success: function(data){
+										$.jGrowl(data);
+										noshdata.pending_orders_id1 = '';
+										reload_grid("alerts_pending");
+									}
+								});
+							}
 						}
 					});
 				}
 			},
 			Cancel: function() {
-				$("#edit_message_cp_form").clearForm();
+				$("#edit_messages_cp_form").clearForm();
 				$("#messages_cp_edit_fields").dialog('close');
 			}
 		},

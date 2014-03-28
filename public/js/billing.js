@@ -358,28 +358,40 @@ $(document).ready(function() {
 				success: function(data){
 					if (data != '') {
 						if(data.assessment_1.length!=0){
-							var label1 = '<strong>Diagnosis #1:</strong> ' + data.assessment_1;
+							var label1 = '<strong>Diagnosis A:</strong> ' + data.assessment_1;
 						}
 						if(data.assessment_2.length!=0){
-							label1 += '<br><strong>Diagnosis #2:</strong> ' + data.assessment_2;
+							label1 += '<br><strong>Diagnosis B:</strong> ' + data.assessment_2;
 						}
 						if(data.assessment_3.length!=0){
-							label1 += '<br><strong>Diagnosis #3:</strong> ' + data.assessment_3;
+							label1 += '<br><strong>Diagnosis C:</strong> ' + data.assessment_3;
 						}
 						if(data.assessment_4.length!=0){
-							label1 += '<br><strong>Diagnosis #4:</strong> ' + data.assessment_4;
+							label1 += '<br><strong>Diagnosis D:</strong> ' + data.assessment_4;
 						}
 						if(data.assessment_5.length!=0){
-							label1 += '<br><strong>Diagnosis #5:</strong> ' + data.assessment_5;
+							label1 += '<br><strong>Diagnosis E:</strong> ' + data.assessment_5;
 						}
 						if(data.assessment_6.length!=0){
-							label1 += '<br><strong>Diagnosis #6:</strong> ' + data.assessment_6;
+							label1 += '<br><strong>Diagnosis F:</strong> ' + data.assessment_6;
 						}
 						if(data.assessment_7.length!=0){
-							label1 += '<br><strong>Diagnosis #7:</strong> ' + data.assessment_7;
+							label1 += '<br><strong>Diagnosis G:</strong> ' + data.assessment_7;
 						}
 						if(data.assessment_8.length!=0){
-							label1 += '<br><strong>Diagnosis #8:</strong> ' + data.assessment_8;
+							label1 += '<br><strong>Diagnosis H:</strong> ' + data.assessment_8;
+						}
+						if(data.assessment_9.length!=0){
+							label1 += '<br><strong>Diagnosis I:</strong> ' + data.assessment_9;
+						}
+						if(data.assessment_10.length!=0){
+							label1 += '<br><strong>Diagnosis J:</strong> ' + data.assessment_10;
+						}
+						if(data.assessment_11.length!=0){
+							label1 += '<br><strong>Diagnosis K:</strong> ' + data.assessment_11;
+						}
+						if(data.assessment_12.length!=0){
+							label1 += '<br><strong>Diagnosis L:</strong> ' + data.assessment_12;
 						}
 						$("#billing_icd9").html(label1);
 					}
@@ -826,21 +838,6 @@ $(document).ready(function() {
 		}
 	});
 	$("#billing_icd1").chosen();
-	$("#billing_icd1").change(function() {
-		var a = $(this).val();
-		if (a != null) {
-			var b = ["1","2","3","4"];
-			var c = 0;
-			for (var i=0;i<a.length;i++) {
-				if (b.indexOf(a[i]) > -1) {
-					c++;
-				}
-			}
-			if (c != 0 && c<a.length) {
-				$.jGrowl("You must choose diagnoses grouped 1-4 or 5-6!");
-			}
-		}
-	});
 	$("#add_billing_cpt1").click(function(){
 		$('#billing_form1').clearForm();
 		$("#billing_unit1").val('1');

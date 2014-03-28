@@ -18,7 +18,7 @@
 	<div style="height:480px;float:left;">
 		<div class="pure-g">
 		<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
-			<div class="pure-u-1-2"><?php echo HTML::image('images/newmessage.png', 'New Telephone Message', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="new_message">New Telephone Message</a></div>
+			<div class="pure-u-1-2"><?php echo HTML::image('images/newmessage.png', 'New Telephone Message', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" class="new_telephone_message">New Telephone Message</a></div>
 			<div class="pure-u-1-2"><?php echo HTML::image('images/newencounter.png', 'New Encounter', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="new_encounter">New Encounter</a></div>
 			<div class="pure-u-1-2"><?php echo HTML::image('images/newletter.png', 'New Letter', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="new_letter">New Letter</a></div>
 		<?php }?>
@@ -40,10 +40,8 @@
 		<button type="button" id="detail_encounter" class="nosh_button_edit">Details</button>
 		<button type="button" id="billing_encounter" class="nosh_button_cart">Billing</button>
 		<button type="button" id="save_draft" class="nosh_button_save">Save Draft</button>
-		<?php if(Session::get('group_id') == '2') {?>
-			<button type="button" id="sign_encounter" class="nosh_button_check">Sign</button>
-			<button type="button" id="delete_encounter" class="nosh_button_delete">Delete</button>
-		<?php }?>
+		<button type="button" id="sign_encounter" class="nosh_button_check">Sign</button>
+		<button type="button" id="delete_encounter" class="nosh_button_delete">Delete</button>
 		<br><br>
 		<div id="encounter_body"></div>
 	</div>

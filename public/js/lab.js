@@ -31,7 +31,7 @@ $(document).ready(function() {
 			jQuery("#messages_lab_list").jqGrid('GridUnload');
 			jQuery("#messages_lab_list").jqGrid({
 				url: "ajaxchart/orders-list/labs",
-				postData: {t_messages_id: function(){return $("#messages_lab_t_messages_id").val();}},
+				postData: {t_messages_id: function(){return $("#messages_lab_t_messages_id_origin").val();}},
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Tests','Diagnosis','Location1','Location','Obtained','Insurance','Provider','Order Date'],
@@ -52,47 +52,10 @@ $(document).ready(function() {
 				sortname: 'orders_id',
 			 	viewrecords: true,
 			 	sortorder: "desc",
-			 	caption:"Lab Orders - Click on Location to get full description",
+			 	caption:"Lab Orders",
 			 	height: "100%",
-			 	jsonReader: { repeatitems : false, id: "0" },
-			 	onCellSelect: function(rowid,iCol,cellcontent,e){
-			 		if (iCol == 'address_id') {
-				 		$.ajax({
-							url: "ajaxchart/addressdefine",
-							type: "POST",
-							data: "address_id=" + cellcontent,
-							dataType: 'json',
-							success: function(data){
-								$.jGrowl(data.item, {sticky:true});
-							}
-						});
-			 		}
-				}
+			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#messages_lab_list_pager',{search:false,edit:false,add:false,del:false});
-			$("#messages_lab_location").removeOption(/./);
-			$.ajax({
-				url: "ajaxsearch/orders-provider/Laboratory",
-				dataType: "json",
-				type: "POST",
-				success: function(data){
-					if(data.response =='true'){
-						$("#messages_lab_location").addOption({"":"Add lab provider."});
-						$("#messages_lab_location").addOption(data.message);
-					} else {
-						$("#messages_lab_location").addOption({"":"No lab provider.  Click Add."});
-					}
-				}
-			});
-			$("#messages_lab_provider_list").removeOption(/./);
-			$.ajax({
-				url: "ajaxsearch/provider-select",
-				dataType: "json",
-				type: "POST",
-				success: function(data){
-					$("#messages_lab_provider_list").addOption({"":"Select a provider for the order."});
-					$("#messages_lab_provider_list").addOption(data);
-				}
-			});
 		},
 		buttons: {
 			'Save': function() {
@@ -132,16 +95,16 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#messages_add_lab").click(function(){
+		load_outside_providers('lab','add');
 		var a = $("#messages_lab_t_messages_id_origin").val();
-		$("#messages_lab_t_messages_id").val(a);
+		if (a == '') {
+			$("#messages_lab_eid").val(noshdata.eid);
+		} else {
+			$("#messages_lab_t_messages_id").val(a);
+		}
 		$("#messages_lab_status").html('');
 		$("#messages_lab_location").val('');
 		$("#messages_lab_provider_list").val('');
-		if (noshdata.group_id == '2') {
-			$("#messages_lab_provider_list").val(noshdata.user_id);
-		} else {
-			$("#messages_lab_provider_list").val('');
-		}
 		var currentDate = getCurrentDate();
 		$('#messages_lab_orders_pending_date').val(currentDate);
 		$("#messages_lab_edit_fields").dialog("option", "title", "Add Lab Order");
@@ -150,7 +113,8 @@ $(document).ready(function() {
 	$("#messages_edit_lab").click(function(){
 		var item = jQuery("#messages_lab_list").getGridParam('selrow');
 		if(item){
-			jQuery("#messages_lab_list").GridToForm(item,"#edit_message_lab_form");
+			load_outside_providers('lab','edit');
+			jQuery("#messages_lab_list").GridToForm(item,"#edit_messages_lab_form");
 			var status = 'Details for Lab Order #' + item;
 			$("#messages_lab_status").html(status);
 			if ($("#messages_lab_provider_list").val() == '' && noshdata.group_id == '2') {
@@ -160,7 +124,11 @@ $(document).ready(function() {
 			var edit_date = editDate1(date);
 			$('#messages_lab_orders_pending_date').val(edit_date);
 			var a = $("#messages_lab_t_messages_id_origin").val();
-			$("#messages_lab_t_messages_id").val(a);
+			if (a == '') {
+				$("#messages_lab_eid").val(noshdata.eid);
+			} else {
+				$("#messages_lab_t_messages_id").val(a);
+			}
 			$("#messages_lab_edit_fields").dialog("option", "title", "Edit Lab Order");
 			$("#messages_lab_edit_fields").dialog('open');
 		} else {
@@ -386,14 +354,14 @@ $(document).ready(function() {
 		buttons: {
 			'Save': function() {
 				var bValid = true;
-				$("#edit_message_lab_form").find("[required]").each(function() {
+				$("#edit_messages_lab_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
 					var id1 = $("#" + input_id); 
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
 				if (bValid) {
-					var str = $("#edit_message_lab_form").serialize();
+					var str = $("#edit_messages_lab_form").serialize();
 					$.ajax({
 						type: "POST",
 						url: "ajaxchart/add-orders/labs",
@@ -403,17 +371,35 @@ $(document).ready(function() {
 							$.jGrowl(data.message);
 							$('#messages_lab_choice').html(data.choice);
 							$("#messages_lab_action_dialog").dialog('open');
-							$("#edit_message_lab_form").clearForm();
+							$("#edit_messages_lab_form").clearForm();
 							$("#messages_lab_orders_id").val(data.id);
 							$("#messages_lab_edit_fields").dialog('close');
 							reload_grid("alerts");
 							reload_grid("messages_lab_list");
+							if(noshdata.pending_orders_id != '') {
+								var old = $("#situation").val();
+								if (old != '') {
+									var b = old + '\n\n' + data.pending;
+								} else {
+									var b = data.pending;
+								}
+								$("#situation").val(b);
+								$.ajax({
+									type: "POST",
+									url: "ajaxchart/complete-alert-order/" + noshdata.pending_orders_id,
+									success: function(data){
+										$.jGrowl(data);
+										noshdata.pending_orders_id = '';
+										reload_grid("alerts_pending");
+									}
+								});
+							}
 						}
 					});
 				}
 			},
 			Cancel: function() {
-				$("#edit_message_lab_form").clearForm();
+				$("#edit_messages_lab_form").clearForm();
 				$("#messages_lab_edit_fields").dialog('close');
 			}
 		},
@@ -451,7 +437,7 @@ $(document).ready(function() {
 	$("#messages_lab_location_state").addOption(states, false);
 	$("#messages_lab_location_phone").mask("(999) 999-9999");
 	$("#messages_lab_location_fax").mask("(999) 999-9999");
-	$("#messages_lab_location_electronic_order").addOption({"":"Select Electronic Order Interface","PeaceHealth":"PeaceHealth Labs"});
+	$("#messages_lab_location_electronic_order").addOption({"":"Select Electronic Order Interface","PeaceHealth":"PeaceHealth Labs"}, false);
 	$("#messages_lab_insurance_client").click(function(){
 		var text = "Bill Client";
 		var old = $("#messages_lab_insurance").val();
@@ -655,11 +641,11 @@ $(document).ready(function() {
 									type: "POST",
 									success: function(data1){
 										if(data1.response =='true'){
-											$("#messages_lab_location").addOption({"":"Add lab provider."});
-											$("#messages_lab_location").addOption(data1.message);
+											$("#messages_lab_location").addOption({"":"Add lab provider."}, false);
+											$("#messages_lab_location").addOption(data1.message, false);
 											$("#messages_lab_location").val(data.id);
 										} else {
-											$("#messages_lab_location").addOption({"":"No lab provider.  Click Add."});
+											$("#messages_lab_location").addOption({"":"No lab provider.  Click Add."}, false);
 										}
 									}
 								});
@@ -678,7 +664,7 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	var user_id = noshdata.user_id;
-	$("#messages_lab_orders_type").addOption({"0":'Global',user_id:'Personal'});
+	$("#messages_lab_orders_type").addOption({"0":'Global',user_id:'Personal'}, false);
 	$("#add_test_cpt").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 

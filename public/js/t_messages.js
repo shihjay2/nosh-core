@@ -278,7 +278,7 @@ $(document).ready(function() {
 					}
 				});
 				if (noshdata.success_doc == true) {
-					window.open("view_documents/" + id_doc);
+					window.open("view_documents/" + noshdata.id_doc);
 					noshdata.success_doc = false;
 					noshdata.id_doc = '';
 				}
@@ -295,7 +295,7 @@ $(document).ready(function() {
 	$("#messages_list").click(function() {
 		$("#messages_list_dialog").dialog('open');
 	});
-	$("#new_telephone_message").click(function() {
+	$(".new_telephone_message").click(function() {
 		$("#edit_message_form").clearForm();
 		$.ajax({
 			url: "ajaxchart/new-message",

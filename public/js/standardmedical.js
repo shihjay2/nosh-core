@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	loadbuttons();
-	setInterval(hpi_autosave, 10000);
+	setInterval(hpi_autosave('hpi'), 10000);
 	$("#encounter_tabs").tabs({
 		beforeLoad: function(event, ui) {
 			//if ($(ui.panel).html()) {
@@ -19,7 +19,7 @@ $(document).ready(function() {
 			var id = $(ui.newTab).attr('id');
 			var isValid = true;
 			if (id != "encounter_tabs_hpi") {
-				hpi_autosave();
+				hpi_autosave('hpi');
 			}
 			if (id == "encounter_tabs_ros") {
 				check_ros_status();
@@ -48,7 +48,7 @@ $(document).ready(function() {
 					dataType: "json",
 					success: function(data){
 						$("#oh_pmh_pf_template").removeOption(/./);
-						$('#oh_pmh_pf_template').addOption(data.options);
+						$('#oh_pmh_pf_template').addOption(data.options, false);
 						$('#oh_pmh_pf_template').sortOptions();
 						$('#oh_pmh_pf_template').val("");
 					}
@@ -59,7 +59,7 @@ $(document).ready(function() {
 					dataType: "json",
 					success: function(data){
 						$("#oh_psh_pf_template").removeOption(/./);
-						$('#oh_psh_pf_template').addOption(data.options);
+						$('#oh_psh_pf_template').addOption(data.options, false);
 						$('#oh_psh_pf_template').sortOptions();
 						$('#oh_psh_pf_template').val("");
 					}
@@ -70,7 +70,7 @@ $(document).ready(function() {
 					dataType: "json",
 					success: function(data){
 						$("#oh_fh_pf_template").removeOption(/./);
-						$('#oh_fh_pf_template').addOption(data.options);
+						$('#oh_fh_pf_template').addOption(data.options, false);
 						$('#oh_fh_pf_template').sortOptions();
 						$('#oh_fh_pf_template').val("");
 					}
@@ -81,7 +81,7 @@ $(document).ready(function() {
 					dataType: "json",
 					success: function(data){
 						$("#oh_sh_pf_template").removeOption(/./);
-						$('#oh_sh_pf_template').addOption(data.options);
+						$('#oh_sh_pf_template').addOption(data.options, false);
 						$('#oh_sh_pf_template').sortOptions();
 						$('#oh_sh_pf_template').val("");
 					}
@@ -119,7 +119,7 @@ $(document).ready(function() {
 		success: function(data){
 			if (data.response == true) {
 				$("#hpi").val(data.hpi);
-				$("#hpi_old").val(data.hpi1);
+				$("#hpi_old").val(data.hpi);
 			} else {
 				var age1 = noshdata.age;
 				var age = age1.replace("Years Old", "year-old ");
@@ -139,7 +139,7 @@ $(document).ready(function() {
 		url: "ajaxencounter/pf-template-select-list/HPI",
 		dataType: "json",
 		success: function(data){
-			$('#hpi_pf_template').addOption(data.options);
+			$('#hpi_pf_template').addOption(data.options, false);
 			$('#hpi_pf_template').sortOptions();
 			$('#hpi_pf_template').val("");
 		}
@@ -165,8 +165,8 @@ $(document).ready(function() {
 		url: "ajaxencounter/hpi-template-select-list",
 		dataType: "json",
 		success: function(data){
-			$('#hpi_template').addOption({"":"*Select a template"});
-			$('#hpi_template').addOption(data.options);
+			$('#hpi_template').addOption({"":"*Select a template"}, false);
+			$('#hpi_template').addOption(data.options, false);
 			$('#hpi_template').sortOptions();
 			$('#hpi_template').val("");
 		}

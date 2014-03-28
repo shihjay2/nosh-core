@@ -17,7 +17,7 @@ class AjaxInstallController extends BaseController {
 		$db_password = Input::get('db_password');
 		$connect = mysqli_connect('localhost', $db_username, $db_password);
 		if ($connect) {
-			$database_filename = "/var/laravel/.env.php";
+			$database_filename = __DIR__."/../../.env.php";
 			$database_config['mysql_database'] = $db_name;
 			$database_config['mysql_username'] = $db_username;
 			$database_config['mysql_password'] = $db_password;
@@ -55,44 +55,44 @@ class AjaxInstallController extends BaseController {
 		Session::put('install_note', 'Database tables created...');
 		
 		// Insert core database files
-		$template_sql_file = "/var/www/nosh/import/templates.sql";
+		$template_sql_file = __DIR__."/../../import/templates.sql";
 		$template_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $template_sql_file;
 		system($template_command);
-		$orderslist1_sql_file = "/var/www/nosh/import/orderslist1.sql";
+		$orderslist1_sql_file = __DIR__."/../../import/orderslist1.sql";
 		$orderslist1_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $orderslist1_sql_file;
 		system($orderslist1_command);
 		Session::put('install_progress', 30);
 		Session::put('install_note', 'Templates installed...');
-		$meds_sql_file = "/var/www/nosh/import/meds_full.sql";
+		$meds_sql_file = __DIR__."/../../import/meds_full.sql";
 		$meds_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $meds_sql_file;
 		system($meds_command);
-		$meds1_sql_file = "/var/www/nosh/import/meds_full_package.sql";
+		$meds1_sql_file = __DIR__."/../../import/meds_full_package.sql";
 		$meds1_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $meds1_sql_file;
 		system($meds1_command);
-		$supplements_file = "/var/www/nosh/import/supplements_list.sql";
+		$supplements_file = __DIR__."/../../import/supplements_list.sql";
 		$supplements_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $supplements_file;
 		system($supplements_command);
 		Session::put('install_progress', 40);
 		Session::put('install_note', 'Medications and supplements installed...');
-		$icd_file = "/var/www/nosh/import/icd9.sql";
+		$icd_file = __DIR__."/../../import/icd9.sql";
 		$icd_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $icd_file;
 		system($icd_command);
 		Session::put('install_progress', 50);
 		Session::put('install_note', 'ICD codes installed...');
-		$cpt_file = "/var/www/nosh/import/cpt.sql";
+		$cpt_file = __DIR__."/../../import/cpt.sql";
 		$cpt_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $cpt_file;
 		system($cpt_command);
 		Session::put('install_progress', 60);
 		Session::put('install_note', 'CPT codes installed...');
-		$cvx_file = "/var/www/nosh/import/cvx.sql";
+		$cvx_file = __DIR__."/../../import/cvx.sql";
 		$cvx_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $cvx_file;
 		system($cvx_command);
-		$gc_file = "/var/www/nosh/import/gc.sql";
+		$gc_file = __DIR__."/../../import/gc.sql";
 		$gc_command = "mysql -u " . $db_username. " -p". $db_password . " " . $db_name. " < " . $gc_file;
 		system($gc_command);
 		Session::put('install_progress', 70);
 		Session::put('install_note', 'Growth charts installed...');
-		$role_csv = "/var/www/nosh/import/familyrole.csv";
+		$role_csv = __DIR__."/../../import/familyrole.csv";
 		if (($role_handle = fopen($role_csv, "r")) !== FALSE) {
 			while (($role1 = fgetcsv($role_handle, 0, ",")) !== FALSE) {
 				if ($role1[0] != '') {
@@ -106,7 +106,7 @@ class AjaxInstallController extends BaseController {
 			}
 			fclose($role_csv);
 		}
-		$lang_csv = "/var/www/nosh/import/lang.csv";
+		$lang_csv = __DIR__."/../../import/lang.csv";
 		if (($lang_handle = fopen($lang_csv, "r")) !== FALSE) {
 			while (($lang1 = fgetcsv($lang_handle, 0, "\t")) !== FALSE) {
 				if ($lang1[0] != '') {
@@ -119,7 +119,7 @@ class AjaxInstallController extends BaseController {
 			}
 			fclose($lang_csv);
 		}
-		$npi_csv = '/var/www/nosh/import/npi_taxonomy.csv';
+		$npi_csv = __DIR__."/../../import/npi_taxonomy.csv";
 		if (($npi_handle = fopen($npi_csv, "r")) !== FALSE) {
 			while (($npi1 = fgetcsv($npi_handle, 0, ",", '"')) !== FALSE) {
 				if ($npi1[0] != '' || $npi1[0] != 'Code') {
@@ -134,7 +134,7 @@ class AjaxInstallController extends BaseController {
 			}
 			fclose($npi_csv);
 		}
-		$pos_csv = '/var/www/nosh/import/pos.csv';
+		$pos_csv = __DIR__."/../../import/pos.csv";
 		if (($pos_handle = fopen($pos_csv, "r")) !== FALSE) {
 			while (($pos1 = fgetcsv($pos_handle, 0, ",")) !== FALSE) {
 				if ($pos1[0] != '') {
@@ -636,7 +636,7 @@ class AjaxInstallController extends BaseController {
 		$connect = mysqli_connect('localhost', $db_username, $db_password);
 		$db = mysqli_select_db($connect,'nosh');
 		if ($db) {
-			$filename = "/var/www/laravel/.env.php";
+			$filename = __DIR__."/../../.env.php";
 			$config = include $filename;
 			$config['mysql_username'] = $db_username;
 			$config['mysql_password'] = $db_password;
@@ -888,21 +888,45 @@ class AjaxInstallController extends BaseController {
 			}
 		}
 		DB::table('meds_full')->truncate();
-		$meds_sql_file = "/var/www/nosh/import/meds_full.sql";
+		$meds_sql_file = __DIR__."/../../import/meds_full.sql";
 		$meds_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $meds_sql_file;
 		system($meds_command);
 		DB::table('meds_full_package')->truncate();
-		$meds1_sql_file = "/var/www/nosh/import/meds_full_package.sql";
+		$meds1_sql_file = __DIR__."/../../import/meds_full_package.sql";
 		$meds1_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $meds1_sql_file;
 		system($meds1_command);
 		DB::table('supplements_list')->truncate();
-		$supplements_file = "/var/www/nosh/import/supplements_list.sql";
+		$supplements_file = __DIR__."/../../import/supplements_list.sql";
 		$supplements_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $supplements_file;
 		system($supplements_command);
 		DB::table('icd9')->truncate();
-		$icd_file = "/var/www/nosh/import/icd9.sql";
+		$icd_file = __DIR__."/../../import/icd9.sql";
 		$icd_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $icd_file;
 		system($icd_command);
+		$alpha_array = array(
+			'1' => 'A',
+			'2' => 'B',
+			'3' => 'C',
+			'4' => 'D',
+			'5' => 'E',
+			'6' => 'F',
+			'7' => 'G',
+			'8' => 'H'
+		);
+		// Update ICD pointers to reflect new HCFA-1500
+		$billing_core = DB::table('billing_core')->whereNotNull('icd_pointer')->get();
+		if ($billing_core) {
+			foreach ($billing_core as $billing_core_row) {
+				if ($billing_core_row->icd_pointer != '') {
+					$icd_pointer = $billing_core_row->icd_pointer;
+					foreach($alpha_array as $key => $value) {
+						$icd_pointer = str_replace($key, $value, $icd_pointer);
+					}
+					$billing_core_data['icd_pointer'] = $icd_pointer;
+					DB::table('billing_core')->where('billing_core_id', '=', $billing_core_row->billing_core_id)->update($billing_core_data);
+				}
+			}
+		}
 		// Update version
 		DB::table('practiceinfo')->update(array('version' => '1.8.0'));
 	}

@@ -15,11 +15,12 @@
 				<div class="pure-u-1-2"><?php echo HTML::image('images/billing.png', 'Billing', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="billing_list" title="Past claims, payments, and balances for this patient" class="nosh_tooltip">Billing</a></div>
 				<div class="pure-u-1-2"><?php echo HTML::image('images/printmgr.png', 'Send Records', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="print_list" title="Print, fax, and create C-CDA documents of this patient's records." class="nosh_tooltip">Send Records</a></div>
 				<div class="pure-u-1-2"><?php echo HTML::image('images/prevent.png', 'Prevention', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="prevention_list" title="View prevention recommendations from U.S. Preventatitve Services Task Force and the CDC" class="nosh_tooltip">Prevention</a></div>
+				<div class="pure-u-1-2"><?php echo HTML::image('images/sign.png', 'Orders', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="order_list" title="View pending order and historical order history for the patient" class="nosh_tooltip">Orders</a></div>
 				<?php if($mtm == 'y') {?>
-					<div class="pure-u-1-2"><?php echo HTML::image('images/graph.png', 'MTM', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="mtm_list" title="Medication Therapy Management" class="nosh_tooltip">MTM</a></div>
+					<div class="pure-u-1-2"><?php echo HTML::image('images/graph.png', 'MTM', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="mtm_list" title="Medicare Medication Therapy Management" class="nosh_tooltip">MTM</a></div>
 				<?php }?>
 				<?php if (Session::get('agealldays') <6574.5) {?>
-					<div class="pure-u-1-2"><?php echo HTML::image('images/plot.png', 'Growth Charts', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="gc_list" title="Growth Charts" class="nosh_tooltip">Growth Charts</a></div>
+					<div class="pure-u-1-2"><?php echo HTML::image('images/plot.png', 'Growth Charts', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="gc_list" title="View growth charts" class="nosh_tooltip">Growth Charts</a></div>
 				<?php }?>
 			</div>
 		</div>

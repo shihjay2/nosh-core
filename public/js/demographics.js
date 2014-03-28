@@ -338,10 +338,10 @@ $(document).ready(function() {
 				type: "POST",
 				success: function(data){
 					if(data.response =='true'){
-						$("#menu_insurance_plan_select").addOption({"":"Select or add insurance provider."});
-						$("#menu_insurance_plan_select").addOption(data.message);
+						$("#menu_insurance_plan_select").addOption({"":"Select or add insurance provider."}, false);
+						$("#menu_insurance_plan_select").addOption(data.message, false);
 					} else {
-						$("#menu_insurance_plan_select").addOption({"":"No insurance providers.  Click Add."});
+						$("#menu_insurance_plan_select").addOption({"":"No insurance providers.  Click Add."}, false);
 					}
 				}
 			});
@@ -801,8 +801,8 @@ $(document).ready(function() {
 			}
 		});
 	});
-	$("#menu_insurance_box_31").addOption({"n":"First Last, Title (Default)","y":"Last, First" });
-	$("#menu_insurance_box_32a").addOption({"n":"Company NPI (Default)","y":"Personal NPI" });
+	$("#menu_insurance_box_31").addOption({"n":"First Last, Title (Default)","y":"Last, First" }, false);
+	$("#menu_insurance_box_32a").addOption({"n":"Company NPI (Default)","y":"Personal NPI" }, false);
 	$("#register_menu_demographics").button().click(function() {
 		$.ajax({
 			type: "POST",

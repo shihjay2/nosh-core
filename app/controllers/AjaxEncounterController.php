@@ -133,46 +133,56 @@ class AjaxEncounterController extends BaseController {
 	function postSignEncounter()
 	{
 		$eid = Session::get('eid');
-		$data = array(
-			'encounter_signed' => "Yes",
-			'date_signed' => date('Y-m-d H:i:s', time())
-		);
-		DB::table('encounters')->where('eid', '=', Session::get('eid'))->update($data);
-		$this->audit('Update');
-		Session::forget('eid');
-		echo 'Encounter Signed!';
+		$encounter = Encounters::find($eid);
+		if ($encounter->encounter_template == 'standardmedical' && Session::get('group_id') == '3') {
+			echo 'You are not allowed to sign this type of encounter!';
+		} else {
+			$data = array(
+				'encounter_signed' => "Yes",
+				'date_signed' => date('Y-m-d H:i:s', time())
+			);
+			DB::table('encounters')->where('eid', '=', Session::get('eid'))->update($data);
+			$this->audit('Update');
+			Session::forget('eid');
+			echo 'Encounter Signed!';
+		}
 	}
 	
 	public function postDeleteEncounter()
 	{
 		$eid = Session::get('eid');
-		DB::table('encounters')->where('eid', '=', Session::get('eid'))->where('encounter_signed', '=', 'No')->delete();
-		$this->audit('Delete');
-		DB::table('hpi')->where('eid', '=', Session::get('eid'))->delete();
-		$this->audit('Delete');
-		DB::table('ros')->where('eid', '=', Session::get('eid'))->delete();
-		$this->audit('Delete');
-		DB::table('other_history')->where('eid', '=', Session::get('eid'))->delete();
-		$this->audit('Delete');
-		DB::table('vitals')->where('eid', '=', Session::get('eid'))->delete();
-		$this->audit('Delete');
-		DB::table('pe')->where('eid', '=', Session::get('eid'))->delete();
-		$this->audit('Delete');
-		DB::table('labs')->where('eid', '=', Session::get('eid'))->delete();
-		$this->audit('Delete');
-		DB::table('procedure')->where('eid', '=', Session::get('eid'))->delete();
-		$this->audit('Delete');
-		DB::table('assessment')->where('eid', '=', Session::get('eid'))->delete();
-		$this->audit('Delete');
-		DB::table('orders')->where('eid', '=', Session::get('eid'))->delete();
-		$this->audit('Delete');
-		DB::table('plan')->where('eid', '=', Session::get('eid'))->delete();
-		$this->audit('Delete');
-		DB::table('rx')->where('eid', '=', Session::get('eid'))->delete();
-		$this->audit('Delete');
-		DB::table('billing')->where('eid', '=', Session::get('eid'))->delete();
-		$this->audit('Delete');
-		echo 'Encounter deleted!';
+		$encounter = Encounters::find($eid);
+		if ($encounter->encounter_template == 'standardmedical' && Session::get('group_id') == '3') {
+			echo 'You are not allowed to delete this type of encounter!';
+		} else {
+			DB::table('encounters')->where('eid', '=', Session::get('eid'))->where('encounter_signed', '=', 'No')->delete();
+			$this->audit('Delete');
+			DB::table('hpi')->where('eid', '=', Session::get('eid'))->delete();
+			$this->audit('Delete');
+			DB::table('ros')->where('eid', '=', Session::get('eid'))->delete();
+			$this->audit('Delete');
+			DB::table('other_history')->where('eid', '=', Session::get('eid'))->delete();
+			$this->audit('Delete');
+			DB::table('vitals')->where('eid', '=', Session::get('eid'))->delete();
+			$this->audit('Delete');
+			DB::table('pe')->where('eid', '=', Session::get('eid'))->delete();
+			$this->audit('Delete');
+			DB::table('labs')->where('eid', '=', Session::get('eid'))->delete();
+			$this->audit('Delete');
+			DB::table('procedure')->where('eid', '=', Session::get('eid'))->delete();
+			$this->audit('Delete');
+			DB::table('assessment')->where('eid', '=', Session::get('eid'))->delete();
+			$this->audit('Delete');
+			DB::table('orders')->where('eid', '=', Session::get('eid'))->delete();
+			$this->audit('Delete');
+			DB::table('plan')->where('eid', '=', Session::get('eid'))->delete();
+			$this->audit('Delete');
+			DB::table('rx')->where('eid', '=', Session::get('eid'))->delete();
+			$this->audit('Delete');
+			DB::table('billing')->where('eid', '=', Session::get('eid'))->delete();
+			$this->audit('Delete');
+			echo 'Encounter deleted!';
+		}
 	}
 	
 	public function getLoadtemplate()
@@ -260,17 +270,17 @@ class AjaxEncounterController extends BaseController {
 	// HPI functions
 	public function postGetHpi()
 	{
-		$row = Hpi::find(Session::get('eid'));
+		$row = DB::table('hpi')->where('eid', '=', Session::get('eid'))->first();
 		if ($row) {
+			$data = (array) $row;
 			$data['response'] = true;
-			$data['hpi'] = $row->hpi;
 		} else {
 			$data['response'] = false;
 		}
 		echo json_encode($data);
 	}
 	
-	public function postHpiSave()
+	public function postHpiSave($type)
 	{
 		$eid = Session::get('eid');
 		$count = Hpi::find($eid);
@@ -278,16 +288,23 @@ class AjaxEncounterController extends BaseController {
 			'eid' => $eid,
 			'pid' => Session::get('pid'),
 			'encounter_provider' => Session::get('displayname'),
-			'hpi' => Input::get('hpi')
+			$type => Input::get($type)
 		);
+		if ($type == 'hpi') {
+			$result1 = 'History of Present Illness';
+		}
+		if ($type == 'situation') {
+			$result1 = 'Situation';
+		}
 		if ($count) {
 			DB::table('hpi')->where('eid', '=', $eid)->update($data);
 			$this->audit('Update');
-			$result = 'History of Present Illness Updated!';
+			
+			$result = $result1 . ' Updated!';
 		} else {
 			DB::table('hpi')->insert($data);
 			$this->audit('Add');
-			$result = 'History of Present Illness Added!';
+			$result = $result1 . ' Added!';
 		}
 		echo $result;
 	}
@@ -1465,6 +1482,10 @@ class AjaxEncounterController extends BaseController {
 			'assessment_icd6' => Input::get('assessment_icd6'),
 			'assessment_icd7' => Input::get('assessment_icd7'),
 			'assessment_icd8' => Input::get('assessment_icd8'),
+			'assessment_icd9' => Input::get('assessment_icd9'),
+			'assessment_icd10' => Input::get('assessment_icd10'),
+			'assessment_icd11' => Input::get('assessment_icd11'),
+			'assessment_icd12' => Input::get('assessment_icd12'),
 			'assessment_1' => Input::get('assessment_1'),
 			'assessment_2' => Input::get('assessment_2'),
 			'assessment_3' => Input::get('assessment_3'),
@@ -1473,6 +1494,10 @@ class AjaxEncounterController extends BaseController {
 			'assessment_6' => Input::get('assessment_6'),
 			'assessment_7' => Input::get('assessment_7'),
 			'assessment_8' => Input::get('assessment_8'),
+			'assessment_9' => Input::get('assessment_9'),
+			'assessment_10' => Input::get('assessment_10'),
+			'assessment_11' => Input::get('assessment_11'),
+			'assessment_12' => Input::get('assessment_12'),
 			'assessment_other' => Input::get('assessment_other'),
 			'assessment_ddx' => Input::get('assessment_ddx'),
 			'assessment_notes' => Input::get('assessment_notes')
@@ -1981,16 +2006,16 @@ class AjaxEncounterController extends BaseController {
 		$assessment_data = Assessment::find($eid);
 		$icd_pointer = '';
 		if ($assessment_data->assessment_1 != '') {
-			$icd_pointer .= "1";
+			$icd_pointer .= "A";
 		}
 		if ($assessment_data->assessment_2 != '') {
-			$icd_pointer .= "2";
+			$icd_pointer .= "B";
 		}
 		if ($assessment_data->assessment_3 != '') {
-			$icd_pointer .= "3";
+			$icd_pointer .= "C";
 		}
 		if ($assessment_data->assessment_4 != '') {
-			$icd_pointer .= "4";
+			$icd_pointer .= "D";
 		}
 		$labsInfo = Labs::find($eid);
 		if ($labsInfo) {

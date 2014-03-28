@@ -205,18 +205,18 @@ function total_balance() {
 		}
 	});
 }
-function hpi_autosave() {
-	var old0 = $("#hpi_old").val();
-	var new0 = $("#hpi").val();
+function hpi_autosave(type) {
+	var old0 = $("#"+type+"_old").val();
+	var new0 = $("#"+type).val();
 	if (old0 != new0) {
 		$.ajax({
 			type: "POST",
-			url: "ajaxencounter/hpi-save",
-			data: 'hpi=' + $("#hpi").val(),
+			url: "ajaxencounter/hpi-save/" + type,
+			data: type+'=' + $("#"+type).val(),
 			success: function(data){
 				$.jGrowl(data);
-				var a = $("#hpi").val();
-				$("#hpi_old").val(a);
+				var a = $("#"+type).val();
+				$("#"+type+"_old").val(a);
 			}
 		});
 	}
@@ -427,6 +427,94 @@ function billing_autosave() {
 			$.jGrowl("Please complete the form");
 		}
 	}
+}
+function pending_order_load(item) {
+	$.ajax({
+		url: "ajaxchart/order-type/" + item,
+		dataType: "json",
+		type: "POST",
+		success: function(data){
+			var label = data.label;
+			var status = "";
+			var type = "";
+			if (label == 'messages_lab') {
+				status = 'Details for Lab Order #' + item;
+				type = 'lab';
+			}
+			if (label == 'messages_rad') {
+				status = 'Details for Radiology Order #' + item;
+				type = 'rad';
+			}
+			if (label == 'messages_cp') {
+				status = 'Details for Cardiopulmonary Order #' + item;
+				type = 'cp';
+			}
+			load_outside_providers(type,'edit');
+			$.each(data, function(key, value){
+				if (key != 'label') {
+					if (key == 'orders_pending_date') {
+						var value = getCurrentDate();
+					}
+					$("#edit_"+label+"_form :input[name='" + key + "']").val(value);
+				}
+			});
+			$("#"+label+"_status").html(status);
+			if ($("#"+label+"_provider_list").val() == '' && noshdata.group_id == '2') {
+				$("#"+label+"_provider_list").val(noshdata.user_id);
+			}
+			$("#"+label+"_edit_fields").dialog("option", "title", "Edit Lab Order");
+			$("#"+label+"_edit_fields").dialog('open');
+		}
+	});
+}
+function load_outside_providers(type,action) {
+	$("#messages_"+type+"_location").removeOption(/./);
+	var type1 = '';
+	var type2 = '';
+	if (type == 'lab') {
+		type1 = 'Laboratory';
+		type2 = 'lab';
+	}
+	if (type == 'rad') {
+		type1 = 'Radiology';
+		type2 = 'imaging';
+	}
+	if (type == 'cp') {
+		type1 = 'Cardiopulmonary';
+		type2 = 'cardiopulmonary';
+	}
+	$.ajax({
+		url: "ajaxsearch/orders-provider/" + type1,
+		dataType: "json",
+		type: "POST",
+		async: false,
+		success: function(data){
+			if(data.response == 'true'){
+				$("#messages_"+type+"_location").addOption({"":"Add "+type2+" provider."}, false);
+				$("#messages_"+type+"_location").addOption(data.message, false);
+			} else {
+				$("#messages_"+type+"_location").addOption({"":"No "+type2+" provider.  Click Add."}, false);
+			}
+		}
+	});
+	$("#messages_"+type+"_provider_list").removeOption(/./);
+	$.ajax({
+		url: "ajaxsearch/provider-select",
+		dataType: "json",
+		type: "POST",
+		async: false,
+		success: function(data){
+			$("#messages_"+type+"_provider_list").addOption({"":"Select a provider for the order."}, false);
+			$("#messages_"+type+"_provider_list").addOption(data, false);
+			if(action == 'add') {
+				if (noshdata.group_id == '2') {
+					$("#messages_"+type+"_provider_list").val(noshdata.user_id);
+				} else {
+					$("#messages_"+type+"_provider_list").val('');
+				}
+			}
+		}
+	});
 }
 function parse_date(string) {
 	var date = new Date();

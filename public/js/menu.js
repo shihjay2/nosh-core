@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	var windowHeight = $(window).height() - 115;
-	$('#menucontainer').css('min-height', windowHeight);
+	$('#menucontainer').css('max-height', windowHeight);
 	$.ajax({
 		type: "POST",
 		url: "ajaxchart/demographics-load",

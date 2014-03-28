@@ -2284,6 +2284,8 @@ class BaseController extends Controller {
 				$bill_Box17A = $this->string_format($npi, 17);
 			}
 		}
+		// Modify in the future so that it allows 0 for icd-10
+		$bill_Box21A = '9';
 		if ($result2->insurance_box_31 == 'n') {
 			$bill_Box31 = $this->string_format($provider, 21);
 		} else {
@@ -2323,7 +2325,6 @@ class BaseController extends Controller {
 		$bill_Box33D = $this->string_format($bill_Box33D, 29);
 		$result5 = DB::table('billing_core')
 			->where('eid', '=', $eid)
-			->where('billing_group', '=', '1')
 			->where('cpt', 'NOT LIKE', "sp%")
 			->orderBy('cpt_charge', 'desc')
 			->get();
@@ -2334,6 +2335,14 @@ class BaseController extends Controller {
 			$bill_Box21_2 = $this->string_format($result6->assessment_icd2, 8);
 			$bill_Box21_3 = $this->string_format($result6->assessment_icd3, 8);
 			$bill_Box21_4 = $this->string_format($result6->assessment_icd4, 8);
+			$bill_Box21_5 = $this->string_format($result6->assessment_icd5, 8);
+			$bill_Box21_6 = $this->string_format($result6->assessment_icd6, 8);
+			$bill_Box21_7 = $this->string_format($result6->assessment_icd7, 8);
+			$bill_Box21_8 = $this->string_format($result6->assessment_icd8, 8);
+			$bill_Box21_9 = $this->string_format($result6->assessment_icd9, 8);
+			$bill_Box21_10 = $this->string_format($result6->assessment_icd10, 8);
+			$bill_Box21_11 = $this->string_format($result6->assessment_icd11, 8);
+			$bill_Box21_12 = $this->string_format($result6->assessment_icd12, 8);
 			$i = 0;
 			foreach ($result5 as $key5 => $value5) {
 				$cpt_charge5[$key5]  = $value5->cpt_charge;
@@ -2433,10 +2442,19 @@ class BaseController extends Controller {
 				'bill_Box11DP'				=> $bill_Box11DP,	//Other Insurance Plan Exist
 				'bill_Box17' 				=> $bill_Box17,		//Provider Use for Box 31 and 33B too
 				'bill_Box17A' 				=> $bill_Box17A,	//Provider NPI
+				'bill_Box21A'				=> $bill_Box21A,	//ICD9 or 10
 				'bill_Box21_1' 				=> $bill_Box21_1,	//ICD1
 				'bill_Box21_2' 				=> $bill_Box21_2,	//ICD2
 				'bill_Box21_3' 				=> $bill_Box21_3,	//ICD3
 				'bill_Box21_4' 				=> $bill_Box21_4,	//ICD4
+				'bill_Box21_5' 				=> $bill_Box21_5,	//ICD5
+				'bill_Box21_6' 				=> $bill_Box21_6,	//ICD6
+				'bill_Box21_7' 				=> $bill_Box21_7,	//ICD7
+				'bill_Box21_8' 				=> $bill_Box21_8,	//ICD8
+				'bill_Box21_9' 				=> $bill_Box21_9,	//ICD9
+				'bill_Box21_10' 			=> $bill_Box21_10,	//ICD10
+				'bill_Box21_11' 			=> $bill_Box21_11,	//ICD11
+				'bill_Box21_12' 			=> $bill_Box21_12,	//ICD12
 				'bill_DOS1F' 				=> $cpt_final[0]['dos_f'],
 				'bill_DOS1T' 				=> $cpt_final[0]['dos_t'],
 				'bill_DOS2F' 				=> $cpt_final[1]['dos_f'],
@@ -2604,10 +2622,19 @@ class BaseController extends Controller {
 					'bill_Box11DP'				=> $bill_Box11DP,
 					'bill_Box17' 				=> $bill_Box17,		//Provider Use for Box 31 and 33B too
 					'bill_Box17A' 				=> $bill_Box17A,	//Provider NPI
+					'bill_Box21A'				=> $bill_Box21A,	//ICD9 or 10
 					'bill_Box21_1' 				=> $bill_Box21_1,	//ICD1
 					'bill_Box21_2' 				=> $bill_Box21_2,	//ICD2
 					'bill_Box21_3' 				=> $bill_Box21_3,	//ICD3
 					'bill_Box21_4' 				=> $bill_Box21_4,	//ICD4
+					'bill_Box21_5' 				=> $bill_Box21_5,	//ICD5
+					'bill_Box21_6' 				=> $bill_Box21_6,	//ICD6
+					'bill_Box21_7' 				=> $bill_Box21_7,	//ICD7
+					'bill_Box21_8' 				=> $bill_Box21_8,	//ICD8
+					'bill_Box21_9' 				=> $bill_Box21_9,	//ICD9
+					'bill_Box21_10' 			=> $bill_Box21_10,	//ICD10
+					'bill_Box21_11' 			=> $bill_Box21_11,	//ICD11
+					'bill_Box21_12' 			=> $bill_Box21_12,	//ICD12
 					'bill_DOS1F' 				=> $cpt_final[0]['dos_f'],
 					'bill_DOS1T' 				=> $cpt_final[0]['dos_t'],
 					'bill_DOS2F' 				=> $cpt_final[1]['dos_f'],
@@ -2692,371 +2719,6 @@ class BaseController extends Controller {
 		} else {
 			return "No CPT charges filed. Billing not saved.";
 			exit (0);
-		}
-		$result7 = DB::table('billing_core')
-			->where('eid', '=', $eid)
-			->where('billing_group', '=', '2')
-			->where('cpt', 'NOT LIKE', "sp%")
-			->orderBy('cpt_charge', 'desc')
-			->get();
-		$num_rows7 = count($result7);
-		if ($num_rows7 > 0) {
-			$result8 = Assessment::find($eid);
-			$bill_Box21_1 = $this->string_format($result8->assessment_icd5, 8);
-			$bill_Box21_2 = $this->string_format($result8->assessment_icd6, 8);
-			$bill_Box21_3 = $this->string_format($result8->assessment_icd7, 8);
-			$bill_Box21_4 = $this->string_format($result8->assessment_icd8, 8);
-			$i = 0;
-			foreach ($result7 as $key7 => $value7) {
-				$cpt_charge7[$key7]  = $value7->cpt_charge;
-			}
-			array_multisort($cpt_charge7, SORT_DESC, $result7);
-			while ($i < $num_rows7 ) {
-				$cpt_final[$i] = (array) $result7[$i];
-				$cpt_final[$i]['dos_f'] = str_replace('/', '', $cpt_final[$i]['dos_f']);
-				$cpt_final[$i]['dos_f'] = $this->string_format($cpt_final[$i]['dos_f'], 8);
-				$cpt_final[$i]['dos_t'] = str_replace('/', '', $cpt_final[$i]['dos_t']);
-				$cpt_final[$i]['dos_t'] = $this->string_format($cpt_final[$i]['dos_t'], 8);
-				$cpt_final[$i]['pos'] =  $this->string_format($pos, 5);
-				$cpt_final[$i]['cpt'] = $this->string_format($cpt_final[$i]['cpt'], 6);
-				$cpt_final[$i]['modifier'] = $this->string_format($cpt_final[$i]['modifier'], 11);
-				$cpt_final[$i]['unit1'] = $cpt_final[$i]['unit'];
-				$cpt_final[$i]['unit'] = $this->string_format($cpt_final[$i]['unit'] ,5);
-				$cpt_final[$i]['cpt_charge'] = number_format($cpt_final[$i]['cpt_charge'], 2, ' ', '');
-				$cpt_final[$i]['cpt_charge1'] = $cpt_final[$i]['cpt_charge'];
-				$cpt_final[$i]['cpt_charge'] = $this->string_format($cpt_final[$i]['cpt_charge'], 8);
-				$cpt_final[$i]['npi'] = $this->string_format($npi, 11);
-				$icd_pointer_final = '';
-				foreach (str_split($cpt_final[$i]['icd_pointer']) as $icd_element) {
-					$icd_pointer_final .= $icd_element - 4;
-				}
-				$cpt_final[$i]['icd_pointer'] =  $this->string_format($icd_pointer_final, 4);
-				$i++;
-			}
-			if ($num_rows7 < 6) {
-				$array['dos_f'] = $this->string_format('', 8);
-				$array['dos_t'] = $this->string_format('', 8);
-				$array['pos'] = $this->string_format('', 5);
-				$array['cpt'] = $this->string_format('', 6);
-				$array['modifier'] = $this->string_format('', 11);
-				$array['unit1'] = '0';
-				$array['unit'] = $this->string_format('', 5);
-				$array['cpt_charge1'] = '0';
-				$array['cpt_charge'] = $this->string_format('', 8);
-				$array['npi'] = $this->string_format('', 11);
-				$array['icd_pointer'] =  $this->string_format('', 4);
-				$cpt_final = array_pad($cpt_final, 6, $array);
-			}
-			$bill_Box28 = $cpt_final[0]['cpt_charge1'] * $cpt_final[0]['unit1'] + $cpt_final[1]['cpt_charge1'] * $cpt_final[1]['unit1'] + $cpt_final[2]['cpt_charge1'] * $cpt_final[2]['unit1'] + $cpt_final[3]['cpt_charge1'] * $cpt_final[3]['unit1'] + $cpt_final[4]['cpt_charge1'] * $cpt_final[4]['unit1'] + $cpt_final[5]['cpt_charge1'] * $cpt_final[5]['unit1'];
-			$bill_Box28 = number_format($bill_Box28, 2, ' ', '');
-			$bill_Box28 = $this->string_format($bill_Box28, 9);
-			$bill_Box29 = $this->string_format('0 00', 8);
-			$bill_Box30 = $this->string_format($bill_Box28, 8);
-			$data3 = array(
-				'eid' 						=> $eid,
-				'pid' 						=> $pid,
-				'insurance_id_1' 			=> $insurance_id_1,
-				'insurance_id_2' 			=> $insurance_id_2,
-				'bill_complex'				=> $bill_complex,
-				'bill_Box11C' 				=> $bill_Box11C,	//Insurance Plan Name
-				'bill_payor_id'				=> $bill_payor_id,
-				'bill_ins_add1'				=> $bill_ins_add1,
-				'bill_ins_add2'				=> $bill_ins_add2,
-				'bill_Box1'					=> $bill_Box1,
-				'bill_Box1P'				=> $bill_Box1P,
-				'bill_Box1A' 				=> $bill_Box1A, 	//Insured ID Number
-				'bill_Box2' 				=> $bill_Box2, 		//Patient Name
-				'bill_Box3A' 				=> $bill_Box3A, 	//Patient Date of Birth
-				'bill_Box3B' 				=> $bill_Box3B, 	//Patient Sex
-				'bill_Box3BP' 				=> $bill_Box3BP,
-				'bill_Box4'					=> $bill_Box4, 		//Insured Name
-				'bill_Box5A' 				=> $bill_Box5A, 	//Patient Address
-				'bill_Box6'					=> $bill_Box6, 		//Patient Relationship to Insured
-				'bill_Box6P'				=> $bill_Box6P,
-				'bill_Box7A'				=> $bill_Box7A, 	//Insured Address
-				'bill_Box5B' 				=> $bill_Box5B, 	//Patient City
-				'bill_Box5C' 				=> $bill_Box5C, 	//Patient State
-				'bill_Box8A'				=> $bill_Box8A, 	//Patient Marital Status
-				'bill_Box8AP'				=> $bill_Box8AP,
-				'bill_Box7B'				=> $bill_Box7B, 	//Insured City
-				'bill_Box7C'				=> $bill_Box7C, 	//Insured State
-				'bill_Box5D'				=> $bill_Box5D,		//Patient Zip
-				'bill_Box5E'				=> $bill_Box5E,
-				'bill_Box8B'				=> $bill_Box8B,		//Patient Employment
-				'bill_Box8BP'				=> $bill_Box8BP,
-				'bill_Box7D'				=> $bill_Box7D,		//Insured Zip
-				'bill_Box9'					=> $bill_Box9, 		//Other Insured Name
-				'bill_Box11'				=> $bill_Box11, 	//Insured Group Number
-				'bill_Box9A'				=> $bill_Box9A, 	//Other Insured Group Number
-				'bill_Box10'				=> $bill_Box10, 
-				'bill_Box10A'				=> $bill_Box10A,	//Condition Employment
-				'bill_Box10AP'				=> $bill_Box10AP,	//Condition Employment
-				'bill_Box11A1'				=> $bill_Box11A1,	//Insured Date of Birth
-				'bill_Box11A2'				=> $bill_Box11A2,	//Insured Sex
-				'bill_Box11A2P'				=> $bill_Box11A2P,
-				'bill_Box9B1'				=> $bill_Box9B1,	//Other Insured Date of Birth
-				'bill_Box9B2'				=> $bill_Box9B2,	//Other Insured Sex
-				'bill_Box9B2P'				=> $bill_Box9B2P,
-				'bill_Box10B1'				=> $bill_Box10B1,	//Condition Auto Accident
-				'bill_Box10B1P'				=> $bill_Box10B1P,	//Condition Auto Accident
-				'bill_Box10B2'				=> $bill_Box10B2,	//Condition Auto Accident State
-				'bill_Box11B'				=> $bill_Box11B,	//Insured Employer
-				'bill_Box9C'				=> $bill_Box9C,		//Other Insured Employer
-				'bill_Box10C'				=> $bill_Box10C,	//Condition Other Accident
-				'bill_Box10CP'				=> $bill_Box10CP,	//Condition Other Accident
-				'bill_Box9D'				=> $bill_Box9D,		//Other Insurance Plan Name
-				'bill_Box11D'				=> $bill_Box11D,	//Other Insurance Plan Exist
-				'bill_Box11DP'				=> $bill_Box11DP,
-				'bill_Box17' 				=> $bill_Box17,		//Provider Use for Box 31 and 33B too
-				'bill_Box17A' 				=> $bill_Box17A,	//Provider NPI
-				'bill_Box21_1' 				=> $bill_Box21_1,	//ICD1
-				'bill_Box21_2' 				=> $bill_Box21_2,	//ICD2
-				'bill_Box21_3' 				=> $bill_Box21_3,	//ICD3
-				'bill_Box21_4' 				=> $bill_Box21_4,	//ICD4
-				'bill_DOS1F' 				=> $cpt_final[0]['dos_f'],
-				'bill_DOS1T' 				=> $cpt_final[0]['dos_t'],
-				'bill_DOS2F' 				=> $cpt_final[1]['dos_f'],
-				'bill_DOS2T' 				=> $cpt_final[1]['dos_t'],
-				'bill_DOS3F' 				=> $cpt_final[2]['dos_f'],
-				'bill_DOS3T' 				=> $cpt_final[2]['dos_t'],
-				'bill_DOS4F' 				=> $cpt_final[3]['dos_f'],
-				'bill_DOS4T' 				=> $cpt_final[3]['dos_t'],
-				'bill_DOS5F' 				=> $cpt_final[4]['dos_f'],
-				'bill_DOS5T'				=> $cpt_final[4]['dos_t'],
-				'bill_DOS6F' 				=> $cpt_final[5]['dos_f'],
-				'bill_DOS6T' 				=> $cpt_final[5]['dos_t'],
-				'bill_Box24B1' 				=> $cpt_final[0]['pos'],	//Place of Service 1
-				'bill_Box24B2' 				=> $cpt_final[1]['pos'],	//Place of Service 2
-				'bill_Box24B3'				=> $cpt_final[2]['pos'],	//Place of Service 3
-				'bill_Box24B4' 				=> $cpt_final[3]['pos'],	//Place of Service 4
-				'bill_Box24B5' 				=> $cpt_final[4]['pos'],	//Place of Service 5
-				'bill_Box24B6' 				=> $cpt_final[5]['pos'],	//Place of Service 6
-				'bill_Box24D1' 				=> $cpt_final[0]['cpt'],	//CPT1
-				'bill_Box24D2'				=> $cpt_final[1]['cpt'],	//CPT2
-				'bill_Box24D3' 				=> $cpt_final[2]['cpt'],	//CPT3
-				'bill_Box24D4' 				=> $cpt_final[3]['cpt'],	//CPT4
-				'bill_Box24D5' 				=> $cpt_final[4]['cpt'],	//CPT5
-				'bill_Box24D6' 				=> $cpt_final[5]['cpt'],	//CPT6
-				'bill_Modifier1'			=> $cpt_final[0]['modifier'],
-				'bill_Modifier2'			=> $cpt_final[1]['modifier'],
-				'bill_Modifier3'			=> $cpt_final[2]['modifier'],
-				'bill_Modifier4'			=> $cpt_final[3]['modifier'],
-				'bill_Modifier5'			=> $cpt_final[4]['modifier'],
-				'bill_Modifier6'			=> $cpt_final[5]['modifier'],
-				'bill_Box24E1'				=> $cpt_final[0]['icd_pointer'],	//Diagnosis Pointer 1
-				'bill_Box24E2'				=> $cpt_final[1]['icd_pointer'],	//Diagnosis Pointer 2
-				'bill_Box24E3'				=> $cpt_final[2]['icd_pointer'],	//Diagnosis Pointer 3
-				'bill_Box24E4'				=> $cpt_final[3]['icd_pointer'],	//Diagnosis Pointer 4
-				'bill_Box24E5'				=> $cpt_final[4]['icd_pointer'],	//Diagnosis Pointer 5
-				'bill_Box24E6'				=> $cpt_final[5]['icd_pointer'],	//Diagnosis Pointer 6
-				'bill_Box24F1' 				=> number_format($cpt_final[0]['cpt_charge'] * $cpt_final[0]['unit'], 2, ' ', ''),	//Charges 1
-				'bill_Box24F2'				=> number_format($cpt_final[1]['cpt_charge'] * $cpt_final[1]['unit'], 2, ' ', ''),	//Charges 2
-				'bill_Box24F3' 				=> number_format($cpt_final[2]['cpt_charge'] * $cpt_final[2]['unit'], 2, ' ', ''),	//Charges 3
-				'bill_Box24F4' 				=> number_format($cpt_final[3]['cpt_charge'] * $cpt_final[3]['unit'], 2, ' ', ''),	//Charges 4
-				'bill_Box24F5' 				=> number_format($cpt_final[4]['cpt_charge'] * $cpt_final[4]['unit'], 2, ' ', ''),	//Charges 5
-				'bill_Box24F6' 				=> number_format($cpt_final[5]['cpt_charge'] * $cpt_final[5]['unit'], 2, ' ', ''),	//Charges 6
-				'bill_Box24G1'				=> $cpt_final[0]['unit'],	//Units 1
-				'bill_Box24G2'				=> $cpt_final[1]['unit'],	//Units 2
-				'bill_Box24G3'				=> $cpt_final[2]['unit'],	//Units 3
-				'bill_Box24G4'				=> $cpt_final[3]['unit'],	//Units 4
-				'bill_Box24G5'				=> $cpt_final[4]['unit'],	//Units 5
-				'bill_Box24G6'				=> $cpt_final[5]['unit'],	//Units 6
-				'bill_Box24J1' 				=> $cpt_final[0]['npi'],	//NPI 1
-				'bill_Box24J2' 				=> $cpt_final[1]['npi'],	//NPI 2
-				'bill_Box24J3' 				=> $cpt_final[2]['npi'],	//NPI 3
-				'bill_Box24J4' 				=> $cpt_final[3]['npi'],	//NPI 4
-				'bill_Box24J5' 				=> $cpt_final[4]['npi'],	//NPI 5
-				'bill_Box24J6' 				=> $cpt_final[5]['npi'],	//NPI 6
-				'bill_Box25' 				=> $bill_Box25,		//Clinic Tax ID
-				'bill_Box26' 				=> $bill_Box26,		//pid
-				'bill_Box27'				=> $bill_Box27,		//Accept Assignment
-				'bill_Box27P'				=> $bill_Box27P,	//Accept Assignment
-				'bill_Box28' 				=> $bill_Box28,		//Total Charges
-				'bill_Box29'				=> $bill_Box29,
-				'bill_Box30'				=> $bill_Box30,
-				'bill_Box31'				=> $bill_Box31,
-				'bill_Box32A' 				=> $bill_Box32A,	//Clinic Name
-				'bill_Box32B' 				=> $bill_Box32B,	//Clinic Address 1
-				'bill_Box32C'				=> $bill_Box32C,	//Clinic Address 2
-				'bill_Box32D' 				=> $bill_Box32D,	//Clinic NPI use for 33E too
-				'bill_Box33A' 				=> $bill_Box33A,	//Clinic Phone
-				'bill_Box33B'				=> $bill_Box33B,
-				'bill_Box33C'				=> $bill_Box33C,	//Billing Address 1
-				'bill_Box33D'				=> $bill_Box33D,	//Billing Address 2
-				'bill_Box33E'				=> $bill_Box32D
-			);
-			DB::table('billing')->insert($data3);
-			$this->audit('Add');
-			unset($cpt_final[0]);
-			unset($cpt_final[1]);
-			unset($cpt_final[2]);
-			unset($cpt_final[3]);
-			unset($cpt_final[4]);
-			unset($cpt_final[5]);
-			if ($num_rows7 > 6 && $num_rows7 < 11) {
-				$k = 6;
-				foreach ($cpt_final as $k=>$v) {
-					$l = $k - 6;
-					$cpt_final[$l] = $cpt_final[$k];
-					unset($cpt_final[$k]);
-					$k++;
-				}
-				$num_rows6 = count($cpt_final);
-				if ($num_rows6 < 6) {
-					$array1['dos_f'] = $this->string_format('', 8);
-					$array1['dos_t'] = $this->string_format('', 8);
-					$array1['pos'] = $this->string_format('', 5);
-					$array1['cpt'] = $this->string_format('', 6);
-					$array1['modifier'] = $this->string_format('', 11);
-					$array1['unit1'] = '0';
-					$array1['unit'] = $this->string_format('', 5);
-					$array1['cpt_charge1'] = '0';
-					$array1['cpt_charge'] = $this->string_format('', 8);
-					$array1['npi'] = $this->string_format('', 11);
-					$array1['icd_pointer'] =  $this->string_format('', 4);
-					$cpt_final = array_pad($cpt_final, 6, $array1);
-				}
-				$bill_Box28 = $cpt_final[0]['cpt_charge1'] * $cpt_final[0]['unit1'] + $cpt_final[1]['cpt_charge1'] * $cpt_final[1]['unit1'] + $cpt_final[2]['cpt_charge1'] * $cpt_final[2]['unit1'] + $cpt_final[3]['cpt_charge1'] * $cpt_final[3]['unit1'] + $cpt_final[4]['cpt_charge1'] * $cpt_final[4]['unit1'] + $cpt_final[5]['cpt_charge1'] * $cpt_final[5]['unit1'];
-				$bill_Box28 = number_format($bill_Box28, 2, ' ', '');
-				$bill_Box28 = $this->string_format($bill_Box28, 9);
-				$bill_Box29 = $this->string_format('0 00', 8);
-				$bill_Box30 = $this->string_format($bill_Box28, 8);
-				$data4 = array(
-					'eid' 						=> $eid,
-					'pid' 						=> $pid,
-					'insurance_id_1' 			=> $insurance_id_1,
-					'insurance_id_2' 			=> $insurance_id_2,
-					'bill_complex'				=> $bill_complex,
-					'bill_Box11C' 				=> $bill_Box11C,	//Insurance Plan Name
-					'bill_payor_id'				=> $bill_payor_id,
-					'bill_ins_add1'				=> $bill_ins_add1,
-					'bill_ins_add2'				=> $bill_ins_add2,
-					'bill_Box1'					=> $bill_Box1,
-					'bill_Box1P'				=> $bill_Box1P,
-					'bill_Box1A' 				=> $bill_Box1A, 	//Insured ID Number
-					'bill_Box2' 				=> $bill_Box2, 		//Patient Name
-					'bill_Box3A' 				=> $bill_Box3A, 	//Patient Date of Birth
-					'bill_Box3B' 				=> $bill_Box3B, 	//Patient Sex
-					'bill_Box3BP' 				=> $bill_Box3BP,
-					'bill_Box4'					=> $bill_Box4, 		//Insured Name
-					'bill_Box5A' 				=> $bill_Box5A, 	//Patient Address
-					'bill_Box6'					=> $bill_Box6, 		//Patient Relationship to Insured
-					'bill_Box6P'				=> $bill_Box6P,
-					'bill_Box7A'				=> $bill_Box7A, 	//Insured Address
-					'bill_Box5B' 				=> $bill_Box5B, 	//Patient City
-					'bill_Box5C' 				=> $bill_Box5C, 	//Patient State
-					'bill_Box8A'				=> $bill_Box8A, 	//Patient Marital Status
-					'bill_Box8AP'				=> $bill_Box8AP,
-					'bill_Box7B'				=> $bill_Box7B, 	//Insured City
-					'bill_Box7C'				=> $bill_Box7C, 	//Insured State
-					'bill_Box5D'				=> $bill_Box5D,		//Patient Zip
-					'bill_Box5E'				=> $bill_Box5E,
-					'bill_Box8B'				=> $bill_Box8B,		//Patient Employment
-					'bill_Box8BP'				=> $bill_Box8BP,
-					'bill_Box7D'				=> $bill_Box7D,		//Insured Zip
-					'bill_Box9'					=> $bill_Box9, 		//Other Insured Name
-					'bill_Box11'				=> $bill_Box11, 	//Insured Group Number
-					'bill_Box9A'				=> $bill_Box9A, 	//Other Insured Group Number
-					'bill_Box10'				=> $bill_Box10, 
-					'bill_Box10A'				=> $bill_Box10A,	//Condition Employment
-					'bill_Box10AP'				=> $bill_Box10AP,	//Condition Employment
-					'bill_Box11A1'				=> $bill_Box11A1,	//Insured Date of Birth
-					'bill_Box11A2'				=> $bill_Box11A2,	//Insured Sex
-					'bill_Box11A2P'				=> $bill_Box11A2P,
-					'bill_Box9B1'				=> $bill_Box9B1,	//Other Insured Date of Birth
-					'bill_Box9B2'				=> $bill_Box9B2,	//Other Insured Sex
-					'bill_Box9B2P'				=> $bill_Box9B2P,
-					'bill_Box10B1'				=> $bill_Box10B1,	//Condition Auto Accident
-					'bill_Box10B1P'				=> $bill_Box10B1P,	//Condition Auto Accident
-					'bill_Box10B2'				=> $bill_Box10B2,	//Condition Auto Accident State
-					'bill_Box11B'				=> $bill_Box11B,	//Insured Employer
-					'bill_Box9C'				=> $bill_Box9C,		//Other Insured Employer
-					'bill_Box10C'				=> $bill_Box10C,	//Condition Other Accident
-					'bill_Box10CP'				=> $bill_Box10CP,	//Condition Other Accident
-					'bill_Box9D'				=> $bill_Box9D,		//Other Insurance Plan Name
-					'bill_Box11D'				=> $bill_Box11D,	//Other Insurance Plan Exist
-					'bill_Box11DP'				=> $bill_Box11DP,
-					'bill_Box17' 				=> $bill_Box17,		//Provider Use for Box 31 and 33B too
-					'bill_Box17A' 				=> $bill_Box17A,	//Provider NPI
-					'bill_Box21_1' 				=> $bill_Box21_1,	//ICD1
-					'bill_Box21_2' 				=> $bill_Box21_2,	//ICD2
-					'bill_Box21_3' 				=> $bill_Box21_3,	//ICD3
-					'bill_Box21_4' 				=> $bill_Box21_4,	//ICD4
-					'bill_DOS1F' 				=> $cpt_final[0]['dos_f'],
-					'bill_DOS1T' 				=> $cpt_final[0]['dos_t'],
-					'bill_DOS2F' 				=> $cpt_final[1]['dos_f'],
-					'bill_DOS2T' 				=> $cpt_final[1]['dos_t'],
-					'bill_DOS3F' 				=> $cpt_final[2]['dos_f'],
-					'bill_DOS3T' 				=> $cpt_final[2]['dos_t'],
-					'bill_DOS4F' 				=> $cpt_final[3]['dos_f'],
-					'bill_DOS4T' 				=> $cpt_final[3]['dos_t'],
-					'bill_DOS5F' 				=> $cpt_final[4]['dos_f'],
-					'bill_DOS5T'				=> $cpt_final[4]['dos_t'],
-					'bill_DOS6F' 				=> $cpt_final[5]['dos_f'],
-					'bill_DOS6T' 				=> $cpt_final[5]['dos_t'],
-					'bill_Box24B1' 				=> $cpt_final[0]['pos'],	//Place of Service 1
-					'bill_Box24B2' 				=> $cpt_final[1]['pos'],	//Place of Service 2
-					'bill_Box24B3'				=> $cpt_final[2]['pos'],	//Place of Service 3
-					'bill_Box24B4' 				=> $cpt_final[3]['pos'],	//Place of Service 4
-					'bill_Box24B5' 				=> $cpt_final[4]['pos'],	//Place of Service 5
-					'bill_Box24B6' 				=> $cpt_final[5]['pos'],	//Place of Service 6
-					'bill_Box24D1' 				=> $cpt_final[0]['cpt'],	//CPT1
-					'bill_Box24D2'				=> $cpt_final[1]['cpt'],	//CPT2
-					'bill_Box24D3' 				=> $cpt_final[2]['cpt'],	//CPT3
-					'bill_Box24D4' 				=> $cpt_final[3]['cpt'],	//CPT4
-					'bill_Box24D5' 				=> $cpt_final[4]['cpt'],	//CPT5
-					'bill_Box24D6' 				=> $cpt_final[5]['cpt'],	//CPT6
-					'bill_Modifier1'			=> $cpt_final[0]['modifier'],
-					'bill_Modifier2'			=> $cpt_final[1]['modifier'],
-					'bill_Modifier3'			=> $cpt_final[2]['modifier'],
-					'bill_Modifier4'			=> $cpt_final[3]['modifier'],
-					'bill_Modifier5'			=> $cpt_final[4]['modifier'],
-					'bill_Modifier6'			=> $cpt_final[5]['modifier'],
-					'bill_Box24E1'				=> $cpt_final[0]['icd_pointer'],	//Diagnosis Pointer 1
-					'bill_Box24E2'				=> $cpt_final[1]['icd_pointer'],	//Diagnosis Pointer 2
-					'bill_Box24E3'				=> $cpt_final[2]['icd_pointer'],	//Diagnosis Pointer 3
-					'bill_Box24E4'				=> $cpt_final[3]['icd_pointer'],	//Diagnosis Pointer 4
-					'bill_Box24E5'				=> $cpt_final[4]['icd_pointer'],	//Diagnosis Pointer 5
-					'bill_Box24E6'				=> $cpt_final[5]['icd_pointer'],	//Diagnosis Pointer 6
-					'bill_Box24F1' 				=> number_format($cpt_final[0]['cpt_charge'] * $cpt_final[0]['unit'], 2, ' ', ''),	//Charges 1
-					'bill_Box24F2'				=> number_format($cpt_final[1]['cpt_charge'] * $cpt_final[1]['unit'], 2, ' ', ''),	//Charges 2
-					'bill_Box24F3' 				=> number_format($cpt_final[2]['cpt_charge'] * $cpt_final[2]['unit'], 2, ' ', ''),	//Charges 3
-					'bill_Box24F4' 				=> number_format($cpt_final[3]['cpt_charge'] * $cpt_final[3]['unit'], 2, ' ', ''),	//Charges 4
-					'bill_Box24F5' 				=> number_format($cpt_final[4]['cpt_charge'] * $cpt_final[4]['unit'], 2, ' ', ''),	//Charges 5
-					'bill_Box24F6' 				=> number_format($cpt_final[5]['cpt_charge'] * $cpt_final[5]['unit'], 2, ' ', ''),	//Charges 6
-					'bill_Box24G1'				=> $cpt_final[0]['unit'],	//Units 1
-					'bill_Box24G2'				=> $cpt_final[1]['unit'],	//Units 2
-					'bill_Box24G3'				=> $cpt_final[2]['unit'],	//Units 3
-					'bill_Box24G4'				=> $cpt_final[3]['unit'],	//Units 4
-					'bill_Box24G5'				=> $cpt_final[4]['unit'],	//Units 5
-					'bill_Box24G6'				=> $cpt_final[5]['unit'],	//Units 6
-					'bill_Box24J1' 				=> $cpt_final[0]['npi'],	//NPI 1
-					'bill_Box24J2' 				=> $cpt_final[1]['npi'],	//NPI 2
-					'bill_Box24J3' 				=> $cpt_final[2]['npi'],	//NPI 3
-					'bill_Box24J4' 				=> $cpt_final[3]['npi'],	//NPI 4
-					'bill_Box24J5' 				=> $cpt_final[4]['npi'],	//NPI 5
-					'bill_Box24J6' 				=> $cpt_final[5]['npi'],	//NPI 6
-					'bill_Box25' 				=> $bill_Box25,		//Clinic Tax ID
-					'bill_Box26' 				=> $bill_Box26,		//pid
-					'bill_Box27'				=> $bill_Box27,		//Accept Assignment
-					'bill_Box27P'				=> $bill_Box27P,	//Accept Assignment
-					'bill_Box28' 				=> $bill_Box28,		//Total Charges
-					'bill_Box29'				=> $bill_Box29,
-					'bill_Box30'				=> $bill_Box30,
-					'bill_Box31'				=> $bill_Box31,
-					'bill_Box32A' 				=> $bill_Box32A,	//Clinic Name
-					'bill_Box32B' 				=> $bill_Box32B,	//Clinic Address 1
-					'bill_Box32C'				=> $bill_Box32C,	//Clinic Address 2
-					'bill_Box32D' 				=> $bill_Box32D,	//Clinic NPI use for 33E too
-					'bill_Box33A' 				=> $bill_Box33A,	//Clinic Phone
-					'bill_Box33B'				=> $bill_Box33B,
-					'bill_Box33C'				=> $bill_Box33C,	//Billing Address 1
-					'bill_Box33D'				=> $bill_Box33D,	//Billing Address 2
-					'bill_Box33E'				=> $bill_Box32D
-				);
-				DB::table('billing')->insert($data4);
-				$this->audit('Add');
-			}
 		}
 		return 'Billing saved and waiting to be submitted!';
 	}

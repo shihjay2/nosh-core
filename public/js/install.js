@@ -10,7 +10,7 @@ $.ajaxSetup({
 $(document).ready(function() {
 	$("#phone").mask("(999) 999-9999");
 	$("#fax").mask("(999) 999-9999");
-	$("#documents_dir").val(noshdata.directory).change(function(){
+	$("#documents_dir").val(noshdata.documents).focusout(function(){
 		var a = encodeURIComponent($("#documents_dir").val());
 		$.ajax({
 			type: "POST",

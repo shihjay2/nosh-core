@@ -54,7 +54,7 @@ $(document).ready(function() {
 			}
 		});
 	});
-	$("#encounter_template").addOption({'standardmedical':'Standard Medical Visit','clinicalsupport':'Clinical Support Visit'}).tooltip();
+	$("#encounter_template").addOption({'standardmedical':'Standard Medical Visit','clinicalsupport':'Clinical Support Visit'}, false).tooltip();
 	$("#encounter_location").val(noshdata.default_pos);
 	$("#encounter_date").mask("99/99/9999").datepicker();
 	$("#encounter_time").timepicker({
@@ -66,7 +66,7 @@ $(document).ready(function() {
 		var a = $(this).val();
 		if (a != "") {
 			$("#encounter_type").removeOption(/./);
-			$("#encounter_type").addOption({'':'Choose appointment to associate encounter!'});
+			$("#encounter_type").addOption({'':'Choose appointment to associate encounter!'}, false);
 			$.ajax({
 				type: "POST",
 				url: "ajaxsearch/get-appointments/" + a,
@@ -109,7 +109,7 @@ $(document).ready(function() {
 				}
 			});
 			$("#encounter_provider").removeOption(/./);
-			$("#encounter_provider").addOption({'':'Choose Provider'});
+			$("#encounter_provider").addOption({'':'Choose Provider'}, false);
 			$.ajax({
 				type: "POST",
 				url: "ajaxsearch/provider-select",
@@ -234,7 +234,7 @@ $(document).ready(function() {
 		$("#encounter_date").val(currentDate);
 		$("#encounter_time").val(currentTime);
 		$("#encounter_type").removeOption(/./);
-		$("#encounter_type").addOption({'':'Choose appointment to associate encounter!'});
+		$("#encounter_type").addOption({'':'Choose appointment to associate encounter!'}, false);
 		if (noshdata.group_id == '2') {
 			$(".new_encounter_dialog_encounter_provider_div").hide();
 		} else {
@@ -972,7 +972,9 @@ $(document).ready(function() {
 							success: function(data){
 								$.jGrowl(data);
 								reload_grid("encounters");
-								closeencounter();
+								if (data == 'Encounter Signed!') {
+									closeencounter();
+								}
 							}
 						});
 					} else {
@@ -986,11 +988,13 @@ $(document).ready(function() {
 		if(confirm('Are you sure you want to delete this encounter?')){ 
 			$.ajax({
 				type: "POST",
-				url: "ajaxencounter/delete-encounter/",
+				url: "ajaxencounter/delete-encounter",
 				data: "eid=" + noshdata.eid,
 				success: function(data){
 					$.jGrowl(data);
-					closeencounter();
+					if (data == 'Encounter deleted!') {
+						closeencounter();
+					}
 				}
 			});
 		}

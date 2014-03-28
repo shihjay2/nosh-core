@@ -30,8 +30,8 @@ $(document).ready(function() {
 			url: "ajaxencounter/ros-template-select-list/" + type,
 			dataType: "json",
 			success: function(data){
-				$('#'+type+'_template').addOption({"":"*Select a template"});
-				$('#'+type+'_template').addOption(data.options);
+				$('#'+type+'_template').addOption({"":"*Select a template"}, false);
+				$('#'+type+'_template').addOption(data.options, false);
 				$('#'+type+'_template').sortOptions();
 				$('#'+type+'_template').val("");
 				if ($('#'+type+'_form').html() == '') {

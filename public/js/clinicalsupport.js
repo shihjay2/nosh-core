@@ -1,6 +1,9 @@
 $(document).ready(function() {
 	loadbuttons();
-	setInterval(hpi_autosave, 10000);
+	setInterval(hpi_autosave('situation'), 10000);
+	if(noshdata.pending_orders_id != '') {
+		pending_order_load(noshdata.pending_orders_id);
+	}
 	$("#encounter_tabs").tabs({
 		beforeLoad: function(event, ui) {
 			//if ($(ui.panel).html()) {
@@ -19,7 +22,7 @@ $(document).ready(function() {
 			var id = $(ui.newTab).attr('id');
 			var isValid = true;
 			if (id != "encounter_tabs_situation") {
-				hpi_autosave();
+				hpi_autosave('situation');
 			}
 			if (id != "encounter_tabs_background") {
 				oh_autosave();
@@ -45,7 +48,7 @@ $(document).ready(function() {
 					dataType: "json",
 					success: function(data){
 						$("#oh_pmh_pf_template").removeOption(/./);
-						$('#oh_pmh_pf_template').addOption(data.options);
+						$('#oh_pmh_pf_template').addOption(data.options, false);
 						$('#oh_pmh_pf_template').sortOptions();
 						$('#oh_pmh_pf_template').val("");
 					}
@@ -56,7 +59,7 @@ $(document).ready(function() {
 					dataType: "json",
 					success: function(data){
 						$("#oh_psh_pf_template").removeOption(/./);
-						$('#oh_psh_pf_template').addOption(data.options);
+						$('#oh_psh_pf_template').addOption(data.options, false);
 						$('#oh_psh_pf_template').sortOptions();
 						$('#oh_psh_pf_template').val("");
 					}
@@ -67,7 +70,7 @@ $(document).ready(function() {
 					dataType: "json",
 					success: function(data){
 						$("#oh_fh_pf_template").removeOption(/./);
-						$('#oh_fh_pf_template').addOption(data.options);
+						$('#oh_fh_pf_template').addOption(data.options, false);
 						$('#oh_fh_pf_template').sortOptions();
 						$('#oh_fh_pf_template').val("");
 					}
@@ -78,7 +81,7 @@ $(document).ready(function() {
 					dataType: "json",
 					success: function(data){
 						$("#oh_sh_pf_template").removeOption(/./);
-						$('#oh_sh_pf_template').addOption(data.options);
+						$('#oh_sh_pf_template').addOption(data.options, false);
 						$('#oh_sh_pf_template').sortOptions();
 						$('#oh_sh_pf_template').val("");
 					}
@@ -109,8 +112,8 @@ $(document).ready(function() {
 		dataType: "json",
 		success: function(data){
 			if (data.response == true) {
-				$("#hpi").val(data.hpi);
-				$("#hpi_old").val(data.hpi1);
+				$("#situation").val(data.situation);
+				$("#situation_old").val(data.situation);
 			} else {
 				var age1 = noshdata.age;
 				var age = age1.replace("Years Old", "year-old ");
@@ -121,7 +124,7 @@ $(document).ready(function() {
 				age = age.replace("Year", 'year');
 				var gender = noshdata.gender;
 				var intro = age + gender + " here for the following concerns:";
-				$("#hpi").val(intro);
+				$("#situation").val(intro);
 			}
 		}
 	});
@@ -130,7 +133,7 @@ $(document).ready(function() {
 		url: "ajaxencounter/pf-template-select-list/HPI",
 		dataType: "json",
 		success: function(data){
-			$('#hpi_pf_template').addOption(data.options);
+			$('#hpi_pf_template').addOption(data.options, false);
 			$('#hpi_pf_template').sortOptions();
 			$('#hpi_pf_template').val("");
 		}
@@ -150,6 +153,11 @@ $(document).ready(function() {
 				$("#situation").val(b);
 			}
 		});
+	});
+	$("#situation_orders_pending").click(function(){
+		$("#process_pending_order").show();
+		$("#pending_create_encounter").hide();
+		$("#alerts_pending_dialog").dialog('open');
 	});
 	$('#situation_reset').click(function(){
 		$("#situation").val('');

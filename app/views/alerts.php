@@ -29,3 +29,16 @@
 		<div class="pure-control-group"><label for="alert_reason_not_complete">Reason:</label><input type="text" name="alert_reason_not_complete" id="alert_reason_not_complete" style="width:500px" class="text" required/></div>
 	</form>
 </div>
+<div id="alerts_pending_dialog" title="Pending Orders">
+	<input type="hidden" id="alerts_pending_origin"/>
+	<table id="alerts_pending" class="scroll" cellpadding="0" cellspacing="0"></table>
+	<div id="alerts_pending_pager" class="scroll" style="text-align:center;"></div><br>
+	<button type="button" id="process_pending_order" class="nosh_button_check">Process Order</button>
+	<button type="button" id="pending_create_encounter" class="nosh_button_check">Create Encounter from Order</button><br><br>
+	<table id="past_orders_lab" class="scroll" cellpadding="0" cellspacing="0"></table>
+	<div id="past_orders_lab_pager" class="scroll" style="text-align:center;"></div><br>
+	<table id="past_orders_rad" class="scroll" cellpadding="0" cellspacing="0"></table>
+	<div id="past_orders_rad_pager" class="scroll" style="text-align:center;"></div><br>
+	<table id="past_orders_cp" class="scroll" cellpadding="0" cellspacing="0"></table>
+	<div id="past_orders_cp_pager" class="scroll" style="text-align:center;"></div>
+</div>

@@ -73,15 +73,15 @@ $(document).ready(function() {
 	});
 	$("#print_chart").click(function() {
 		var currentDate = getCurrentDate();
-		$('#hippa_date_release1').val(currentDate);
+		$('#hippa_date_release').val(currentDate);
 		$("#print_chart_dialog").dialog('open');
-		$('#hippa_reason1').focus();
+		$('#hippa_reason').focus();
 	});
 	$("#new_records_release").click(function() {
 		var currentDate = getCurrentDate();
-		$('#hippa_date_release1').val(currentDate);
+		$('#hippa_date_release').val(currentDate);
 		$("#print_chart_dialog").dialog('open');
-		$('#hippa_reason1').focus();
+		$('#hippa_reason').focus();
 	});
 	$("#edit_records_release").click(function() {
 		var item = jQuery("#records_release").getGridParam('selrow');
@@ -126,6 +126,7 @@ $(document).ready(function() {
 				},
 				minLength: 3
 			});
+			$("#hippa_reason").focus();
 		},
 		buttons: {
 			'Continue': function() {
@@ -967,9 +968,9 @@ $(document).ready(function() {
 				});
 				var date = $('#hippa_date_release1').val();
 				var edit_date = editDate1(date);
-				$('#hippa_date_release1').val(edit_date);
+				$('#hippa_date_release').val(edit_date);
 				$("#print_chart_dialog").dialog('open');
-				$('#hippa_reason1').focus();
+				$('#hippa_reason').focus();
 			}
 		});
 	});

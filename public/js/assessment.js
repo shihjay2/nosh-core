@@ -51,6 +51,26 @@ $(document).ready(function() {
 					$("#assessment_icd8_div").html(label8);
 					$("#assessment_icd8_div_button").show('fast');
 				}
+				if(data.assessment_9.length!=0){
+					var label9 = '<strong>Diagnosis #9:</strong> ' + data.assessment_9;
+					$("#assessment_icd9_div").html(label9);
+					$("#assessment_icd9_div_button").show('fast');
+				}
+				if(data.assessment_10.length!=0){
+					var label10 = '<strong>Diagnosis #10:</strong> ' + data.assessment_10;
+					$("#assessment_icd10_div").html(label10);
+					$("#assessment_icd10_div_button").show('fast');
+				}
+				if(data.assessment_11.length!=0){
+					var label11 = '<strong>Diagnosis #11:</strong> ' + data.assessment_11;
+					$("#assessment_icd11_div").html(label11);
+					$("#assessment_icd11_div_button").show('fast');
+				}
+				if(data.assessment_12.length!=0){
+					var label12 = '<strong>Diagnosis #12:</strong> ' + data.assessment_12;
+					$("#assessment_icd12_div").html(label12);
+					$("#assessment_icd12_div_button").show('fast');
+				}
 			}
 		}
 	});
@@ -105,7 +125,7 @@ $(document).ready(function() {
 			$("#assessment_buttons").hide();
 		}
 	});
-	$("#assessment_select_icd_9").click(function(){
+	$("#assessment_select_icd_13").click(function(){
 		var issue = $("#assessment_icd_search").val();
 		var old = $("#assessment_other").val();
 		if(old){
@@ -128,7 +148,7 @@ $(document).ready(function() {
 		$("#assessment_icd_search").val('');
 		$("#assessment_buttons").hide();
 	});
-	$("#assessment_select_icd_10").click(function(){
+	$("#assessment_select_icd_14").click(function(){
 		var issue = $("#assessment_icd_search").val();
 		var old = $("#assessment_ddx").val();
 		if(old){
