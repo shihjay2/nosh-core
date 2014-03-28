@@ -10,29 +10,6 @@ class AjaxInstallController extends BaseController {
 	{
 		set_time_limit(0);
 		ini_set('memory_limit','196M');
-		
-		// Configure database settings
-		$db_name = 'nosh';
-		$db_username = Input::get('db_username');
-		$db_password = Input::get('db_password');
-		$connect = mysqli_connect('localhost', $db_username, $db_password);
-		if ($connect) {
-			$database_filename = __DIR__."/../../.env.php";
-			$database_config['mysql_database'] = $db_name;
-			$database_config['mysql_username'] = $db_username;
-			$database_config['mysql_password'] = $db_password;
-			if (!mysqli_query($connect, "CREATE DATABASE " . $db_name)) {
-				echo 'Error creating database: ' . mysqli_error($connect);
-				exit (0);
-			}
-			mysqli_close($connect);
-			file_put_contents($database_filename, '<?php return ' . var_export($database_config, true) . ";\n");
-		} else {
-			echo "Incorrect username/password for your MySQL database.  Try again.";
-			exit (0);
-		}
-		//Session::put('install_progress', 10);
-		//Session::put('install_note', 'Database created...');
 		$smtp_user = Input::get('smtp_user');
 		$smtp_pass = Input::get('smtp_pass');
 		$username = Input::get('username');
@@ -47,13 +24,8 @@ class AjaxInstallController extends BaseController {
 		$phone = Input::get('phone');
 		$fax = Input::get('fax');
 		$documents_dir = Input::get('documents_dir');
-		
-		// Create database schema
-		Artisan::call('migrate:install');
-		Artisan::call('migrate');
-		Session::put('install_progress', 20);
-		Session::put('install_note', 'Database tables created...');
-		
+		Session::put('install_progress', 10);
+		Session::put('install_note', 'Installing database files...');
 		// Insert core database files
 		$template_sql_file = __DIR__."/../../import/templates.sql";
 		$template_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $template_sql_file;
@@ -61,7 +33,7 @@ class AjaxInstallController extends BaseController {
 		$orderslist1_sql_file = __DIR__."/../../import/orderslist1.sql";
 		$orderslist1_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $orderslist1_sql_file;
 		system($orderslist1_command);
-		Session::put('install_progress', 30);
+		Session::put('install_progress', 20);
 		Session::put('install_note', 'Templates installed...');
 		$meds_sql_file = __DIR__."/../../import/meds_full.sql";
 		$meds_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $meds_sql_file;
@@ -72,17 +44,17 @@ class AjaxInstallController extends BaseController {
 		$supplements_file = __DIR__."/../../import/supplements_list.sql";
 		$supplements_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $supplements_file;
 		system($supplements_command);
-		Session::put('install_progress', 40);
+		Session::put('install_progress', 30);
 		Session::put('install_note', 'Medications and supplements installed...');
 		$icd_file = __DIR__."/../../import/icd9.sql";
 		$icd_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $icd_file;
 		system($icd_command);
-		Session::put('install_progress', 50);
+		Session::put('install_progress', 40);
 		Session::put('install_note', 'ICD codes installed...');
 		$cpt_file = __DIR__."/../../import/cpt.sql";
 		$cpt_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $cpt_file;
 		system($cpt_command);
-		Session::put('install_progress', 60);
+		Session::put('install_progress', 50);
 		Session::put('install_note', 'CPT codes installed...');
 		$cvx_file = __DIR__."/../../import/cvx.sql";
 		$cvx_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $cvx_file;
@@ -90,7 +62,7 @@ class AjaxInstallController extends BaseController {
 		$gc_file = __DIR__."/../../import/gc.sql";
 		$gc_command = "mysql -u " . $db_username. " -p". $db_password . " " . $db_name. " < " . $gc_file;
 		system($gc_command);
-		Session::put('install_progress', 70);
+		Session::put('install_progress', 60);
 		Session::put('install_note', 'Growth charts installed...');
 		$role_csv = __DIR__."/../../import/familyrole.csv";
 		if (($role_handle = fopen($role_csv, "r")) !== FALSE) {
@@ -147,7 +119,7 @@ class AjaxInstallController extends BaseController {
 			}
 			fclose($pos_csv);
 		}
-		Session::put('install_progress', 80);
+		Session::put('install_progress', 70);
 		Session::put('install_note', 'NPI, CVX, language, and POS codes installed...');
 		
 		// Insert Administrator
@@ -181,6 +153,8 @@ class AjaxInstallController extends BaseController {
 			'active' => 'Y'
 		);
 		DB::table('practiceinfo')->insert($data2);
+		Session::put('install_progress', 80);
+		Session::put('install_note', 'Practice information saved...');
 		
 		// Clean up documents directory string
 		$check_string = substr($documents_dir, -1);

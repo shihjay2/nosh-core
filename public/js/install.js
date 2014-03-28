@@ -78,7 +78,10 @@ $(document).ready(function() {
 			dataType: "json",
 			success: function(data){
 				$("#install_progressbar").progressbar("option","value", parseInt(data.install_progress));
-				$("#install_progress_div").append("<br>" + data.install_note);
+				if ($("#progress_input").val() != data.install_note) {
+					$("#install_progress_div").append("<br>" + data.install_note);
+					$("#progress_input").val(data.install_note);
+				}
 				if (data.install_progress < 99) {
 					setTimeout(install_progress, 1000);
 				}

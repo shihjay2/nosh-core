@@ -11,7 +11,7 @@
 |
 */
 
-Route::any('/', array('as' => 'home', 'before' => 'needinstall|installfix|update|auth', 'uses' => 'HomeController@dashboard'));
+Route::any('/', array('as' => 'home', 'before' => 'installfix|needinstall|update|auth', 'uses' => 'HomeController@dashboard'));
 Route::any('login', array('as' => 'login', 'uses' => 'LoginController@action'));
 Route::get('start/{practicehandle}', function($practicehandle = null)
 {
@@ -23,7 +23,7 @@ Route::get('start/{practicehandle}', function($practicehandle = null)
 	}
 	return Redirect::to('/');
 });
-Route::get('install', array('as' => 'install', 'before' => 'noinstall|installfix', 'uses' => 'InstallController@view'));
+Route::get('install', array('as' => 'install', 'before' => 'installfix|noinstall', 'uses' => 'InstallController@view'));
 Route::get('install_fix', array('as' => 'install_fix', 'uses' => 'InstallController@install_fix'));
 Route::get('codeigniter_migrate', array('as' => 'codeigniter_migrate', 'uses' => 'AjaxInstallController@codeigniter_migrate'));
 Route::get('update', array('as' => 'update', 'uses' => 'AjaxInstallController@update'));
@@ -145,38 +145,17 @@ Route::get('backup', array('as' => 'backup', 'uses' => 'BackupController@backup'
 Route::post('backuprestore', array('as' => 'backuprestore', 'uses' => 'BackupController@restore'));
 Route::filter('needinstall', function()
 {
-	$config_file = __DIR__."/../.env.php";
-	$codeigniter = __DIR__."/../.codeigniter.php";
-	if (!file_exists($config_file)) {
-		if (file_exists($codeigniter)) {
-			return Redirect::to('codeigniter_migrate');
-		} else {
-			return Redirect::to('install');
-		}
-	} else {
-		$config = require($config_file);
-		$connect = mysqli_connect('localhost', $config['mysql_username'], $config['mysql_password']);
-		$db = mysqli_select_db($connect, $config['mysql_database']);
-		if (!$db) {
-			mysqli_close($connect);
-			return Redirect::to('install');
-		}
-		mysqli_close($connect);
+	$query = Practiceinfo::find('1');
+	if ($query == false) {
+		return Redirect::to('install');
 	}
 });
 
 Route::filter('noinstall', function()
 {
-	$config_file = __DIR__."/../.env.php";
-	if (file_exists($config_file)) {
-		$config = require($config_file);
-		$connect = mysqli_connect('localhost', $config['mysql_username'], $config['mysql_password']);
-		$db = mysqli_select_db($connect, $config['mysql_database']);
-		if ($db) {
-			mysqli_close($connect);
-			return Redirect::to('/');
-		}
-		mysqli_close($connect);
+	$query = Practiceinfo::find('1');
+	if ($query) {
+		return Redirect::to('/');
 	}
 });
 

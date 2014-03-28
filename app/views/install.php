@@ -1,10 +1,10 @@
 <div id="logo">Nosh</div><br>
 <div id="mainborder_full" class="ui-corner-all ui-tabs ui-widget ui-widget-content">
 	<div id="installcontent">
+		<input type="hidden" id="progress_input"/>
 		<h3>Welcome to the NOSH ChartingSystem Installation</h3>
 		<form id="install" class="pure-form pure-form-aligned">
 			<p style="font-size:13px;">Please fill out the entries to complete the installation of NOSH ChartingSystem.</p>
-			<p style="font-size:13px;">This database tables will be installed onto the MYSQL database 'nosh'.</p>
 			<p style="font-size:13px;">You will need to establish a Google Gmail account to be able to send e-mail from the system for patient appointment reminders, non-Protected Health Information messages, and faxes.</p>
 			<br><br><div style="width: 50%;margin: 0 auto;">
 				<div class="pure-control-group">
@@ -57,15 +57,7 @@
 				</div>
 				<div class="pure-control-group">
 					<?php echo Form::label('documents_dir', 'System Directory for Patient Documents:');?>
-					<?php echo Form::text('documents_dir','',array('id'=>'documents_dir','required','style'=>'width:500px','class'=>'text', 'title'=>'Format: /directory/subdirectory/subdirectory/'));?>
-				</div>
-				<div class="pure-control-group">
-					<?php echo Form::label('db_username', 'MySQL Username:');?>
-					<?php echo Form::text('db_username','',array('id'=>'db_username','required','style'=>'width:500px','class'=>'text'));?>
-				</div>
-				<div class="pure-control-group">
-					<?php echo Form::label('db_password', 'MySQL Password:');?>
-					<?php echo Form::password('db_password', array('id'=>'db_password','required','style'=>'width:500px','class'=>'text'));?>
+					<?php echo Form::text('documents_dir','',array('id'=>'documents_dir','required','style'=>'width:500px','class'=>'text', 'title'=>'Format: /directory/subdirectory/subdirectory/', 'disabled'));?>
 				</div>
 				<div class="pure-control-group">
 					<?php echo Form::label('smtp_user', 'Gmail Username for Sending E-mail:');?>
