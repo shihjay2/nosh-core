@@ -71,6 +71,7 @@
 				<button type='button' id='install_submit'>Install NOSH ChartingSystem</button>
 			</div>
 		</form>
+		<br><br><br>
 		<div id="install_progress_div" style="display:none;">
 			<div id="install_progressbar" style="width:600px";>
 				<div id="install_progressbar_label">Loading...</div>

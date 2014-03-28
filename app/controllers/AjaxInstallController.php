@@ -24,49 +24,9 @@ class AjaxInstallController extends BaseController {
 		$phone = Input::get('phone');
 		$fax = Input::get('fax');
 		$documents_dir = Input::get('documents_dir');
-		Session::put('install_progress', 10);
-		Session::put('install_note', 'Installing database files...');
-		$db_username = $_ENV['mysql_username'];
-		$db_password = $_ENV['mysql_password'];
-		$db_name = $_ENV['mysql_database'];
-		// Insert core database files
-		$template_sql_file = __DIR__."/../../import/templates.sql";
-		$template_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $template_sql_file;
-		system($template_command);
-		$orderslist1_sql_file = __DIR__."/../../import/orderslist1.sql";
-		$orderslist1_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $orderslist1_sql_file;
-		system($orderslist1_command);
 		Session::put('install_progress', 20);
-		Session::put('install_note', 'Templates installed...');
-		$meds_sql_file = __DIR__."/../../import/meds_full.sql";
-		$meds_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $meds_sql_file;
-		system($meds_command);
-		$meds1_sql_file = __DIR__."/../../import/meds_full_package.sql";
-		$meds1_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $meds1_sql_file;
-		system($meds1_command);
-		$supplements_file = __DIR__."/../../import/supplements_list.sql";
-		$supplements_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $supplements_file;
-		system($supplements_command);
-		Session::put('install_progress', 30);
-		Session::put('install_note', 'Medications and supplements installed...');
-		$icd_file = __DIR__."/../../import/icd9.sql";
-		$icd_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $icd_file;
-		system($icd_command);
-		Session::put('install_progress', 40);
-		Session::put('install_note', 'ICD codes installed...');
-		$cpt_file = __DIR__."/../../import/cpt.sql";
-		$cpt_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $cpt_file;
-		system($cpt_command);
-		Session::put('install_progress', 50);
-		Session::put('install_note', 'CPT codes installed...');
-		$cvx_file = __DIR__."/../../import/cvx.sql";
-		$cvx_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $cvx_file;
-		system($cvx_command);
-		$gc_file = __DIR__."/../../import/gc.sql";
-		$gc_command = "mysql -u " . $db_username. " -p". $db_password . " " . $db_name. " < " . $gc_file;
-		system($gc_command);
-		Session::put('install_progress', 60);
-		Session::put('install_note', 'Growth charts installed...');
+		Session::put('install_note', 'Installing database files...');
+		// Insert core database files
 		$role_csv = __DIR__."/../../import/familyrole.csv";
 		if (($role_handle = fopen($role_csv, "r")) !== FALSE) {
 			while (($role1 = fgetcsv($role_handle, 0, ",")) !== FALSE) {
@@ -122,7 +82,7 @@ class AjaxInstallController extends BaseController {
 			}
 			fclose($pos_handle);
 		}
-		Session::put('install_progress', 70);
+		Session::put('install_progress', 40);
 		Session::put('install_note', 'NPI, CVX, language, and POS codes installed...');
 		
 		// Insert Administrator
@@ -156,7 +116,7 @@ class AjaxInstallController extends BaseController {
 			'active' => 'Y'
 		);
 		DB::table('practiceinfo')->insert($data2);
-		Session::put('install_progress', 80);
+		Session::put('install_progress', 60);
 		Session::put('install_note', 'Practice information saved...');
 		
 		// Clean up documents directory string
@@ -441,7 +401,7 @@ class AjaxInstallController extends BaseController {
 			'user_id' => '0'
 		);
 		DB::table('orderslist')->update($orderslist_data);
-		Session::put('install_progress', 90);
+		Session::put('install_progress', 80);
 		Session::put('install_note', 'Default values installed...');
 		
 		// Insert templates
