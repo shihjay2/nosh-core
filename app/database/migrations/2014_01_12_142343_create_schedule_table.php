@@ -23,7 +23,7 @@ class CreateScheduleTable extends Migration {
 				$table->string('status', 100)->nullable();
 				$table->bigInteger('provider_id')->nullable();
 				$table->bigInteger('user_id')->nullable();
-				$table->timestamp('timestamp')->default("0000-00-00 00:00:00");
+				$table->timestamp('timestamp');
 			});
 		}
     }
