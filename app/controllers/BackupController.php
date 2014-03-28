@@ -42,7 +42,7 @@ class BackupController extends BaseController
 				}
 			}
 			$arr2 = array_reverse($arr);
-			foreach($arr2 as $sha)
+			foreach($arr2 as $sha) {
 				$result1 = $this->github_single($sha);
 				if (isset($result1['files'])) {
 					foreach($result1['files'] as $row1) {
