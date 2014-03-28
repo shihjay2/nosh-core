@@ -26,6 +26,9 @@ class AjaxInstallController extends BaseController {
 		$documents_dir = Input::get('documents_dir');
 		Session::put('install_progress', 10);
 		Session::put('install_note', 'Installing database files...');
+		$db_username = $_ENV['mysql_username'];
+		$db_password = $_ENV['mysql_password'];
+		$db_name = $_ENV['mysql_database'];
 		// Insert core database files
 		$template_sql_file = __DIR__."/../../import/templates.sql";
 		$template_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $template_sql_file;
@@ -76,7 +79,7 @@ class AjaxInstallController extends BaseController {
 					DB::table('guardian_roles')->insert($role_data);
 				}
 			}
-			fclose($role_csv);
+			fclose($role_handle);
 		}
 		$lang_csv = __DIR__."/../../import/lang.csv";
 		if (($lang_handle = fopen($lang_csv, "r")) !== FALSE) {
@@ -89,7 +92,7 @@ class AjaxInstallController extends BaseController {
 					DB::table('lang')->insert($lang_data);
 				}
 			}
-			fclose($lang_csv);
+			fclose($lang_handle);
 		}
 		$npi_csv = __DIR__."/../../import/npi_taxonomy.csv";
 		if (($npi_handle = fopen($npi_csv, "r")) !== FALSE) {
@@ -104,7 +107,7 @@ class AjaxInstallController extends BaseController {
 					DB::table('npi')->insert($npi_data);
 				}
 			}
-			fclose($npi_csv);
+			fclose($npi_handle);
 		}
 		$pos_csv = __DIR__."/../../import/pos.csv";
 		if (($pos_handle = fopen($pos_csv, "r")) !== FALSE) {
@@ -117,7 +120,7 @@ class AjaxInstallController extends BaseController {
 					DB::table('pos')->insert($pos_data);
 				}
 			}
-			fclose($pos_csv);
+			fclose($pos_handle);
 		}
 		Session::put('install_progress', 70);
 		Session::put('install_note', 'NPI, CVX, language, and POS codes installed...');
