@@ -1,8 +1,9 @@
 <?php
+$driver = 'file';
 if (isset($_ENV['mysql_database'])) {
-	$driver = 'database';
-} else {
-	$driver = 'file';
+	if(Schema::hasTable('sessions')) {
+		$driver = 'database';
+	}
 }
 return array(
 
