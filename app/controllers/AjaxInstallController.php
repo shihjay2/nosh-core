@@ -21,18 +21,18 @@ class AjaxInstallController extends BaseController {
 			$database_config['mysql_database'] = $db_name;
 			$database_config['mysql_username'] = $db_username;
 			$database_config['mysql_password'] = $db_password;
-			file_put_contents($database_filename, '<?php return ' . var_export($database_config, true) . ";\n");
 			if (!mysqli_query($connect, "CREATE DATABASE " . $db_name)) {
 				echo 'Error creating database: ' . mysqli_error($connect);
 				exit (0);
 			}
 			mysqli_close($connect);
+			file_put_contents($database_filename, '<?php return ' . var_export($database_config, true) . ";\n");
 		} else {
 			echo "Incorrect username/password for your MySQL database.  Try again.";
 			exit (0);
 		}
-		Session::put('install_progress', 10);
-		Session::put('install_note', 'Database created...');
+		//Session::put('install_progress', 10);
+		//Session::put('install_note', 'Database created...');
 		$smtp_user = Input::get('smtp_user');
 		$smtp_pass = Input::get('smtp_pass');
 		$username = Input::get('username');
