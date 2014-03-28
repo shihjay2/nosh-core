@@ -13,7 +13,6 @@ class CreateCurrsimplerefsetfTable extends Migration {
     {
         if(!Schema::hasTable('curr_simplerefset_f')) {
 			Schema::create('curr_simplerefset_f', function($table) {
-				$table->increments('id');
 				$table->string('id', 36)->index();
 				$table->char('effectivetime', 8)->index();
 				$table->char('active', 1)->index();
