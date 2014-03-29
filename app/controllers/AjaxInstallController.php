@@ -471,6 +471,87 @@ class AjaxInstallController extends BaseController {
 			);
 			DB::table('templates')->insert($template_data);
 		}
+		$orderslist1_array = array();
+		$orderslist1_array[] = array(
+			'orders_code' => '11550',
+			'aoe_code' => 'CHM1^FASTING STATE:',
+			'aoe_field' => 'aoe_fasting_code'
+		);
+		$orderslist1_array[] = array(
+			'orders_code' => '12500',
+			'aoe_code' => 'CHM1^FASTING STATE:',
+			'aoe_field' => 'aoe_fasting_code'
+		);
+		$orderslist1_array[] = array(
+			'orders_code' => '24080',
+			'aoe_code' => 'MIC1^SOURCE:',
+			'aoe_field' => 'aoe_source_code'
+		);
+		$orderslist1_array[] = array(
+			'orders_code' => '30000',
+			'aoe_code' => 'CHM1^FASTING STATE:',
+			'aoe_field' => 'aoe_fasting_code'
+		);
+		$orderslist1_array[] = array(
+			'orders_code' => '30740',
+			'aoe_code' => 'CHM1^FASTING STATE:',
+			'aoe_field' => 'aoe_fasting_code'
+		);
+		$orderslist1_array[] = array(
+			'orders_code' => '30820',
+			'aoe_code' => 'GLUFAST^HOURS FASTING:',
+			'aoe_field' => 'aoe_fasting_hours_code'
+		);
+		$orderslist1_array[] = array(
+			'orders_code' => '31300',
+			'aoe_code' => 'CHM1^FASTING STATE:',
+			'aoe_field' => 'aoe_fasting_code'
+		);
+		$orderslist1_array[] = array(
+			'orders_code' => '33320',
+			'aoe_code' => 'TDM1^LAST DOSE DATE:;TDM2^LAST DOSE TIME:',
+			'aoe_field' => 'aoe_dose_date_code;aoe_dose_time_code'
+		);
+		$orderslist1_array[] = array(
+			'orders_code' => '43540',
+			'aoe_code' => 'CHM1^FASTING STATE:',
+			'aoe_field' => 'aoe_fasting_code'
+		);
+		$orderslist1_array[] = array(
+			'orders_code' => '43542',
+			'aoe_code' => 'CHM1^FASTING STATE:',
+			'aoe_field' => 'aoe_fasting_code'
+		);
+		$orderslist1_array[] = array(
+			'orders_code' => '43546',
+			'aoe_code' => 'CHM1^FASTING STATE:',
+			'aoe_field' => 'aoe_fasting_code'
+		);
+		$orderslist1_array[] = array(
+			'orders_code' => '60109',
+			'aoe_code' => 'BFL1^SOURCE:',
+			'aoe_field' => 'aoe_source1_code'
+		);
+		$orderslist1_array[] = array(
+			'orders_code' => '61500',
+			'aoe_code' => 'MIC1^SOURCE:;MIC2^ADD. INFORMATION:',
+			'aoe_field' => 'aoe_source_code;aoe_additional_code'
+		);
+		$orderslist1_array[] = array(
+			'orders_code' => '68329',
+			'aoe_code' => 'MIC1^SOURCE:',
+			'aoe_field' => 'aoe_source_code'
+		);
+		foreach ($orderslist1_array as $row1) {
+			$orders_query = DB::table('orderslist1')->where('orders_code', '=', $row1['orders_code'])->get();
+			foreach ($orders_query as $row2) {
+				$orders_data = array(
+					'aoe_code' => $row1['aoe_code'],
+					'aoe_field' => $row1['aoe_field']
+				);
+				DB::table('orderslist1')->where('orderslist1_id', '=', $row2->orderslist1_id)->update($orders_data);
+			}
+		}
 		Auth::attempt(array('username' => $username, 'password' => $password, 'active' => '1', 'practice_id' => '1'));
 		Session::put('user_id', $user_id);
 		Session::put('group_id', '1');
@@ -599,7 +680,7 @@ class AjaxInstallController extends BaseController {
 			'aoe_field' => 'aoe_source_code'
 		);
 		foreach ($orderslist1_array as $row1) {
-			$order_query = DB::table('orderslist1')->where('orders_code', '=', $row1['orders_code'])->get();
+			$orders_query = DB::table('orderslist1')->where('orders_code', '=', $row1['orders_code'])->get();
 			foreach ($orders_query as $row2) {
 				$orders_data = array(
 					'aoe_code' => $row1['aoe_code'],
@@ -788,29 +869,5 @@ class AjaxInstallController extends BaseController {
 		}
 		// Update version
 		DB::table('practiceinfo')->update(array('version' => '1.8.0'));
-	}
-	
-	public function codeigniter_migrate()
-	{
-		$codeigniter = __DIR__."/../../.codeigniter.php";
-		if (file_exists($codeigniter)) {
-			include($codeigniter);
-			$db_name = 'nosh';
-			$db_username = $db['default']['username'];
-			$db_password = $db['default']['password'];
-			$connect = mysqli_connect('localhost', $db_username, $db_password);
-			if ($connect) {
-				$database_filename = __DIR__."/../../.env.php";
-				$database_config['mysql_database'] = $db_name;
-				$database_config['mysql_username'] = $db_username;
-				$database_config['mysql_password'] = $db_password;
-				file_put_contents($database_filename, '<?php return ' . var_export($database_config, true) . ";\n");
-				mysqli_close($connect);
-			} else {
-				echo "Incorrect username/password for your MySQL database.  Try again.";
-				exit (0);
-			}
-		}
-		return Redirect::to('/');
 	}
 }

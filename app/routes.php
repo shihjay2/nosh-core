@@ -25,7 +25,6 @@ Route::get('start/{practicehandle}', function($practicehandle = null)
 });
 Route::get('install', array('as' => 'install', 'before' => 'installfix|noinstall', 'uses' => 'InstallController@view'));
 Route::get('install_fix', array('as' => 'install_fix', 'uses' => 'InstallController@install_fix'));
-Route::get('codeigniter_migrate', array('as' => 'codeigniter_migrate', 'uses' => 'AjaxInstallController@codeigniter_migrate'));
 Route::get('update', array('as' => 'update', 'uses' => 'AjaxInstallController@update'));
 Route::get('update_system', array('as' => 'update_system', 'uses' => 'BackupController@update_system'));
 Route::get('set_version', array('as' => 'set_version', 'uses' => 'AjaxInstallController@set_version'));
