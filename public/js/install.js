@@ -53,40 +53,9 @@ $(document).ready(function() {
 						}
 					}
 				});
-				$("#install_progress_div").show();
-				$("#install_progressbar").progressbar("option", "value", 0);
-				setTimeout(install_progress, 1000);
 			} else {
 				$.jGrowl("Please complete the form");
 			}
 		}
 	});
-	$("#install_progressbar").progressbar({
-		value: false,
-		change: function() {
-			var value = $("#install_progressbar").progressbar("option", "value");
-			$("#install_progressbar_label").text(value + "%" );
-		},
-		complete: function() {
-			$("#install_progressbar_label").text( "Complete!" );
-		}
-	});
-	function install_progress() {
-		$.ajax({
-			type: "POST",
-			url: "ajaxinstall/install-progress",
-			dataType: "json",
-			success: function(data){
-				$("#install_progressbar").progressbar("option","value", parseInt(data.install_progress));
-				if ($("#progress_input").val() != data.install_note) {
-					$("#install_progress_div").append("<br>" + data.install_note);
-					$("#progress_input").val(data.install_note);
-				}
-				if (data.install_progress < 99) {
-					setTimeout(install_progress, 1000);
-				}
-			}
-		});
-	}
-	
 });

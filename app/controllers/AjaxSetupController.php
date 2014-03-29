@@ -1054,4 +1054,63 @@ class AjaxSetupController extends BaseController {
 		}
 		echo json_encode($response);
 	}
+	
+	public function spare()
+	{
+		$role_csv = __DIR__."/../../import/familyrole.csv";
+		if (($role_handle = fopen($role_csv, "r")) !== FALSE) {
+			while (($role1 = fgetcsv($role_handle, 0, ",")) !== FALSE) {
+				if ($role1[0] != '') {
+					$role_description = ucfirst($role1[1]);
+					$role_data = array (
+						'code' => $role1[0],
+						'description' => $role_description
+					);
+					DB::table('guardian_roles')->insert($role_data);
+				}
+			}
+			fclose($role_handle);
+		}
+		$lang_csv = __DIR__."/../../import/lang.csv";
+		if (($lang_handle = fopen($lang_csv, "r")) !== FALSE) {
+			while (($lang1 = fgetcsv($lang_handle, 0, "\t")) !== FALSE) {
+				if ($lang1[0] != '') {
+					$lang_data = array (
+						'code' => $lang1[0],
+						'description' => $lang1[6]
+					);
+					DB::table('lang')->insert($lang_data);
+				}
+			}
+			fclose($lang_handle);
+		}
+		$npi_csv = __DIR__."/../../import/npi_taxonomy.csv";
+		if (($npi_handle = fopen($npi_csv, "r")) !== FALSE) {
+			while (($npi1 = fgetcsv($npi_handle, 0, ",", '"')) !== FALSE) {
+				if ($npi1[0] != '' || $npi1[0] != 'Code') {
+					$npi_data = array (
+						'code' => $npi1[0],
+						'type' => $npi1[1],
+						'classification' => $npi1[2],
+						'specialization' => $npi1[3]
+					);
+					DB::table('npi')->insert($npi_data);
+				}
+			}
+			fclose($npi_handle);
+		}
+		$pos_csv = __DIR__."/../../import/pos.csv";
+		if (($pos_handle = fopen($pos_csv, "r")) !== FALSE) {
+			while (($pos1 = fgetcsv($pos_handle, 0, ",")) !== FALSE) {
+				if ($pos1[0] != '') {
+					$pos_data = array (
+						'pos_id' => $pos1[0],
+						'pos_description' => $pos1[1]
+					);
+					DB::table('pos')->insert($pos_data);
+				}
+			}
+			fclose($pos_handle);
+		}
+	}
 }

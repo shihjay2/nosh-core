@@ -24,67 +24,6 @@ class AjaxInstallController extends BaseController {
 		$phone = Input::get('phone');
 		$fax = Input::get('fax');
 		$documents_dir = Input::get('documents_dir');
-		Session::put('install_progress', 20);
-		Session::put('install_note', 'Installing database files...');
-		// Insert core database files
-		$role_csv = __DIR__."/../../import/familyrole.csv";
-		if (($role_handle = fopen($role_csv, "r")) !== FALSE) {
-			while (($role1 = fgetcsv($role_handle, 0, ",")) !== FALSE) {
-				if ($role1[0] != '') {
-					$role_description = ucfirst($role1[1]);
-					$role_data = array (
-						'code' => $role1[0],
-						'description' => $role_description
-					);
-					DB::table('guardian_roles')->insert($role_data);
-				}
-			}
-			fclose($role_handle);
-		}
-		$lang_csv = __DIR__."/../../import/lang.csv";
-		if (($lang_handle = fopen($lang_csv, "r")) !== FALSE) {
-			while (($lang1 = fgetcsv($lang_handle, 0, "\t")) !== FALSE) {
-				if ($lang1[0] != '') {
-					$lang_data = array (
-						'code' => $lang1[0],
-						'description' => $lang1[6]
-					);
-					DB::table('lang')->insert($lang_data);
-				}
-			}
-			fclose($lang_handle);
-		}
-		$npi_csv = __DIR__."/../../import/npi_taxonomy.csv";
-		if (($npi_handle = fopen($npi_csv, "r")) !== FALSE) {
-			while (($npi1 = fgetcsv($npi_handle, 0, ",", '"')) !== FALSE) {
-				if ($npi1[0] != '' || $npi1[0] != 'Code') {
-					$npi_data = array (
-						'code' => $npi1[0],
-						'type' => $npi1[1],
-						'classification' => $npi1[2],
-						'specialization' => $npi1[3]
-					);
-					DB::table('npi')->insert($npi_data);
-				}
-			}
-			fclose($npi_handle);
-		}
-		$pos_csv = __DIR__."/../../import/pos.csv";
-		if (($pos_handle = fopen($pos_csv, "r")) !== FALSE) {
-			while (($pos1 = fgetcsv($pos_handle, 0, ",")) !== FALSE) {
-				if ($pos1[0] != '') {
-					$pos_data = array (
-						'pos_id' => $pos1[0],
-						'pos_description' => $pos1[1]
-					);
-					DB::table('pos')->insert($pos_data);
-				}
-			}
-			fclose($pos_handle);
-		}
-		Session::put('install_progress', 40);
-		Session::put('install_note', 'NPI, CVX, language, and POS codes installed...');
-		
 		// Insert Administrator
 		$data1 = array(
 			'username' => $username,
@@ -96,7 +35,6 @@ class AjaxInstallController extends BaseController {
 			'practice_id' => '1'
 		);
 		$user_id = DB::table('users')->insertGetId($data1);
-		
 		// Insert practice
 		$data2 = array(
 			'practice_name' => $practice_name,
@@ -116,15 +54,11 @@ class AjaxInstallController extends BaseController {
 			'active' => 'Y'
 		);
 		DB::table('practiceinfo')->insert($data2);
-		Session::put('install_progress', 60);
-		Session::put('install_note', 'Practice information saved...');
-		
 		// Clean up documents directory string
 		$check_string = substr($documents_dir, -1);
 		if ($check_string != '/') {
 			$documents_dir .= '/';
 		}
-		
 		// Insert groups
 		$data3 = array(
 			'id' => '1',
@@ -152,7 +86,6 @@ class AjaxInstallController extends BaseController {
 			'description' => 'Patient'
 		);
 		DB::table('groups')->insert(array($data3,$data4,$data5,$data6,$data7));
-		
 		// Insert default calendar class
 		$data8 = array(
 			'visit_type' => 'Closed',
@@ -161,7 +94,6 @@ class AjaxInstallController extends BaseController {
 			'practice_id' => '1'
 		);
 		DB::table('calendar')->insert($data8);
-		
 		// Insert default values for procedure template
 		$procedurelist_data_array = array();
 		$procedurelist_data_array[] = array(
@@ -200,8 +132,9 @@ class AjaxInstallController extends BaseController {
 			'procedure_complications' => 'None.',
 			'procedure_ebl' => 'Less than 5 mL.'
 		);
-		DB::table('procedurelist')->insert(array($procedurelist_data_array));
-		
+		foreach($procedurelist_data_array as $row1) {
+			DB::table('procedurelist')->insert($row1);
+		}
 		// Insert default values for orders template
 		$orderslist_data_array = array();
 		$orderslist_data_array[] = array(
@@ -396,14 +329,13 @@ class AjaxInstallController extends BaseController {
 			'orders_category' => 'Frequency',
 			'orders_description' => 'Three times a week'
 		);
-		DB::table('orderslist')->insert($orderslist_data_array);
+		foreach($orderslist_data_array as $row2) {
+			DB::table('orderslist')->insert($row2);
+		}
 		$orderslist_data = array(
 			'user_id' => '0'
 		);
 		DB::table('orderslist')->update($orderslist_data);
-		Session::put('install_progress', 80);
-		Session::put('install_note', 'Default values installed...');
-		
 		// Insert templates
 		$template_array = array();
 		$template_array[] = array(
@@ -543,17 +475,7 @@ class AjaxInstallController extends BaseController {
 		Session::put('user_id', $user_id);
 		Session::put('group_id', '1');
 		Session::put('practice_id', '1');
-		Session::put('install_progress', 100);
-		Session::put('install_note', 'Administrator user logged in and installation is complete.');
 		echo "OK";
-	}
-	
-	public function postInstallProgress()
-	{
-		$result = array();
-		$result['install_progress'] = Session::get('install_progress');
-		$result['install_note'] = Session::get('install_note');
-		echo json_encode($result);
 	}
 	
 	public function postDirectoryCheck()
