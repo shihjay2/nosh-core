@@ -827,6 +827,9 @@ class AjaxInstallController extends BaseController {
 				DB::table('encounters')->where('eid', '=', $encounter->eid)->update($data);
 			}
 		}
+		$db_name = $_ENV['mysql_database'];
+		$db_username = $_ENV['mysql_username'];
+		$db_password = $_ENV['mysql_password'];
 		DB::table('meds_full')->truncate();
 		$meds_sql_file = __DIR__."/../../import/meds_full.sql";
 		$meds_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $meds_sql_file;
