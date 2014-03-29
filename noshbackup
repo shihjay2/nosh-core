@@ -1,6 +1,6 @@
 #!/bin/sh
 wget --no-check-certificate -O - -q -t 1 localhost/nosh/backup
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR=$(dirname $0)
 cd $DIR
 composer update
 wget --no-check-certificate -O - -q -t 1 localhost/nosh/update_system
