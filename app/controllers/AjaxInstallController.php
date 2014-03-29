@@ -591,6 +591,7 @@ class AjaxInstallController extends BaseController {
 	{
 		$result = $this->github_all();
 		File::put(__DIR__."/../../.version", $result[0]['sha']);
+		return Redirect::to('/');
 	}
 	
 	public function update()
