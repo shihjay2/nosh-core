@@ -596,10 +596,6 @@ class AjaxInstallController extends BaseController {
 	
 	public function update()
 	{
-		if (!Schema::hasTable('migrations')) {
-			Artisan::call('migrate:install');
-		}
-		Artisan::call('migrate');
 		$practice = Practiceinfo::find(1);
 		if ($practice->version < "1.8.0") {
 			$this->update180();

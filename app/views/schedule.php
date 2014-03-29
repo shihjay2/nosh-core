@@ -48,7 +48,7 @@
 			<?php if (Session::get('group_id') != '100') {?>
 				<div class="pure-control-group"><label for="patient_search">Patient:</label><input type="text" name="patient_search" id="patient_search" style="width:400px" class="text" /></div>
 			<?php }?>
-			<div class="pure-control-group"><label for="visit_type">Visit Type:</label><select name="visit_type" id="visit_type" class="text"></select></div>
+			<div class="pure-control-group"><label for="schedule_visit_type">Visit Type:</label><select name="visit_type" id="schedule_visit_type" class="text"></select></div>
 		</div>
 		<div id="reason_form">
 			<div class="pure-control-group"><label for="reason">Reason:</label><textarea name="reason" id="reason" style="width:400px" rows="3" class="text"></textarea></div>

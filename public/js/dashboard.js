@@ -1,4 +1,30 @@
 $(document).ready(function() {
+	function colorlabel1 (cellvalue, options, rowObject) {
+		if(cellvalue=="colorred"){
+			return "Red";
+		}
+		if(cellvalue=="colororange"){
+			return "Orange";
+		}
+		if(cellvalue=="coloryellow"){
+			return "Yellow"; mi
+		}
+		if(cellvalue=="colorgreen"){
+			return "Green";
+		}
+		if(cellvalue=="colorblue"){
+			return "Blue";
+		}
+		if(cellvalue=="colorpurple"){
+			return "Purple";
+		}
+		if(cellvalue=="colorbrown"){
+			return "Brown"
+		}
+		if(cellvalue=="colorblack"){
+			return "Black"
+		}
+	}
 	$(".dashboard_draft").click(function(){
 		$("#draft_messages").jqGrid('GridUnload');
 		$("#draft_messages").jqGrid({
@@ -326,11 +352,6 @@ $(document).ready(function() {
 		autoOpen: false, 
 		height: 580, 
 		width: 800, 
-		modal: true,
-		overlay: {
-			backgroundColor: '#000',
-			opacity: 50
-		},
 		closeOnEscape: false,
 		dialogClass: "noclose",
 		open: function() {
@@ -379,6 +400,7 @@ $(document).ready(function() {
 					$("#preview_signature").html(data);
 				}
 			});
+			jQuery("#provider_visit_type_list").jqGrid('GridUnload');
 			jQuery("#provider_visit_type_list").jqGrid({
 				url:"ajaxdashboard/visit-type-list",
 				editurl:"ajaxdashboard/edit-visit-type-list",
@@ -389,7 +411,7 @@ $(document).ready(function() {
 					{name:'calendar_id',index:'calendar_id',width:1,hidden:true},
 					{name:'visit_type',index:'visit_type',width:300,editable:true,editrules:{required:true},formoptions:{elmsuffix:"(*)"}},
 					{name:'duration',index:'duration',width:1,hidden:true,editable:true,editrules:{edithidden:true, required:true},edittype:'select',editoptions:{value:"900:15 minutes;1200:20 minutes;1800:30 minutes;2400:40 minutes;2700:45 minutes;3600:60 minutes;4500:75 minutes;4800:80 minutes;5400:90 minutes;6000:100 minutes;6300:105 minutes;7200:120 minutes"},formoptions:{elmsuffix:"(*)"}},
-					{name:'classname',index:'classname',width:300,editable:true,edittype:'select',formatter:colorlabel,editoptions:{value:"colorred:Red;colororange:Orange;coloryellow:Yellow;colorgreen:Green;colorblue:Blue;colorpurple:Purple;colorbrown:Brown"},formoptions:{elmsuffix:"(*)"}}
+					{name:'classname',index:'classname',width:300,editable:true,edittype:'select',formatter:colorlabel1,editoptions:{value:"colorred:Red;colororange:Orange;coloryellow:Yellow;colorgreen:Green;colorblue:Blue;colorpurple:Purple;colorbrown:Brown"},formoptions:{elmsuffix:"(*)"}}
 				],
 				rowNum:10,
 				rowList:[10,20,30],

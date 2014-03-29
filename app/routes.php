@@ -173,6 +173,10 @@ Route::filter('installfix', function()
 
 Route::filter('update', function()
 {
+	if (!Schema::hasTable('migrations')) {
+		Artisan::call('migrate:install');
+	}
+	Artisan::call('migrate');
 	$current_version = "1.8.0";
 	$row = Practiceinfo::find(1);
 	// Check version number
@@ -265,9 +269,9 @@ Route::filter('acl5', function()
 	}
 });
 
-Route::get('test', array('as' => 'test', function()
-{
-	echo route('home');
-}));
+//Route::get('test', array('as' => 'test', function()
+//{
+	//echo route('home');
+//}));
 
-Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));
+//Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));

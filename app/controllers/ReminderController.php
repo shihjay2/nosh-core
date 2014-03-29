@@ -5,12 +5,12 @@ class ReminderController extends BaseController {
 	/**
 	* NOSH ChartingSystem Reminder System, to be run as a cron job
 	*/
-	public function test()
-	{
-		$calendar['provider_id'] = '0';
-		DB::table('calendar')->update($calendar);
-		echo 'OK';
-	}
+	//public function test()
+	//{
+		//$calendar['provider_id'] = '0';
+		//DB::table('calendar')->update($calendar);
+		//echo 'OK';
+	//}
 	
 	public function reminder()
 	{

@@ -81,7 +81,7 @@ $(document).ready(function() {
 							$("#start_date").val($.fullCalendar.formatDate(date, 'MM/dd/yyyy'));
 							$("#start_time").val($.fullCalendar.formatDate(date, 'hh:mmTT'));
 							$("#end").val('');
-							$("#visit_type").val('');
+							$("#schedule_visit_type").val('');
 							$("#end_row").show();
 							$("#title").val('');
 							$("#reason").val('');
@@ -101,9 +101,9 @@ $(document).ready(function() {
 							if (isOverlapping(date)) {
 								$.jGrowl('You cannot schedule an appointment in this time slot!');
 							} else {
-								$("#visit_type").focus();
+								$("#schedule_visit_type").focus();
 								$("#start").text($.fullCalendar.formatDate(date, 'dddd, MM/dd/yyyy, hh:mmTT'));
-								$("#visit_type").val('');
+								$("#schedule_visit_type").val('');
 								$("#reason").val('');
 								$("#delete_form").hide("fast");
 								$("#patient_appt").show();
@@ -132,7 +132,7 @@ $(document).ready(function() {
 					$("#start_time").val($.fullCalendar.formatDate(calEvent.start, 'hh:mmTT'));
 					$("#end").val($.fullCalendar.formatDate(calEvent.end, 'hh:mmTT'));
 					$("#schedule_title").val(calEvent.title);
-					$("#visit_type").val(calEvent.visit_type);
+					$("#schedule_visit_type").val(calEvent.visit_type);
 					if (calEvent.visit_type){
 						loadappt();
 						$("#patient_search").val(calEvent.title);
@@ -262,7 +262,7 @@ $(document).ready(function() {
 									var n =  $.cookie('nosh-schedule').split(",");
 									loadcalendar(n[0],n[1],n[2],n[3]);
 								}
-								$("#visit_type").removeOption(/./);
+								$("#schedule_visit_type").removeOption(/./);
 								$.ajax({
 									url: "ajaxsearch/visit-types/" + noshdata.user_id,
 									dataType: "json",
@@ -270,9 +270,9 @@ $(document).ready(function() {
 									async: false,
 									success: function(data){
 										if (data.response == 'true') {
-											$("#visit_type").addOption(data.message, false);
+											$("#schedule_visit_type").addOption(data.message, false);
 										} else {
-											$("#visit_type").addOption({"":"No visit types available."},false);
+											$("#schedule_visit_type").addOption({"":"No visit types available."},false);
 										}
 									}
 								});
@@ -321,7 +321,7 @@ $(document).ready(function() {
 					if (noshdata.group_id == '100') {
 						$("#schedule_patient_step").show();
 					}
-					$("#visit_type").removeOption(/./);
+					$("#schedule_visit_type").removeOption(/./);
 					$.ajax({
 						url: "ajaxsearch/visit-types/" + id,
 						dataType: "json",
@@ -329,9 +329,9 @@ $(document).ready(function() {
 						async: false,
 						success: function(data){
 							if (data.response == 'true') {
-								$("#visit_type").addOption(data.message, false);
+								$("#schedule_visit_type").addOption(data.message, false);
 							} else {
-								$("#visit_type").addOption({"":"No visit types available."},false);
+								$("#schedule_visit_type").addOption({"":"No visit types available."},false);
 							}
 						}
 					});
@@ -378,7 +378,7 @@ $(document).ready(function() {
 			class: 'nosh_button_save',
 			click: function() {
 				var end= $("#end").val();
-				var visit_type = $("#visit_type").val();
+				var visit_type = $("#schedule_visit_type").val();
 				var pid = $("#pid").val();
 				if (pid == '') {
 					var reason = $("#reason").val();
@@ -507,8 +507,8 @@ $(document).ready(function() {
 		'timeFormat': 'h:i A',
 		'step': noshdata.schedule_increment
 	});
-	$('#visit_type').change(function() {
-		var visit_type_select = $("#visit_type").val();
+	$('#schedule_visit_type').change(function() {
+		var visit_type_select = $("#schedule_visit_type").val();
 		if (visit_type_select != ''){
 			$("#end_row").hide();
 			$("#end").val('');
