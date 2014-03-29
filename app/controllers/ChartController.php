@@ -12,7 +12,7 @@ class ChartController extends BaseController {
 		} else {
 			$data['default_pos'] = '';
 		}
-		if ($row->weekends == 'yes') {
+		if ($row->weekends == '1') {
 			$data['weekends'] = 'true';
 		} else {
 			$data['weekends'] = 'false';

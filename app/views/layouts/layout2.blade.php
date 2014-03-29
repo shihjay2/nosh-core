@@ -97,6 +97,9 @@
 		{{ $script }}
 	</head>
 	<body>
+		<div id="dialog_load" title="">
+			<?php echo HTML::image('images/indicator.gif', 'Loading image', array('border' => '0')); ?>
+		</div>
 		<div id="options_load"></div>
 		<div id="allpage" class="allpage">
 			<div id="header" class="header ui-widget">

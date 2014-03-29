@@ -1,6 +1,6 @@
 <script type="text/javascript">
 	noshdata.pid = '<?php if (Session::get('pid')) {echo Session::get('pid');}?>';
-	noshdata.weekends = '<?php echo $weekends;?>';
+	noshdata.weekends = <?php echo $weekends;?>;
 	noshdata.minTime = '<?php echo $minTime;?>';
 	noshdata.maxTime = '<?php echo $maxTime;?>';
 	noshdata.schedule_increment = '<?php echo $schedule_increment;?>';
@@ -219,6 +219,14 @@
 				</div>
 			</form>
 			<br><button type="button" id="change_signature">Save signature</button>
+		</div>
+		<h3 class="provider_info_class3"><a href="#">Visit Types</a></h3>
+		<div class="provider_info_class3">
+			<table id="provider_visit_type_list" class="scroll" cellpadding="0" cellspacing="0"></table>
+			<div id="provider_visit_type_list_pager" class="scroll" style="text-align:center;"></div><br>
+			<button type="button" id="add_provider_visit_type" class="nosh_button_add">Add</button>
+			<button type="button" id="edit_provider_visit_type" class="nosh_button_edit">Edit</button>
+			<button type="button" id="delete_provider_visit_type" class="nosh_button_delete">Delete</button>
 		</div>
 	</div>
 </div>

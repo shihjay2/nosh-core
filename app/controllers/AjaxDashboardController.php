@@ -1157,7 +1157,7 @@ class AjaxDashboardController extends BaseController {
 		}
 	}
 	
-	public function edit_cpt_list()
+	public function postEditCptList()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
 			Auth::logout();
@@ -1165,46 +1165,33 @@ class AjaxDashboardController extends BaseController {
 			header("HTTP/1.1 404 Page Not Found", true, 404);
 			exit("You cannot do this.");
 		} else {
-			$data = array(
-				'cpt' => Input::get('cpt'),
-				'cpt_description' => Input::get('cpt_description'),
-			);
-			if (Input::get('cpt_id') != '') {
-				DB::table('cpt')->where('cpt_id', '=', Input::get('cpt_id'))->update($data);
-				$this->audit('Update');
-				$arr['message'] = "CPT code updated!";
-			} else {
-				DB::table('cpt')->insert($data);
-				$this->audit('Add');
-				$arr['message'] = "CPT code added!";
-			}
 			if (Input::get('cpt_charge') != '') {
 				$charge = str_replace("$", "", Input::get('cpt_charge'));
 				$pos = strpos($charge, ".");
 				if ($pos === FALSE) {
 					$charge .= ".00";
 				}
-				$data_relate = array(
-					'cpt' => Input::get('cpt'),
-					'cpt_description' => Input::get('cpt_description'),
-					'cpt_charge' => $charge,
-					'practice_id' => Session::get('practice_id'),
-					'favorite' => Input::get('favorite'),
-					'unit' => Input::get('unit')
-				);
-				if (Input::get('cpt_relate_id') != '') {
-					DB::table('cpt_relate')->where('cpt_relate_id', '=', Input::get('cpt_relate_id'))->update($data_relate);
-					$this->audit('Update');
-					$arr['message'] .= "  CPT charge updated!";
-				} else {
-					DB::table('cpt_relate')->insert($data_relate);
-					$this->audit('Add');
-					$arr['message'] .= "  CPT charge added!";
-				}
-				$arr['charge'] = $charge;
 			} else {
-				$arr['charge'] = '';
+				$charge = '';
 			}
+			$data_relate = array(
+				'cpt' => Input::get('cpt'),
+				'cpt_description' => Input::get('cpt_description'),
+				'cpt_charge' => $charge,
+				'practice_id' => Session::get('practice_id'),
+				'favorite' => Input::get('favorite'),
+				'unit' => Input::get('unit')
+			);
+			if (Input::get('cpt_relate_id') != '') {
+				DB::table('cpt_relate')->where('cpt_relate_id', '=', Input::get('cpt_relate_id'))->update($data_relate);
+				$this->audit('Update');
+				$arr['message'] = "  CPT updated!";
+			} else {
+				DB::table('cpt_relate')->insert($data_relate);
+				$this->audit('Add');
+				$arr['message'] = "  CPT added!";
+			}
+			$arr['charge'] = $charge;
 			echo json_encode($arr);
 		}
 	}
@@ -1866,6 +1853,94 @@ class AjaxDashboardController extends BaseController {
 			echo "Yes";
 		} else {
 			echo "No";
+		}
+	}
+	
+	public function postVisitTypeList()
+	{
+		if (Session::get('group_id') != '2') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$practice_id = Session::get('practice_id');
+			$page = Input::get('page');
+			$limit = Input::get('rows');
+			$sidx = Input::get('sidx');
+			$sord = Input::get('sord');
+			$query = DB::table('calendar')
+				->where('active', '=', 'y')
+				->where('practice_id', '=', $practice_id)
+				->where('provider_id', '=', Session::get('user_id'))
+				->get();
+			if($query) { 
+				$count = count($query);
+				$total_pages = ceil($count/$limit); 
+			} else { 
+				$count = 0;
+				$total_pages = 0;
+			}
+			if ($page > $total_pages) $page=$total_pages;
+			$start = $limit*$page - $limit;
+			if($start < 0) $start = 0;
+			$query1 = DB::table('calendar')
+				->where('active', '=', 'y')
+				->where('practice_id', '=', $practice_id)
+				->where('provider_id', '=', Session::get('user_id'))
+				->orderBy($sidx, $sord)
+				->skip($start)
+				->take($limit)
+				->get();
+			$response['page'] = $page;
+			$response['total'] = $total_pages;
+			$response['records'] = $count;
+			if ($query1) {
+				$response['rows'] = $query1;
+			} else {
+				$response['rows'] = '';
+			}
+			echo json_encode($response);
+		}
+	}
+	
+	public function postEditVisitTypeList()
+	{
+		if (Session::get('group_id') != '2') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$data = array(
+				'visit_type' => Input::get('visit_type'),
+				'duration' => Input::get('duration'),
+				'classname' => Input::get('classname'),
+				'active' => 'y',
+				'provider_id' => Session::get('user_id'),
+				'practice_id' => Session::get('practice_id')
+			);
+			$action = Input::get('oper');
+			if ($action == 'edit') {
+				DB::table('calendar')->insert($data);
+				$this->audit('Add');
+				$data1 = array(
+					'active' => 'n'
+				);
+				DB::table('calendar')->where('calendar_id', '=', Input::get('id'))->update($data1);
+				$this->audit('Update');
+			}
+			if ($action == 'add') {
+				DB::table('calendar')->insert($data);
+				$this->audit('Add');
+			}
+			if ($action == 'del') {
+				$data1 = array(
+					'active' => 'n'
+				);
+				DB::table('calendar')->where('calendar_id', '=', Input::get('id'))->update($data1);
+				$this->audit('Update');
+			}
 		}
 	}
 }

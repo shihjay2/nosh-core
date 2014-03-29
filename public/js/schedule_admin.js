@@ -49,6 +49,27 @@ $(document).ready(function() {
 			return 'Saturday';
 		}
 	}
+	function providerlabel(cellvalue, options, rowObject) {
+		var item = "";
+		if (cellvalue == '0') {
+			item = "All Providers";
+		} else {
+			$.ajax({
+				url: "ajaxsearch/provider-select1",
+				dataType: "json",
+				type: "POST",
+				async: false,
+				success: function(data){
+					$.each(data, function(key, value){
+						if (cellvalue == key) {
+							item = value;
+						}
+					});
+				}
+			});
+		}
+		return item;
+	}
 	$("#admin_schedule_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
@@ -123,12 +144,29 @@ $(document).ready(function() {
 				editurl:"ajaxsetup/edit-visit-type-list",
 				datatype: "json",
 				mtype: "POST",
-				colNames:['ID','Visit Type','Duration','Color'],
+				colNames:['ID','Visit Type','Provider','Duration','Color'],
 				colModel:[
 					{name:'calendar_id',index:'calendar_id',width:1,hidden:true},
-					{name:'visit_type',index:'repeat_day',width:300,editable:true,editrules:{required:true},formoptions:{elmsuffix:"(*)"}},
+					{name:'visit_type',index:'visit_type',width:300,editable:true,editrules:{required:true},formoptions:{elmsuffix:"(*)"}},
+					{name:'provider_id',index:'provider_id',width:200,editable:true,editrules:{edithidden:true, required:true},formatter:providerlabel,edittype:'select',
+						editoptions:{value: function(){
+							var list = "0:All Providers";
+							$.ajax({
+								url: "ajaxsearch/provider-select1",
+								dataType: "json",
+								type: "POST",
+								async: false,
+								success: function(data){
+									$.each(data, function(key, value){
+										list += ";" + key + ":" + value
+									});
+								}
+							});
+							return list;
+						}},
+						formoptions:{elmsuffix:"(*)"}},
 					{name:'duration',index:'duration',width:1,hidden:true,editable:true,editrules:{edithidden:true, required:true},edittype:'select',editoptions:{value:"900:15 minutes;1200:20 minutes;1800:30 minutes;2400:40 minutes;2700:45 minutes;3600:60 minutes;4500:75 minutes;4800:80 minutes;5400:90 minutes;6000:100 minutes;6300:105 minutes;7200:120 minutes"},formoptions:{elmsuffix:"(*)"}},
-					{name:'classname',index:'classname',width:300,editable:true,edittype:'select',formatter:colorlabel,editoptions:{value:"colorred:Red;colororange:Orange;coloryellow:Yellow;colorgreen:Green;colorblue:Blue;colorpurple:Purple;colorbrown:Brown"},formoptions:{elmsuffix:"(*)"}},
+					{name:'classname',index:'classname',width:300,editable:true,edittype:'select',formatter:colorlabel,editoptions:{value:"colorred:Red;colororange:Orange;coloryellow:Yellow;colorgreen:Green;colorblue:Blue;colorpurple:Purple;colorbrown:Brown"},formoptions:{elmsuffix:"(*)"}}
 				],
 				rowNum:10,
 				rowList:[10,20,30],
@@ -144,7 +182,7 @@ $(document).ready(function() {
 			$("#provider_list1").removeOption(/./);
 			$("#provider_grid").hide();
 			$.ajax({
-				url: "ajaxsearch/provider-select",
+				url: "ajaxsearch/provider-select1",
 				dataType: "json",
 				type: "POST",
 				success: function(data){
@@ -155,7 +193,7 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'top', of: '#maincontent' }
 	});
-	$("#weekends").addOption({"No":"No","Yes":"Yes"});
+	$("#weekends").addOption({"0":"No","1":"Yes"},false);
 	$("#dashboard_admin_schedule").click(function(){
 		$("#admin_schedule_dialog").dialog('open');
 	});
@@ -220,7 +258,6 @@ $(document).ready(function() {
 	$("#delete_visit_type").click(function(){
 		var item = jQuery("#visit_type_list").getGridParam('selrow');
 		if(item){ 
-			alert(item);
 			jQuery("#visit_type_list").delGridRow(item);
 			jQuery("#visit_type_list").delRowData(item);
 		} else {

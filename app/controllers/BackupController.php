@@ -57,8 +57,9 @@ class BackupController extends BaseController
 					}
 				}
 			}
+			Artisan::call('migrate');
 			File::put(__DIR__."/../../.version", $result[0]['sha']);
-			echo "System Updated with version " . $result[0]['sha'];
+			echo "System Updated with version " . $result[0]['sha'] . " from " . $current_version;
 		} else {
 			echo "No update needed";
 		}

@@ -36,10 +36,10 @@ Route::group(array('before' => 'csrf_header'), function() {
 	Route::controller('ajaxsearch', 'AjaxSearchController');
 	Route::controller('ajaxmessaging', 'AjaxMessagingController');
 	Route::controller('ajaxcommon', 'AjaxCommonController');
+	Route::controller('ajaxschedule', 'AjaxScheduleController');
 });
 Route::group(array('before' => 'csrf_header|session_check|acl1'), function() {
 	Route::controller('ajaxchart', 'AjaxChartController');
-	Route::controller('ajaxschedule', 'AjaxScheduleController');
 	Route::controller('ajaxfinancial', 'AjaxFinancialController');
 	Route::controller('ajaxoffice', 'AjaxOfficeController');
 });

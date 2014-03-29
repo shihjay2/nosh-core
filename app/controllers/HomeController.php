@@ -115,7 +115,7 @@ class HomeController extends BaseController {
 				$data['saas_admin'] = 'n';
 			}
 		}
-		if ($data['practiceinfo']->weekends == 'yes') {
+		if ($data['practiceinfo']->weekends == '1') {
 			$data['weekends'] = 'true';
 		} else {
 			$data['weekends'] = 'false';

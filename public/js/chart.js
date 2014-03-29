@@ -1,8 +1,4 @@
 $(document).ready(function() {
-	$('#dialog_load').dialog('option', 'title', "Loading chart...").dialog('open');
-	$(document).ajaxStop(function(){
-		$("#dialog_load").dialog("close");
-	});
 	function newencounter() {
 		var str = $("#new_encounter_form").serialize();
 		if(str){
@@ -112,7 +108,7 @@ $(document).ready(function() {
 			$("#encounter_provider").addOption({'':'Choose Provider'}, false);
 			$.ajax({
 				type: "POST",
-				url: "ajaxsearch/provider-select",
+				url: "ajaxsearch/provider-select1",
 				dataType: "json",
 				success: function(data){
 					$("#encounter_provider").addOption(data,false);

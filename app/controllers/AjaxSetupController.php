@@ -483,7 +483,7 @@ class AjaxSetupController extends BaseController {
 	public function postScheduleSetup1()
 	{
 		$data = array(
-			'weekends' => Input::get('weedends'),
+			'weekends' => Input::get('weekends'),
 			'minTime' => Input::get('minTime'),
 			'maxTime' => Input::get('maxTime'),
 			'sun_o' => Input::get('sun_o'),
@@ -552,6 +552,7 @@ class AjaxSetupController extends BaseController {
 			'duration' => Input::get('duration'),
 			'classname' => Input::get('classname'),
 			'active' => 'y',
+			'provider_id' => Input::get('provider_id'),
 			'practice_id' => Session::get('practice_id')
 		);
 		$action = Input::get('oper');

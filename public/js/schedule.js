@@ -21,6 +21,22 @@ $(document).ready(function() {
 		}
 		return false;
 	}
+	function loadappt() {
+		$("#patient_appt").show();
+		$("#start_form").show();
+		$("#reason_form").show();
+		$("#other_event").hide();
+		$("#event_choose").hide();
+		$("#patient_search").focus();
+	}
+	function loadevent() {
+		$("#patient_appt").hide();
+		$("#other_event").show();
+		$("#start_form").show();
+		$("#reason_form").show();
+		$("#event_choose").hide();
+		$("#reason").focus();
+	}
 	function loadcalendar (y,m,d,view) {
 		$('#providers_calendar').fullCalendar('destroy');
 		$('#providers_calendar').fullCalendar({
@@ -72,6 +88,7 @@ $(document).ready(function() {
 							$("#until").val('');
 							$("#until_row").hide();
 							$('#repeat').val('');
+							$('#status').val('');
 							$("#delete_form").hide();
 							$(".nosh_schedule_exist_event").hide();
 							$("#patient_appt").hide();
@@ -117,15 +134,11 @@ $(document).ready(function() {
 					$("#schedule_title").val(calEvent.title);
 					$("#visit_type").val(calEvent.visit_type);
 					if (calEvent.visit_type){
-						$("#other_event").hide();
-						$("#patient_appt").show();
+						loadappt();
 						$("#patient_search").val(calEvent.title);
 						$("#end").val('');
-						$("#patient_search").focus();
 					} else {
-						$("#other_event").show();
-						$("#patient_appt").hide();
-						$("#reason").focus();
+						loadevent();
 					}
 					$("#reason").val(calEvent.reason);
 					$("#repeat").val(calEvent.repeat);
@@ -227,11 +240,11 @@ $(document).ready(function() {
 		open: function(event, ui) {
 			$("#provider_list2").removeOption(/./);
 			$.ajax({
-				url: "ajaxsearch/provider-select",
+				url: "ajaxsearch/provider-select1",
 				dataType: "json",
 				type: "POST",
 				success: function(data){
-					$("#provider_list2").addOption({"":"Select a provider."}, false);
+					$("#provider_list2").addOption({"":"Select a provider."});
 					$("#provider_list2").addOption(data, false);
 					if (noshdata.group_id == '2' || noshdata.group_id == '3') {
 						$.ajax({
@@ -249,21 +262,23 @@ $(document).ready(function() {
 									var n =  $.cookie('nosh-schedule').split(",");
 									loadcalendar(n[0],n[1],n[2],n[3]);
 								}
+								$("#visit_type").removeOption(/./);
+								$.ajax({
+									url: "ajaxsearch/visit-types/" + noshdata.user_id,
+									dataType: "json",
+									type: "POST",
+									async: false,
+									success: function(data){
+										if (data.response == 'true') {
+											$("#visit_type").addOption(data.message, false);
+										} else {
+											$("#visit_type").addOption({"":"No visit types available."},false);
+										}
+									}
+								});
 								setInterval(schedule_autosave, 10000);
 							}
 						});
-					}
-				}
-			});
-			$.ajax({
-				url: "ajaxsearch/visit-types",
-				dataType: "json",
-				type: "POST",
-				success: function(data){
-					if (data.response == 'true') {
-						$("#visit_type").addOption(data.message, false);
-					} else {
-						$("#visit_type").addOption({"":"No visit types available."}, false);
 					}
 				}
 			});
@@ -306,6 +321,20 @@ $(document).ready(function() {
 					if (noshdata.group_id == '100') {
 						$("#schedule_patient_step").show();
 					}
+					$("#visit_type").removeOption(/./);
+					$.ajax({
+						url: "ajaxsearch/visit-types/" + id,
+						dataType: "json",
+						type: "POST",
+						async: false,
+						success: function(data){
+							if (data.response == 'true') {
+								$("#visit_type").addOption(data.message, false);
+							} else {
+								$("#visit_type").addOption({"":"No visit types available."},false);
+							}
+						}
+					});
 				}
 			});
 		} 
@@ -365,9 +394,10 @@ $(document).ready(function() {
 				}
 				var str = $("#event_form").serialize();
 				if(str){
-					if (visit_type == '' && end == '') {
+					if (visit_type == '' || visit_type == null && end == '') {
 						$.jGrowl("No visit type or end time selected!");
 					} else {
+						$('#dialog_load').dialog('option', 'title', "Saving...").dialog('open');
 						$.ajax({
 							type: "POST",
 							url: "ajaxschedule/edit-event",
@@ -377,6 +407,7 @@ $(document).ready(function() {
 								$("#event_dialog").dialog('close');
 								$("#event_form").clearForm();
 								$("#providers_calendar").fullCalendar('refetchEvents');
+								$('#dialog_load').dialog('close');
 							}
 						});
 					}
@@ -427,6 +458,7 @@ $(document).ready(function() {
 						success: function(data){
 							$("#providers_calendar").fullCalendar('removeEvents');
 							$("#event_dialog").dialog('close');
+							$("#event_form").clearForm();
 							$("#providers_calendar").fullCalendar('refetchEvents');
 						}
 					});
@@ -441,29 +473,30 @@ $(document).ready(function() {
 				$("#event_form").clearForm();
 			}
 		}],
+		close: function(event, ui) {
+			$("#other_event").hide();
+			$("#patient_appt").hide();
+			$("#until_row").hide();
+			$("#delete_form").hide();
+			$(".nosh_schedule_exist_event").hide();
+			$("#start_form").hide();
+			$("#reason_form").hide();
+			$("#event_choose").hide();
+		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#status").addOption({"":"None.","Pending":"Pending","Reminder Sent":"Reminder Sent","Attended":"Attended","LMC":"Last Minute Cancellation","DNKA":"Did Not Keep Appointment"}, false);
 	$("#repeat").addOption({"":"None.","86400":"Every Day","604800":"Every Week","1209600":"Every Other Week"}, false);
 	$('#patient_appt_button').click(function() {
-		$("#patient_appt").show();
-		$("#start_form").show();
-		$("#reason_form").show();
-		$("#other_event").hide();
-		$("#event_choose").hide();
-		$("#patient_search").focus();
+		loadappt();
 	});
 	$('#event_appt_button').click(function() {
-		$("#patient_appt").hide();
-		$("#other_event").show();
-		$("#start_form").show();
-		$("#reason_form").show();
-		$("#event_choose").hide();
-		$("#reason").focus();
+		loadevent();
 	});
 	if (noshdata.group_id != '100') {
 		$("#start_date").datepicker();
 	}
+	$("#until").datepicker();
 	$('#start_time').timepicker({
 		'scrollDefaultNow': true,
 		'timeFormat': 'h:i A',
@@ -492,5 +525,4 @@ $(document).ready(function() {
 			$("#until").val('');
 		}
 	});
-	$("#until").datepicker();
 });

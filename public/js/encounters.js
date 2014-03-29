@@ -7,6 +7,14 @@ $(document).ready(function() {
 			return 'Signed';
 		}
 	}
+	function typelabel (cellvalue, options, rowObject){
+		if (cellvalue == 'standardmedical') {
+			return 'Standard Medical Visit';
+		}
+		if (cellvalue == 'clinicalsupport') {
+			return 'Clinical Support Visit';
+		}
+	}
 	$("#encounter_view_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
@@ -28,11 +36,12 @@ $(document).ready(function() {
 				url:"ajaxcommon/encounters",
 				datatype: "json",
 				mtype: "POST",
-				colNames:['ID','Date','Chief Complaint','Status'],
+				colNames:['ID','Date','Chief Complaint','Type','Status'],
 				colModel:[
 					{name:'eid',index:'eid',width:1,hidden:true},
 					{name:'encounter_DOS',index:'encounter_DOS',width:100,formatter:'date',formatoptions:{srcformat:"ISO8601Long", newformat: "ISO8601Short"}},
-					{name:'encounter_cc',index:'encounter_cc',width:500},
+					{name:'encounter_cc',index:'encounter_cc',width:350},
+					{name:'encounter_template',index:'encounter_template',width:150,formatter:typelabel},
 					{name:'encounter_signed',index:'encounter_signed',width:100,formatter:signedlabel}
 				],
 				rowNum:10,

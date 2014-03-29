@@ -113,7 +113,7 @@
 		{{ $script }}
 	</head>
 	<body>
-		<div id="dialog_load" title="Loading...">
+		<div id="dialog_load" title="">
 			<?php echo HTML::image('images/indicator.gif', 'Loading image', array('border' => '0')); ?>
 		</div>
 		<div id="options_load"></div>

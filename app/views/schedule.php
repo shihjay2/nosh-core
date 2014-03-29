@@ -8,9 +8,9 @@
 			<div class="pure-form pure-form-stacked"><label for="provider_list2">Provider:</label><select id ="provider_list2" name="provider_list2" class="text"></select></div>
 			<?php if (Session::get('group_id') == 100) {?>
 				<div id="schedule_patient_step" style="display:none">
-					Step 2: Click on an open time slot on the schedule.<br>
-					There can be no overlapping appointments with an existing appointment.<br>
-					You will be notified if there is a problem with your appointment request.<br>
+					Step 2: Click on an open time slot on the schedule.<br><br>
+					There can be no overlapping appointments with an existing appointment.<br><br>
+					You will be notified if there is a problem with your appointment request.<br><br>
 					To delete an existing appointment, double click on the appointment and on the dialog box on the upper right hand corner, click Delete.
 				</div>
 			<?php }?>

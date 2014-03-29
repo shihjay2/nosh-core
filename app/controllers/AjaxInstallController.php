@@ -871,6 +871,9 @@ class AjaxInstallController extends BaseController {
 				}
 			}
 		}
+		// Update calendar
+		$calendar['provider_id'] = '0';
+		DB::table('calendar')->update($calendar);
 		// Update version
 		DB::table('practiceinfo')->update(array('version' => '1.8.0'));
 	}

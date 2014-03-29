@@ -757,7 +757,7 @@ $(document).ready(function() {
 		loadtheme: "redmond"
 	});
 	$("#dialog_load").dialog({
-		height: 100,
+		height: 75,
 		autoOpen: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",

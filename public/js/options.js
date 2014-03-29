@@ -560,7 +560,7 @@ $(document).ready(function() {
 					var str = $("#configuration_cpt_form").serialize();
 					$.ajax({
 						type: "POST",
-						url: "ajaxdashboard/edit_cpt_list",
+						url: "ajaxdashboard/edit-cpt-list",
 						data: str,
 						dataType: 'json',
 						success: function(data){

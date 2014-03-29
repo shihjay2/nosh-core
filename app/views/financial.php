@@ -33,7 +33,7 @@
 							<div class="pure-control-group"><label for="financial_query_year">Year:</label><select name="year[]" multiple="multiple"style="width:400px"  id="financial_query_year" required></select></div>
 						</table>
 					</div><br>
-					<button type="button" id="financial_query_submit" class="nosh_button">Submit Query</button><button type="button" id="financial_query_print" class="nosh_button_print">Print Results</button><button type="button" id="financial_query_reset" class="nosh_button">Reset Query</button><br><br>
+					<button type="button" id="financial_query_submit" class="nosh_button">Submit Query</button> <button type="button" id="financial_query_print" class="nosh_button_print">Print Results</button> <button type="button" id="financial_query_reset" class="nosh_button">Reset Query</button><br><br>
 				</fieldset><br><br>
 			</form>
 			<table id="financial_query_results" class="scroll" cellpadding="0" cellspacing="0"></table>
@@ -44,10 +44,10 @@
 <div id="submit_bill_dialog" title="Choose Method Of Bill Submission">
 	<form name="submit_bill_form" id="submit_bill_form_id">
 		<input type="hidden" id="billing_eid"/>
-		<button type="button" id="submit_batch_printimage" class="nosh_button_add" style="width:210px">Batch Print Image</button><br>
-		<button type="button" id="submit_batch_hcfa" class="nosh_button_add" style="width:210px">Batch Print HCFA-1500</button><br>
-		<button type="button" id="submit_single_printimage" class="nosh_button_print" style="width:210px">Create Single Print Image</button><br>
-		<button type="button" id="submit_hcfa" class="nosh_button_print" style="width:210px">Print HCFA-1500 - Editable</button><br>
+		<button type="button" id="submit_batch_printimage" class="nosh_button_add" style="width:210px">Batch Print Image</button><br><br>
+		<button type="button" id="submit_batch_hcfa" class="nosh_button_add" style="width:210px">Batch Print HCFA-1500</button><br><br>
+		<button type="button" id="submit_single_printimage" class="nosh_button_print" style="width:210px">Create Single Print Image</button><br><br>
+		<button type="button" id="submit_hcfa" class="nosh_button_print" style="width:210px">Print HCFA-1500 - Editable</button><br><br>
 		<button type="button" id="submit_hcfa2" class="nosh_button_print" style="width:210px">Print HCFA-1500</button>
 	</form>
 </div>

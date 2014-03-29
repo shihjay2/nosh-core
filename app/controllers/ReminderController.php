@@ -7,29 +7,8 @@ class ReminderController extends BaseController {
 	*/
 	public function test()
 	{
-		$alpha_array = array(
-			'1' => 'A',
-			'2' => 'B',
-			'3' => 'C',
-			'4' => 'D',
-			'5' => 'E',
-			'6' => 'F',
-			'7' => 'G',
-			'8' => 'H'
-		);
-		$billing_core = DB::table('billing_core')->whereNotNull('icd_pointer')->get();
-		if ($billing_core) {
-			foreach ($billing_core as $billing_core_row) {
-				if ($billing_core_row->icd_pointer != '') {
-					$icd_pointer = $billing_core_row->icd_pointer;
-					foreach($alpha_array as $key => $value) {
-						$icd_pointer = str_replace($key, $value, $icd_pointer);
-					}
-					$billing_core_data['icd_pointer'] = $icd_pointer;
-					DB::table('billing_core')->where('billing_core_id', '=', $billing_core_row->billing_core_id)->update($billing_core_data);
-				}
-			}
-		}
+		$calendar['provider_id'] = '0';
+		DB::table('calendar')->update($calendar);
 		echo 'OK';
 	}
 	

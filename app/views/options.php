@@ -126,8 +126,8 @@
 		<div class="pure-control-group"><label for="configuration_cpt_code">CPT Code:</label><input type="text" name="cpt" id="configuration_cpt_code" style="width:290px" class="text" required/></div>
 		<div class="pure-control-group"><label for="configuration_cpt_description">Description:</label><textarea name="cpt_description" id="configuration_cpt_description" style="width:400px" rows="5" class="text" required/></textarea></div>
 		<div class="pure-control-group"><label for="configuration_charge">Charge:</label>$<input type="text" name="cpt_charge" id="configuration_charge" style="width:290px" class="text"/></div>
-		<div class="pure-control-group"><label for="configuration_unit">Default Unit(s):<br><input type="text" name="unit" id="configuration_unit" style="width:290px" class="text"/></div>
-		<div class="pure-control-group"><label for="configuration_favorite">Favorite:<select name="favorite" id="configuration_favorite" class="text forms_main"></select></div>
+		<div class="pure-control-group"><label for="configuration_unit">Default Unit(s):</label><input type="text" name="unit" id="configuration_unit" style="width:290px" class="text"/></div>
+		<div class="pure-control-group"><label for="configuration_favorite">Favorite:</label><select name="favorite" id="configuration_favorite" class="text forms_main"></select></div>
 	</form>
 </div>
 <div id="configuration_patient_forms_dialog" title="">

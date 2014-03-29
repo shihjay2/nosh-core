@@ -462,9 +462,16 @@ class BaseController extends Controller {
 		$practiceInfo = Practiceinfo::find($practice_id);
 		$hpiInfo = Hpi::find($eid);
 		if ($hpiInfo) {
-			$data['hpi'] = '<br><h4>History of Present Illness:</h4><p class="view">';
-			$data['hpi'] .= nl2br($hpiInfo->hpi);
-			$data['hpi'] .= '</p>';
+			if ($hpiInfo->hpi != '') {
+				$data['hpi'] = '<br><h4>History of Present Illness:</h4><p class="view">';
+				$data['hpi'] .= nl2br($hpiInfo->hpi);
+				$data['hpi'] .= '</p>';
+			}
+			if ($hpiInfo->situation != '') {
+				$data['hpi'] = '<br><h4>Situation:</h4><p class="view">';
+				$data['hpi'] .= nl2br($hpiInfo->situation);
+				$data['hpi'] .= '</p>';
+			}
 		} else {
 			$data['hpi'] = '';
 		}
@@ -3344,11 +3351,11 @@ class BaseController extends Controller {
 				->orderBy('cpt_charge', 'desc')
 				->take(1)
 				->first();
-			$cpt_query = DB::table('cpt')->where('cpt', '=', $billing->cpt)->first();
+			$cpt_query = DB::table('cpt_relate')->where('cpt', '=', $billing->cpt)->first();
 			if ($cpt_query) {
-				$cpt_result = DB::table('cpt')->where('cpt', '=', $billing->cpt)->first();
-			} else {
 				$cpt_result = DB::table('cpt_relate')->where('cpt', '=', $billing->cpt)->first();
+			} else {
+				$cpt_result = DB::table('cpt')->where('cpt', '=', $billing->cpt)->first();
 			}
 			$provider_info2 = User::find($encounters_row->user_id);
 			$encounters_file = str_replace('?encounter_cc?', $encounters_row->encounter_cc, $encounters_file);
@@ -3512,28 +3519,28 @@ class BaseController extends Controller {
 					$med_freq_array_6 = array("every three hours", "every 3 hours", "eight times a day", "8 times a day", "eight times daily", "8 times daily", "q3h", "Q3h");
 					$med_freq_array_7 = array("every two hours", "every 2 hours", "twelve times a day", "12 times a day", "twelve times daily", "12 times daily", "q2h", "Q2h");
 					$med_freq_array_8 = array("every hour", "every 1 hour", "every one hour", "q1h", "Q1h");
-					if (in_array($med_row->rxl_frequncy, $med_freq_array_1)) {
+					if (in_array($med_row->rxl_frequency, $med_freq_array_1)) {
 						$med_period = "24";
 					}
-					if (in_array($med_row->rxl_frequncy, $med_freq_array_2)) {
+					if (in_array($med_row->rxl_frequency, $med_freq_array_2)) {
 						$med_period = "12";
 					}
-					if (in_array($med_row->rxl_frequncy, $med_freq_array_3)) {
+					if (in_array($med_row->rxl_frequency, $med_freq_array_3)) {
 						$med_period = "8";
 					}
-					if (in_array($med_row->rxl_frequncy, $med_freq_array_4)) {
+					if (in_array($med_row->rxl_frequency, $med_freq_array_4)) {
 						$med_period = "6";
 					}
-					if (in_array($med_row->rxl_frequncy, $med_freq_array_5)) {
+					if (in_array($med_row->rxl_frequency, $med_freq_array_5)) {
 						$med_period = "4";
 					}
-					if (in_array($med_row->rxl_frequncy, $med_freq_array_6)) {
+					if (in_array($med_row->rxl_frequency, $med_freq_array_6)) {
 						$med_period = "3";
 					}
-					if (in_array($med_row->rxl_frequncy, $med_freq_array_7)) {
+					if (in_array($med_row->rxl_frequency, $med_freq_array_7)) {
 						$med_period = "2";
 					}
-					if (in_array($med_row->rxl_frequncy, $med_freq_array_8)) {
+					if (in_array($med_row->rxl_frequency, $med_freq_array_8)) {
 						$med_period = "1";
 					}
 				}
@@ -3891,18 +3898,18 @@ class BaseController extends Controller {
 		if ($result1) {
 			$charge = 0;
 			$payment = 0;
-			$data['text'] = '<table class="pure-table"><tr><th style="width:14%">PROCEDURE</th><th style="width:14%">UNITS</th><th style="width:50%">DESCRIPTION</th><th style="width:22%">CHARGE</th></tr>';
+			$data['text'] = '<table class="pure-table"><tr><th style="width:14%">PROCEDURE</th><th style="width:14%">UNITS</th><th style="width:50%">DESCRIPTION</th><th style="width:22%">CHARGE PER UNIT</th></tr>';
 			foreach ($result1 as $key1 => $value1) {
 				$cpt_charge1[$key1]  = $value1->cpt_charge;
 			}
 			array_multisort($cpt_charge1, SORT_DESC, $result1);
 			foreach ($result1 as $result1a) {
 				if ($result1a->cpt) {
-					$query2 = DB::table('cpt')->where('cpt', '=', $result1a->cpt)->first();
+					$query2 = DB::table('cpt_relate')->where('cpt', '=', $result1a->cpt)->first();
 					if ($query2) {
-						$result2 = DB::table('cpt')->where('cpt', '=', $result1a->cpt)->first();
-					} else {
 						$result2 = DB::table('cpt_relate')->where('cpt', '=', $result1a->cpt)->first();
+					} else {
+						$result2 = DB::table('cpt')->where('cpt', '=', $result1a->cpt)->first();
 					}
 					$data['text'] .= '<tr><td>' . $result1a->cpt . '</td><td>' . $result1a->unit . '</td><td>' . $result2->cpt_description . '</td><td>$' . $result1a->cpt_charge . '</td></tr>';
 					$charge += $result1a->cpt_charge * $result1a->unit;
@@ -3971,7 +3978,7 @@ class BaseController extends Controller {
 		$pid = Session::get('pid');
 		$result1 = DB::table('billing_core')->where('other_billing_id', '=', $id)->where('payment', '=', '0')->first();
 		if ($result1) {
-			$data['text'] = '<table class="pure-table"><tr><th style="width:14%">DATE</th><th style="width:14%">UNITS</th><th style="width:50%">DESCRIPTION</th><th style="width:22%">CHARGE</th></tr>';
+			$data['text'] = '<table class="pure-table"><tr><th style="width:14%">DATE</th><th style="width:14%">UNITS</th><th style="width:50%">DESCRIPTION</th><th style="width:22%">CHARGE PER UNIT</th></tr>';
 			$charge = 0;
 			$payment = 0;
 			$data['text'] .= '<tr><td>' . $result1->dos_f . '</td><td>' . $result1->unit . '</td><td>' . $result1->reason . '</td><td>$' . $result1->cpt_charge . '</td></tr>';

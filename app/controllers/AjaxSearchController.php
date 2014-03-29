@@ -289,6 +289,27 @@ class AjaxSearchController extends BaseController {
 		echo json_encode($data);
 	}
 	
+	public function postProviderSelect1()
+	{
+		$query = DB::table('users')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->where('active', '=', '1')
+			->select('displayname', 'id')
+			->where(function($query_array1) {
+				$query_array1->where('group_id', '=', '2')
+				->orWhere('group_id', '=', '3');
+			})
+			->distinct()
+			->get();
+		$data = array();
+		if ($query) {
+			foreach ($query as $row) {
+				$data[$row->id] = $row->displayname;
+			}
+		}
+		echo json_encode($data);
+	}
+	
 	public function postSpecialty()
 	{
 		$q = strtolower(Input::get('term'));
@@ -2105,9 +2126,16 @@ class AjaxSearchController extends BaseController {
 		echo json_encode($data);
 	}
 	
-	public function postVisitTypes()
+	public function postVisitTypes($id)
 	{
-		$query = DB::table('calendar')->where('active', '=', 'y')->where('practice_id', '=', Session::get('practice_id'))->get();
+		$query = DB::table('calendar')
+			->where('active', '=', 'y')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->where(function($query_array1) use ($id) {
+				$query_array1->where('provider_id', '=', '0')
+				->orWhere('provider_id', '=', $id);
+			})
+			->get();
 		$data['response'] = 'false';
 		if ($query) {
 			$data['message'] = array();
