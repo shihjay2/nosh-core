@@ -11,7 +11,7 @@
 |
 */
 
-Route::any('/', array('as' => 'home', 'before' => 'installfix|needinstall|update|auth', 'uses' => 'HomeController@dashboard'));
+Route::any('/', array('as' => 'home', 'before' => 'version_check|installfix|needinstall|update|auth', 'uses' => 'HomeController@dashboard'));
 Route::any('login', array('as' => 'login', 'uses' => 'LoginController@action'));
 Route::get('start/{practicehandle}', function($practicehandle = null)
 {
@@ -178,6 +178,13 @@ Route::filter('update', function()
 	// Check version number
 	if ($row->version < $current_version) {
 		return Redirect::to('update');
+	}
+});
+
+Route::filter('version_check', function()
+{
+	if (!File::exists(__DIR__."/../.version")) {
+		return Redirect::to('set_version');
 	}
 });
 

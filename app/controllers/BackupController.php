@@ -9,7 +9,7 @@ class BackupController extends BaseController
 	
 	public function backup()
 	{
-		$config_file = __DIR__."/../.env.php";
+		$config_file = __DIR__."/../../.env.php";
 		$config = require($config_file);
 		$row2 = Practiceinfo::find(1);
 		$dir = $row2->documents_dir;
