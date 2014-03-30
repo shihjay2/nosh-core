@@ -4284,7 +4284,7 @@ class AjaxChartController extends BaseController {
 			if ($row1->electronic_order == 'PeaceHealth') {
 				$date = date('YmdHi');
 				$dob = date('Ymd', $this->human_to_unix($row2->DOB));
-				$order_date('YmdHi', $this->human_to_unix($row->orders_pending_date));
+				$order_date = date('YmdHi', $this->human_to_unix($row->orders_pending_date));
 				$middle = substr($row3->middle, 0, 1);
 				$pname = substr($row3->lastname, 0, 5) . substr($row3->firstname, 0, 1) . substr($row3->middle, 0, 1);
 				$hl7 = "MSH|^~\&|QDX|" . strtoupper($pname) . "|||" . $date . "00||ORM^O01|R10063131003.1|P|2.3||^" . strtoupper($pname);
@@ -4314,6 +4314,7 @@ class AjaxChartController extends BaseController {
 							}
 							if (strpos($orders_row1, " AOECode: ") !== FALSE) {
 								$aoe_code = str_replace(" AOECode: ", "", $orders_row1);
+								$aoe_code = str_replace("\r", "", $aoe_code);
 								if (strpos($aoe_code, "|") !== FALSE) {
 									$aoe_code_array = explode("|", $aoe_code);
 								} else {
@@ -4326,7 +4327,8 @@ class AjaxChartController extends BaseController {
 							exit (0);
 						}
 						$hl7 .= "\r";
-						$hl7 .= "OBR|" . $j . "|" . $orders_id . "||" . strtoupper($testcode) . "^" . strtoupper($testname) . "^^|R|" . $order_date . "00|" .$date . "|||||||" . $date . "00|SST^BLD|96666|||||PHL^PeaceHealth Laboratories^123 International Way^Springfield^OR^97477|";
+						$orders_cc = '';
+						$hl7 .= "OBR|" . $j . "|" . $orders_id . "||" . strtoupper($testcode) . "^" . strtoupper($testname) . "^^|R|" . $order_date . "00|" .$date . "|||||||" . $date . "00|SST^BLD|96666|||||PHL^PeaceHealth Laboratories^123 International Way^Springfield^OR^97477|||||||" . $orders_cc . "|";
 						$j++;
 					}
 				}

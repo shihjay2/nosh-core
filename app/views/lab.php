@@ -10,7 +10,7 @@
 </div>
 <div id="messages_lab_edit_fields" title="">
 	<form id="edit_messages_lab_form">
-		<div class="pure-form nosh_provider_exclude"><label for="messages_lab_provider_list">Provider:</label><select id ="messages_lab_provider_list" name="id" class="text"></select></div>
+		<div class="pure-form nosh_provider_exclude"><label for="messages_lab_provider_list">Provider:</label><select id ="messages_lab_provider_list" name="id" class="text" required></select></div>
 		<div id="messages_lab_status"></div>
 		<input type="hidden" name="orders_id" id="messages_lab_orders_id"/>
 		<input type="hidden" name="t_messages_id" id="messages_lab_t_messages_id"/>
@@ -119,14 +119,14 @@
 	</form>
 </div>
 <div id="messages_lab_aoe_dialog" title="Required Question">
-	<form id="messages_lab_aoe_dialog_form" class="pure-form pure-form-aligned">
+	<form id="messages_lab_aoe_dialog_form" class="pure-form pure-form-stacked">
 		<input type="hidden" id="aoe_value" value=""/>
-		<div class="pure_control_group aoe_fasting" style="display:none;"><label for="aoe_fasting_input">Fasting:</label><select id="aoe_fasting_input" class="text"><option value="">Choose an option</option><option value="Yes">Yes</option><option value="No">No</option></select><input type="hidden" id="aoe_fasting_code" value=""/></div>
-		<div class="pure_control_group aoe_fasting_hours" style="display:none;"><label for="aoe_fasting_hours_input">Hours fasting:</label><input type="text" id="aoe_fasting_hours_input" style="width:164px" class="text"/><input type="hidden" id="aoe_fasting_hours_code" value=""/></div>
-		<div class="pure_control_group aoe_dose_date" style="display:none;"><label for="aoe_dose_date_input">Date of Last Medication Dosage:</label><input type="text" id="aoe_dose_date_input" style="width:164px" class="text"/><input type="hidden" id="aoe_dose_date_code" value=""/></div>
-		<div class="pure_control_group aoe_dose_time" style="display:none;"><label for="aoe_dose_time_input">Time of Last Medication Dosage:</label><input type="text" id="aoe_dose_time_input" style="width:164px" class="text"/><input type="hidden" id="aoe_dose_time_code" value=""/></div>
-		<div class="pure_control_group aoe_source" style="display:none;"><label for="aoe_source_input">Source:</label><input type="text" id="aoe_source_input" style="width:290px" class="text"/><input type="hidden" id="aoe_source_code" value=""/></div>
-		<div class="pure_control_group aoe_source1" style="display:none;"><label for="aoe_source1_input">Source:</label><input type="text" id="aoe_source1_input" style="width:290px" class="text"/><input type="hidden" id="aoe_source1_code" value=""/></div>
-		<div class="pure_control_group aoe_additional" style="display:none;"><label for="aoe_additional_input">Additional information:</label><input type="text" id="aoe_additional_input" style="width:290px" class="text"/><input type="hidden" id="aoe_additional_code" value=""/></div>
+		<div id="aoe_fasting" style="display:none;"><label for="aoe_fasting_input">Fasting:</label><select id="aoe_fasting_input" class="text"><option value="">Choose an option</option><option value="Yes">Yes</option><option value="No">No</option></select><input type="hidden" id="aoe_fasting_code" value=""/></div>
+		<div id="aoe_fasting_hours" style="display:none;"><label for="aoe_fasting_hours_input">Hours fasting:</label><input type="text" id="aoe_fasting_hours_input" style="width:164px" class="text"/><input type="hidden" id="aoe_fasting_hours_code" value=""/></div>
+		<div id="aoe_dose_date" style="display:none;"><label for="aoe_dose_date_input">Date of Last Medication Dosage:</label><input type="text" id="aoe_dose_date_input" style="width:164px" class="text"/><input type="hidden" id="aoe_dose_date_code" value=""/></div>
+		<div id="aoe_dose_time" style="display:none;"><label for="aoe_dose_time_input">Time of Last Medication Dosage:</label><input type="text" id="aoe_dose_time_input" style="width:164px" class="text"/><input type="hidden" id="aoe_dose_time_code" value=""/></div>
+		<div id="aoe_source" style="display:none;"><label for="aoe_source_input">Source:</label><input type="text" id="aoe_source_input" style="width:290px" class="text"/><input type="hidden" id="aoe_source_code" value=""/></div>
+		<div id="aoe_source1" style="display:none;"><label for="aoe_source1_input">Source:</label><input type="text" id="aoe_source1_input" style="width:290px" class="text"/><input type="hidden" id="aoe_source1_code" value=""/></div>
+		<div id="aoe_additional" style="display:none;"><label for="aoe_additional_input">Additional information:</label><input type="text" id="aoe_additional_input" style="width:290px" class="text"/><input type="hidden" id="aoe_additional_code" value=""/></div>
 	</form>
 </div>

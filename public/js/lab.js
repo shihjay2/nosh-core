@@ -332,14 +332,14 @@ $(document).ready(function() {
 								for (var i=0;i<codes.length;i++) {
 									$("#" + fields[i]).val(codes[i]);
 									var parent_id = fields[i].replace("_code", "");
-									$("." + parent_id).show();
-									$("." + parent_id).addClass("aoe_required");
+									$("#" + parent_id).show();
+									$("#" + parent_id).addClass("aoe_required");
 								}
 							} else {
 								$("#" + aoe_field).val(aoe_code);
 								var parent_id = aoe_field.replace("_code", "");
-								$("." + parent_id).show();
-								$("." + parent_id).addClass("aoe_required");
+								$("#" + parent_id).show();
+								$("#" + parent_id).addClass("aoe_required");
 							}
 							$("#aoe_value").val(ui.item.value);
 							$("#messages_lab_orders_text").val(this.value);
