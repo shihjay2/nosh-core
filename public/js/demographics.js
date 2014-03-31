@@ -762,7 +762,7 @@ $(document).ready(function() {
 		if($("#menu_insurance_relationship").val() == "Self") {
 			$.ajax({
 				type: "POST",
-				url: "ajaxdashboard/copy_address",
+				url: "ajaxdashboard/copy-address",
 				dataType: "json",
 				success: function(data){
 					$("#menu_insurance_insu_lastname").val(data.lastname);
