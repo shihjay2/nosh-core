@@ -109,6 +109,8 @@
 		<?php echo HTML::script('js/jquery.populate.js'); ?>
 		<?php echo HTML::script('js/jquery.ocupload.js'); ?>
 		<?php echo HTML::script('js/main.js'); ?>
+		<?php echo HTML::script('js/jstz-1.0.4.min.js'); ?>
+		<?php echo HTML::script('js/jquery.cookie.js'); ?>
 		<?php echo HTML::script('js/bluebutton.js'); ?>
 		{{ $script }}
 	</head>
