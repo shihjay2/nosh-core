@@ -65,7 +65,6 @@ class LoginController extends BaseController {
 				$data['practice_id'] = $practice_id;
 			}
 			if((array_key_exists('login_attempts', $_COOKIE)) && ($_COOKIE['login_attempts'] >= 5)){
-				
 				$data['attempts'] = "You have reached the number of limits to login.  Wait 15 minutes then try again.";
 				$this->layout->style = '';
 				$this->layout->script = HTML::script('/js/login.js');

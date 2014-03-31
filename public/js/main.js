@@ -763,6 +763,8 @@ $(document).ready(function() {
 		dialogClass: "noclose",
 		modal: true
 	});
+	var tz = jstz.determine();
+	$.cookie('nosh-tz', tz.name(), { path: '/' });
 });
 $(document).on("click", ".ui-jqgrid-titlebar", function() {
 	$(".ui-jqgrid-titlebar-close", this).click();

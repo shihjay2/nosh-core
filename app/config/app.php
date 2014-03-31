@@ -1,5 +1,8 @@
 <?php
-
+$tz = 'UTC';
+if(array_key_exists('nosh_tz', $_COOKIE)) {
+	$tz = $_COOKIE['nosh_tz'];
+}
 return array(
 
 	/*
@@ -39,7 +42,7 @@ return array(
 	|
 	*/
 
-	'timezone' => 'UTC',
+	'timezone' => $tz,
 
 	/*
 	|--------------------------------------------------------------------------
