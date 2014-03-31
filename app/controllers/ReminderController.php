@@ -7,9 +7,6 @@ class ReminderController extends BaseController {
 	*/
 	//public function test()
 	//{
-		//$calendar['provider_id'] = '0';
-		//DB::table('calendar')->update($calendar);
-		//echo 'OK';
 	//}
 	
 	public function reminder()
