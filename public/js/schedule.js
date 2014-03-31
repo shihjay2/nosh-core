@@ -428,7 +428,7 @@ $(document).ready(function() {
 							type: "POST",
 							url: "ajaxsearch/openchart",
 							dataType: "json",
-							data: "pid=" + ui.item.id,
+							data: "pid=" + pid,
 							success: function(data){
 								window.location = data.url;
 							}
