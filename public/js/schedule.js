@@ -48,6 +48,7 @@ $(document).ready(function() {
 			maxTime: noshdata.maxTime,
 			theme: true,
 			allDayDefault: false,
+			ignoreTimezone: false,
 			slotMinutes: 15,
 			defaultView: view,
 			aspectRatio: 0.8,
