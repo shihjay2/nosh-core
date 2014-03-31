@@ -1866,7 +1866,8 @@ class BaseController extends Controller {
 	
 	protected function strstrb($h, $n)
 	{
-		return array_shift(explode($n,$h,2));
+		$arr = explode($n,$h,2);
+		return array_shift($arr);
 	}
 	
 	protected function recursive_array_search($needle, $haystack)

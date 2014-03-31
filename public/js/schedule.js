@@ -240,19 +240,19 @@ $(document).ready(function() {
 		open: function(event, ui) {
 			$("#provider_list2").removeOption(/./);
 			$.ajax({
-				url: "ajaxsearch/provider-select1",
+				url: "ajaxsearch/provider-select",
 				dataType: "json",
 				type: "POST",
 				success: function(data){
 					$("#provider_list2").addOption({"":"Select a provider."});
 					$("#provider_list2").addOption(data, false);
-					if (noshdata.group_id == '2' || noshdata.group_id == '3') {
+					if (noshdata.group_id == '2') {
 						$.ajax({
 							type: "POST",
 							url: "ajaxschedule/set-default-provider",
 							success: function(data){
 								$('#provider_list2').val(noshdata.user_id);
-								if( $.cookie('nosh-schedule') === null){
+								if( $.cookie('nosh-schedule') === undefined){
 									var d = new Date();
 									var y = d.getFullYear();
 									var m = d.getMonth();
@@ -308,7 +308,7 @@ $(document).ready(function() {
 				url: "ajaxschedule/set-provider",
 				data: "id=" + id,
 				success: function(data){
-					if( $.cookie('nosh-schedule') === null){
+					if( $.cookie('nosh-schedule') === undefined){
 						var d = new Date();
 						var y = d.getFullYear();
 						var m = d.getMonth();
