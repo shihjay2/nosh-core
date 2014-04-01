@@ -319,7 +319,7 @@ $(document).ready(function() {
 			});
 			jQuery("#print_labs").jqGrid('GridUnload');
 			jQuery("#print_labs").jqGrid({
-				url: "ajaxchart/documents/Laboratory",
+				url: "ajaxcommon/documents/Laboratory",
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Date','From','Description','URL'],
@@ -385,7 +385,7 @@ $(document).ready(function() {
 			});
 			jQuery("#print_radiology").jqGrid('GridUnload');
 			jQuery("#print_radiology").jqGrid({
-				url: "ajaxchart/documents/Imaging",
+				url: "ajaxcommon/documents/Imaging",
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Date','From','Description','URL'],
@@ -451,7 +451,7 @@ $(document).ready(function() {
 			});
 			jQuery("#print_cardiopulm").jqGrid('GridUnload');
 			jQuery("#print_cardiopulm").jqGrid({
-				url: "ajaxchart/documents/Cardiopulmonary",
+				url: "ajaxcommon/documents/Cardiopulmonary",
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Date','From','Description','URL'],
@@ -517,7 +517,7 @@ $(document).ready(function() {
 			});
 			jQuery("#print_endoscopy").jqGrid('GridUnload');
 			jQuery("#print_endoscopy").jqGrid({
-				url: "ajaxchart/documents/Endoscopy",
+				url: "ajaxcommon/documents/Endoscopy",
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Date','From','Description','URL'],
@@ -583,7 +583,7 @@ $(document).ready(function() {
 			});
 			jQuery("#print_referrals").jqGrid('GridUnload');
 			jQuery("#print_referrals").jqGrid({
-				url: "ajaxchart/documents/Referrals",
+				url: "ajaxcommon/documents/Referrals",
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Date','From','Description','URL'],
@@ -649,7 +649,7 @@ $(document).ready(function() {
 			});
 			jQuery("#print_past_records").jqGrid('GridUnload');
 			jQuery("#print_past_records").jqGrid({
-				url: "ajaxchart/documents/Past_Records",
+				url: "ajaxcommon/documents/Past_Records",
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Date','From','Description','URL'],
@@ -715,7 +715,7 @@ $(document).ready(function() {
 			});
 			jQuery("#print_outside_forms").jqGrid('GridUnload');
 			jQuery("#print_outside_forms").jqGrid({
-				url: "ajaxchart/documents/Other_Forms",
+				url: "ajaxcommon/documents/Other_Forms",
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Date','From','Description','URL'],
@@ -781,7 +781,7 @@ $(document).ready(function() {
 			});
 			jQuery("#print_letters").jqGrid('GridUnload');
 			jQuery("#print_letters").jqGrid({
-				url: "ajaxchart/documents/Letters",
+				url: "ajaxcommon/documents/Letters",
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Date','From','Description','URL'],
