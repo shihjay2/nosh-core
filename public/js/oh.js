@@ -128,7 +128,6 @@ $(document).ready(function() {
 		$('#issues_cp_header').hide();
 		$('#issues_ref_header').hide();
 		$('#issues_assessment_header').hide();
-		$('#edit_issue_form').hide();
 		$("#issues_list_dialog").dialog('open');
 	});
 	$('#oh_psh_reset').click(function(){
@@ -142,7 +141,6 @@ $(document).ready(function() {
 		$('#issues_cp_header').hide();
 		$('#issues_ref_header').hide();
 		$('#issues_assessment_header').hide();
-		$('#edit_issue_form').hide();
 		$("#issues_list_dialog").dialog('open');
 	});
 	$("#oh_psh").autocomplete({
