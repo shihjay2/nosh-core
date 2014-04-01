@@ -1411,9 +1411,9 @@ class AjaxSearchController extends BaseController {
 		$q = strtolower(Input::get('term'));
 		if (!$q) return;
 		$data['response'] = 'false';
-		DB::table('supplement_inventory')
+		$query = DB::table('supplement_inventory')
 			->where('sup_description', 'LIKE', "%$q%")
-			->select('sup_description','charge','quantity','sup_manufacturer')
+			->select('sup_description','cpt','charge','quantity','sup_manufacturer')
 			->distinct()
 			->get();
 		if ($query) {

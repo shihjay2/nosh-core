@@ -434,10 +434,9 @@ class AjaxMessagingController extends BaseController {
 			header("HTTP/1.1 404 Page Not Found", true, 404);
 			exit("You cannot do this.");
 		} else {
-			$trash = Session::get('documents_dir') . "received/trash/" . Input::get('fileName');
 			DB::table('received')->where('fileName', '=', Input::get('fileName'))->delete();
 			$this->audit('Delete');
-			rename(Input::get('filePath'), $trash);
+			unlink(Input::get('filePath'));
 			echo 'Fax Deleted';
 		}
 	}
