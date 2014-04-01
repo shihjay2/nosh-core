@@ -295,5 +295,5 @@ $(document).ready(function() {
 	$("#orders_schedule").click(function() {
 		$("#schedule_dialog").dialog('open');
 	});
-	setInterval(orders_autosave, 10000);
+	setInterval(orders_autosave, 15000);
 });

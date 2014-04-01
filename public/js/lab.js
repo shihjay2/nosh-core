@@ -56,6 +56,16 @@ $(document).ready(function() {
 			 	height: "100%",
 			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#messages_lab_list_pager',{search:false,edit:false,add:false,del:false});
+			$("#messages_lab_provider_list").removeOption(/./);
+			$.ajax({
+				url: "ajaxsearch/provider-select",
+				dataType: "json",
+				type: "POST",
+				success: function(data){
+					$("#messages_lab_provider_list").addOption({"":"Select a provider for the order."}, false);
+					$("#messages_lab_provider_list").addOption(data, false);
+				}
+			});
 		},
 		buttons: {
 			'Save': function() {
@@ -104,7 +114,9 @@ $(document).ready(function() {
 		}
 		$("#messages_lab_status").html('');
 		$("#messages_lab_location").val('');
-		$("#messages_lab_provider_list").val('');
+		if ($("#messages_lab_provider_list").val() == '' && noshdata.group_id == '2') {
+			$("#messages_lab_provider_list").val(noshdata.user_id);
+		}
 		var currentDate = getCurrentDate();
 		$('#messages_lab_orders_pending_date').val(currentDate);
 		$("#messages_lab_edit_fields").dialog("option", "title", "Add Lab Order");

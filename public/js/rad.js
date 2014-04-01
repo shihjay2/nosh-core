@@ -55,6 +55,16 @@ $(document).ready(function() {
 			 	height: "100%",
 			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#messages_rad_list_pager',{search:false,edit:false,add:false,del:false});
+			$("#messages_rad_provider_list").removeOption(/./);
+			$.ajax({
+				url: "ajaxsearch/provider-select",
+				dataType: "json",
+				type: "POST",
+				success: function(data){
+					$("#messages_rad_provider_list").addOption({"":"Select a provider for the order."}, false);
+					$("#messages_rad_provider_list").addOption(data, false);
+				}
+			});
 		},
 		buttons: {
 			'Save': function() {
@@ -103,6 +113,9 @@ $(document).ready(function() {
 			$("#messages_rad_t_messages_id").val(a);
 		}
 		$("#messages_rad_status").html('');
+		if ($("#messages_rad_provider_list").val() == '' && noshdata.group_id == '2') {
+			$("#messages_rad_provider_list").val(noshdata.user_id);
+		}
 		$("#messages_rad_location").val('');
 		var currentDate = getCurrentDate();
 		$('#messages_rad_orders_pending_date').val(currentDate);

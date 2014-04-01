@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	loadbuttons();
-	setInterval(hpi_autosave('hpi'), 10000);
+	//setInterval(hpi_autosave('hpi'), 10000);
 	$("#encounter_tabs").tabs({
 		beforeLoad: function(event, ui) {
 			//if ($(ui.panel).html()) {
@@ -17,14 +17,15 @@ $(document).ready(function() {
 		},
 		activate: function(event, ui) {
 			var id = $(ui.newTab).attr('id');
+			var old_id = $(ui.oldTab).attr('id');
 			var isValid = true;
-			if (id != "encounter_tabs_hpi") {
+			if (old_id == "encounter_tabs_hpi") {
 				hpi_autosave('hpi');
 			}
 			if (id == "encounter_tabs_ros") {
 				check_ros_status();
 			}
-			if (id != "encounter_tabs_oh") {
+			if (old_id == "encounter_tabs_oh") {
 				oh_autosave();
 			}
 			if (id == "encounter_tabs_oh") {
@@ -87,7 +88,7 @@ $(document).ready(function() {
 					}
 				});
 			}
-			if (id != "encounter_tabs_vitals") {
+			if (old_id == "encounter_tabs_vitals") {
 				vitals_autosave();
 			}
 			if (id == "encounter_tabs_pe") {
@@ -96,13 +97,13 @@ $(document).ready(function() {
 			if (id == "encounter_tabs_labs") {
 				check_labs1();
 			}
-			if (id != "encounter_tabs_proc") {
+			if (old_id == "encounter_tabs_proc") {
 				proc_autosave();
 			}
-			if (id != "encounter_tabs_assessment") {
+			if (old_id == "encounter_tabs_assessment") {
 				assessment_autosave();
 			}
-			if (id != "encounter_tabs_orders") {
+			if (old_id == "encounter_tabs_orders") {
 				orders_autosave();
 			}
 			if (id == "encounter_tabs_orders") {
