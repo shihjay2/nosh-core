@@ -956,57 +956,6 @@ $(document).ready(function() {
 			$.jGrowl("Please select fax to delete!");
 		}
 	});
-	$("#fax_patient_search").autocomplete({
-		source: function (req, add){
-			$.ajax({
-				url: "ajaxsearch/search",
-				dataType: "json",
-				type: "POST",
-				data: req,
-				success: function(data){
-					if(data.response =='true'){
-						add(data.message);
-					}
-				}
-			});
-		},
-		minLength: 1,
-		select: function(event, ui){
-			$("#fax_pid").val(ui.item.id);
-		}
-	});
-	$("#fax_import_documents_from").autocomplete({
-		source: function (req, add){
-			$.ajax({
-				url: "ajaxsearch/document-from",
-				dataType: "json",
-				type: "POST",
-				data: req,
-				success: function(data){
-					if(data.response =='true'){
-						add(data.message);
-					}
-				}
-			});
-		},
-		minLength: 2
-	});
-	$("#fax_import_documents_desc").autocomplete({
-		source: function (req, add){
-			$.ajax({
-				url: "ajaxsearch/document-description",
-				dataType: "json",
-				type: "POST",
-				data: req,
-				success: function(data){
-					if(data.response =='true'){
-						add(data.message);
-					}
-				}
-			});
-		},
-		minLength: 2
-	});
 	$("#fax_import_documents_type").addOption({"Laboratory":"Laboratory","Imaging":"Imaging","Cardiopulmonary":"Cardiopulmonary","Endoscopy":"Endoscopy","Referrals":"Referrals","Past Records":"Past Records","Other Forms":"Other Forms"}, false);
 	$("#fax_import_documents_date").mask("99/99/9999");
 	$("#fax_import_documents_date").datepicker();
@@ -1017,6 +966,59 @@ $(document).ready(function() {
 		width: 800, 
 		closeOnEscape: false,
 		dialogClass: "noclose",
+		open: function (event, ui) {
+			$("#fax_import_patient_search").autocomplete({
+				source: function (req, add){
+					$.ajax({
+						url: "ajaxsearch/search",
+						dataType: "json",
+						type: "POST",
+						data: req,
+						success: function(data){
+							if(data.response =='true'){
+								add(data.message);
+							}
+						}
+					});
+				},
+				minLength: 1,
+				select: function(event, ui){
+					$("#fax_pid").val(ui.item.id);
+				}
+			});
+			$("#fax_import_documents_from").autocomplete({
+				source: function (req, add){
+					$.ajax({
+						url: "ajaxsearch/document-from",
+						dataType: "json",
+						type: "POST",
+						data: req,
+						success: function(data){
+							if(data.response =='true'){
+								add(data.message);
+							}
+						}
+					});
+				},
+				minLength: 2
+			});
+			$("#fax_import_documents_desc").autocomplete({
+				source: function (req, add){
+					$.ajax({
+						url: "ajaxsearch/document-description",
+						dataType: "json",
+						type: "POST",
+						data: req,
+						success: function(data){
+							if(data.response =='true'){
+								add(data.message);
+							}
+						}
+					});
+				},
+				minLength: 2
+			});
+		},
 		buttons: {
 			'Save': function() {
 				var bValid = true;

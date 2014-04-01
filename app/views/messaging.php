@@ -160,7 +160,7 @@
 		<input type="hidden" name="received_id" id="fax_received_id"/>
 		<input type="hidden" name="pid" id="fax_pid"/>
 		<input type="hidden" name="fax_import_pages" id="fax_import_pages"/>
-		<div class="pure-control-group"><label for="fax_import_patient_search">Choose Patient:</label><input type="text" name="patient_search" id="fax_patient_search" style="width:500px" class="text" required/></div>
+		<div class="pure-control-group"><label for="fax_import_patient_search">Choose Patient:</label><input type="text" name="patient_search" id="fax_import_patient_search" style="width:500px" class="text" required/></div>
 		<div class="pure-control-group"><label for="fax_import_documents_from">From:</label><input type="text" name="documents_from" id="fax_import_documents_from" style="width:500px" class="text" /></div>
 		<div class="pure-control-group"><label for="fax_import_documents_type">Document Type:</label><select name="documents_type" id="fax_import_documents_type" class="text" required></select></div>
 		<div class="pure-control-group"><label for="fax_import_documents_desc">Description:</label><input type="text" name="documents_desc" id="fax_import_documents_desc" style="width:500px" class="text" /></div>
