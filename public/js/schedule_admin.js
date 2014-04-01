@@ -137,8 +137,14 @@ $(document).ready(function() {
 						$("#schedule-setup1 :input[name='" + key + "']").val(value);
 						$("#" + key + "_old").val(value);
 					});
+					if ($("#timezone").val() == '') {
+						var tz = jstz.determine();
+						$("#timezone").val(tz.name());
+						$.jGrowl("Timezone not set. Automatically set based on your browser location");
+					}
 				}
 			});
+			
 			jQuery("#visit_type_list").jqGrid({
 				url:"ajaxsetup/visit-type-list",
 				editurl:"ajaxsetup/edit-visit-type-list",
@@ -186,14 +192,23 @@ $(document).ready(function() {
 				dataType: "json",
 				type: "POST",
 				success: function(data){
-					$("#provider_list1").addOption({"":"Select a provider."});
-					$("#provider_list1").addOption(data);
+					$("#provider_list1").addOption({"":"Select a provider."}, false);
+					$("#provider_list1").addOption(data, false);
 				}
 			});
 		},
 		position: { my: 'center', at: 'top', of: '#maincontent' }
 	});
 	$("#weekends").addOption({"0":"No","1":"Yes"},false);
+	$.ajax({
+		url: "ajaxsearch/timezone",
+		dataType: "json",
+		type: "POST",
+		success: function(data){
+			$("#timezone").addOption({"":"Select a timezone."}, false);
+			$("#timezone").addOption(data, false);
+		}
+	});
 	$("#dashboard_admin_schedule").click(function(){
 		$("#admin_schedule_dialog").dialog('open');
 	});

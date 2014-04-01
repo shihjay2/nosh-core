@@ -5,9 +5,10 @@ class ReminderController extends BaseController {
 	/**
 	* NOSH ChartingSystem Reminder System, to be run as a cron job
 	*/
-	//public function test()
-	//{
-	//}
+	public function test()
+	{
+		Config::set('app.timezone' , $row->timezone);
+	}
 	
 	public function reminder()
 	{
@@ -26,10 +27,11 @@ class ReminderController extends BaseController {
 			foreach ($query1 as $row) {
 				$to = $row->reminder_to;
 				if ($to != '') {
+					$row2 = Practiceinfo::where('practice_id', '=', $row0->practice_id)->first();
+					Config::set('app.timezone' , $row2->timezone);
 					$data_message['startdate'] = date("F j, Y, g:i a", $row->start);
 					$row0 = User::where('id', '=', $row->provider_id)->first();
 					$data_message['displayname'] = $row0->displayname;
-					$row2 = Practiceinfo::where('practice_id', '=', $row0->practice_id)->first();
 					$data_message['phone'] = $row2->phone;
 					$data_message['email'] = $row2->email;
 					$data_message['additional_message'] = $row2->additional_message;
@@ -140,6 +142,7 @@ class ReminderController extends BaseController {
 	{
 		// Update Notification
 		$row0 = Practiceinfo::find($practice_id);
+		Config::set('app.timezone' , $row0->timezone);
 		if ($row0->rcopia_update_notification_lastupdate == "") {
 			$date0 = date('m/d/Y H:i:s', time());
 		} else {
@@ -695,6 +698,7 @@ class ReminderController extends BaseController {
 			$practice_row = Practiceinfo::where('peacehealth_id', '=', $practice_lab_id)->first();
 			if ($practice_row) {
 				$practice_id = $practice_row->practice_id;
+				Config::set('app.timezone' , $practice_row->timezone);
 			} else {
 				$cmd = 'rm ' . $file;
 				exec($cmd);
@@ -818,6 +822,7 @@ class ReminderController extends BaseController {
 	public function get_scans($practice_id)
 	{
 		$result = Practiceinfo::find($practice_id);
+		Config::set('app.timezone' , $result->timezone);
 		$dir = $result->documents_dir . 'scans/' . $practice_id;
 		$files = scandir($dir);
 		$count = count($files);

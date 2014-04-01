@@ -9,6 +9,8 @@
 				<input type="text" name="minTime" id="minTime" size="20" class="schedule_time text" required/><input type="hidden" id="minTime_old"/>
 				<label for="maxTime">Last hour/time that will be displayed on the schedule:</label>
 				<input type="text" name="maxTime" id="maxTime" size="20" class="schedule_time text" required/><input type="hidden" id="maxTime_old"/>
+				<label for="timezone">Timezone:</label>
+				<select name="timezone" id="timezone" class="text" required></select><input type="hidden" id="timezone_old"/>
 				<br>
 				<strong>Clinic-wide operation hours</strong>
 				<table id="global_schedule" class="pure-table pure-table-horizontal">

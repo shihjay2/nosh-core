@@ -15,6 +15,7 @@ class FaxController extends BaseController {
 			$smtp_pass = $row1->fax_email_password;
 			$smtp_host = $row1->fax_email_hostname;
 			if ($fax_type != "") {
+				Config::set('app.timezone' , $row1->timezone);
 				if ($fax_type === "efaxsend.com") {
 					$email_sender = "message@inbound.efax.com";
 					$email_subject = 'eFax from';

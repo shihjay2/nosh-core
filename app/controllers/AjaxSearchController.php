@@ -2288,4 +2288,14 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
+	
+	public function postTimezone()
+	{
+		$arr = array();
+		$zones = DateTimeZone::listIdentifiers();
+		foreach ($zones as $zone) {
+			$arr[$zone] = $zone;
+		}
+		echo json_encode($arr);
+	}
 }

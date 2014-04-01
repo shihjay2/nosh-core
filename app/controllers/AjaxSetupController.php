@@ -499,7 +499,8 @@ class AjaxSetupController extends BaseController {
 			'fri_o' => Input::get('fri_o'),
 			'fri_c' => Input::get('fri_c'),
 			'sat_o' => Input::get('sat_o'),
-			'sat_c' => Input::get('sat_c')
+			'sat_c' => Input::get('sat_c'),
+			'timezone' => Input::get('timezone')
 		);
 		DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->update($data);
 		$this->audit('Update');

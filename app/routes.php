@@ -274,4 +274,4 @@ Route::filter('acl5', function()
 	//echo route('home');
 //}));
 
-//Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));
+Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));
