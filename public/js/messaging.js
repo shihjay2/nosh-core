@@ -1074,7 +1074,6 @@ $(document).ready(function() {
 		$("#fax_import_dialog").dialog('open');
 		$("#fax_patient_search").focus();
 	});
-	
 	$("#addrecipient").click(function(){
 		jQuery("#send_list").editGridRow("new",{closeAfterAdd:true});
 	});

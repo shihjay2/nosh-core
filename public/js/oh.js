@@ -469,6 +469,7 @@ $(document).ready(function() {
 	$("#button_oh_supplements").click(function() {
 		$("#oh_supplements_header").show();
 		$("#supplements_list_dialog").dialog('open');
+		$("#supplement_origin_orders").val('N');
 		$("#oh_supplements").focus();
 	});
 	$("#button_oh_allergies").click(function() {
