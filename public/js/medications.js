@@ -394,7 +394,7 @@ $(document).ready(function() {
 		open: function(event, ui) {
 			jQuery("#messages_medications").jqGrid('GridUnload');
 			jQuery("#messages_medications").jqGrid({
-				url:"ajaxchart/medications",
+				url:"ajaxcommon/medications",
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Date Active','Date Prescribed','Due Date','Medication','Dosage','Unit','SIG','Route','Frequency','Special Instructions','Reason','Days','Quantity','Refills','NDC','Provider ID'],
@@ -443,7 +443,7 @@ $(document).ready(function() {
 			}).navGrid('#messages_medications_pager',{search:false,edit:false,add:false,del:false});
 			jQuery("#messages_medications_inactive").jqGrid('GridUnload');
 			jQuery("#messages_medications_inactive").jqGrid({
-				url:"ajaxchart/medications-inactive",
+				url:"ajaxcommon/medications-inactive",
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Date Active','Date Prescribed','Due Date','Medication','Dosage','Unit','SIG','Route','Frequency','Special Instructions','Reason','Days'],
