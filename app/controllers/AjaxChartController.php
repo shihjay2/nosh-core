@@ -1152,6 +1152,7 @@ class AjaxChartController extends BaseController {
 				'pid' => $pid
 			);
 			if(Input::get('amount') != '') {
+				$amount = Input::get('amount');
 				if(Input::get('supplement_id') != '') {
 					$data['supplement_id'] = Input::get('supplement_id');
 					$inventory_result = DB::table('supplement_inventory')->where('supplement_id', '=', Input::get('supplement_id'))->first();

@@ -338,6 +338,7 @@ $(document).ready(function() {
 	});
 	$("#message_sup").click(function() {
 		$("#supplement_origin_orders").val("Y");
+		$("#supplement_origin_orders1").val("N");
 		$("#supplements_list_dialog").dialog('open');
 		$("#messages_supplements_header").show();
 		$("#orders_supplements").focus();
