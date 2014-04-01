@@ -295,7 +295,11 @@ class AjaxScheduleController extends BaseController {
 			$title = $row1->lastname . ', ' . $row1->firstname . ' (DOB: ' . date('m/d/Y', strtotime($row1->DOB)) . ') (ID: ' . $pid . ')';
 		} else {
 			$pid = Input::get('pid');
-			$title = Input::get('title');
+			if ($pid == '') {
+				$title = Input::get('reason');
+			} else {
+				$title = Input::get('title');
+			}
 		}
 		$provider_id = Session::get('provider_id');
 		$reason = Input::get('reason');

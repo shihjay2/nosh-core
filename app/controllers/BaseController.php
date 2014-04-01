@@ -4260,24 +4260,26 @@ class BaseController extends Controller {
 	protected function schedule_notification($appt_id)
 	{
 		$row1 = Schedule::find($appt_id);
-		$row = Demographics::find($row1->pid);
-		$row2 = Practiceinfo::find(Session::get('practice_id'));
-		$row0 = User::find($row1->provider_id);
-		$displayname = $row0->displayname;
-		$to = $row->reminder_to;
-		$phone = $row2->phone;
-		$startdate = date("F j, Y, g:i a", $row1->start);
-		if ($row1->start < time()) {
-			if ($to != '') {
-				$data_message['startdate'] = date("F j, Y, g:i a", $row1->start);
-				$data_message['displayname'] = $row0->displayname;
-				$data_message['phone'] = $row2->phone;
-				$data_message['email'] = $row2->email;
-				$data_message['additional_message'] = $row2->additional_message;
-				if ($row->reminder_method == 'Cellular Phone') {
-					$this->send_mail(array('text' => 'emails.remindertext'), $data_message, 'Appointment Reminder', $to, Session::get('practice_id'));
-				} else {
-					$this->send_mail('emails.reminder', $data_message, 'Appointment Reminder', $to, Session::get('practice_id'));
+		if ($row1->pid != '0') {
+			$row = Demographics::find($row1->pid);
+			$row2 = Practiceinfo::find(Session::get('practice_id'));
+			$row0 = User::find($row1->provider_id);
+			$displayname = $row0->displayname;
+			$to = $row->reminder_to;
+			$phone = $row2->phone;
+			$startdate = date("F j, Y, g:i a", $row1->start);
+			if ($row1->start < time()) {
+				if ($to != '') {
+					$data_message['startdate'] = date("F j, Y, g:i a", $row1->start);
+					$data_message['displayname'] = $row0->displayname;
+					$data_message['phone'] = $row2->phone;
+					$data_message['email'] = $row2->email;
+					$data_message['additional_message'] = $row2->additional_message;
+					if ($row->reminder_method == 'Cellular Phone') {
+						$this->send_mail(array('text' => 'emails.remindertext'), $data_message, 'Appointment Reminder', $to, Session::get('practice_id'));
+					} else {
+						$this->send_mail('emails.reminder', $data_message, 'Appointment Reminder', $to, Session::get('practice_id'));
+					}
 				}
 			}
 		}
