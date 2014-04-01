@@ -41,7 +41,7 @@
 		<input type="hidden" name="amount" id="sup_amount"/>
 		<input type="hidden" name="supplement_id" id="supplement_id"/>
 		<div class="pure-g">
-			<div class="pure-u-3-4 messages_sup_provider_div"><label for="messages_sup_provider">Prescribing Provider:</label><select name="id" id="messages_sup_provider" class="text pure-input-1" required/></select></div>
+			<div class="pure-u-3-4 messages_sup_provider_div"><label for="messages_sup_provider">Prescribing Provider:</label><select name="id" id="messages_sup_provider" class="text pure-input-1"/></select></div>
 			<div class="pure-u-1-4" style="text-align:center; padding: 2% 0;"><button type="button" id="search_db_supplement" class="nosh_button_extlink">Database</button></div>
 			<div class="pure-u-1-2"><label for="">Supplement:</label><input type="text" name="sup_supplement" id="sup_supplement" class="text pure-input-1" required/></div>
 			<div class="pure-u-1-4"><label for="">Dosage:</label><input type="text" name="sup_dosage" id="sup_dosage"class="text pure-input-1"/></div>
