@@ -3,11 +3,11 @@
 	<div id="encounter_tabs">
 		<ul>
 			<li id="encounter_tabs_situation"><a href="#encounter_tabs_1">Situation</a></li>
-			<li id="encounter_tabs_background"><a href="ajaxencounter/oh">Background</a></li>
-			<li id="encounter_tabs_labs"><a href="ajaxencounter/labs">Labs</a></a></li>
-			<li id="encounter_tabs_proc"><a href="ajaxencounter/proc">Procedure</a></li>
-			<li id="encounter_tabs_assessment"><a href="ajaxencounter/assessment">Assessment</a></li>
-			<li id="encounter_tabs_orders"><a href="ajaxencounter/orders">Orders</a></li>
+			<li id="encounter_tabs_background"><a href="#encounter_tabs_2">Background</a></li>
+			<li id="encounter_tabs_labs"><a href="#encounter_tabs_3">Labs</a></a></li>
+			<li id="encounter_tabs_proc"><a href="#encounter_tabs_4">Procedure</a></li>
+			<li id="encounter_tabs_assessment"><a href="#encounter_tabs_5">Assessment</a></li>
+			<li id="encounter_tabs_orders"><a href="#encounter_tabs_6">Orders</a></li>
 		</ul>
 		<div id="encounter_tabs_1" style="overflow:auto">
 			<div id="situation_form" class="pure-g">
@@ -24,6 +24,21 @@
 					<br><button type="button" id="situation_orders_pending" class="nosh_button">Orders Pending</button>
 				</div>
 			</div>
+		</div>
+		<div id="encounter_tabs_2" style="overflow:auto">
+			<?php echo $oh;?>
+		</div>
+		<div id="encounter_tabs_3" style="overflow:auto">
+			<?php echo $labs;?>
+		</div>
+		<div id="encounter_tabs_4" style="overflow:auto">
+			<?php echo $proc;?>
+		</div>
+		<div id="encounter_tabs_5" style="overflow:auto">
+			<?php echo $assessment;?>
+		</div>
+		<div id="encounter_tabs_6" style="overflow:auto">
+			<?php echo $orders;?>
 		</div>
 	</div>
 </div>

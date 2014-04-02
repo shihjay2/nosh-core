@@ -29,6 +29,8 @@
 		<?php echo HTML::script('js/jquery.jqGrid.min.js'); ?>
 		<?php echo HTML::script('js/jquery-idleTimeout.js'); ?>
 		<?php echo HTML::script('js/jquery.themeswitcher.js'); ?>
+		<?php echo HTML::script('js/jstz-1.0.4.min.js'); ?>
+		<?php echo HTML::script('js/jquery.cookie.js'); ?>
 		<?php echo HTML::script('js/main.js'); ?>
 		{{ $script }}
 	</head>

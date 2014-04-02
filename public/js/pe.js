@@ -6,79 +6,6 @@ $(document).ready(function() {
 		});
 		$('#' + parent_id_entry).val(newtext);
 	}
-	function pe_form_load() {
-		$('.pe_buttonset').buttonset();
-		$('.pe_detail_text').hide();
-	}
-	function get_pe_templates(group, id, type) {
-		$.ajax({
-			type: "POST",
-			url: "ajaxencounter/get-pe-templates/" + group + "/" + id + "/" + type,
-			dataType: "json",
-			success: function(data){
-				$('#'+group+'_form').html('');
-				$('#'+group+'_form').dform(data);
-				pe_form_load();
-			}
-		});
-	}
-	function pe_accordion_action(id, dialog_id) {
-		$("#" + id + " .text").first().focus();
-		$("#"+dialog_id).find('.pe_entry').each(function(){
-			var parent_id1 = $(this).attr("id");
-			if (!!$(this).val()) {
-				$('#' + parent_id1 + '_h').html(noshdata.item_present);
-			} else {
-				$('#' + parent_id1 + '_h').html(noshdata.item_empty);
-			}
-		});
-	}
-	function pe_dialog_open(dialog_id) {
-		var accordion_id = dialog_id.replace('_dialog', '_accordion');
-		if (!$("#"+accordion_id).hasClass('ui-accordion')) {
-			$("#"+accordion_id).accordion({
-				create: function(event, ui) {
-					var id = ui.panel[0].id;
-					pe_accordion_action(id, dialog_id);
-				},
-				activate: function(event, ui) {
-					var id = ui.newPanel[0].id;
-					pe_accordion_action(id, dialog_id);
-				},
-				heightStyle: "content"
-			});
-		}
-		$("#"+dialog_id).find('.pe_entry').each(function(){
-			var parent_id = $(this).attr("id");
-			$.ajax({
-				type: "POST",
-				url: "ajaxencounter/get-pe/" + parent_id,
-				success: function(data){
-					$('#' + parent_id).val(data);
-					$('#' + parent_id + "_old").val(data);
-					if (!!data) {
-						$('#' + parent_id + '_h').html(noshdata.item_present);
-					} else {
-						$('#' + parent_id + '_h').html(noshdata.item_empty);
-					}
-				}
-			});
-			$.ajax({
-				type: "POST",
-				url: "ajaxencounter/pe-template-select-list/" + parent_id,
-				dataType: "json",
-				success: function(data){
-					$('#'+parent_id+'_template').addOption({"":"*Select a template"}, false);
-					$('#'+parent_id+'_template').addOption(data.options, false);
-					$('#'+parent_id+'_template').sortOptions();
-					$('#'+parent_id+'_template').val("");
-					if ($('#'+parent_id+'_form').html() == '') {
-						get_pe_templates(parent_id, '0', 'y');
-					}
-				}
-			});
-		});
-	}
 	function pe_clear_dialog_form(dialog_id) {
 		$("#"+dialog_id).find('.pe_entry').each(function(){
 			$(this).val('');
@@ -114,7 +41,6 @@ $(document).ready(function() {
 			data: str,
 			success: function(data){
 				$.jGrowl(data);
-				pe_clear_dialog_form(dialog_id);
 				$("#"+dialog_id).dialog('close');
 				check_pe_status();
 			}
@@ -496,9 +422,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_gen_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_gen_dialog');
@@ -519,9 +442,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_eye_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_eye_dialog');
@@ -542,9 +462,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_ent_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_ent_dialog');
@@ -565,9 +482,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_neck_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_neck_dialog');
@@ -588,9 +502,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_resp_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_resp_dialog');
@@ -611,9 +522,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_cv_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_cv_dialog');
@@ -634,9 +542,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_ch_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_ch_dialog');
@@ -657,9 +562,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_gi_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_gi_dialog');
@@ -680,9 +582,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_gu_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_gu_dialog');
@@ -703,9 +602,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_lymph_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_lymph_dialog');
@@ -726,9 +622,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_ms_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_ms_dialog');
@@ -749,9 +642,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_neuro_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_neuro_dialog');
@@ -772,9 +662,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_psych_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_psych_dialog');
@@ -795,9 +682,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function() {
-			pe_dialog_open('pe_skin_dialog');
-		},
 		buttons: {
 			'Save': function() {
 				pe_dialog_save('pe_skin_dialog');

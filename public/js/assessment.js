@@ -11,65 +11,65 @@ $(document).ready(function() {
 					$("#assessment_form :input[name='" + key + "']").val(value);
 					$("#"+key+"_old").val(value);
 				});
-				if(data.assessment_1.length!=0){
+				if(data.assessment_1 != '' && data.assessment_1 != null){
 					var label1 = '<strong>Diagnosis #1:</strong> ' + data.assessment_1;
 					$("#assessment_icd1_div").html(label1);
-					$("#assessment_icd1_div_button").show('fast');
+					$("#assessment_icd1_div_button").show();
 				}
-				if(data.assessment_2.length!=0){
+				if(data.assessment_2 != '' && data.assessment_2 != null){
 					var label2 = '<strong>Diagnosis #2:</strong> ' + data.assessment_2;
 					$("#assessment_icd2_div").html(label2);
-					$("#assessment_icd2_div_button").show('fast');
+					$("#assessment_icd2_div_button").show();
 				}
-				if(data.assessment_3.length!=0){
+				if(data.assessment_3 != '' && data.assessment_3 != null){
 					var label3 = '<strong>Diagnosis #3:</strong> ' + data.assessment_3;
 					$("#assessment_icd3_div").html(label3);
-					$("#assessment_icd3_div_button").show('fast');
+					$("#assessment_icd3_div_button").show();
 				}
-				if(data.assessment_4.length!=0){
+				if(data.assessment_4 != '' && data.assessment_4 != null){
 					var label4 = '<strong>Diagnosis #4:</strong> ' + data.assessment_4;
 					$("#assessment_icd4_div").html(label4);
-					$("#assessment_icd4_div_button").show('fast');
+					$("#assessment_icd4_div_button").show();
 				}
-				if(data.assessment_5.length!=0){
+				if(data.assessment_5 != '' && data.assessment_5 != null){
 					var label5 = '<strong>Diagnosis #5:</strong> ' + data.assessment_5;
 					$("#assessment_icd5_div").html(label5);
-					$("#assessment_icd5_div_button").show('fast');
+					$("#assessment_icd5_div_button").show();
 				}
-				if(data.assessment_6.length!=0){
+				if(data.assessment_6 != '' && data.assessment_6 != null){
 					var label6 = '<strong>Diagnosis #6:</strong> ' + data.assessment_6;
 					$("#assessment_icd6_div").html(label6);
-					$("#assessment_icd6_div_button").show('fast');
+					$("#assessment_icd6_div_button").show();
 				}
-				if(data.assessment_7.length!=0){
+				if(data.assessment_7 != '' && data.assessment_7 != null){
 					var label7 = '<strong>Diagnosis #7:</strong> ' + data.assessment_7;
 					$("#assessment_icd7_div").html(label7);
-					$("#assessment_icd7_div_button").show('fast');
+					$("#assessment_icd7_div_button").show();
 				}
-				if(data.assessment_8.length!=0){
+				if(data.assessment_8 != '' && data.assessment_8 != null){
 					var label8 = '<strong>Diagnosis #8:</strong> ' + data.assessment_8;
 					$("#assessment_icd8_div").html(label8);
-					$("#assessment_icd8_div_button").show('fast');
+					$("#assessment_icd8_div_button").show();
 				}
-				if(data.assessment_9.length!=0){
+				if(data.assessment_9 != '' && data.assessment_9 != null){
 					var label9 = '<strong>Diagnosis #9:</strong> ' + data.assessment_9;
 					$("#assessment_icd9_div").html(label9);
-					$("#assessment_icd9_div_button").show('fast');
+					$("#assessment_icd9_div_button").show();
 				}
-				if(data.assessment_10.length!=0){
+				if(data.assessment_10 != '' && data.assessment_10 != null){
 					var label10 = '<strong>Diagnosis #10:</strong> ' + data.assessment_10;
 					$("#assessment_icd10_div").html(label10);
-					$("#assessment_icd10_div_button").show('fast');
+					$("#assessment_icd10_div_button").show();
 				}
-				if(data.assessment_11.length!=0){
+				if(data.assessment_11 != '' && data.assessment_11 != null){
 					var label11 = '<strong>Diagnosis #11:</strong> ' + data.assessment_11;
 					$("#assessment_icd11_div").html(label11);
-					$("#assessment_icd11_div_button").show('fast');
+					$("#assessment_icd11_div_button").show();
 				}
-				if(data.assessment_12.length!=0){
+				if(data.assessment_12 != '' && data.assessment_12 != null){
 					var label12 = '<strong>Diagnosis #12:</strong> ' + data.assessment_12;
 					$("#assessment_icd12_div").html(label12);
-					$("#assessment_icd12_div_button").show('fast');
+					$("#assessment_icd12_div_button").show();
 				}
 			}
 		}

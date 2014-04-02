@@ -211,56 +211,27 @@ class AjaxEncounterController extends BaseController {
 				$data['preg'] = '<button type="button" id="hpi_preg" class="nosh_button">Pregnancy Status</button>';
 			}
 		}
+		if ($row->encounter_template == 'standardmedical') {
+			$data['ros'] = View::make('encounters.ros')->render();
+			$data['oh'] = View::make('encounters.oh')->render();
+			$data1['practiceInfo'] = $result;
+			$data['vitals'] = View::make('encounters.vitals', $data1)->render();
+			$data['pe'] = View::make('encounters.pe')->render();
+			$data['labs'] = View::make('encounters.labs')->render();
+			$data['proc'] = View::make('encounters.proc')->render();
+			$data['assessment'] = View::make('encounters.assessment')->render();
+			$data2['mtm'] = $result->mtm_extension;
+			$data['orders'] = View::make('encounters.orders', $data2)->render();
+		}
+		if ($row->encounter_template == 'clinicalsupport') {
+			$data['oh'] = View::make('encounters.oh')->render();
+			$data['labs'] = View::make('encounters.labs')->render();
+			$data['proc'] = View::make('encounters.proc')->render();
+			$data['assessment'] = View::make('encounters.assessment')->render();
+			$data2['mtm'] = $result->mtm_extension;
+			$data['orders'] = View::make('encounters.orders', $data2)->render();
+		}
 		return View::make('encounters.' . $row->encounter_template, $data);
-	}
-	
-	// Standard medical tabs
-	public function getRos()
-	{
-		return View::make('encounters.ros');
-	}
-	
-	public function getOh()
-	{
-		return View::make('encounters.oh');
-	}
-	
-	public function getVitals()
-	{
-		$data['practiceInfo'] = Practiceinfo::find(Session::get('practice_id'));
-		return View::make('encounters.vitals', $data);
-	}
-	
-	public function getPe()
-	{
-		return View::make('encounters.pe');
-	}
-	
-	public function getLabs()
-	{
-		return View::make('encounters.labs');
-	}
-	
-	public function getProc()
-	{
-		return View::make('encounters.proc');
-	}
-	
-	public function getAssessment()
-	{
-		return View::make('encounters.assessment');
-	}
-	
-	public function getOrders()
-	{
-		$row = Practiceinfo::find(Session::get('practice_id'));
-		$data['mtm'] = $row->mtm_extension;
-		return View::make('encounters.orders', $data);
-	}
-	
-	public function getBilling()
-	{
-		return '';
 	}
 	
 	// HPI functions
@@ -433,7 +404,7 @@ class AjaxEncounterController extends BaseController {
 		echo json_encode($data);
 	}
 	
-	public function postRosTemplateSelectList($group)
+	public function postRosTemplateSelectList()
 	{
 		if (Session::get('gender') == 'male') {
 			$sex = 'm';
@@ -445,16 +416,17 @@ class AjaxEncounterController extends BaseController {
 			->orWhere('user_id', '=', '0')
 			->where('sex', '=', $sex)
 			->where('category', '=', 'ros')
-			->where('group', '=', $group);
+			->orderBy('group', 'asc');
 		if (Session::get('agealldays') > 6574.5) {
 			$query->where('age', 'adult');
 		}
 		$result = $query->get();
-		$data['options'] = array();
+		$data = array();
 		foreach ($result as $row) {
 			$id = $row->template_id;
 			$name = $row->template_name;
-			$data['options'][$id] = $name;
+			$group = $row->group;
+			$data[$group][$id] = $name;
 		}
 		echo json_encode($data);
 	}
@@ -526,12 +498,38 @@ class AjaxEncounterController extends BaseController {
 		echo $data1;
 	}
 	
-	public function postGetRos($type)
+	public function postGetDefaultRosTemplates()
+	{
+		$gender = Session::get('gender');
+		$age = Session::get('agealldays');
+		if ($gender == 'male') {
+			$sex = 'm';
+		} else {
+			$sex = 'f';
+		}
+		$query = DB::table('templates')
+			->where('user_id', '=', '0')
+			->where('sex', '=', $sex)
+			->where('category', '=', 'ros')
+			->where('default', '=', "default")
+			->orderBy('group', 'asc')
+			->get();
+		$data = array();
+		foreach ($query as $row) {
+			$group = $row->group;
+			$data[$group] = unserialize($row->array);
+		}
+		echo json_encode($data);
+	}
+	
+	public function postGetRos()
 	{
 		$data = DB::table('ros')->where('eid', '=', Session::get('eid'))->first();
 		if ($data) {
 			$data1 = (array) $data;
-			echo $data1[$type];
+			echo json_encode($data1);
+		} else {
+			echo '';
 		}
 	}
 	
@@ -1004,7 +1002,30 @@ class AjaxEncounterController extends BaseController {
 		echo $data1;
 	}
 	
-	public function postPeTemplateSelectList($group)
+	public function postGetDefaultPeTemplates()
+	{
+		$gender = Session::get('gender');
+		if ($gender == 'male') {
+			$sex = 'm';
+		} else {
+			$sex = 'f';
+		}
+		$query = DB::table('templates')
+			->where('user_id', '=', '0')
+			->where('sex', '=', $sex)
+			->where('category', '=', 'pe')
+			->where('default', '=', "default")
+			->orderBy('group', 'asc')
+			->get();
+		$data = array();
+		foreach ($query as $row) {
+			$group = $row->group;
+			$data[$group] = unserialize($row->array);
+		}
+		echo json_encode($data);
+	}
+	
+	public function postPeTemplateSelectList()
 	{
 		if (Session::get('gender') == 'male') {
 			$sex = 'm';
@@ -1016,13 +1037,14 @@ class AjaxEncounterController extends BaseController {
 			->orWhere('user_id', '=', '0')
 			->where('sex', '=', $sex)
 			->where('category', '=', 'pe')
-			->where('group', '=', $group);
+			->orderBy('group', 'asc');
 		$result = $query->get();
 		$data['options'] = array();
 		foreach ($result as $row) {
 			$id = $row->template_id;
 			$name = $row->template_name;
-			$data['options'][$id] = $name;
+			$group = $row->group;
+			$data[$group][$id] = $name;
 		}
 		echo json_encode($data);
 	}
@@ -1093,12 +1115,14 @@ class AjaxEncounterController extends BaseController {
 		echo json_encode($data);
 	}
 	
-	public function postGetPe($type)
+	public function postGetPe()
 	{
 		$data = DB::table('pe')->where('eid', '=', Session::get('eid'))->first();
 		if ($data) {
 			$data1 = (array) $data;
-			echo $data1[$type];
+			echo json_encode($data1);
+		} else {
+			echo '';
 		}
 	}
 	

@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	loadbuttons();
-	setInterval(hpi_autosave('situation'), 10000);
+	//setInterval(hpi_autosave('situation'), 10000);
 	if(noshdata.pending_orders_id != '') {
 		pending_order_load(noshdata.pending_orders_id);
 	}
@@ -20,11 +20,12 @@ $(document).ready(function() {
 		},
 		activate: function(event, ui) {
 			var id = $(ui.newTab).attr('id');
+			var old_id = $(ui.oldTab).attr('id');
 			var isValid = true;
-			if (id != "encounter_tabs_situation") {
+			if (old_id == "encounter_tabs_situation") {
 				hpi_autosave('situation');
 			}
-			if (id != "encounter_tabs_background") {
+			if (old_id == "encounter_tabs_background") {
 				oh_autosave();
 			}
 			if (id == "encounter_tabs_background") {
@@ -90,13 +91,13 @@ $(document).ready(function() {
 			if (id == "encounter_tabs_labs") {
 				check_labs1();
 			}
-			if (id != "encounter_tabs_proc") {
+			if (old_id == "encounter_tabs_proc") {
 				proc_autosave();
 			}
-			if (id != "encounter_tabs_assessment") {
+			if (old_id == "encounter_tabs_assessment") {
 				assessment_autosave();
 			}
-			if (id != "encounter_tabs_orders") {
+			if (old_id == "encounter_tabs_orders") {
 				orders_autosave();
 			}
 			if (id == "encounter_tabs_orders") {

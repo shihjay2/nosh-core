@@ -32,6 +32,7 @@ function reload_grid(id) {
 	}
 }
 function openencounter() {
+	$('#dialog_load').dialog('option', 'title', "Loading encounter...").dialog('open');
 	$("#encounter_body").load('ajaxencounter/loadtemplate');
 	$("#encounter_link_span").html('<a href="#" id="encounter_panel">[Active Encounter #: ' + noshdata.eid + ']</a>');
 	$("#encounter_panel").click(function() {
@@ -188,7 +189,6 @@ function check_labs1() {
 		url: "ajaxencounter/check-labs",
 		dataType: "json",
 		success: function(data){
-			$.jGrowl(data.message);
 			$('#button_labs_ua_status').html(data.ua);
 			$('#button_labs_rapid_status').html(data.rapid);
 			$('#button_labs_micro_status').html(data.micro);
@@ -534,30 +534,141 @@ function get_ros_templates(group, id, type) {
 		}
 	});
 }
-function ros_dialog_open(type) {
+function ros_dialog_open() {
 	$.ajax({
 		type: "POST",
-		url: "ajaxencounter/ros-template-select-list/" + type,
+		url: "ajaxencounter/ros-template-select-list",
 		dataType: "json",
 		success: function(data){
-			$('#'+type+'_template').addOption({"":"*Select a template"}, false);
-			$('#'+type+'_template').addOption(data.options, false);
-			$('#'+type+'_template').sortOptions();
-			$('#'+type+'_template').val("");
-			if ($('#'+type+'_form').html() == '') {
-				get_ros_templates(type, '0', 'y');
+			$.each(data, function(key, value){
+				$('#'+key+'_template').addOption({"":"*Select a template"}, false);
+				$('#'+key+'_template').addOption(value, false);
+				$('#'+key+'_template').sortOptions();
+				$('#'+key+'_template').val("");
+			});
+		}
+	});
+	$.ajax({
+		type: "POST",
+		url: "ajaxencounter/get-default-ros-templates",
+		dataType: "json",
+		success: function(data){
+			$.each(data, function(key, value){
+				$('#'+key+'_form').html('');
+				$('#'+key+'_form').dform(value);
+				ros_form_load();
+			});
+			
+		}
+	});
+	$.ajax({
+		type: "POST",
+		url: "ajaxencounter/get-ros",
+		dataType: "json",
+		success: function(data){
+			if (data != '') {
+				$.each(data, function(key, value){
+					if (key != 'eid' || key != 'pid' || key != 'ros_date' || key != 'encounter_provider') {
+						$('#'+key).val(value);
+						$('#'+key+'_old').val(value);
+					}
+				});
 			}
 		}
 	});
+}
+function pe_form_load() {
+	$('.pe_buttonset').buttonset();
+	$('.pe_detail_text').hide();
+}
+function get_pe_templates(group, id, type) {
 	$.ajax({
 		type: "POST",
-		url: "ajaxencounter/get-ros/" + type,
+		url: "ajaxencounter/get-pe-templates/" + group + "/" + id + "/" + type,
+		dataType: "json",
 		success: function(data){
-			$('#'+type).val(data);
-			$('#'+type+'_old').val(data);
+			$('#'+group+'_form').html('');
+			$('#'+group+'_form').dform(data);
+			pe_form_load();
 		}
 	});
-	$("#"+type).focus();
+}
+function pe_accordion_action(id, dialog_id) {
+	$("#" + id + " .text").first().focus();
+	$("#"+dialog_id).find('.pe_entry').each(function(){
+		var parent_id1 = $(this).attr("id");
+		if (!!$(this).val()) {
+			$('#' + parent_id1 + '_h').html(noshdata.item_present);
+		} else {
+			$('#' + parent_id1 + '_h').html(noshdata.item_empty);
+		}
+	});
+}
+function pe_dialog_open() {
+	$('.pe_dialog').each(function() {
+		var dialog_id = $(this).attr('id');
+		var accordion_id = dialog_id.replace('_dialog', '_accordion');
+		if (!$("#"+accordion_id).hasClass('ui-accordion')) {
+			$("#"+accordion_id).accordion({
+				create: function(event, ui) {
+					var id = ui.panel[0].id;
+					pe_accordion_action(id, dialog_id);
+				},
+				activate: function(event, ui) {
+					var id = ui.newPanel[0].id;
+					pe_accordion_action(id, dialog_id);
+				},
+				heightStyle: "content"
+			});
+		}
+	});
+	$.ajax({
+		type: "POST",
+		url: "ajaxencounter/pe-template-select-list",
+		dataType: "json",
+		success: function(data){
+			$.each(data, function(key, value){
+				$('#'+key+'_template').addOption({"":"*Select a template"}, false);
+				$('#'+key+'_template').addOption(value, false);
+				$('#'+key+'_template').sortOptions();
+				$('#'+key+'_template').val("");
+			});
+		}
+	});
+	$.ajax({
+		type: "POST",
+		url: "ajaxencounter/get-default-pe-templates",
+		dataType: "json",
+		success: function(data){
+			$.each(data, function(key, value){
+				$('#'+key+'_form').html('');
+				$('#'+key+'_form').dform(value);
+				pe_form_load();
+			});
+		}
+	});
+	$.ajax({
+		type: "POST",
+		url: "ajaxencounter/get-pe",
+		dataType: "json",
+		success: function(data){
+			if (data != '') {
+				$.each(data, function(key, value){
+					if (key != 'eid' || key != 'pid' || key != 'pe_date' || key != 'encounter_provider') {
+						$('#'+key).val(value);
+						$('#'+key+'_old').val(value);
+						if (!!value) {
+							$('#' + key + '_h').html(noshdata.item_present);
+						} else {
+							$('#' + key + '_h').html(noshdata.item_empty);
+						}
+						
+						
+					}
+				});
+			}
+		}
+	});
 }
 function parse_date(string) {
 	var date = new Date();
@@ -811,4 +922,7 @@ $(document).ready(function() {
 });
 $(document).on("click", ".ui-jqgrid-titlebar", function() {
 	$(".ui-jqgrid-titlebar-close", this).click();
+});
+$(document).ajaxStop(function() {
+  $('#dialog_load').dialog('close');
 });

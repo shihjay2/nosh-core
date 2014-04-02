@@ -174,5 +174,5 @@ $(document).ready(function() {
 			}
 		}
 	});
-	//setInterval(vitals_autosave, 10000);
+	setInterval(vitals_autosave, 10000);
 });

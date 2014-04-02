@@ -1,5 +1,7 @@
 $(document).ready(function() {
 	loadbuttons();
+	ros_dialog_open();
+	pe_dialog_open();
 	//setInterval(hpi_autosave('hpi'), 10000);
 	$("#encounter_tabs").tabs({
 		beforeLoad: function(event, ui) {
@@ -23,23 +25,7 @@ $(document).ready(function() {
 				hpi_autosave('hpi');
 			}
 			if (id == "encounter_tabs_ros") {
-				$('#dialog_load').dialog('option', 'title', "Loading...").dialog('open');
 				check_ros_status();
-				ros_dialog_open('ros_gen');
-				ros_dialog_open('ros_eye');
-				ros_dialog_open('ros_ent');
-				ros_dialog_open('ros_resp');
-				ros_dialog_open('ros_cv');
-				ros_dialog_open('ros_gi');
-				ros_dialog_open('ros_gu');
-				ros_dialog_open('ros_mus');
-				ros_dialog_open('ros_neuro');
-				ros_dialog_open('ros_psych');
-				ros_dialog_open('ros_heme');
-				ros_dialog_open('ros_endocrine');
-				ros_dialog_open('ros_skin');
-				ros_dialog_open('ros_wcc');
-				$('#dialog_load').dialog('close');
 			}
 			if (old_id == "encounter_tabs_oh") {
 				oh_autosave();

@@ -119,8 +119,9 @@
 					<span>Alcohol Use</span><br>
 					<input name="oh_etoh_select" id="oh_etoh_n" value="No alcohol use." type="radio"><label for="oh_etoh_n">No</label>
 					<input name="oh_etoh_select" id="oh_etoh_y" value="Frequency of alcohol use: " type="radio"><label for="oh_etoh_y">Yes</label>
+				</div>
 				<div id="oh_etoh_input" style="display:none">
-					<label for="oh_etoh_text">Frequency:</label><br><input type="text" name="oh_etoh_text" id="oh_etoh_text" style="width:300px" class="text" />
+					<label for="oh_etoh_text">Frequency:</label><input type="text" name="oh_etoh_text" id="oh_etoh_text" style="width:300px" class="text" />
 				</div>
 			</form>
 		</div>
@@ -142,7 +143,7 @@
 					<input name="oh_tobacco_select" id="oh_tobacco_y" value="Frequency of tobacco use: " type="radio"><label for="oh_tobacco_y">Yes</label>
 				</div>
 				<div id="oh_tobacco_input" style="display:none">
-					<label for="oh_tobacco_text">Frequency:</label><br><input type="text" name="oh_tobacco_text" id="oh_tobacco_text" style="width:300px" class="text" />
+					<label for="oh_tobacco_text">Frequency:</label><input type="text" name="oh_tobacco_text" id="oh_tobacco_text" style="width:300px" class="text" />
 				</div>
 			</form>
 		</div>
@@ -164,8 +165,8 @@
 					<input name="oh_drugs_select" id="oh_drugs_y"value="Type of drug use: " type="radio"><label for="oh_drugs_y">Yes</label>
 				</div>
 				<div id="oh_drugs_input" style="display:none">
-					<div class="oh_buttonset"><label for="oh_drugs_text">Type:</label><br><input type="text" name="oh_drugs_text" id="oh_drugs_text" style="width:300px" class="text" /></div><br>
-					<div class="oh_buttonset"><label for="oh_drugs_text1">Frequency:</label><input type="text" name="oh_drugs_text1" id="oh_drugs_text1" style="width:300px" class="text" /></div>
+					<label for="oh_drugs_text">Type:</label><input type="text" name="oh_drugs_text" id="oh_drugs_text" style="width:300px" class="text" /><br>
+					<label for="oh_drugs_text1">Frequency:</label><input type="text" name="oh_drugs_text1" id="oh_drugs_text1" style="width:300px" class="text" />
 				</div>
 			</form>
 		</div>
@@ -191,10 +192,10 @@
 					<input name="oh_employment_select" id="oh_employment_6" value="Homemaker." type="radio"><label for="oh_employment_6">Homemaker</label>
 				</div>
 				<div id="oh_employment_input" style="display:none">
-					<div class="oh_buttonset"><label for="oh_employment_text">Employment Field:</label><br><input type="text" name="oh_employment_text" id="oh_employment_text" style="width:300px" class="text" /></div><br>
-					<div class="oh_buttonset"><label for="oh_employment_employer">Employer:</label><br><input type="text" name="employer" id="oh_employment_employer" style="width:300px" class="text"/><input type="hidden" id="oh_employment_employer_old"></div>
+					<label for="oh_employment_text">Employment Field:</label><input type="text" name="oh_employment_text" id="oh_employment_text" style="width:300px" class="text" /><br>
+					<label for="oh_employment_employer">Employer:</label><input type="text" name="employer" id="oh_employment_employer" style="width:300px" class="text"/><input type="hidden" id="oh_employment_employer_old">
 				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 </div>

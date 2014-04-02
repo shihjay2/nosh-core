@@ -35,7 +35,7 @@
 		</div>
 	</div>
 </form>
-<div id="pe_gen_dialog" title="General">
+<div id="pe_gen_dialog" class="pe_dialog" title="General">
 	<input type="checkbox" id="pe_gen_normal" class="all_normal1 nosh_button" value=""><label for="pe_gen_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_gen_accordion">
@@ -58,7 +58,7 @@
 		</div>
 	</div>
 </div>
-<div id="pe_eye_dialog" title="Eye" >
+<div id="pe_eye_dialog" class="pe_dialog" title="Eye" >
 	<input type="checkbox" id="pe_eye_normal" class="all_normal1 nosh_button" value=""><label for="pe_eye_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_eye_accordion">
@@ -115,7 +115,7 @@
 		</div>
 	</div>
 </div>
-<div id="pe_ent_dialog" title="Ears, Nose, Throat">
+<div id="pe_ent_dialog" class="pe_dialog" title="Ears, Nose, Throat">
 	<input type="checkbox" id="pe_ent_normal" class="all_normal1 nosh_button" value=""><label for="pe_ent_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_ent_accordion">
@@ -223,7 +223,7 @@
 		</div>
 	</div>
 </div>
-<div id="pe_neck_dialog" title="Neck">
+<div id="pe_neck_dialog" class="pe_dialog" title="Neck">
 	<input type="checkbox" id="pe_neck_normal" class="all_normal1 nosh_button" value=""><label for="pe_neck_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_neck_accordion">
@@ -263,7 +263,7 @@
 		</div>
 	</div>
 </div>
-<div id="pe_resp_dialog" title="Respiratory">
+<div id="pe_resp_dialog" class="pe_dialog" title="Respiratory">
 	<input type="checkbox" id="pe_resp_normal" class="all_normal1 nosh_button" value=""><label for="pe_resp_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_resp_accordion">
@@ -337,7 +337,7 @@
 		</div>
 	</div>
 </div>
-<div id="pe_cv_dialog" title="Cardiovascular">
+<div id="pe_cv_dialog" class="pe_dialog" title="Cardiovascular">
 	<input type="checkbox" id="pe_cv_normal" class="all_normal1 nosh_button" value=""><label for="pe_cv_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_cv_accordion">
@@ -445,7 +445,7 @@
 		</div>
 	</div>
 </div>
-<div id="pe_ch_dialog" title="Chest">
+<div id="pe_ch_dialog" class="pe_dialog" title="Chest">
 	<input type="checkbox" id="pe_ch_normal" class="all_normal1 nosh_button" value=""><label for="pe_ch_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_ch_accordion">
@@ -485,7 +485,7 @@
 		</div>
 	</div>
 </div>
-<div id="pe_gi_dialog" title="Gastrointestinal">
+<div id="pe_gi_dialog" class="pe_dialog" title="Gastrointestinal">
 	<input type="checkbox" id="pe_gi_normal" class="all_normal1 nosh_button" value=""><label for="pe_gi_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_gi_accordion">
@@ -559,7 +559,7 @@
 		</div>
 	</div>
 </div>
-<div id="pe_gu_dialog" title="Genitourinary">
+<div id="pe_gu_dialog" class="pe_dialog" title="Genitourinary">
 	<input type="checkbox" id="pe_gu_normal" class="all_normal1 nosh_button" value=""><label for="pe_gu_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_gu_accordion">
@@ -721,7 +721,7 @@
 		<?php }?>
 	</div>
 </div>
-<div id="pe_lymph_dialog" title="Lymphatic">
+<div id="pe_lymph_dialog" class="pe_dialog" title="Lymphatic">
 	<input type="checkbox" id="pe_lymph_normal" class="all_normal1 nosh_button" value=""><label for="pe_lymph_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_lymph_accordion">
@@ -778,7 +778,7 @@
 		</div>
 	</div>
 </div>
-<div id="pe_ms_dialog" title="Musculoskeletal">
+<div id="pe_ms_dialog" class="pe_dialog" title="Musculoskeletal">
 	<input type="checkbox" id="pe_ms_normal" class="all_normal1 nosh_button" value=""><label for="pe_ms_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_ms_accordion">
@@ -988,7 +988,7 @@
 		</div>
 	</div>
 </div>
-<div id="pe_neuro_dialog" title="Neurological">
+<div id="pe_neuro_dialog" class="pe_dialog" title="Neurological">
 	<input type="checkbox" id="pe_neuro_normal" class="all_normal1 nosh_button" value=""><label for="pe_neuro_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_neuro_accordion">
@@ -1045,7 +1045,7 @@
 		</div>
 	</div>
 </div>
-<div id="pe_psych_dialog" title="Psychological">
+<div id="pe_psych_dialog" class="pe_dialog" title="Psychological">
 	<input type="checkbox" id="pe_psych_normal" class="all_normal1 nosh_button" value=""><label for="pe_psych_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_psych_accordion">
@@ -1119,7 +1119,7 @@
 		</div>
 	</div>
 </div>
-<div id="pe_skin_dialog" title="Skin">
+<div id="pe_skin_dialog" class="pe_dialog" title="Skin">
 	<input type="checkbox" id="pe_skin_normal" class="all_normal1 nosh_button" value=""><label for="pe_skin_normal">All Normal</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_skin_accordion">

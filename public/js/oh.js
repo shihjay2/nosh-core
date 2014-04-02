@@ -930,5 +930,5 @@ $(document).ready(function() {
 	$('#cancel_oh_employment_form').click(function(){
 		$('#oh_employment_form').clearForm();
 	});
-	//setInterval(oh_autosave, 10000);
+	setInterval(oh_autosave, 10000);
 });

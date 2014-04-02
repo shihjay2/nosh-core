@@ -14,7 +14,6 @@ $(document).ready(function() {
 			data: str,
 			success: function(data){
 				$.jGrowl(data);
-				$("#ros_"+type+"_dialog_form").clearForm();
 				$("#ros_"+type+"_dialog").dialog('close');
 				check_ros_status();
 			}
@@ -78,6 +77,7 @@ $(document).ready(function() {
 		}
 		var old = $("#" + parent_id_entry).val();
 		var a = $(this).val();
+		//console.log(a);
 		if ($(this).prop('checked')) {
 			if (old != '') {
 				var b = old + a + '  ';
@@ -296,7 +296,7 @@ $(document).ready(function() {
 			});
 		}
 	});
-	$('.ros_template_div').click('click', '.ros_other', function() {
+	$('.ros_template_div').on('click', '.ros_other', function() {
 		if ($(this).prop('checked')) {
 			var parent_id = $(this).attr("id");
 			var x = parent_id.length - 1;
