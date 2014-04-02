@@ -375,8 +375,10 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#messages_action_rx_dialog").dialog({
-		height: 200,
+		bgiframe: true,
 		autoOpen: false,
+		height: 200,
+		width: 400,
 		closeOnEscape: false,
 		dialogClass: "noclose",
 		modal: true,

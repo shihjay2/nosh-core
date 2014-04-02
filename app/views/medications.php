@@ -60,10 +60,10 @@
 			<button type="button" id="messages_delete_rx" class="nosh_button_delete">Delete</button>
 			<button type="button" id="messages_print_rx" class="nosh_button_print">Print List</button><br><br>
 			<form id="messages_rx_main_form">
-				<input type="hidden" name="messages_rx_text" id="messages_rx_text"/>
-				<input type="hidden" name="messages_rx_eie_text" id="messages_rx_eie_text"/>
-				<input type="hidden" name="messages_rx_inactivate_text" id="messages_rx_inactivate_text"/>
-				<input type="hidden" name="messages_rx_reactivate_text" id="messages_rx_reactivate_text"/>
+				<input type="hidden" name="rx" id="messages_rx_text"/>
+				<input type="hidden" name="eie" id="messages_rx_eie_text"/>
+				<input type="hidden" name="inactivate" id="messages_rx_inactivate_text"/>
+				<input type="hidden" name="reactivate" id="messages_rx_reactivate_text"/>
 			</form>
 			<table id="messages_medications_inactive" class="scroll" cellpadding="0" cellspacing="0"></table>
 			<div id="messages_medications_inactive_pager" class="scroll" style="text-align:center;"></div><br>
@@ -88,7 +88,7 @@
 				<div class="pure-u-1-2"><label for="messages_rxl_instructions">Special Instructions:</label><input type="text" name="rxl_instructions" id="messages_rxl_instructions" class="text pure-input-1 search_instructions"/></div>
 				<div class="pure-u-1-4"><label for="messages_rxl_quantity">Quantity:</label><input type="text" name="rxl_quantity" id="messages_rxl_quantity" class="text pure-input-1"/></div>
 				<div class="pure-u-1-4"><label for="messages_rxl_refill">Refills:</label><input type="text" name="rxl_refill" id="messages_rxl_refill" class="text pure-input-1"/></div>
-				<div class="pure-u-1-4"><label for="messages_rxl_days">Days:</label><input type="text" name="rxl_days" id="messages_rxl_days" class="text pure-input-1" required/></div>
+				<div class="pure-u-1-4"><label for="messages_rxl_days">Days:</label><input type="text" name="rxl_days" id="messages_rxl_days" class="text pure-input-1"/></div>
 				<div class="pure-u-1-2"><label for="messages_rxl_reason">Reason:</label><input type="text" name="rxl_reason" id="messages_rxl_reason" class="text pure-input-1 search_reason" required/></div>
 				<div class="pure-u-1-4"><label for="messages_rxl_date_prescribed">Date of Prescription:</label><input type="text" name="rxl_date_prescribed" id="messages_rxl_date_prescribed" class="text pure-input-1"/></div>
 			</div>
