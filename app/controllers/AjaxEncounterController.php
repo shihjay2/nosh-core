@@ -585,7 +585,7 @@ class AjaxEncounterController extends BaseController {
 	public function postOhSave()
 	{
 		$eid = Session::get('eid');
-		$count = Other_history::find($eid);
+		$count = DB::table('other_history')->where('eid', '=', $eid)->first();
 		$data = array(
 			'eid' => $eid,
 			'pid' => Session::get('pid'),
