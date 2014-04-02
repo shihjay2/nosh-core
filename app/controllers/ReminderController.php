@@ -7,7 +7,7 @@ class ReminderController extends BaseController {
 	*/
 	public function test()
 	{
-		Config::set('app.timezone' , $row->timezone);
+		return $this->clinithink("Sore throat and fever in a 3 year old.");
 	}
 	
 	public function reminder()

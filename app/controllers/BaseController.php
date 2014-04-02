@@ -3078,8 +3078,8 @@ class BaseController extends Controller {
 			'port' => 465,
 			'from' => array('address' => null, 'name' => null),
 			'encryption' => 'ssl',
-			'username' => $practice->fax_email,
-			'password' => $practice->fax_email_password,
+			'username' => $practice_row->fax_email,
+			'password' => $practice_row->fax_email_password,
 			'sendmail' => '/usr/sbin/sendmail -bs',
 			'pretend' => false
 		);
@@ -5057,5 +5057,37 @@ class BaseController extends Controller {
 		$client = new \Github\Client($client);
 		$result = $commit = $client->api('repo')->commits()->show('shihjay2', 'nosh-core', $sha);
 		return $result;
+	}
+	
+	protected function clinithink($text)
+	{
+		$url = 'http://clinithink.api.mashery.com/v1/prd/encoding/Document?profileId=3&apiKey=gaaedrzjnyhtga7vc576xqjt';
+		$text_array = explode(' ', $text);
+		$fields_string = 'text=';
+		$fields_string .= implode("+", $text_array);
+		rtrim($fields_string, '+');
+		$headers = array(
+			"X-Originating-Ip: " . $_SERVER['SERVER_ADDR']
+		);
+		$ch = curl_init();
+		curl_setopt($ch,CURLOPT_URL, $url);
+		curl_setopt($ch,CURLOPT_POST, 1);
+		curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+		curl_setopt($ch,CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch,CURLOPT_FAILONERROR,1);
+		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch,CURLOPT_TIMEOUT, 15);
+		$result = curl_exec($ch);
+		curl_close($ch);
+		$result_array = json_decode($result, true);
+		$return_array = array();
+		$i = 0;
+		foreach ($result_array[0]['ChunkingResult']['DetailedChunkList'] as $row) {
+			$return_array[$i]['term'] = $row['term'];
+			$return_array[$i]['id'] = $row['ConceptId'];
+			$i++;
+		}
+		return $return_array;
 	}
 }
