@@ -520,7 +520,7 @@ $(document).ready(function() {
 					success: function(data){
 						if(data.callback == 'Items copied from last encounter!'){
 							$.jGrowl(data.callback);
-							$("#oh_etoh").val(data.oh_sh);
+							$("#oh_etoh").val(data.oh_etoh);
 						} else {
 							$.jGrowl(data.callback);
 							$("#oh_etoh").val('');
@@ -616,7 +616,7 @@ $(document).ready(function() {
 					success: function(data){
 						if(data.callback == 'Items copied from last encounter!'){
 							$.jGrowl(data.callback);
-							$("#oh_tobacco").val(data.oh_sh);
+							$("#oh_tobacco").val(data.oh_tobacco);
 						} else {
 							$.jGrowl(data.callback);
 							$("#oh_tobacco").val('');
@@ -734,7 +734,7 @@ $(document).ready(function() {
 					success: function(data){
 						if(data.callback == 'Items copied from last encounter!'){
 							$.jGrowl(data.callback);
-							$("#oh_drugs").val(data.oh_sh);
+							$("#oh_drugs").val(data.oh_drugs);
 						} else {
 							$.jGrowl(data.callback);
 							$("#oh_drugs").val('');
@@ -844,7 +844,7 @@ $(document).ready(function() {
 					success: function(data){
 						if(data.callback == 'Items copied from last encounter!'){
 							$.jGrowl(data.callback);
-							$("#oh_employment").val(data.oh_sh);
+							$("#oh_employment").val(data.oh_employment);
 						} else {
 							$.jGrowl(data.callback);
 							$("#oh_employment").val('');
