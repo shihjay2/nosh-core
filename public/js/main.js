@@ -516,6 +516,24 @@ function load_outside_providers(type,action) {
 		}
 	});
 }
+function ros_form_load() {
+	$('.ros_buttonset').buttonset();
+	$('.ros_detail_text').hide();
+	$("#ros_gu_menarche").datepicker();
+	$("#ros_gu_lmp").datepicker();
+}
+function get_ros_templates(group, id, type) {
+	$.ajax({
+		type: "POST",
+		url: "ajaxencounter/get-ros-templates/" + group + "/" + id + "/" + type,
+		dataType: "json",
+		success: function(data){
+			$('#'+group+'_form').html('');
+			$('#'+group+'_form').dform(data);
+			ros_form_load();
+		}
+	});
+}
 function ros_dialog_open(type) {
 	$.ajax({
 		type: "POST",

@@ -6,24 +6,6 @@ $(document).ready(function() {
 		});
 		$('#' + parent_id_entry).val(newtext);
 	}
-	function ros_form_load() {
-		$('.ros_buttonset').buttonset();
-		$('.ros_detail_text').hide();
-		$("#ros_gu_menarche").datepicker();
-		$("#ros_gu_lmp").datepicker();
-	}
-	function get_ros_templates(group, id, type) {
-		$.ajax({
-			type: "POST",
-			url: "ajaxencounter/get-ros-templates/" + group + "/" + id + "/" + type,
-			dataType: "json",
-			success: function(data){
-				$('#'+group+'_form').html('');
-				$('#'+group+'_form').dform(data);
-				ros_form_load();
-			}
-		});
-	}
 	function ros_dialog_save(type) {
 		var str = $("#ros_"+type+"_dialog_form").serialize();
 		$.ajax({

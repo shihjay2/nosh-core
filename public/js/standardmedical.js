@@ -23,6 +23,7 @@ $(document).ready(function() {
 				hpi_autosave('hpi');
 			}
 			if (id == "encounter_tabs_ros") {
+				$('#dialog_load').dialog('option', 'title', "Loading...").dialog('open');
 				check_ros_status();
 				ros_dialog_open('ros_gen');
 				ros_dialog_open('ros_eye');
@@ -38,6 +39,7 @@ $(document).ready(function() {
 				ros_dialog_open('ros_endocrine');
 				ros_dialog_open('ros_skin');
 				ros_dialog_open('ros_wcc');
+				$('#dialog_load').dialog('close');
 			}
 			if (old_id == "encounter_tabs_oh") {
 				oh_autosave();
