@@ -462,7 +462,7 @@ $(document).ready(function() {
 			$("#messages_cc").addOption(data, false).trigger("liszt:updated");
 		}
 	});
-	$("#new_message").click(function(){
+	$("#new_internal_message").click(function(){
 		$("#internal_messages_form").clearForm();
 		$("#internal_messages_form_id").show();
 		$("#message_view_wrapper").hide();
@@ -707,8 +707,9 @@ $(document).ready(function() {
 		$("#internal_messages_dialog").dialog('open');
 		$("#messages_to").focus();
 	});
-	$("#open_chart").click(function(){
+	$("#internal_open_chart").click(function(){
 		var pid = $("#message_view_pid").val();
+		console.log(pid);
 		if(pid){
 			var oldpt = noshdata.pid;
 			if(!oldpt){
@@ -716,16 +717,24 @@ $(document).ready(function() {
 					type: "POST",
 					url: "ajaxsearch/openchart",
 					dataType: "json",
-					data: "pid=" + ui.item.id,
+					data: "pid=" + pid,
 					success: function(data){
 						window.location = data.url;
 					}
 				});
 			} else {
-				if(pid != oldpt){
-					$("#search_dialog").dialog('open');
-				} else {
+				if(pid == oldpt){
 					$.jGrowl("Patient chart already open!");
+				} else {
+					$.ajax({
+						type: "POST",
+						url: "ajaxsearch/openchart",
+						dataType: "json",
+						data: "pid=" + pid,
+						success: function(data){
+							window.location = data.url;
+						}
+					});
 				}
 			}
 		} else {

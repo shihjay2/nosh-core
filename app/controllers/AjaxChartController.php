@@ -1864,16 +1864,20 @@ class AjaxChartController extends BaseController {
 			exit("You cannot do this.");
 		} else {
 			$pid = Session::get('pid');
-			$med_name = explode(", ", Input::get('allergies_med'), -1);
-			$ndcid = "";
-			if ($med_name[0]) {
-				$med_result = DB::table('meds_full_package')
-					->join('meds_full', 'meds_full.PRODUCTNDC', '=', 'meds_full_package.PRODUCTNDC')
-					->select('meds_full_package.NDCPACKAGECODE')
-					->where('meds_full.PROPRIETARYNAME', '=', $med_name[0])
-					->first();
-				if ($med_result) {
-					$ndcid = $this->ndc_convert($med_result->NDCPACKAGECODE);
+			if (strpos(Input::get('allergies_med'), ', ') === false) {
+				$ndcid = '';
+			} else {
+				$med_name = explode(", ", Input::get('allergies_med'), -1);
+				$ndcid = "";
+				if ($med_name[0]) {
+					$med_result = DB::table('meds_full_package')
+						->join('meds_full', 'meds_full.PRODUCTNDC', '=', 'meds_full_package.PRODUCTNDC')
+						->select('meds_full_package.NDCPACKAGECODE')
+						->where('meds_full.PROPRIETARYNAME', '=', $med_name[0])
+						->first();
+					if ($med_result) {
+						$ndcid = $this->ndc_convert($med_result->NDCPACKAGECODE);
+					}
 				}
 			}
 			$data = array(

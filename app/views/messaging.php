@@ -2,7 +2,7 @@
 	<div id="messaging_accordion">
 		<h3>Practice Messaging</h3>
 		<div>
-			<button type="button" id="new_message" class="nosh_button_add">New Message</button><br><br>
+			<button type="button" id="new_internal_message" class="nosh_button_add">New Message</button><br><br>
 			<table id="internal_inbox" class="scroll" cellpadding="0" cellspacing="0"></table>
 			<div id="internal_inbox_pager" class="scroll" style="text-align:center;"></div><br>
 			<table id="internal_draft" class="scroll" cellpadding="0" cellspacing="0"></table>
@@ -77,7 +77,7 @@
 	<button type="button" id="reply_message" class="nosh_button_reply">Reply</button>
 	<button type="button" id="reply_all_message" class="nosh_button_reactivate">Reply All</button>
 	<button type="button" id="forward_message" class="nosh_button_forward">Forward</button>
-	<button type="button" id="open_chart" class="nosh_button">Open Chart</button>
+	<button type="button" id="internal_open_chart" class="nosh_button">Open Chart</button>
 	<button type="button" id="export_message" class="nosh_button_copy">Export to Patient Chart</button><br>
 	<input type="hidden" id="message_view_message_id">
 	<input type="hidden" id="message_view_to">

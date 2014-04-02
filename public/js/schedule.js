@@ -434,10 +434,18 @@ $(document).ready(function() {
 							}
 						});
 					} else {
-						if(pid != oldpt){
-							$("#search_dialog").dialog('open');
-						} else {
+						if(pid == oldpt){
 							$.jGrowl("Patient chart already open!");
+						} else {
+							$.ajax({
+								type: "POST",
+								url: "ajaxsearch/openchart",
+								dataType: "json",
+								data: "pid=" + pid,
+								success: function(data){
+									window.location = data.url;
+								}
+							});
 						}
 					}
 				} else {
