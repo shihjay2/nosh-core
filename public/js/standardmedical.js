@@ -17,6 +17,9 @@ $(document).ready(function() {
 			});
 			ui.jqXHR.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
 		},
+		create: function(event, ui) {
+			check_ros_status();
+		},
 		activate: function(event, ui) {
 			var id = $(ui.newTab).attr('id');
 			var old_id = $(ui.oldTab).attr('id');
