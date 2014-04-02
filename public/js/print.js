@@ -345,7 +345,7 @@ $(document).ready(function() {
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
-							url: "ajaxcommon/view_documents1/" + id,
+							url: "ajaxcommon/view-documents1/" + id,
 							dataType: "json",
 							success: function(data){
 								//$('#embedURL').PDFDoc( { source : data.html } );
@@ -411,7 +411,7 @@ $(document).ready(function() {
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
-							url: "ajaxcommon/view_documents1/" + id,
+							url: "ajaxcommon/view-documents1/" + id,
 							dataType: "json",
 							success: function(data){
 								//$('#embedURL').PDFDoc( { source : data.html } );
@@ -477,7 +477,7 @@ $(document).ready(function() {
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
-							url: "ajaxcommon/view_documents1/" + id,
+							url: "ajaxcommon/view-documents1/" + id,
 							dataType: "json",
 							success: function(data){
 								//$('#embedURL').PDFDoc( { source : data.html } );
@@ -543,7 +543,7 @@ $(document).ready(function() {
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
-							url: "ajaxcommon/view_documents1/" + id,
+							url: "ajaxcommon/view-documents1/" + id,
 							dataType: "json",
 							success: function(data){
 								//$('#embedURL').PDFDoc( { source : data.html } );
@@ -609,7 +609,7 @@ $(document).ready(function() {
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
-							url: "ajaxcommon/view_documents1/" + id,
+							url: "ajaxcommon/view-documents1/" + id,
 							dataType: "json",
 							success: function(data){
 								//$('#embedURL').PDFDoc( { source : data.html } );
@@ -675,7 +675,7 @@ $(document).ready(function() {
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
-							url: "ajaxcommon/view_documents1/" + id,
+							url: "ajaxcommon/view-documents1/" + id,
 							dataType: "json",
 							success: function(data){
 								//$('#embedURL').PDFDoc( { source : data.html } );
@@ -741,7 +741,7 @@ $(document).ready(function() {
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
-							url: "ajaxcommon/view_documents1/" + id,
+							url: "ajaxcommon/view-documents1/" + id,
 							dataType: "json",
 							success: function(data){
 								//$('#embedURL').PDFDoc( { source : data.html } );
@@ -807,7 +807,7 @@ $(document).ready(function() {
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
-							url: "ajaxcommon/view_documents1/" + id,
+							url: "ajaxcommon/view-documents1/" + id,
 							dataType: "json",
 							success: function(data){
 								//$('#embedURL').PDFDoc( { source : data.html } );
