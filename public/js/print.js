@@ -861,7 +861,7 @@ $(document).ready(function() {
 			$("#print_fax_recipient").autocomplete({
 				source: function (req, add){
 					$.ajax({
-						url: "<?php echo site_url('search/all_contacts');?>",
+						url: "ajaxsearch/all-contacts",
 						dataType: "json",
 						type: "POST",
 						data: req,

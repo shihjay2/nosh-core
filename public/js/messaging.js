@@ -1150,7 +1150,7 @@ $(document).ready(function() {
 			var click_pages_id = jQuery("#pages_list").getCell(clickremove,'pages_id');
 			$.ajax({
 				type: "POST",
-				url: "<?php echo site_url('provider/messaging/deletepage');?>",
+				url: "ajaxmessaging/deletepage",
 				data: "file=" + click_file + "&pages_id=" + click_pages_id,
 				success: function(data){
 					$.jGrowl(data);

@@ -739,6 +739,14 @@ class AjaxMessagingController extends BaseController {
 		}
 	}
 	
+	public function postDeletepage()
+	{
+		DB::table('pages')->where('pages_id', '=', Input::get('pages_id'))->delete();
+		$this->audit('Delete');
+		unlink(Input::get('file'));
+		echo 'Document removed!';
+	}
+	
 	public function postSendfinal()
 	{
 		if (Session::get('group_id') == '100') {

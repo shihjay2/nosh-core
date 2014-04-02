@@ -5084,7 +5084,7 @@ class BaseController extends Controller {
 		$return_array = array();
 		$i = 0;
 		foreach ($result_array[0]['ChunkingResult']['DetailedChunkList'] as $row) {
-			$return_array[$i]['term'] = $row['term'];
+			$return_array[$i]['term'] = $row['Term'];
 			$return_array[$i]['id'] = $row['ConceptId'];
 			$i++;
 		}

@@ -79,9 +79,6 @@
 		<input type="hidden" id="print_fax_type"/>
 		<div class="pure-control-group"><label for="print_fax_recipient">Recipient:</label><input type="text" name="faxrecipient" id="print_fax_recipient" style="width:200px;" class="text"/></div>
 		<div class="pure-control-group"><label for="print_fax_faxnumber">Fax Number:</label><input type="text" name="faxnumber" id="print_fax_faxnumber" class="text"/></div>
-		<button type="button" id="print_fax_add_fax_contact">Add Contact to Address Book</button>
-		<button type="button" id="print_fax_send_fax">Send Fax</button>
-		<button type="button" id="print_fax_cancel_fax">Cancel</button>
 	</form>
 </div>
 <div id="print_message_view_dialog" title="Telephone Message"></div>
