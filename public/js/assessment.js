@@ -83,7 +83,6 @@ $(document).ready(function() {
 		$('#issues_cp_header').hide();
 		$('#issues_ref_header').hide();
 		$('#issues_assessment_header').show();
-		$('#edit_issue_form').hide();
 	});
 	$("#assessment_icd_search").autocomplete({
 		source: function (req, add){
