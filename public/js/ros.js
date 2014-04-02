@@ -24,31 +24,6 @@ $(document).ready(function() {
 			}
 		});
 	}
-	function ros_dialog_open(type) {
-		$.ajax({
-			type: "POST",
-			url: "ajaxencounter/ros-template-select-list/" + type,
-			dataType: "json",
-			success: function(data){
-				$('#'+type+'_template').addOption({"":"*Select a template"}, false);
-				$('#'+type+'_template').addOption(data.options, false);
-				$('#'+type+'_template').sortOptions();
-				$('#'+type+'_template').val("");
-				if ($('#'+type+'_form').html() == '') {
-					get_ros_templates(type, '0', 'y');
-				}
-			}
-		});
-		$.ajax({
-			type: "POST",
-			url: "ajaxencounter/get-ros/" + type,
-			success: function(data){
-				$('#'+type).val(data);
-				$('#'+type+'_old').val(data);
-			}
-		});
-		$("#"+type).focus();
-	}
 	function ros_dialog_save(type) {
 		var str = $("#ros_"+type+"_dialog_form").serialize();
 		$.ajax({
@@ -422,9 +397,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_gen');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('gen');
@@ -445,9 +417,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_eye');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('eye');
@@ -468,9 +437,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_ent');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('ent');
@@ -491,9 +457,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_resp');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('resp');
@@ -514,9 +477,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_cv');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('cv');
@@ -537,9 +497,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_gi');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('gi');
@@ -560,9 +517,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_gu');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('gu');
@@ -583,9 +537,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_mus');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('mus');
@@ -606,9 +557,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_neuro');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('neuro');
@@ -629,9 +577,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_psych');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('psych');
@@ -652,9 +597,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_heme');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('heme');
@@ -675,9 +617,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_endocrine');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('endocrine');
@@ -698,9 +637,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_skin');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('skin');
@@ -721,9 +657,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function(event, ui) {
-			ros_dialog_open('ros_wcc');
-		},
 		buttons: {
 			'Save': function() {
 				ros_dialog_save('wcc');

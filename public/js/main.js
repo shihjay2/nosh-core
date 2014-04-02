@@ -516,6 +516,31 @@ function load_outside_providers(type,action) {
 		}
 	});
 }
+function ros_dialog_open(type) {
+	$.ajax({
+		type: "POST",
+		url: "ajaxencounter/ros-template-select-list/" + type,
+		dataType: "json",
+		success: function(data){
+			$('#'+type+'_template').addOption({"":"*Select a template"}, false);
+			$('#'+type+'_template').addOption(data.options, false);
+			$('#'+type+'_template').sortOptions();
+			$('#'+type+'_template').val("");
+			if ($('#'+type+'_form').html() == '') {
+				get_ros_templates(type, '0', 'y');
+			}
+		}
+	});
+	$.ajax({
+		type: "POST",
+		url: "ajaxencounter/get-ros/" + type,
+		success: function(data){
+			$('#'+type).val(data);
+			$('#'+type+'_old').val(data);
+		}
+	});
+	$("#"+type).focus();
+}
 function parse_date(string) {
 	var date = new Date();
 	var parts = String(string).split(/[- :]/);

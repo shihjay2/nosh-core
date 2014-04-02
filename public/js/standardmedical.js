@@ -24,6 +24,20 @@ $(document).ready(function() {
 			}
 			if (id == "encounter_tabs_ros") {
 				check_ros_status();
+				ros_dialog_open('ros_gen');
+				ros_dialog_open('ros_eye');
+				ros_dialog_open('ros_ent');
+				ros_dialog_open('ros_resp');
+				ros_dialog_open('ros_cv');
+				ros_dialog_open('ros_gi');
+				ros_dialog_open('ros_gu');
+				ros_dialog_open('ros_mus');
+				ros_dialog_open('ros_neuro');
+				ros_dialog_open('ros_psych');
+				ros_dialog_open('ros_heme');
+				ros_dialog_open('ros_endocrine');
+				ros_dialog_open('ros_skin');
+				ros_dialog_open('ros_wcc');
 			}
 			if (old_id == "encounter_tabs_oh") {
 				oh_autosave();
