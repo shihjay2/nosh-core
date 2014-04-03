@@ -413,7 +413,6 @@ $(document).ready(function() {
 		$('#issues_rad_header').hide();
 		$('#issues_ref_header').hide();
 		$('#issues_assessment_header').hide();
-		$('#edit_issue_form').hide();
 	});
 	$("#messages_select_cp_location2").click(function (){
 		$("#messages_edit_cp_location").dialog('open');

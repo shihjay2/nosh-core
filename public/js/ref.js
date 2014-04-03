@@ -411,7 +411,6 @@ $(document).ready(function() {
 		$('#issues_rad_header').hide();
 		$('#issues_cp_header').hide();
 		$('#issues_assessment_header').hide();
-		$('#edit_issue_form').hide();
 	});	
 	$("#messages_select_ref_location2").click(function (){
 		$("#messages_edit_ref_location").dialog('open');

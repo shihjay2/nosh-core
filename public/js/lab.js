@@ -441,7 +441,6 @@ $(document).ready(function() {
 		$('#issues_cp_header').hide();
 		$('#issues_ref_header').hide();
 		$('#issues_assessment_header').hide();
-		$('#edit_issue_form').hide();
 	});
 	$("#messages_select_lab_location2").click(function (){
 		$("#messages_edit_lab_location").dialog('open');
