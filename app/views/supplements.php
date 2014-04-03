@@ -43,15 +43,15 @@
 		<div class="pure-g">
 			<div class="pure-u-3-4 messages_sup_provider_div"><label for="messages_sup_provider">Prescribing Provider:</label><select name="id" id="messages_sup_provider" class="text pure-input-1"/></select></div>
 			<div class="pure-u-1-4" style="text-align:center; padding: 2% 0;"><button type="button" id="search_db_supplement" class="nosh_button_extlink">Database</button></div>
-			<div class="pure-u-1-2"><label for="">Supplement:</label><input type="text" name="sup_supplement" id="sup_supplement" class="text pure-input-1" required/></div>
-			<div class="pure-u-1-4"><label for="">Dosage:</label><input type="text" name="sup_dosage" id="sup_dosage"class="text pure-input-1"/></div>
-			<div class="pure-u-1-4"><label for="">Unit:</label><input type="text" name="sup_dosage_unit" id="sup_dosage_unit" class="text pure-input-1"/></div>
-			<div class="pure-u-1-4"><label for="">Sig:</label><input type="text" name="sup_sig" id="sup_sig" class="text pure-input-1"/></div>
-			<div class="pure-u-1-4"><label for="">Route</label><select id ="sup_route" name="sup_route" class="text pure-input-1"></select></div>
-			<div class="pure-u-1-2"><label for="">Frequency:</label><input type="text" name="sup_frequency" id="sup_frequency"  class="text pure-input-1"/></div>
-			<div class="pure-u-1"><label for="">Special Instructions:</label><input type="text" name="sup_instructions" id="sup_instructions" class="text pure-input-1"/></div>
-			<div class="pure-u-1"><label for="">Reason:</label><input type="text" name="sup_reason" id="sup_reason" class="text pure-input-1" required/></div>
-			<div class="pure-u-1"><label for="">Date Active:</label><input type="text" name="sup_date_active" id="sup_date_active" class="text pure-input-1"/></div>
+			<div class="pure-u-1-2"><label for="sup_supplement">Supplement:</label><input type="text" name="sup_supplement" id="sup_supplement" class="text pure-input-1" required/></div>
+			<div class="pure-u-1-4"><label for="sup_dosage">Dosage:</label><input type="text" name="sup_dosage" id="sup_dosage"class="text pure-input-1"/></div>
+			<div class="pure-u-1-4"><label for="sup_dosage_unit">Unit:</label><input type="text" name="sup_dosage_unit" id="sup_dosage_unit" class="text pure-input-1"/></div>
+			<div class="pure-u-1-4"><label for="sup_sig">Sig:</label><input type="text" name="sup_sig" id="sup_sig" class="text pure-input-1"/></div>
+			<div class="pure-u-1-4"><label for="sup_route">Route</label><select id ="sup_route" name="sup_route" class="text pure-input-1"></select></div>
+			<div class="pure-u-1-2"><label for="sup_frequency">Frequency:</label><input type="text" name="sup_frequency" id="sup_frequency"  class="text pure-input-1"/></div>
+			<div class="pure-u-1"><label for="sup_instructions">Special Instructions:</label><input type="text" name="sup_instructions" id="sup_instructions" class="text pure-input-1"/></div>
+			<div class="pure-u-1"><label for="sup_reason">Reason:</label><input type="text" name="sup_reason" id="sup_reason" class="text pure-input-1" required/></div>
+			<div class="pure-u-1"><label for="sup_date_active">Date Active:</label><input type="text" name="sup_date_active" id="sup_date_active" class="text pure-input-1"/></div>
 		</div>
 	</form>
 </div>
