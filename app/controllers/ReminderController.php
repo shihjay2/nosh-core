@@ -27,10 +27,10 @@ class ReminderController extends BaseController {
 			foreach ($query1 as $row) {
 				$to = $row->reminder_to;
 				if ($to != '') {
-					$row2 = Practiceinfo::where('practice_id', '=', $row->practice_id)->first();
+					$row0 = User::where('id', '=', $row->provider_id)->first();
+					$row2 = Practiceinfo::where('practice_id', '=', $row0->practice_id)->first();
 					Config::set('app.timezone' , $row2->timezone);
 					$data_message['startdate'] = date("F j, Y, g:i a", $row->start);
-					$row0 = User::where('id', '=', $row->provider_id)->first();
 					$data_message['displayname'] = $row0->displayname;
 					$data_message['phone'] = $row2->phone;
 					$data_message['email'] = $row2->email;
