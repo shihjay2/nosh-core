@@ -700,7 +700,8 @@ class ReminderController extends BaseController {
 				$practice_id = $practice_row->practice_id;
 				Config::set('app.timezone' , $practice_row->timezone);
 			} else {
-				$cmd = 'rm ' . $file;
+				$file1 = str_replace('/srv/ftp/shared/import', '/srv/ftp/shared', $file);
+				$cmd = 'mv ' . $file . ' ' . $file1
 				exec($cmd);
 				exit (0);
 			}
@@ -812,7 +813,8 @@ class ReminderController extends BaseController {
 				DB::table('messaging')->insert($data_message);
 				$this->audit('Add');
 			}
-			$cmd = 'rm ' . $file;
+			$file1 = str_replace('/srv/ftp/shared/import', '/srv/ftp/shared', $file);
+			$cmd = 'mv ' . $file . ' ' . $file1;
 			exec($cmd);
 			$full_count++;
 		}
