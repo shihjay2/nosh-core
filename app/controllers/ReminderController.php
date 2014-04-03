@@ -562,7 +562,7 @@ class ReminderController extends BaseController {
 					$xml6 .= "<Quantity>" . $quantity1 . "</Quantity>";
 					$xml6 .= "<QuantityUnit>" . $quantity_unit1 . "</QuantityUnit>";
 					$xml6 .= "<Refills>" . $row6->rxl_refill . "</Refills>";
-					$xml6 .= "<SubstitutionPermitted>" . $daw2 . "</SubstitutionPermitted>";
+					$xml6 .= "<SubstitutionPermitted>" . $daw1 . "</SubstitutionPermitted>";
 					$xml6 .= "</Sig>";
 					$xml6 .= "<StartDate>" . $ddm_final . "</StartDate>";
 					$xml6 .= "<StopDate>" . $ddn_final . "</StopDate>";
