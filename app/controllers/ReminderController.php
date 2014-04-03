@@ -52,10 +52,10 @@ class ReminderController extends BaseController {
 		}
 		$query3 = Practiceinfo::all();
 		foreach ($query3 as $practice_row) {
-			$updox = $this->check_extension('updox_extension', $practice_row->practice_id);
-			if ($updox) {
-				$this->updox_sync($practice_row->practice_id);
-			}
+			//$updox = $this->check_extension('updox_extension', $practice_row->practice_id);
+			//if ($updox) {
+				//$this->updox_sync($practice_row->practice_id);
+			//}
 			$rcopia = $this->check_extension('rcopia_extension', $practice_row->practice_id);
 			if ($rcopia) {
 				$this->rcopia_sync($practice_row->practice_id);
