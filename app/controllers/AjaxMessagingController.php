@@ -815,7 +815,8 @@ class AjaxMessagingController extends BaseController {
 					$faxpages .= ' ' . $row4->file;
 					$totalpages = $totalpages + $row4->pagecount;
 				}
-				if ($fax_data->faxcoverpage == 'yes') {
+				$cover_filename = '';
+				if ($fax_data['faxcoverpage'] == 'yes') {
 					$cover_filename = Session::get('documents_dir') . 'sentfax/' . $job_id . '/coverpage.pdf';
 					$cover_html = $this->page_intro('Cover Page', Session::get('practice_id'))->render();
 					$cover_html .= $this->page_coverpage($job_id, $totalpages, $faxrecipients, date("M d, Y, h:i", time()))->render();
@@ -830,13 +831,14 @@ class AjaxMessagingController extends BaseController {
 					'port' => 465,
 					'from' => array('address' => null, 'name' => null),
 					'encryption' => 'ssl',
-					'username' => $practice->fax_email,
-					'password' => $practice->fax_email_password,
+					'username' => $practice_row->fax_email,
+					'password' => $practice_row->fax_email_password,
 					'sendmail' => '/usr/sbin/sendmail -bs',
 					'pretend' => false
 				);
 				Config::set('mail',$config);
-				Mail::send('emails.reminder', $data_message, function($message) use ($faxnumber_array, $practice_row, $fax_data, $cover_filename, $pagesInfo) {
+				$data_message = array();
+				Mail::send('emails.blank', $data_message, function($message) use ($faxnumber_array, $practice_row, $fax_data, $cover_filename, $pagesInfo) {
 					$i = 0;
 					foreach ($faxnumber_array as $faxnumber_row) {
 						if ($i == 0) {
@@ -847,8 +849,8 @@ class AjaxMessagingController extends BaseController {
 						$i++;
 					}
 					$message->from($practice_row->email, $practice_row->practice_name);
-					$message->subject($fax_data->faxsubject);
-					if ($fax_data->faxcoverpage == 'yes') {
+					$message->subject($fax_data['faxsubject']);
+					if ($fax_data['faxcoverpage'] == 'yes') {
 						$message->attach($cover_filename);
 					}
 					foreach ($pagesInfo as $row5) {
