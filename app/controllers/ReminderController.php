@@ -714,7 +714,7 @@ class ReminderController extends BaseController {
 			} else {
 				$provider_id = '';
 			}
-			$patient_row = Demographics::where('lastname', '=', $lastname)->where('firstname', '=', $firstname)->where('DOB', '=', $dob)->where('sex', '=', $sex)->get();
+			$patient_row = Demographics::where('lastname', '=', $lastname)->where('firstname', '=', $firstname)->where('DOB', '=', $dob)->where('sex', '=', $sex)->first();
 			if ($patient_row) {
 				$pid = $patient_row->pid;
 				$dob_message = date("m/d/Y", strtotime($patient_row->DOB));
