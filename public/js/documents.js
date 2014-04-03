@@ -937,6 +937,7 @@ $(document).ready(function() {
 								dataType: "json",
 								success: function(data){
 									//$('#embedURL').PDFDoc( { source : data.html } );
+									$("#view_document_id").val(data.id);
 									$("#embedURL").html(data.html);
 									$("#document_filepath").val(data.filepath);
 									$("#documents_view_dialog").dialog('open');

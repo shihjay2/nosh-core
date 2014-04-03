@@ -699,124 +699,121 @@ class ReminderController extends BaseController {
 			if ($practice_row) {
 				$practice_id = $practice_row->practice_id;
 				Config::set('app.timezone' , $practice_row->timezone);
-			} else {
-				$file1 = str_replace('/srv/ftp/shared/import', '/srv/ftp/shared', $file);
-				$cmd = 'mv ' . $file . ' ' . $file1;
-				exec($cmd);
-				exit (0);
-			}
-			$provider_row = DB::table('users')
-				->join('providers', 'providers.id', '=', 'users.id')
-				->select('users.lastname', 'users.firstname', 'users.title', 'users.id')
-				->where('providers.peacehealth_id', '=', $provider_id)
-				->first();
-			if ($provider_row) {
-				$provider_id = $provider_row->id;
-			} else {
-				$provider_id = '';
-			}
-			$patient_row = Demographics::where('lastname', '=', $lastname)->where('firstname', '=', $firstname)->where('DOB', '=', $dob)->where('sex', '=', $sex)->first();
-			if ($patient_row) {
-				$pid = $patient_row->pid;
-				$dob_message = date("m/d/Y", strtotime($patient_row->DOB));
-				$patient_name =  $patient_row->lastname . ', ' . $patient_row->firstname . ' (DOB: ' . $dob_message . ') (ID: ' . $pid . ')';
-				$tests = 'y';
-				$test_desc = "";
-				$k = 0;
-				foreach ($results as $results_row) {
-					$test_data = array(
-						'pid' => $pid,
-						'test_name' => $results_row['test_name'],
-						'test_result' => $results_row['test_result'],
-						'test_units' => $results_row['test_units'],
-						'test_reference' => $results_row['test_reference'],
-						'test_flags' => $results_row['test_flags'],
-						'test_from' => $from,
-						'test_datetime' => $results_row['test_datetime'],
-						'test_type' => $test_type,
-						'test_provider_id' => $provider_id,
-						'practice_id' => $practice_id
-					);
-					DB::table('tests')->insert($test_data);
-					$this->audit('Add');
-					if ($k == 0) {
-						$test_desc .= $results_row['test_name'];
-					} else {
-						$test_desc .= ", " . $results_row['test_name'];
+				$provider_row = DB::table('users')
+					->join('providers', 'providers.id', '=', 'users.id')
+					->select('users.lastname', 'users.firstname', 'users.title', 'users.id')
+					->where('providers.peacehealth_id', '=', $provider_id)
+					->first();
+				if ($provider_row) {
+					$provider_id = $provider_row->id;
+				} else {
+					$provider_id = '';
+				}
+				$patient_row = Demographics::where('lastname', '=', $lastname)->where('firstname', '=', $firstname)->where('DOB', '=', $dob)->where('sex', '=', $sex)->first();
+				if ($patient_row) {
+					$pid = $patient_row->pid;
+					$dob_message = date("m/d/Y", strtotime($patient_row->DOB));
+					$patient_name =  $patient_row->lastname . ', ' . $patient_row->firstname . ' (DOB: ' . $dob_message . ') (ID: ' . $pid . ')';
+					$tests = 'y';
+					$test_desc = "";
+					$k = 0;
+					foreach ($results as $results_row) {
+						$test_data = array(
+							'pid' => $pid,
+							'test_name' => $results_row['test_name'],
+							'test_result' => $results_row['test_result'],
+							'test_units' => $results_row['test_units'],
+							'test_reference' => $results_row['test_reference'],
+							'test_flags' => $results_row['test_flags'],
+							'test_from' => $from,
+							'test_datetime' => $results_row['test_datetime'],
+							'test_type' => $test_type,
+							'test_provider_id' => $provider_id,
+							'practice_id' => $practice_id
+						);
+						DB::table('tests')->insert($test_data);
+						$this->audit('Add');
+						if ($k == 0) {
+							$test_desc .= $results_row['test_name'];
+						} else {
+							$test_desc .= ", " . $results_row['test_name'];
+						}
+						$k++;
 					}
-					$k++;
-				}
-				$practice_row = Practiceinfo::find($practice_id);
-				$directory = $practice_row->documents_dir . $pid;
-				$file_path = $directory . '/tests_' . time() . '.pdf';
-				$html = $this->page_intro('Test Results', $practice_id);
-				$html .= $this->page_results($pid, $results, $patient_name);
-				$this->generate_pdf($html, $file_path);
-				$documents_date = date("Y-m-d H:i:s", time());
-				$test_desc = 'Test results for ' . $patient_name;
-				$pages_data = array(
-					'documents_url' => $file_path,
-					'pid' => $pid,
-					'documents_type' => $test_type,
-					'documents_desc' => $test_desc,
-					'documents_from' => $from,
-					'documents_date' => $documents_date
-				);
-				$documents_id = DB::table('documents')->insertGetId($pages_data);
-				$this->audit('Add');
-			} else {
-				$messages_pid = '';
-				$patient_name = "Unknown patient: " . $lastname . ", " . $firstname . ", DOB: " . $month . "/" . $day . "/" . $year;
-				$tests = 'unk';
-				foreach ($results as $results_row) {
-					$test_data = array(
-						'test_name' => $results_row['test_name'],
-						'test_result' => $results_row['test_result'],
-						'test_units' => $results_row['test_units'],
-						'test_reference' => $results_row['test_reference'],
-						'test_flags' => $results_row['test_flags'],
-						'test_unassigned' => $patient_name,
-						'test_from' => $from,
-						'test_datetime' => $results_row['test_datetime'],
-						'test_type' => $test_type,
-						'test_provider_id' => $provider_id,
-						'practice_id' => $practice_id
+					$practice_row = Practiceinfo::find($practice_id);
+					$directory = $practice_row->documents_dir . $pid;
+					$file_path = $directory . '/tests_' . time() . '.pdf';
+					$html = $this->page_intro('Test Results', $practice_id);
+					$html .= $this->page_results($pid, $results, $patient_name);
+					$this->generate_pdf($html, $file_path);
+					$documents_date = date("Y-m-d H:i:s", time());
+					$test_desc = 'Test results for ' . $patient_name;
+					$pages_data = array(
+						'documents_url' => $file_path,
+						'pid' => $pid,
+						'documents_type' => $test_type,
+						'documents_desc' => $test_desc,
+						'documents_from' => $from,
+						'documents_date' => $documents_date
 					);
-					DB::table('tests')->insert($test_data);
+					$documents_id = DB::table('documents')->insertGetId($pages_data);
+					$this->audit('Add');
+				} else {
+					$messages_pid = '';
+					$patient_name = "Unknown patient: " . $lastname . ", " . $firstname . ", DOB: " . $month . "/" . $day . "/" . $year;
+					$tests = 'unk';
+					foreach ($results as $results_row) {
+						$test_data = array(
+							'test_name' => $results_row['test_name'],
+							'test_result' => $results_row['test_result'],
+							'test_units' => $results_row['test_units'],
+							'test_reference' => $results_row['test_reference'],
+							'test_flags' => $results_row['test_flags'],
+							'test_unassigned' => $patient_name,
+							'test_from' => $from,
+							'test_datetime' => $results_row['test_datetime'],
+							'test_type' => $test_type,
+							'test_provider_id' => $provider_id,
+							'practice_id' => $practice_id
+						);
+						DB::table('tests')->insert($test_data);
+						$this->audit('Add');
+					}
+					$documents_id = '';
+				}
+				$subject = "Test results for " . $patient_name;
+				$body = "Test results for " . $patient_name . "\n\n";
+				foreach ($results as $results_row1) {
+					$body .= $results_row1['test_name'] . ": " . $results_row1['test_result'] . ", Units: " . $results_row1['test_units'] . ", Normal reference range: " . $results_row1['test_reference'] . ", Date: " . $results_row1['test_datetime'] . "\n";
+				}
+				$body .= "\n" . $from;
+				if ($tests="unk") {
+					$body .= "\n" . "Patient is unknown to the system.  Please reconcile this test result in your dashboard.";
+				}
+				if ($provider_id != '') {
+					$provider_name = $provider_row->firstname . " " . $provider_row->lastname . ", " . $provider_row->title . " (" . $provider_id . ")";
+					$data_message = array(
+						'pid' => $pid,
+						'message_to' => $provider_name,
+						'message_from' => $provider_row['id'],
+						'subject' => $subject,
+						'body' => $body,
+						'patient_name' => $patient_name,
+						'status' => 'Sent',
+						'mailbox' => $provider_id,
+						'practice_id' => $practice_id,
+						'documents_id' => $documents_id
+					);
+					DB::table('messaging')->insert($data_message);
 					$this->audit('Add');
 				}
-				$documents_id = '';
+				$file1 = str_replace('/srv/ftp/shared/import', '', $file);
+				rename($file, $practice_row->documents_dir . $file1);
+				$full_count++;
+			} else {
+				$file1 = str_replace('/srv/ftp/shared/import', '', $file);
+				rename($file, $practice_row->documents_dir . $file1 . '.error');
 			}
-			$subject = "Test results for " . $patient_name;
-			$body = "Test results for " . $patient_name . "\n\n";
-			foreach ($results as $results_row1) {
-				$body .= $results_row1['test_name'] . ": " . $results_row1['test_result'] . ", Units: " . $results_row1['test_units'] . ", Normal reference range: " . $results_row1['test_reference'] . ", Date: " . $results_row1['test_datetime'] . "\n";
-			}
-			$body .= "\n" . $from;
-			if ($tests="unk") {
-				$body .= "\n" . "Patient is unknown to the system.  Please reconcile this test result in your dashboard.";
-			}
-			if ($provider_id != '') {
-				$provider_name = $provider_row->firstname . " " . $provider_row->lastname . ", " . $provider_row->title . " (" . $provider_id . ")";
-				$data_message = array(
-					'pid' => $pid,
-					'message_to' => $provider_name,
-					'message_from' => $provider_row['id'],
-					'subject' => $subject,
-					'body' => $body,
-					'patient_name' => $patient_name,
-					'status' => 'Sent',
-					'mailbox' => $provider_id,
-					'practice_id' => $practice_id,
-					'documents_id' => $documents_id
-				);
-				DB::table('messaging')->insert($data_message);
-				$this->audit('Add');
-			}
-			$file1 = str_replace('/srv/ftp/shared/import', '/srv/ftp/shared', $file);
-			$cmd = 'mv ' . $file . ' ' . $file1;
-			exec($cmd);
-			$full_count++;
 		}
 		return $full_count;
 	}
