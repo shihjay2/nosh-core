@@ -701,7 +701,7 @@ class ReminderController extends BaseController {
 				Config::set('app.timezone' , $practice_row->timezone);
 			} else {
 				$file1 = str_replace('/srv/ftp/shared/import', '/srv/ftp/shared', $file);
-				$cmd = 'mv ' . $file . ' ' . $file1
+				$cmd = 'mv ' . $file . ' ' . $file1;
 				exec($cmd);
 				exit (0);
 			}
