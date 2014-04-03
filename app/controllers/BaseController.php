@@ -3084,7 +3084,8 @@ class BaseController extends Controller {
 			'pretend' => false
 		);
 		Config::set('mail',$config);
-		Mail::send('emails.reminder', $data_message, function($message) use ($faxnumber_array, $practice_row, $fax_data, $cover_filename, $pagesInfo) {
+		$data_message = array();
+		Mail::send('emails.blank', $data_message, function($message) use ($faxnumber_array, $practice_row, $fax_data, $cover_filename, $pagesInfo) {
 			$i = 0;
 			foreach ($faxnumber_array as $faxnumber_row) {
 				if ($i == 0) {
