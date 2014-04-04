@@ -806,7 +806,9 @@ class AjaxInstallController extends BaseController {
 				$practice2 = Practiceinfo::find($fax_practice_id);
 				$new_received_dir = $practice2->documents_dir . 'received/' . $fax_practice_id;
 				$received_data['filePath'] = str_replace('/var/www/nosh/received', $new_received_dir, $fax->filePath);
-				rename($fax->filePath, $received_data['filePath']);
+				if (file_exists($fax->filePath)) {
+					rename($fax->filePath, $received_data['filePath']);
+				}
 				DB::table('received')->where('received_id', '=', $fax->received_id)->update($received_data);
 			}
 		}
