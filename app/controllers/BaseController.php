@@ -1260,7 +1260,7 @@ class BaseController extends Controller {
 		$data['practiceInfo'] .= '<br />';
 		$data['practiceInfo'] .= $practice->city . ', ' . $practice->state . ' ' . $practice->zip . '<br />';
 		$data['practiceInfo'] .= 'Phone: ' . $practice->phone . ', Fax: ' . $practice->fax . '<br />';
-		$data['practiceLogo'] = $this->practice_logo();
+		$data['practiceLogo'] = $this->practice_logo($practice_id);
 		$data['title'] = $title;
 		return View::make('pdf.intro', $data);
 	}
@@ -1517,7 +1517,7 @@ class BaseController extends Controller {
 		$data['practiceInfo'] .= '<br />';
 		$data['practiceInfo'] .= $practice->city . ', ' . $practice->state . ' ' . $practice->zip . '<br />';
 		$data['practiceInfo'] .= 'Phone: ' . $practice->phone . ', Fax: ' . $practice->fax . '<br />';
-		$data['practiceLogo'] = $this->practice_logo();
+		$data['practiceLogo'] = $this->practice_logo(Session::get('practice_id'));
 		$data['patientInfo'] = Demographics::find($pid);
 		$data['dob'] = date('m/d/Y', $this->human_to_unix($data['patientInfo']->DOB));
 		if ($data['patientInfo']->sex == 'm') {
@@ -1653,7 +1653,7 @@ class BaseController extends Controller {
 		}
 		$data['practiceInfo'] .= '<br />';
 		$data['practiceInfo'] .= $practice->city . ', ' . $practice->state . ' ' . $practice->zip . '<br />';
-		$data['practiceLogo'] = $this->practice_logo();
+		$data['practiceLogo'] = $this->practice_logo(Session::get('practice_id'));
 		$data['patientInfo'] = Demographics::find($pid);
 		$data['dob'] = date('m/d/Y', $this->human_to_unix($data['patientInfo']->DOB));
 		$encounterInfo = Encounters::find($eid);
@@ -2871,9 +2871,9 @@ class BaseController extends Controller {
 		return $res; 
 	}
 	
-	protected function practice_logo()
+	protected function practice_logo($practice_id)
 	{
-		$practice = Practiceinfo::find(Session::get('practice_id'));
+		$practice = Practiceinfo::find($practice_id);
 		if ($practice->practice_logo != '') {
 			$link = HTML::image($practice->practice_logo, 'Practice Logo', array('border' => '0'));
 			$logo = str_replace('https', 'http', $link);
@@ -2917,7 +2917,7 @@ class BaseController extends Controller {
 		$data['practiceInfo'] .= $practice->city . ', ' . $practice->state . ' ' . $practice->zip . '<br />';
 		$data['practiceInfo'] .= 'Phone: ' . $practice->phone . ', Fax: ' . $practice->fax . '<br />';
 		$data['patientInfo'] = DB::table('demographics')->where('pid', '=', $pid)->first();
-		$data['practiceLogo'] = $this->practice_logo();
+		$data['practiceLogo'] = $this->practice_logo(Session::get('practice_id'));
 		$rxicon = HTML::image('images/rxicon.png', 'Practice Logo', array('border' => '0', 'height' => '30', 'width' => '30'));
 		$data['rxicon'] = str_replace('https', 'http', $rxicon);
 		$data['dob'] = date('m/d/Y', $this->human_to_unix($data['patientInfo']->DOB));
@@ -4057,7 +4057,7 @@ class BaseController extends Controller {
 		}
 		$data['practiceInfo2'] = $practice->city . ', ' . $practice->state . ' ' . $practice->zip;
 		$data['practiceInfo3'] = 'Phone: ' . $practice->phone . ', Fax: ' . $practice->fax;
-		$data['practiceLogo'] = $this->practice_logo();
+		$data['practiceLogo'] = $this->practice_logo(Session::get('practice_id'));
 		$row = Demographics::find($pid);
 		$data['patientInfo1'] = $row->firstname . ' ' . $row->lastname;
 		$data['patientInfo2'] = $row->address;
@@ -4080,7 +4080,7 @@ class BaseController extends Controller {
 		}
 		$data['practiceInfo2'] = $practice->city . ', ' . $practice->state . ' ' . $practice->zip;
 		$data['practiceInfo3'] = 'Phone: ' . $practice->phone . ', Fax: ' . $practice->fax;
-		$data['practiceLogo'] = $this->practice_logo();
+		$data['practiceLogo'] = $this->practice_logo(Session::get('practice_id'));
 		$row = Demographics::find($pid);
 		$data['patientDOB'] = date('m/d/Y', $this->human_to_unix($row->DOB));
 		$data['patientInfo1'] = $row->firstname . ' ' . $row->lastname;
@@ -4112,7 +4112,7 @@ class BaseController extends Controller {
 		}
 		$data['practiceInfo2'] = $practice->city . ', ' . $practice->state . ' ' . $practice->zip;
 		$data['practiceInfo3'] = 'Phone: ' . $practice->phone . ', Fax: ' . $practice->fax;
-		$data['practiceLogo'] = $this->practice_logo();
+		$data['practiceLogo'] = $this->practice_logo(Session::get('practice_id'));
 		$row = Demographics::find($pid);
 		$data['patientDOB'] = date('m/d/Y', $this->human_to_unix($row->DOB));
 		$data['patientInfo1'] = $row->firstname . ' ' . $row->lastname;
@@ -4163,7 +4163,7 @@ class BaseController extends Controller {
 		}
 		$data['practiceInfo2'] = $practice->city . ', ' . $practice->state . ' ' . $practice->zip;
 		$data['practiceInfo3'] = 'Phone: ' . $practice->phone . ', Fax: ' . $practice->fax;
-		$data['practiceLogo'] = $this->practice_logo();
+		$data['practiceLogo'] = $this->practice_logo(Session::get('practice_id'));
 		$row = Demographics::find($pid);
 		$data['patientDOB'] = date('m/d/Y', $this->human_to_unix($row->DOB));
 		$data['patientInfo1'] = $row->firstname . ' ' . $row->lastname;
