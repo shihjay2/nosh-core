@@ -645,7 +645,7 @@ class ReminderController extends BaseController {
 			$hl7_lines = explode("\r", $hl7);
 			$results = array();
 			$j = 0;
-			$nte_result = '';
+			$result_last = '';
 			foreach ($hl7_lines as $line) {
 				$line_section = explode("|", $line);
 				if ($line_section[0] == "MSH") {
@@ -689,26 +689,36 @@ class ReminderController extends BaseController {
 					$j++;
 				}
 				if ($line_section[0] == "NTE") {
+					if ($line_section[1] == '1') {
+						$result_last = $j - 1;
+					}
 					if ($line_section[2] == "TX") {
-						$from = $line_section[3];
+						$from = $line_section[3] . ", Ordering Provider: " . $provider_firstname . ' ' . $provider_lastname;
 						$keys = array_keys($results);
 						foreach ($keys as $key) {
-							$results[$key]['test_from'] = $line_section[3];
+							$results[$key]['test_from'] = $from;
 						}
 					} else {
-						$nte_result .= "\n" . $line_section[3]; 
+						$results[$result_last]['test_result'] .= "\n" . $line_section[3];
 					}
 				}
 			}
-			if ($nte_result != '') {
-				$nte_keys = array_keys($results);
-				foreach ($nte_keys as $nte_key) {
-					$results[$nte_key]['test_result'] .= $nte_result;
+			$practice_id = '';
+			$practice_row_test = Practiceinfo::where('peacehealth_id', '=', $practice_lab_id)->first();
+			if (!$practice_row_test) {
+				$patient_row = Demographics::where('lastname', '=', $lastname)->where('firstname', '=', $firstname)->where('DOB', '=', $dob)->where('sex', '=', $sex)->first();
+				if ($patient_row) {
+					$pid = $patient_row->pid;
+					$demo_relate = DB::table('demographics_relate')->where('pid', '=', $pid)->first();
+					if ($demo_relate) {
+						$practice_id = $demo_relate->practice_id;
+					}
 				}
+			} else {
+				$practice_id = $practice_row_test->practice_id;
 			}
-			$practice_row = Practiceinfo::where('peacehealth_id', '=', $practice_lab_id)->first();
-			if ($practice_row) {
-				$practice_id = $practice_row->practice_id;
+			if ($practice_id != '') {
+				$practice_row = Practiceinfo::find($practice_id);
 				Config::set('app.timezone' , $practice_row->timezone);
 				$provider_row = DB::table('users')
 					->join('providers', 'providers.id', '=', 'users.id')
