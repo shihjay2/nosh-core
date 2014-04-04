@@ -1,4 +1,4 @@
-<?php echo HTML::script('js/assessment.js'); ?>
+<?php echo HTML::script('/js/assessment.js');?>
 <input type="hidden" name="assessment_icd1_old" id="assessment_icd1_old"/>
 <input type="hidden" name="assessment_icd2_old" id="assessment_icd2_old"/>
 <input type="hidden" name="assessment_icd3_old" id="assessment_icd3_old"/>

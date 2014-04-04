@@ -34,14 +34,6 @@ function reload_grid(id) {
 function openencounter() {
 	$('#dialog_load').dialog('option', 'title', "Loading encounter...").dialog('open');
 	$("#encounter_body").html('');
-	$('.ros_template_div').off("click", 'input');
-	$('.pe_template_div').off("click", 'input');
-	$('.ros_template_div').off("change", 'input');
-	$('.pe_template_div').off("change", 'input');
-	$('.ros_template_div').off("focusin", 'input');
-	$('.ros_template_div').off("focusout", 'input');
-	$('.pe_template_div').off("focusin", 'input');
-	$('.pe_template_div').off("focusout", 'input');
 	$("#encounter_body").load('ajaxencounter/loadtemplate');
 	$("#encounter_link_span").html('<a href="#" id="encounter_panel">[Active Encounter #: ' + noshdata.eid + ']</a>');
 	$("#encounter_panel").click(function() {
@@ -271,6 +263,7 @@ function vitals_autosave() {
 			var a = $("#" + input_id).val();
 			var b = $("#" + input_id + "_old").val();
 			if (a != b) {
+				console.log(input_id+","+a+","+b);
 				bValid = true;
 			}
 		}
@@ -934,4 +927,669 @@ $(document).on("click", ".ui-jqgrid-titlebar", function() {
 });
 $(document).ajaxStop(function() {
   $('#dialog_load').dialog('close');
+});
+function updateTextArea(parent_id_entry) {
+	var newtext = '';
+	$('#' + parent_id_entry + '_form :checked').each(function() {
+		newtext += $(this).val() + '  ';
+	});
+	$('#' + parent_id_entry).val(newtext);
+}
+function ros_normal(parent_id) {
+	var x = parent_id.length - 1;
+	parent_id = parent_id.slice(0,x);
+	$("#" + parent_id + "_div").find('.ros_other:checkbox').each(function(){
+		var parent_id = $(this).attr("id");
+		$(this).prop('checked',false);
+		var parts = parent_id.split('_');
+		if (parts[1] == 'wccage') {
+			var parent_id_entry = 'ros_wcc';
+		} else {
+			var parent_id_entry = parts[0] + '_' + parts[1];
+		}
+		var old = $("#" + parent_id_entry).val();
+		var a = $(this).val();
+		var a1 = a + '  ';
+		var c = old.replace(a1,'');
+		c = c.replace(a, '');
+		$("#" + parent_id_entry).val(c);
+		$("#" + parent_id_entry + "_form input").button('refresh');
+		if (parts[1] == 'wccage') {
+			$("#ros_wcc_age_form input").button('refresh');
+		}
+	});
+	$("#" + parent_id + "_div").find('.ros_detail_text').each(function(){
+		var parent_id = $(this).attr("id");
+		var parts = parent_id.split('_');
+		if (parts[1] == 'wccage') {
+			var parent_id_entry = 'ros_wcc';
+		} else {
+			var parent_id_entry = parts[0] + '_' + parts[1];
+		}
+		var old = $("#" + parent_id_entry).val();
+		var a = ' ' + $(this).val();
+		var a1 = a + '  ';
+		var c = old.replace(a1,'');
+		c = c.replace(a, '');
+		$("#" + parent_id_entry).val(c);
+		$(this).hide();
+	});
+}
+function ros_other(parent_id) {
+	var x = parent_id.length - 1;
+	parent_id = parent_id.slice(0,x);
+	$("#" + parent_id + "_div").find('.ros_normal:checkbox').each(function(){
+		var parent_id = $(this).attr("id");
+		$(this).prop('checked',false);
+		var parts = parent_id.split('_');
+		if (parts[1] == 'wccage') {
+			var parent_id_entry = 'ros_wcc';
+		} else {
+			var parent_id_entry = parts[0] + '_' + parts[1];
+		}
+		var old = $("#" + parent_id_entry).val();
+		var a = $(this).val();
+		var a1 = a + '  ';
+		var c = old.replace(a1,'');
+		c = c.replace(a, '');
+		$("#" + parent_id_entry).val(c);
+		$("#" + parent_id_entry + "_form input").button('refresh');
+		if (parts[1] == 'wccage') {
+			$("#ros_wcc_age_form input").button('refresh');
+		}
+	});
+}
+$(document).on("click", '.ros_template_div input[type="checkbox"]', function() {
+	var parent_id = $(this).attr("id");
+	var parts = parent_id.split('_');
+	if (parts[1] == 'wccage') {
+		var parent_id_entry = 'ros_wcc';
+	} else {
+		var parent_id_entry = parts[0] + '_' + parts[1];
+	}
+	var old = $("#" + parent_id_entry).val();
+	var a = $(this).val();
+	if ($(this).prop('checked')) {
+		if (old != '') {
+			var b = old + a + '  ';
+		} else {
+			var b = a + '  ';
+		}
+		$("#" + parent_id_entry).val(b);
+		if ($(this).is('.ros_normal')) {
+			ros_normal(parent_id);
+		}
+		if ($(this).is('.ros_other')) {
+			ros_other(parent_id);
+		}
+	} else {
+		var a1 = a + '  ';
+		var c = old.replace(a1,'');
+		c = c.replace(a, '');
+		$("#" + parent_id_entry).val(c); 
+	}
+});
+$(document).on("click", '.ros_template_div input[type="radio"]', function() {
+	var parent_id = $(this).attr("id");
+	var parts = parent_id.split('_');
+	if (parts[1] == 'wccage') {
+		var parent_id_entry = 'ros_wcc';
+	} else {
+		var parent_id_entry = parts[0] + '_' + parts[1];
+	}
+	var old = $("#" + parent_id_entry).val();
+	var a = $(this).val();
+	if ($(this).prop('checked')) {
+		if (old != '') {
+			var b = old + a + '  ';
+		} else {
+			var b = a + '  ';
+		}
+		$("#" + parent_id_entry).val(b);
+		if ($(this).is('.ros_normal')) {
+			ros_normal(parent_id);
+		}
+		if ($(this).is('.ros_other')) {
+			ros_other(parent_id);
+		}
+	} else {
+		var a1 = a + '  ';
+		var c = old.replace(a1,'');
+		c = c.replace(a, '');
+		$("#" + parent_id_entry).val(c); 
+	}
+});
+$(document).on("change", '.ros_template_div select', function() {
+	var parent_id = $(this).attr("id");
+	var parts = parent_id.split('_');
+	if (parts[1] == 'wccage') {
+		var parent_id_entry = 'ros_wcc';
+	} else {
+		var parent_id_entry = parts[0] + '_' + parts[1];
+	}
+	var old = $("#" + parent_id_entry).val();
+	var a = $(this).val();
+	if (old != '') {
+		var b = old + a + '  ';
+	} else {
+		var b = a + '  ';
+	}
+	$("#" + parent_id_entry).val(b); 
+});
+$(document).on('focusin', '.ros_template_div input[type="text"]', function() {
+	old_text = $(this).val();
+});
+$(document).on('focusout', '.ros_template_div input[type="text"]', function() {
+	var a = $(this).val();
+	if (a != '') {
+		var parent_id = $(this).attr("id");
+		var parts = parent_id.split('_');
+		if (parts[1] == 'wccage') {
+			var parent_id_entry = 'ros_wcc';
+		} else {
+			var parent_id_entry = parts[0] + '_' + parts[1];
+		}
+		var x = parent_id.length - 1;
+		var parent_div = parent_id.slice(0,x);
+		var start1 = $("#" + parent_div + "_div").find('span:first').text();
+		if (start1 == '') {
+			start1 = $("#" + parts[0] + '_' + parts[1] + '_' + parts[2] + '_label').text();
+		}
+		var start1_n = start1.lastIndexOf(' (');
+		if (start1_n != -1) {
+			var start1_n1 = start1.substring(0,start1_n);
+			var start1_n2 = start1_n1.toLowerCase();
+		} else {
+			var start1_n1 = start1;
+			var start1_n2 = start1;
+		}
+		var start2 = $("label[for='" + parent_id + "']").text();
+		var start3_n = start1.lastIndexOf('degrees');
+		if (start3_n != -1) {
+			var end_text = ' degrees.';
+		} else {
+			var end_text = '';
+		}
+		var start4 = $(this).closest('div.ui-accordion').find('h3.ui-state-active').text();
+		if (start4 != '') {
+			var start4_n = start4.lastIndexOf('-');
+			if (start4_n != -1) {
+				var parts2 = start4.split(' - ');
+				var mid_text = ', ' + parts2[1].toLowerCase();
+			} else {
+				var mid_text = ', ' + start4.toLowerCase();
+			}
+		} else {
+			var mid_text = '';
+		}
+		if (!!start2) {
+			var start_text = start2 + ' ' + start1_n2;
+		} else {
+			var start_text = start1_n1;
+		}
+		var old = $("#" + parent_id_entry).val();
+		var a_pointer = a.length - 1;
+		var a_pointer2 = a.lastIndexOf('.');
+		if (!!old) {
+			if (!!start_text) {
+				var c = start_text + mid_text + ': ' + a + end_text;
+				if (old_text != '') {
+					var c_old = start_text + mid_text + ': ' + old_text + end_text;
+				}
+			} else {
+				if (a_pointer != a_pointer2) {
+					var c = a + '.';
+				} else {
+					var c = a;
+				}
+			}
+			if (old_text != '') {
+				var old_text_pointer = old_text.length - 1;
+				var old_text_pointer2 = old_text.lastIndexOf('.');
+				if (old_text_pointer != old_text_pointer2) {
+					var old_text1 = old_text + '.';
+				} else {
+					var old_text1 = old_text;
+				}
+				if (!!start_text) {
+					var b = old.replace(c_old, c);
+				} else {
+					var b = old.replace(old_text1, c);
+				}
+				old_text = '';
+			} else {
+				var b = old + ' ' + c;
+			}
+		} else {
+			if (!!start_text) {
+				var b = start_text + mid_text + ': ' + a + end_text;
+			} else {
+				if (a_pointer != a_pointer2) {
+					var b = a + '.';
+				} else {
+					var b = a;
+				}
+			}
+		}
+		$("#" + parent_id_entry).val(b);
+	}
+});
+$(document).on('click', '.ros_template_div .ros_detail', function() {
+	var detail_id = $(this).attr("id") + '_detail';
+	if ($(this).prop('checked')) {
+		$('#' + detail_id).show('fast');
+		$('#' + detail_id).focus();
+	} else {
+		var parent_id = $(this).attr("id");
+		var parts = parent_id.split('_');
+		if (parts[1] == 'wccage') {
+		var parent_id_entry = 'ros_wcc';
+		} else {
+			var parent_id_entry = parts[0] + '_' + parts[1];
+		}
+		var old = $("#" + parent_id_entry).val();
+		var a = ' ' + $('#' + detail_id).val();
+		var a1 = a + '  ';
+		var c = old.replace(a1,'');
+		c = c.replace(a, '');
+		$("#" + parent_id_entry).val(c);
+		$('#' + detail_id).hide('fast');
+	}
+});
+$(document).on("click", '.all_normal', function(){
+	var a = $(this).prop('checked');
+	var parent_id = $(this).attr("id");
+	var parts = parent_id.split('_');
+	if (parts[1] == 'wcc') {
+		if(a){
+			$("#ros_wcc_form").find("input.ros_normal:checkbox").each(function(){
+				$(this).prop("checked",true);
+			});
+			$("#ros_wcc_age_form").find("input.ros_normal:checkbox").each(function(){
+				$(this).prop("checked",true);
+			});
+			var newtext = '';
+			$('#ros_wcc_form :checked').each(function() {
+				newtext += $(this).val() + '  ';
+			});
+			$('#ros_wcc_age_form :checked').each(function() {
+				newtext += $(this).val() + '  ';
+			});
+			$('#ros_wcc').val(newtext);
+		} else {
+			$("#ros_wcc").val('');
+			$("#ros_wcc_form").find('input.ros_normal:checkbox').each(function(){
+				$(this).prop("checked",false);
+			});
+			$("#ros_wcc_age_form").find('input.ros_normal:checkbox').each(function(){
+				$(this).prop("checked",false);
+			});
+		}
+		$('#ros_wcc_form input[type="checkbox"]').button('refresh');
+		$('#ros_wcc_age_form input[type="checkbox"]').button('refresh');
+	} else {
+		var parent_id_entry = parts[0] + '_' + parts[1];
+		if(a){
+			$("#" + parent_id_entry + "_form").find("input.ros_normal:checkbox").each(function(){
+				$(this).prop("checked",true);
+			});
+			updateTextArea(parent_id_entry);
+		} else {
+			$("#" + parent_id_entry).val('');
+			$("#" + parent_id_entry + "_form").find('input.ros_normal:checkbox').each(function(){
+				$(this).prop("checked",false);
+			});
+		}
+		$("#" + parent_id_entry + '_form input[type="checkbox"]').button('refresh');
+	}
+});
+
+function updateTextArea_pe(parent_id_entry) {
+	var newtext = '';
+	$('#' + parent_id_entry + '_form :checked').each(function() {
+		newtext += $(this).val() + '  ';
+	});
+	$('#' + parent_id_entry).val(newtext);
+}
+function pe_normal(parent_id) {
+	var x = parent_id.length - 1;
+	parent_id = parent_id.slice(0,x);
+	$("#" + parent_id + "_div").find('.pe_other:checkbox').each(function(){
+		var parent_id = $(this).attr("id");
+		$(this).prop('checked',false);
+		var parts = parent_id.split('_');
+		var parent_id_entry = parts[0] + '_' + parts[1];
+		var old = $("#" + parent_id_entry).val();
+		var a = $(this).val();
+		var a1 = a + '  ';
+		var c = old.replace(a1,'');
+		c = c.replace(a, '');
+		$("#" + parent_id_entry).val(c);
+		$(this).button('refresh');
+	});
+	$("#" + parent_id + "_div").find('.pe_detail_text').each(function(){
+		var parent_id = $(this).attr("id");
+		var parts = parent_id.split('_');
+		var parent_id_entry = parts[0] + '_' + parts[1];
+		var old = $("#" + parent_id_entry).val();
+		if ($(this).val() != '') {
+			var text_pointer = $(this).val().length - 1;
+			var text_pointer2 = $(this).val().lastIndexOf('.');
+			if (text_pointer != text_pointer2) {
+				var text1 = $(this).val() + '.';
+			} else {
+				var text1 = $(this).val();
+			}
+			var a = ' ' + text1;
+			var a1 = a + '  ';
+			var c = old.replace(a1,'');
+			c = c.replace(a, '');
+			$("#" + parent_id_entry).val(c);
+		}
+		$(this).val('');
+		$(this).hide();
+	});
+}
+function pe_other(parent_id) {
+	var x = parent_id.length - 1;
+	parent_id = parent_id.slice(0,x);
+	$("#" + parent_id + "_div").find('.pe_normal:checkbox').each(function(){
+		var parent_id = $(this).attr("id");
+		$(this).prop('checked',false);
+		var parts = parent_id.split('_');
+		var parent_id_entry = parts[0] + '_' + parts[1];
+		var old = $("#" + parent_id_entry).val();
+		var a = $(this).val();
+		var a1 = a + '  ';
+		var c = old.replace(a1,'');
+		c = c.replace(a, '');
+		$("#" + parent_id_entry).val(c);
+		$(this).button('refresh');
+	});
+}
+$(document).on("click", '.pe_template_div input[type="checkbox"]', function() {
+	var parent_id = $(this).attr("id");
+	var parts = parent_id.split('_');
+	var parent_id_entry = parts[0] + '_' + parts[1];
+	var old = $("#" + parent_id_entry).val();
+	var a = $(this).val();
+	if ($(this).is(':checked')) {
+		if (old != '') {
+			var b = old + '  ' + a;
+		} else {
+			var b = a;
+		}
+		$("#" + parent_id_entry).val(b);
+		if ($(this).is('.pe_normal')) {
+			pe_normal(parent_id);
+		}
+		if ($(this).is('.pe_other')) {
+			pe_other(parent_id);
+		}
+	} else {
+		var a1 = '  ' + a;
+		var c = old.replace(a1,'');
+		c = c.replace(a, '');
+		$("#" + parent_id_entry).val(c); 
+	}
+});
+$(document).on("change", '.pe_template_div input[type="radio"]', function() {
+	var parent_id = $(this).attr("id");
+	var parts = parent_id.split('_');
+	var parent_id_entry = parts[0] + '_' + parts[1];
+	var old = $("#" + parent_id_entry).val();
+	var a = $(this).val();
+	if ($(this).is(':checked')) {
+		if (old != '') {
+			var b = old + '  ' + a;
+		} else {
+			var b = a;
+		}
+		$("#" + parent_id_entry).val(b);
+		if ($(this).is('.pe_normal')) {
+			pe_normal(parent_id);
+		}
+		if ($(this).is('.pe_other')) {
+			pe_other(parent_id);
+		}
+	} else {
+		var a1 = '  ' + a;
+		var c = old.replace(a1,'');
+		c = c.replace(a, '');
+		$("#" + parent_id_entry).val(c); 
+	}
+});
+$(document).on("change", '.pe_template_div select', function() {
+	var parent_id = $(this).attr("id");
+	var parts = parent_id.split('_');
+	var parent_id_entry = parts[0] + '_' + parts[1];
+	var old = $("#" + parent_id_entry).val();
+	var a = $(this).val();
+	if (old != '') {
+		var b = old + '  ' + a;
+	} else {
+		var b = a;
+	}
+	$("#" + parent_id_entry).val(b); 
+});
+$(document).on("focusin", '.pe_template_div input[type="text"]', function() {
+	old_text = $(this).val();
+});
+$(document).on("focusout", '.pe_template_div input[type="text"]', function() {
+	var a = $(this).val();
+	if (a != '') {
+		var parent_id = $(this).attr("id");
+		var parts = parent_id.split('_');
+		var parent_id_entry = parts[0] + '_' + parts[1];
+		var x = parent_id.length - 1;
+		var parent_div = parent_id.slice(0,x);
+		var start1 = $("#" + parent_div + "_div").find('span:first').text();
+		if (start1 == '') {
+			start1 = $("#" + parts[0] + '_' + parts[1] + '_' + parts[2] + '_label').text();
+		}
+		var start1_n = start1.lastIndexOf(' (');
+		if (start1_n != -1) {
+			var start1_n1 = start1.substring(0,start1_n);
+			var start1_n2 = start1_n1.toLowerCase();
+		} else {
+			var start1_n1 = start1;
+			var start1_n2 = start1;
+		}
+		var start2 = $("label[for='" + parent_id + "']").text();
+		var start3_n = start1.lastIndexOf('degrees');
+		if (start3_n != -1) {
+			var end_text = ' degrees.';
+		} else {
+			var end_text = '';
+		}
+		var start4 = $(this).closest('div.ui-accordion').find('h3.ui-state-active').text();
+		if (start4 != '') {
+			var start4_n = start4.lastIndexOf('-');
+			if (start4_n != -1) {
+				var parts2 = start4.split(' - ');
+				var mid_text = ', ' + parts2[1].toLowerCase();
+			} else {
+				var mid_text = ', ' + start4.toLowerCase();
+			}
+		} else {
+			var mid_text = '';
+		}
+		if (!!start2) {
+			var start_text = start2 + ' ' + start1_n2;
+		} else {
+			var start_text = start1_n1;
+		}
+		var old = $("#" + parent_id_entry).val();
+		var a_pointer = a.length - 1;
+		var a_pointer2 = a.lastIndexOf('.');
+		if (!!old) {
+			if (!!start_text) {
+				var c = start_text + mid_text + ': ' + a + end_text;
+				if (old_text != '') {
+					var c_old = start_text + mid_text + ': ' + old_text + end_text;
+				}
+			} else {
+				if (a_pointer != a_pointer2) {
+					var c = a + '.';
+				} else {
+					var c = a;
+				}
+			}
+			if (old_text != '') {
+				var old_text_pointer = old_text.length - 1;
+				var old_text_pointer2 = old_text.lastIndexOf('.');
+				if (old_text_pointer != old_text_pointer2) {
+					var old_text1 = old_text + '.';
+				} else {
+					var old_text1 = old_text;
+				}
+				if (!!start_text) {
+					var b = old.replace(c_old, c);
+				} else {
+					var b = old.replace(old_text1, c);
+				}
+				old_text = '';
+			} else {
+				var b = old + ' ' + c;
+			}
+		} else {
+			if (!!start_text) {
+				var b = start_text + mid_text + ': ' + a + end_text;
+			} else {
+				if (a_pointer != a_pointer2) {
+					var b = a + '.';
+				} else {
+					var b = a;
+				}
+			}
+		}
+		$("#" + parent_id_entry).val(b);
+	}
+});
+$(document).on("click", '.pe_template_div .pe_detail', function() {
+	var detail_id = $(this).attr("id") + '_detail';
+	if ($(this).is(':checked')) {
+		$('#' + detail_id).show('fast');
+		$('#' + detail_id).focus();
+	} else {
+		var parent_id = $(this).attr("id");
+		var parts = parent_id.split('_');
+		var parent_id_entry = parts[0] + '_' + parts[1];
+		var old = $("#" + parent_id_entry).val();
+		if ($('#' + detail_id).val() != '') {
+			var text_pointer = $('#' + detail_id).val().length - 1;
+			var text_pointer2 = $('#' + detail_id).val().lastIndexOf('.');
+			if (text_pointer != text_pointer2) {
+				var text1 = $('#' + detail_id).val() + '.';
+			} else {
+				var text1 = $('#' + detail_id).val();
+			}
+			var a = ' ' + text1;
+			var a1 = a + '  ';
+			var c = old.replace(a1,'');
+			c = c.replace(a, '');
+			$("#" + parent_id_entry).val(c);
+		}
+		$('#' + detail_id).val('');
+		$('#' + detail_id).hide('fast');
+	}
+});
+$(document).on("click", '.all_normal_pe', function(){
+	var a = $(this).is(':checked');
+	var parent_id = $(this).attr("id");
+	var n = parent_id.lastIndexOf('_');
+	var parent_id_entry = parent_id.substring(0,n);
+	if(a){
+		$("#" + parent_id_entry + "_form").find("input.pe_normal:checkbox").each(function(){
+			$(this).prop("checked",true);
+		});
+		updateTextArea_pe(parent_id_entry);
+	} else {
+		$("#" + parent_id_entry).val('');
+		$("#" + parent_id_entry + "_form").find('input.pe_normal:checkbox').each(function(){
+			$(this).prop("checked",false);
+		});
+	}
+	$("#" + parent_id_entry + '_form input[type="checkbox"]').button('refresh');
+});
+$(document).on("click", '.all_normal1_pe', function(){
+	var a = $(this).is(':checked');
+	var parent_id = $(this).attr("id");
+	var parent_id_entry = parent_id.replace('normal','dialog');
+	if(a){
+		$("#" + parent_id_entry).find(".all_normal").each(function(){
+			$(this).prop("checked",true);
+			var parent_id1 = $(this).attr("id");
+			var n1 = parent_id1.lastIndexOf('_');
+			var parent_id_entry1 = parent_id1.substring(0,n1);
+			$("#" + parent_id_entry1 + "_form").find("input.pe_normal:checkbox").each(function(){
+				$(this).prop("checked",true);
+			});
+			updateTextArea_pe(parent_id_entry1);
+			$("#" + parent_id_entry1 + '_form input[type="checkbox"]').button('refresh');
+		}).button('refresh');
+		$("#" + parent_id_entry).find(".all_normal2").each(function(){
+			$(this).prop("checked",true);
+			var parent_id2 = $(this).attr("id");
+			var parent_id_entry2 = parent_id2.replace('_normal1','');
+			var old2 = $("#" + parent_id_entry2).val();
+			var a2 = $(this).val();
+			if (old2 != '') {
+				var b2 = old2 + '  ' + a2;
+			} else {
+				var b2 = a2;
+			}
+			$("#" + parent_id_entry2).val(b2); 
+		}).button('refresh');
+	} else {
+		$("#" + parent_id_entry).find(".all_normal").each(function(){
+			$(this).prop("checked",false);
+			var parent_id2 = $(this).attr("id");
+			var n2 = parent_id2.lastIndexOf('_');
+			var parent_id_entry2 = parent_id2.substring(0,n2);
+			$("#" + parent_id_entry2).val('');
+			$("#" + parent_id_entry2 + "_form").find('input.pe_normal:checkbox').each(function(){
+				$(this).prop("checked",false);
+			});
+			$("#" + parent_id_entry2 + '_form input[type="checkbox"]').button('refresh');
+		}).button('refresh');
+		$("#" + parent_id_entry).find(".all_normal2").each(function(){
+			$(this).prop("checked",true);
+			var parent_id2 = $(this).attr("id");
+			var parent_id_entry2 = parent_id2.replace('_normal1','');
+			var old2 = $("#" + parent_id_entry2).val();
+			var a2 = $(this).val();
+			var a3 = '  ' + a2;
+			var c2 = old2.replace(a3,'');
+			c2 = c2.replace(a2, '');
+			$("#" + parent_id_entry2).val(c2); 
+		}).button('refresh');
+	}
+	$("#"+parent_id_entry).find('.pe_entry').each(function(){
+		var parent_id1 = $(this).attr("id");
+		if (!!$(this).val()) {
+			$('#' + parent_id1 + '_h').html(noshdata.item_present);
+		} else {
+			$('#' + parent_id1 + '_h').html(noshdata.item_empty);
+		}
+	});
+});
+$(document).on("click", ".all_normal2_pe", function(){
+	var parent_id = $(this).attr("id");
+	var parent_id_entry = parent_id.replace('_normal1','');
+	var old = $("#" + parent_id_entry).val();
+	var a = $(this).val();
+	if ($(this).is(':checked')) {
+		if (old != '') {
+			var b = old + '  ' + a;
+		} else {
+			var b = a;
+		}
+		$("#" + parent_id_entry).val(b); 
+	} else {
+		var a1 = '  ' + a;
+		var c = old.replace(a1,'');
+		c = c.replace(a, '');
+		$("#" + parent_id_entry).val(c); 
+	}
 });

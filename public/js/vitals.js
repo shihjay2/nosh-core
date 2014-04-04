@@ -16,8 +16,8 @@ $(document).ready(function() {
 			}
 		}
 	});
-	$("#vitals_temp_method").addOption({"Oral":"Oral","Axillary":"Axillary","Temporal":"Temporal","Rectal":"Rectal"}, false);
-	$("#vitals_bp_position").addOption({"Sitting":"Sitting","Standing":"Standing","Supine":"Supinee"}, false);
+	$("#vitals_temp_method").addOption({"":"Pick method","Oral":"Oral","Axillary":"Axillary","Temporal":"Temporal","Rectal":"Rectal"}, false);
+	$("#vitals_bp_position").addOption({"":"Pick position","Sitting":"Sitting","Standing":"Standing","Supine":"Supinee"}, false);
 	jQuery("#vitals_list").jqGrid({
 		url:"ajaxencounter/vitals-list",
 		datatype: "json",

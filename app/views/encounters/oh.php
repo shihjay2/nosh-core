@@ -1,4 +1,4 @@
-<?php echo HTML::script('js/oh.js'); ?>
+<?php echo HTML::script('/js/oh.js');?>
 <input type="hidden" name="oh_pmh_old" id="oh_pmh_old" value=""/>
 <input type="hidden" name="oh_psh_old" id="oh_psh_old" value=""/>
 <input type="hidden" name="oh_fh_old" id="oh_fh_old" value=""/>

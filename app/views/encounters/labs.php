@@ -1,4 +1,4 @@
-<?php echo HTML::script('js/labs.js'); ?>
+<?php echo HTML::script('/js/labs.js');?>
 <form id="encounters_labs">
 	<div class="pure-g">
 		<div class="pure-u-1-2">

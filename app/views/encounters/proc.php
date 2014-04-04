@@ -1,4 +1,4 @@
-<?php echo HTML::script('js/proc.js'); ?>
+<?php echo HTML::script('/js/proc.js');?>
 <input type="hidden" id="procedure_type_old"/>
 <input type="hidden" id="procedure_cpt_old"/>
 <input type="hidden" id="procedure_description_old"/>

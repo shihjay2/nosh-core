@@ -40,8 +40,6 @@
 		<div class="pure-control-group"><label for="menu_documents_type">Document Type:</label><select name="documents_type" id="menu_documents_type" class="text" required></select></div>
 		<div class="pure-control-group"><label for="menu_documents_desc">Description:</label><input type="text" name="documents_desc" id="menu_documents_desc" style="width:500px" class="text" required/></div>
 		<div class="pure-control-group"><label for="menu_document_date">Document Date:</label><input type="text" name="documents_date" id="menu_documents_date" class="text" required/></div>
-		<button type="button" id="save_menu_documents">Save</button> 
-		<button type="button" id="cancel_menu_documents">Cancel</button>
 	</form>
 </div>
 <div id="documents_view_dialog" title="Documents Viewer">

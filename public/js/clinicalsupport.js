@@ -6,9 +6,6 @@ $(document).ready(function() {
 	}
 	$("#encounter_tabs").tabs({
 		beforeLoad: function(event, ui) {
-			//if ($(ui.panel).html()) {
-				//event.preventDefault()
-			//}
 			if ( ui.tab.data("loaded") ) {
 				event.preventDefault();
 				return;

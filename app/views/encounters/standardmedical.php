@@ -1,4 +1,4 @@
-<?php echo HTML::script('js/standardmedical.js'); ?>
+<?php echo HTML::script('/js/standardmedical.js');?>
 <div id="noshtabs">
 	<div id="encounter_tabs">
 		<ul>

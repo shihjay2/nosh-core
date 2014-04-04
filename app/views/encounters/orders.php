@@ -1,4 +1,4 @@
-<?php echo HTML::script('js/orders.js'); ?>
+<?php echo HTML::script('/js/orders.js');?>
 <input type="hidden" name="orders_plan_old" id="orders_plan_old"/>
 <input type="hidden" name="orders_duration_old" id="orders_duration_old"/>
 <input type="hidden" name="orders_followup_old" id="orders_followup_old"/>

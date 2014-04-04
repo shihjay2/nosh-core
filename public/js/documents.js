@@ -1245,14 +1245,14 @@ $(document).ready(function() {
 			if (b == "added") {
 				$.ajax({
 					type: "POST",
-					url: "ajaxsearch/save_tag/documents_id/" + $("#view_document_id").val(),
+					url: "ajaxsearch/save-tag/documents_id/" + $("#view_document_id").val(),
 					data: 'tag=' + a
 				});
 			}
 			if (b == "popped") {
 				$.ajax({
 					type: "POST",
-					url: "ajaxsearch/remove_tag/documents_id/" + $("#view_document_id").val(),
+					url: "ajaxsearch/remove-tag/documents_id/" + $("#view_document_id").val(),
 					data: 'tag=' + a
 				});
 			}
@@ -1266,6 +1266,48 @@ $(document).ready(function() {
 			dataType: "json",
 			success: function(data){
 				$("#documents_view_tags").tagit("fill",data);
+			}
+		});
+	}
+	$("#documents_tags").tagit({
+		tagSource: function (req, add){
+			$.ajax({
+				url: "ajaxsearch/search-tags",
+				dataType: "json",
+				type: "POST",
+				data: req,
+				success: function(data){
+					if(data.response =='true'){
+						add(data.message);
+					}
+				}
+			});
+		},
+		tagsChanged: function(a, b) {
+			if (b == "added") {
+				$.ajax({
+					type: "POST",
+					url: "ajaxsearch/save-tag/documents_id/" + $("#menu_documents_id").val(),
+					data: 'tag=' + a
+				});
+			}
+			if (b == "popped") {
+				$.ajax({
+					type: "POST",
+					url: "ajaxsearch/remove-tag/documents_id/" + $("#menu_documents_id").val(),
+					data: 'tag=' + a
+				});
+			}
+		}
+	});
+	function documents_tags() {
+		var id = $("#menu_documents_id").val();
+		$.ajax({
+			type: "POST",
+			url: "ajaxsearch/get-tags/documents_id/" + id,
+			dataType: "json",
+			success: function(data){
+				$("#documents_tags").tagit("fill",data);
 			}
 		});
 	}

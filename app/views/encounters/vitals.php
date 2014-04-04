@@ -1,4 +1,4 @@
-<?php echo HTML::script('js/vitals.js'); ?>
+<?php echo HTML::script('/js/vitals.js');?>
 <div id="vitals_fieldset">
 	<input type="hidden" name="vitals_weight_old" id="vitals_weight_old"/>
 	<input type="hidden" name="vitals_height_old" id="vitals_height_old"/>
