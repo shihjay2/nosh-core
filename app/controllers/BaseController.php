@@ -1269,7 +1269,7 @@ class BaseController extends Controller {
 	{
 		$body = '';
 		$body .= "<br>Test results for " . $patient_name . "<br><br>";
-		$body .= "<table style='table-layout:fixed;width:700px'><tr><th style='width:50px'>Date</th><th style='width:200px'>Test</th><th style='width:300px'>Result</th><th style='width:50px'>Units</th><th style='width:50px'>Range</th><th style='width:50px'>Flags</th></tr>";
+		$body .= "<table style='table-layout:fixed;width:800px'><tr><th style='width:100px'>Date</th><th style='width:200px'>Test</th><th style='width:300px'>Result</th><th style='width:50px'>Units</th><th style='width:100px'>Range</th><th style='width:50px'>Flags</th></tr>";
 		foreach ($results as $results_row1) {
 			$body .= "<tr><td>" . $results_row1['test_datetime'] . "</td><td>" . $results_row1['test_name'] . "</td><td>" . $results_row1['test_result'] . "</td><td>" . $results_row1['test_units'] . "</td><td>" . $results_row1['test_reference'] . "</td><td>" . $results_row1['test_flags'] . "</td></tr>";
 			$from = $results_row1['test_from'];
