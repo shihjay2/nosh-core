@@ -19,6 +19,70 @@ $(document).ready(function() {
 			}
 		});
 	}
+	function ros_normal(parent_id) {
+		var x = parent_id.length - 1;
+		parent_id = parent_id.slice(0,x);
+		$("#" + parent_id + "_div").find('.ros_other:checkbox').each(function(){
+			var parent_id = $(this).attr("id");
+			$(this).prop('checked',false);
+			var parts = parent_id.split('_');
+			if (parts[1] == 'wccage') {
+				var parent_id_entry = 'ros_wcc';
+			} else {
+				var parent_id_entry = parts[0] + '_' + parts[1];
+			}
+			var old = $("#" + parent_id_entry).val();
+			var a = $(this).val();
+			var a1 = a + '  ';
+			var c = old.replace(a1,'');
+			c = c.replace(a, '');
+			$("#" + parent_id_entry).val(c);
+			$("#" + parent_id_entry + "_form input").button('refresh');
+			if (parts[1] == 'wccage') {
+				$("#ros_wcc_age_form input").button('refresh');
+			}
+		});
+		$("#" + parent_id + "_div").find('.ros_detail_text').each(function(){
+			var parent_id = $(this).attr("id");
+			var parts = parent_id.split('_');
+			if (parts[1] == 'wccage') {
+				var parent_id_entry = 'ros_wcc';
+			} else {
+				var parent_id_entry = parts[0] + '_' + parts[1];
+			}
+			var old = $("#" + parent_id_entry).val();
+			var a = ' ' + $(this).val();
+			var a1 = a + '  ';
+			var c = old.replace(a1,'');
+			c = c.replace(a, '');
+			$("#" + parent_id_entry).val(c);
+			$(this).hide();
+		});
+	}
+	function ros_other(parent_id) {
+		var x = parent_id.length - 1;
+		parent_id = parent_id.slice(0,x);
+		$("#" + parent_id + "_div").find('.ros_normal:checkbox').each(function(){
+			var parent_id = $(this).attr("id");
+			$(this).prop('checked',false);
+			var parts = parent_id.split('_');
+			if (parts[1] == 'wccage') {
+				var parent_id_entry = 'ros_wcc';
+			} else {
+				var parent_id_entry = parts[0] + '_' + parts[1];
+			}
+			var old = $("#" + parent_id_entry).val();
+			var a = $(this).val();
+			var a1 = a + '  ';
+			var c = old.replace(a1,'');
+			c = c.replace(a, '');
+			$("#" + parent_id_entry).val(c);
+			$("#" + parent_id_entry + "_form input").button('refresh');
+			if (parts[1] == 'wccage') {
+				$("#ros_wcc_age_form input").button('refresh');
+			}
+		});
+	}
 	loadbuttons();
 	$('.reset').click(function(){
 		var parent_id = $(this).attr("id");
@@ -67,7 +131,55 @@ $(document).ready(function() {
 			});
 		}
 	});
-	$('.ros_template_div').on("change", 'input[type="checkbox"]', function() {
+	//$('.ros_template_div').on("change", 'input[type="checkbox"]', function() {
+		//var parent_id = $(this).attr("id");
+		//var parts = parent_id.split('_');
+		//if (parts[1] == 'wccage') {
+			//var parent_id_entry = 'ros_wcc';
+		//} else {
+			//var parent_id_entry = parts[0] + '_' + parts[1];
+		//}
+		//var old = $("#" + parent_id_entry).val();
+		//var a = $(this).val();
+		//if ($(this).prop('checked')) {
+			//if (old != '') {
+				//var b = old + a + '  ';
+			//} else {
+				//var b = a + '  ';
+			//}
+			//$("#" + parent_id_entry).val(b); 
+		//} else {
+			//var a1 = a + '  ';
+			//var c = old.replace(a1,'');
+			//c = c.replace(a, '');
+			//$("#" + parent_id_entry).val(c); 
+		//}
+	//});
+	//$('.ros_template_div').on("change", 'input[type="radio"]', function() {
+		//var parent_id = $(this).attr("id");
+		//var parts = parent_id.split('_');
+		//if (parts[1] == 'wccage') {
+			//var parent_id_entry = 'ros_wcc';
+		//} else {
+			//var parent_id_entry = parts[0] + '_' + parts[1];
+		//}
+		//var old = $("#" + parent_id_entry).val();
+		//var a = $(this).val();
+		//if ($(this).prop('checked')) {
+			//if (old != '') {
+				//var b = old + a + '  ';
+			//} else {
+				//var b = a + '  ';
+			//}
+			//$("#" + parent_id_entry).val(b); 
+		//} else {
+			//var a1 = a + '  ';
+			//var c = old.replace(a1,'');
+			//c = c.replace(a, '');
+			//$("#" + parent_id_entry).val(c); 
+		//}
+	//});
+	$('.ros_template_div').on("click", 'input[type="checkbox"]', function() {
 		var parent_id = $(this).attr("id");
 		var parts = parent_id.split('_');
 		if (parts[1] == 'wccage') {
@@ -77,14 +189,19 @@ $(document).ready(function() {
 		}
 		var old = $("#" + parent_id_entry).val();
 		var a = $(this).val();
-		//console.log(a);
 		if ($(this).prop('checked')) {
 			if (old != '') {
 				var b = old + a + '  ';
 			} else {
 				var b = a + '  ';
 			}
-			$("#" + parent_id_entry).val(b); 
+			$("#" + parent_id_entry).val(b);
+			if ($(this).is('.ros_normal')) {
+				ros_normal(parent_id);
+			}
+			if ($(this).is('.ros_other')) {
+				ros_other(parent_id);
+			}
 		} else {
 			var a1 = a + '  ';
 			var c = old.replace(a1,'');
@@ -92,7 +209,7 @@ $(document).ready(function() {
 			$("#" + parent_id_entry).val(c); 
 		}
 	});
-	$('.ros_template_div').on("change", 'input[type="radio"]', function() {
+	$('.ros_template_div').on("click", 'input[type="radio"]', function() {
 		var parent_id = $(this).attr("id");
 		var parts = parent_id.split('_');
 		if (parts[1] == 'wccage') {
@@ -108,7 +225,13 @@ $(document).ready(function() {
 			} else {
 				var b = a + '  ';
 			}
-			$("#" + parent_id_entry).val(b); 
+			$("#" + parent_id_entry).val(b);
+			if ($(this).is('.ros_normal')) {
+				ros_normal(parent_id);
+			}
+			if ($(this).is('.ros_other')) {
+				ros_other(parent_id);
+			}
 		} else {
 			var a1 = a + '  ';
 			var c = old.replace(a1,'');
@@ -253,76 +376,76 @@ $(document).ready(function() {
 			$('#' + detail_id).hide('fast');
 		}
 	});
-	$('.ros_template_div').on('click', '.ros_normal', function() {
-		if ($(this).prop('checked')) {
-			var parent_id = $(this).attr("id");
-			var x = parent_id.length - 1;
-			parent_id = parent_id.slice(0,x);
-			$("#" + parent_id + "_div").find('.ros_other:checkbox').each(function(){
-				var parent_id = $(this).attr("id");
-				$(this).prop('checked',false);
-				var parts = parent_id.split('_');
-				if (parts[1] == 'wccage') {
-					var parent_id_entry = 'ros_wcc';
-				} else {
-					var parent_id_entry = parts[0] + '_' + parts[1];
-				}
-				var old = $("#" + parent_id_entry).val();
-				var a = $(this).val();
-				var a1 = a + '  ';
-				var c = old.replace(a1,'');
-				c = c.replace(a, '');
-				$("#" + parent_id_entry).val(c);
-				$("#" + parent_id_entry + "_form input").button('refresh');
-				if (parts[1] == 'wccage') {
-					$("#ros_wcc_age_form input").button('refresh');
-				}
-			});
-			$("#" + parent_id + "_div").find('.ros_detail_text').each(function(){
-				var parent_id = $(this).attr("id");
-				var parts = parent_id.split('_');
-				if (parts[1] == 'wccage') {
-					var parent_id_entry = 'ros_wcc';
-				} else {
-					var parent_id_entry = parts[0] + '_' + parts[1];
-				}
-				var old = $("#" + parent_id_entry).val();
-				var a = ' ' + $(this).val();
-				var a1 = a + '  ';
-				var c = old.replace(a1,'');
-				c = c.replace(a, '');
-				$("#" + parent_id_entry).val(c);
-				$(this).hide();
-			});
-		}
-	});
-	$('.ros_template_div').on('click', '.ros_other', function() {
-		if ($(this).prop('checked')) {
-			var parent_id = $(this).attr("id");
-			var x = parent_id.length - 1;
-			parent_id = parent_id.slice(0,x);
-			$("#" + parent_id + "_div").find('.ros_normal:checkbox').each(function(){
-				var parent_id = $(this).attr("id");
-				$(this).prop('checked',false);
-				var parts = parent_id.split('_');
-				if (parts[1] == 'wccage') {
-					var parent_id_entry = 'ros_wcc';
-				} else {
-					var parent_id_entry = parts[0] + '_' + parts[1];
-				}
-				var old = $("#" + parent_id_entry).val();
-				var a = $(this).val();
-				var a1 = a + '  ';
-				var c = old.replace(a1,'');
-				c = c.replace(a, '');
-				$("#" + parent_id_entry).val(c);
-				$("#" + parent_id_entry + "_form input").button('refresh');
-				if (parts[1] == 'wccage') {
-					$("#ros_wcc_age_form input").button('refresh');
-				}
-			});
-		}
-	});
+	//$('.ros_template_div').on('click', '.ros_normal', function() {
+		//if ($(this).prop('checked')) {
+			//var parent_id = $(this).attr("id");
+			//var x = parent_id.length - 1;
+			//parent_id = parent_id.slice(0,x);
+			//$("#" + parent_id + "_div").find('.ros_other:checkbox').each(function(){
+				//var parent_id = $(this).attr("id");
+				//$(this).prop('checked',false);
+				//var parts = parent_id.split('_');
+				//if (parts[1] == 'wccage') {
+					//var parent_id_entry = 'ros_wcc';
+				//} else {
+					//var parent_id_entry = parts[0] + '_' + parts[1];
+				//}
+				//var old = $("#" + parent_id_entry).val();
+				//var a = $(this).val();
+				//var a1 = a + '  ';
+				//var c = old.replace(a1,'');
+				//c = c.replace(a, '');
+				//$("#" + parent_id_entry).val(c);
+				//$("#" + parent_id_entry + "_form input").button('refresh');
+				//if (parts[1] == 'wccage') {
+					//$("#ros_wcc_age_form input").button('refresh');
+				//}
+			//});
+			//$("#" + parent_id + "_div").find('.ros_detail_text').each(function(){
+				//var parent_id = $(this).attr("id");
+				//var parts = parent_id.split('_');
+				//if (parts[1] == 'wccage') {
+					//var parent_id_entry = 'ros_wcc';
+				//} else {
+					//var parent_id_entry = parts[0] + '_' + parts[1];
+				//}
+				//var old = $("#" + parent_id_entry).val();
+				//var a = ' ' + $(this).val();
+				//var a1 = a + '  ';
+				//var c = old.replace(a1,'');
+				//c = c.replace(a, '');
+				//$("#" + parent_id_entry).val(c);
+				//$(this).hide();
+			//});
+		//}
+	//});
+	//$('.ros_template_div').on('click', '.ros_other', function() {
+		//if ($(this).prop('checked')) {
+			//var parent_id = $(this).attr("id");
+			//var x = parent_id.length - 1;
+			//parent_id = parent_id.slice(0,x);
+			//$("#" + parent_id + "_div").find('.ros_normal:checkbox').each(function(){
+				//var parent_id = $(this).attr("id");
+				//$(this).prop('checked',false);
+				//var parts = parent_id.split('_');
+				//if (parts[1] == 'wccage') {
+					//var parent_id_entry = 'ros_wcc';
+				//} else {
+					//var parent_id_entry = parts[0] + '_' + parts[1];
+				//}
+				//var old = $("#" + parent_id_entry).val();
+				//var a = $(this).val();
+				//var a1 = a + '  ';
+				//var c = old.replace(a1,'');
+				//c = c.replace(a, '');
+				//$("#" + parent_id_entry).val(c);
+				//$("#" + parent_id_entry + "_form input").button('refresh');
+				//if (parts[1] == 'wccage') {
+					//$("#ros_wcc_age_form input").button('refresh');
+				//}
+			//});
+		//}
+	//});
 	$('.all_normal').click(function(){
 		var a = $(this).prop('checked');
 		var parent_id = $(this).attr("id");

@@ -55,34 +55,6 @@ $(document).ready(function() {
 			 	height: "100%",
 			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#messages_ref_list_pager',{search:false,edit:false,add:false,del:false});
-			$("#messages_specialty_select").removeOption(/./);
-			$.ajax({
-				url: "ajaxsearch/ref-provider-specialty",
-				dataType: "json",
-				type: "POST",
-				success: function(data){
-					if(data.response =='true'){
-						$("#messages_specialty_select").addOption({"":"All specialties."}, false);
-						$("#messages_specialty_select").addOption(data.message, false);
-					} else {
-						$("#messages_specialty_select").addOption({"":"No specialties.  Click Add."}, false);
-					}
-				}
-			});
-			$("#messages_ref_location").removeOption(/./);
-			$.ajax({
-				url: "ajaxsearch/ref-provider/all",
-				dataType: "json",
-				type: "POST",
-				success: function(data){
-					if(data.response =='true'){
-						$("#messages_ref_location").addOption({"":"Add referral provider."}, false);
-						$("#messages_ref_location").addOption(data.message, false);
-					} else {
-						$("#messages_ref_location").addOption({"":"No referral provider.  Click Add."}, false);
-					}
-				}
-			});
 			$("#messages_ref_provider_list").removeOption(/./);
 			$.ajax({
 				url: "ajaxsearch/provider-select",
@@ -167,12 +139,70 @@ $(document).ready(function() {
 		}
 		var currentDate = getCurrentDate();
 		$('#messages_ref_orders_pending_date').val(currentDate);
+		$("#messages_specialty_select").removeOption(/./);
+		$.ajax({
+			url: "ajaxsearch/ref-provider-specialty",
+			dataType: "json",
+			type: "POST",
+			success: function(data){
+				if(data.response =='true'){
+					$("#messages_specialty_select").addOption({"":"All specialties."}, false);
+					$("#messages_specialty_select").addOption(data.message, false);
+				} else {
+					$("#messages_specialty_select").addOption({"":"No specialties.  Click Add."}, false);
+				}
+			}
+		});
+		$("#messages_ref_location").removeOption(/./);
+		$.ajax({
+			url: "ajaxsearch/ref-provider/all",
+			dataType: "json",
+			type: "POST",
+			success: function(data){
+				if(data.response =='true'){
+					$("#messages_ref_location").addOption({"":"Add referral provider."}, false);
+					$("#messages_ref_location").addOption(data.message, false);
+				} else {
+					$("#messages_ref_location").addOption({"":"No referral provider.  Click Add."}, false);
+				}
+			}
+		});
 		$("#messages_ref_edit_fields").dialog("option", "title", "Add Referral");
 		$("#messages_ref_edit_fields").dialog('open');
 	});
 	$("#messages_edit_ref").click(function(){
 		var item = jQuery("#messages_ref_list").getGridParam('selrow');
 		if(item){
+			$("#messages_specialty_select").removeOption(/./);
+			$.ajax({
+				url: "ajaxsearch/ref-provider-specialty",
+				dataType: "json",
+				type: "POST",
+				async: false,
+				success: function(data){
+					if(data.response =='true'){
+						$("#messages_specialty_select").addOption({"":"All specialties."}, false);
+						$("#messages_specialty_select").addOption(data.message, false);
+					} else {
+						$("#messages_specialty_select").addOption({"":"No specialties.  Click Add."}, false);
+					}
+				}
+			});
+			$("#messages_ref_location").removeOption(/./);
+			$.ajax({
+				url: "ajaxsearch/ref-provider/all",
+				dataType: "json",
+				type: "POST",
+				async: false,
+				success: function(data){
+					if(data.response =='true'){
+						$("#messages_ref_location").addOption({"":"Add referral provider."}, false);
+						$("#messages_ref_location").addOption(data.message, false);
+					} else {
+						$("#messages_ref_location").addOption({"":"No referral provider.  Click Add."}, false);
+					}
+				}
+			});
 			jQuery("#messages_ref_list").GridToForm(item,"#edit_messages_ref_form");
 			var status = 'Details for Referral Order #' + item;
 			$("#messages_ref_status").html(status);
@@ -374,6 +404,7 @@ $(document).ready(function() {
 							$("#edit_messages_ref_form").clearForm();
 							$("#messages_ref_orders_id").val(data.id);
 							$("#messages_ref_edit_fields").dialog('close');
+							$('#messages_ref_form').html('');
 							reload_grid("alerts");
 							reload_grid("messages_ref_list");
 						}
@@ -383,6 +414,7 @@ $(document).ready(function() {
 			Cancel: function() {
 				$("#edit_messages_ref_form").clearForm();
 				$("#messages_ref_edit_fields").dialog('close');
+				$('#messages_ref_form').html('');
 			}
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }

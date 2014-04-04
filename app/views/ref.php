@@ -23,7 +23,7 @@
 				</div>
 				<div class="pure-u-11-24">
 					<div class="pure-form pure-form-stacked"><label for="messages_ref_template">Choose Template:</label><select id="messages_ref_template" class="text ui-widget-content ui-corner-all"></select></div>
-					<button type="button" id="messages_ref_template_save" class="nosh_button_copy">Copy</button><button type="button" id="messages_ref_orderslist_link" class="nosh_button_edit">Edit Referral Templates</button><button type="button" id="messages_ref_orders_clear" class="nosh_button_cancel messages_ref_button_clear">Clear</button>
+					<button type="button" id="messages_ref_template_save" class="nosh_button_copy">Copy</button><button type="button" id="messages_ref_orderslist_link" class="nosh_button_edit">Edit Templates</button><button type="button" id="messages_ref_orders_clear" class="nosh_button_cancel messages_ref_button_clear">Clear</button>
 					<div class="ref_template_div">
 						<br><div id="messages_ref_form" class="ui-widget pure-form"></div>
 					</div>

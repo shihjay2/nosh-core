@@ -799,7 +799,11 @@ class AjaxInstallController extends BaseController {
 		$received = DB::table('received')->get();
 		if ($received) {
 			foreach ($received as $fax) {
-				$practice2 = Practiceinfo::find($fax->practice_id);
+				$fax_practice_id = '1';
+				if ($fax->practice_id == '') {
+					$fax_practice_id = $fax->practice_id;
+				}
+				$practice2 = Practiceinfo::find($fax_practice_id);
 				$new_received_dir = $practice2->documents_dir . 'received/' . $fax->practice_id;
 				$received_data['filePath'] = str_replace('/var/www/nosh/received', $new_received_dir, $fax->filePath);
 				rename($fax->filePath, $received_data['filePath']);
