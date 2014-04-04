@@ -1165,7 +1165,7 @@ class AjaxChartController extends BaseController {
 					$sales_tax_check = Practiceinfo::find(Session::get('practice_id'));
 					if ($origin_orders == "Y") {
 						$eid = Session::get('eid');
-						$encounterInfo = Encounter::find($eid);
+						$encounterInfo = Encounters::find($eid);
 						$dos1 = $this->human_to_unix($encounterInfo->encounter_DOS);
 						$dos = date('mdY', $dos1);
 						$dos2 = date('m/d/Y', $dos1);
