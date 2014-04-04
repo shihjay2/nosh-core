@@ -33,6 +33,15 @@ function reload_grid(id) {
 }
 function openencounter() {
 	$('#dialog_load').dialog('option', 'title', "Loading encounter...").dialog('open');
+	$("#encounter_body").html('');
+	$('.ros_template_div').off("click", 'input');
+	$('.pe_template_div').off("click", 'input');
+	$('.ros_template_div').off("change", 'input');
+	$('.pe_template_div').off("change", 'input');
+	$('.ros_template_div').off("focusin", 'input');
+	$('.ros_template_div').off("focusout", 'input');
+	$('.pe_template_div').off("focusin", 'input');
+	$('.pe_template_div').off("focusout", 'input');
 	$("#encounter_body").load('ajaxencounter/loadtemplate');
 	$("#encounter_link_span").html('<a href="#" id="encounter_panel">[Active Encounter #: ' + noshdata.eid + ']</a>');
 	$("#encounter_panel").click(function() {

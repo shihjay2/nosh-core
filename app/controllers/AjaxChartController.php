@@ -1135,7 +1135,12 @@ class AjaxChartController extends BaseController {
 		} else {
 			$pid = Session::get('pid');
 			$user_id = Input::get('id');
-			$user = User::find($user_id);
+			if ($user_id != '') {
+				$user = User::find($user_id);
+				$sup_provider = $user->displayname;
+			} else {
+				$sup_provider = '';
+			}
 			$data = array(
 				'sup_supplement' => Input::get('sup_supplement'),
 				'sup_dosage' => Input::get('sup_dosage'),
@@ -1147,7 +1152,7 @@ class AjaxChartController extends BaseController {
 				'sup_reason' => Input::get('sup_reason'),
 				'sup_date_active' => date('Y-m-d H:i:s', strtotime(Input::get('sup_date_active'))),
 				'sup_date_inactive' => '',
-				'sup_provider' => $user->displayname,
+				'sup_provider' => $sup_provider,
 				'id' => $user_id,
 				'pid' => $pid
 			);
