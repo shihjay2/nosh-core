@@ -645,6 +645,7 @@ class ReminderController extends BaseController {
 			$hl7_lines = explode("\r", $hl7);
 			$results = array();
 			$j = 0;
+			$nte_result = '';
 			foreach ($hl7_lines as $line) {
 				$line_section = explode("|", $line);
 				if ($line_section[0] == "MSH") {
@@ -688,11 +689,21 @@ class ReminderController extends BaseController {
 					$j++;
 				}
 				if ($line_section[0] == "NTE") {
-					$from = $line_section[3];
-					$keys = array_keys($results);
-					foreach ($keys as $key) {
-						$results[$key]['test_from'] = $line_section[3];
+					if ($line_section[2] == "TX") {
+						$from = $line_section[3];
+						$keys = array_keys($results);
+						foreach ($keys as $key) {
+							$results[$key]['test_from'] = $line_section[3];
+						}
+					} else {
+						$nte_result .= "\n" . $line_section[3]; 
 					}
+				}
+			}
+			if ($nte_result != '') {
+				$nte_keys = array_keys($results);
+				foreach ($nte_keys as $nte_key) {
+					$results[$nte_key]['test_result'] .= $nte_result;
 				}
 			}
 			$practice_row = Practiceinfo::where('peacehealth_id', '=', $practice_lab_id)->first();
