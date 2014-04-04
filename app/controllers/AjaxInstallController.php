@@ -800,7 +800,7 @@ class AjaxInstallController extends BaseController {
 		if ($received) {
 			foreach ($received as $fax) {
 				$fax_practice_id = '1';
-				if ($fax->practice_id != '' || $fax->practice_id != '0') {
+				if ($fax->practice_id != '' && $fax->practice_id != '0') {
 					$fax_practice_id = $fax->practice_id;
 				}
 				$practice2 = Practiceinfo::find($fax_practice_id);
