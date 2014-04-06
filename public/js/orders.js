@@ -258,19 +258,6 @@ $(document).ready(function() {
 	});
 	$("#button_orders_rx").click(function() {
 		$("#messages_rx_dialog").dialog('open');
-		$.ajax({
-			type: "POST",
-			url: "ajaxdashboard/check-rcopia",
-			success: function(data){
-				if (data == 'y') {
-					$('#rcopia_orders_rx').hide();
-					$('#rcopia_rx_helper').show();
-				} else {
-					$('#rcopia_orders_rx').hide();
-					$('#rcopia_rx_helper').hide();
-				}
-			}
-		});
 		$("#orders_rx_header").show();
 		$("#messages_rx_header").hide();
 	});
