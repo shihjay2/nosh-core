@@ -52,7 +52,9 @@ class BackupController extends BaseController
 							file_put_contents($filename, $file);
 						}
 						if ($row1['status'] == 'removed') {
-							unlink($filename);
+							if (file_exists($filename)) {
+								unlink($filename);
+							}
 						}
 					}
 				}
