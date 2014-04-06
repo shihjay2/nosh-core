@@ -28,7 +28,9 @@ class ReminderController extends BaseController {
 				if ($to != '') {
 					$row0 = User::where('id', '=', $row->provider_id)->first();
 					$row2 = Practiceinfo::where('practice_id', '=', $row0->practice_id)->first();
-					Config::set('app.timezone' , $row2->timezone);
+					if ($row2->timezone != null) {
+						Config::set('app.timezone' , $row2->timezone);
+					}
 					$data_message['startdate'] = date("F j, Y, g:i a", $row->start);
 					$data_message['displayname'] = $row0->displayname;
 					$data_message['phone'] = $row2->phone;

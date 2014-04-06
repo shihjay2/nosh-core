@@ -144,7 +144,6 @@ $(document).ready(function() {
 					}
 				}
 			});
-			
 			jQuery("#visit_type_list").jqGrid({
 				url:"ajaxsetup/visit-type-list",
 				editurl:"ajaxsetup/edit-visit-type-list",
@@ -196,6 +195,49 @@ $(document).ready(function() {
 					$("#provider_list1").addOption(data, false);
 				}
 			});
+		},
+		close: function (event, ui) {
+			var bValid = true;
+			$("#schedule-setup1").find("[required]").each(function() {
+				var input_id = $(this).attr('id');
+				var id1 = $("#" + input_id); 
+				var text = $("label[for='" + input_id + "']").html();
+				bValid = bValid && checkEmpty(id1, text);
+			});
+			var bValid1 = false;
+			$("#schedule-setup1").find(".text").each(function() {
+				if (bValid1 == false) {
+					var input_id = $(this).attr('id');
+					var a = $("#" + input_id).val();
+					var b = $("#" + input_id + "_old").val();
+					if (a != b) {
+						bValid1 = true;
+					}
+				}
+			});
+			if (bValid) {
+				if (bValid1) {
+					var str = $("#schedule-setup1").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxsetup/schedule-setup1",
+							data: str,
+							success: function(data){
+								$.jGrowl(data);
+								return true;
+							}
+						});
+					} else {
+						$.jGrowl("Please complete the form");
+						return false;
+					}
+				} else {
+					return true;
+				}
+			} else {
+				return false;
+			}
 		},
 		position: { my: 'center', at: 'top', of: '#maincontent' }
 	});
