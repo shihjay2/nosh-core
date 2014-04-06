@@ -48,7 +48,18 @@ class BackupController extends BaseController
 					foreach($result1['files'] as $row1) {
 						$filename = __DIR__."/../../" . $row1['filename'];
 						if ($row1['status'] == 'added' || $row1['status'] == 'modified') {
-							$file = file_get_contents($row1['raw_url']);
+							$github_url = str_replace(' ', '%20', $row1['raw_url']);
+							$file = file_get_contents($github_url);
+							$parts = explode('/', $row1['filename']);
+							array_pop($parts);
+							$dir = implode('/', $parts);
+							if (!is_dir(__DIR__."/../../" . $dir)) {
+								if ($parts[0] == 'public') {
+									mkdir(__DIR__."/../../" . $dir, 0777, true);
+								} else {
+									mkdir(__DIR__."/../../" . $dir, 0755, true);
+								}
+							}
 							file_put_contents($filename, $file);
 						}
 						if ($row1['status'] == 'removed') {

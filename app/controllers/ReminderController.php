@@ -5,10 +5,9 @@ class ReminderController extends BaseController {
 	/**
 	* NOSH ChartingSystem Reminder System, to be run as a cron job
 	*/
-	public function test()
-	{
-		return $this->clinithink("Sore throat and fever in a 3 year old.");
-	}
+	//public function test()
+	//{
+	//}
 	
 	public function reminder()
 	{
