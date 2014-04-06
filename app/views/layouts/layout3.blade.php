@@ -29,6 +29,8 @@
 		<?php echo HTML::style('css/jquery.Jcrop.css'); ?>
 		<?php echo HTML::style('css/jquery.realperson.css'); ?>
 		<?php echo HTML::style('css/tagit.css'); ?>
+		<?php echo HTML::style('css/wColorPicker.min.css'); ?>
+		<?php echo HTML::style('css/wPaint.min.css'); ?>
 		{{ $style }}
 		<script type="text/javascript">
 			var noshdata = {
@@ -112,6 +114,12 @@
 		<?php echo HTML::script('js/jstz-1.0.4.min.js'); ?>
 		<?php echo HTML::script('js/jquery.cookie.js'); ?>
 		<?php echo HTML::script('js/bluebutton.js'); ?>
+		<?php echo HTML::script('js/wColorPicker.min.js'); ?>
+		<?php echo HTML::script('js/wPaint.min.js'); ?>
+		<?php echo HTML::script('js/plugins/main/wPaint.menu.main.min.js'); ?>
+		<?php echo HTML::script('js/plugins/text/wPaint.menu.text.min.js'); ?>
+		<?php echo HTML::script('js/plugins/shapes/wPaint.menu.main.shapes.min.js'); ?>
+		<?php echo HTML::script('js/plugins/file/wPaint.menu.main.file.min.js'); ?>
 		{{ $script }}
 	</head>
 	<body>

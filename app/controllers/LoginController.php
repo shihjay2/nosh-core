@@ -44,6 +44,7 @@ class LoginController extends BaseController {
 					Session::put('practice_active', $practice->active);
 					Session::put('displayname', $user->displayname);
 					Session::put('documents_dir', $practice->documents_dir);
+					Session::put('rcopia', $practice->rcopia_extension);
 					setcookie("login_attempts", 0, time()+900, '/');
 					return Redirect::intended('/');
 				}

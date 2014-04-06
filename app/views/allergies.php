@@ -1,9 +1,8 @@
 <div id="allergies_list_dialog" title="Allergies">
 	<button type="button" id="save_oh_allergies" style="display:none" class="nosh_button_save">Save Allergies List</button> 
-	<button type="button" id="rcopia_update_allergies" style="display:none" class="nosh_button">Update from RCopia</button>
-	<div id="allergies_header" style="display:none">
-		<br><br>
-	</div>
+	<?php if(Session::get('rcopia') == 'y') {?>
+		<button type="button" id="rcopia_update_allergies" class="nosh_button">Update from RCopia</button>
+	<?php }?>
 	<table id="allergies" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="allergies_pager" class="scroll" style="text-align:center;"></div><br>
 	<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>

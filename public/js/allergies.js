@@ -52,26 +52,9 @@ $(document).ready(function() {
 			 	height: "100%",
 			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#allergies_inactive_pager',{search:false,edit:false,add:false,del:false});
-			$.ajax({
-				type: "POST",
-				url: "ajaxdashboard/check-rcopia",
-				success: function(data){
-					if (data == 'y') {
-						$('#rcopia_update_allergies').show();
-					} else {
-						$('#rcopia_update_allergies').hide();
-					}
-					if ($('#rcopia_update_allergies').is(":visible") || $('#save_oh_allergies').is(":visible")) {
-						$('#allergies_header').show();
-					} else {
-						$('#allergies_header').hide();
-					}
-				}
-			});
 		},
 		close: function(event, ui) {
 			$('#edit_allergy_form').clearForm();
-			$('#allergies_header').hide();
 			menu_update('allergies');
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
@@ -258,7 +241,6 @@ $(document).ready(function() {
 			success: function(data){
 				$.jGrowl(data);
 				$("#save_oh_allergies").hide();
-				$("#allergies_header").hide();
 				$("#allergies_list_dialog").dialog('close');
 				check_oh_status();
 			}

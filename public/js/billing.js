@@ -842,6 +842,16 @@ $(document).ready(function() {
 		$('#billing_form1').clearForm();
 		$("#billing_unit1").val('1');
 		$("#billing_modifier1").val('');
+		var eid = $("#billing_eid_1").val();
+		$.ajax({
+			type: "POST",
+			url: "ajaxchart/get-encounter-date/" + eid,
+			success: function(data){
+				var a = editDate1(data);
+				$("#billing_dos_f1").val(a);
+				$("#billing_dos_t1").val(a);
+			}
+		});
 		$("#cpt_billing_dialog1").dialog('open');
 		$("#billing_cpt1").focus();
 	});

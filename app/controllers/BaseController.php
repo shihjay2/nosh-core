@@ -1709,7 +1709,7 @@ class BaseController extends Controller {
 		} else {
 			$menu_data['lastvisit'] = "No previous visits.";
 		}
-		$row2 = Schedule::where('pid', '=', Session::get('pid'))->where('start', '>', time())->get();
+		$row2 = Schedule::where('pid', '=', Session::get('pid'))->where('start', '>', time())->first();
 		if (isset($row2->start)) {
 			$menu_data['nextvisit'] = '<br>' . date('F jS, Y, g:i A', $row2->start);
 		} else {

@@ -3721,6 +3721,12 @@ class AjaxChartController extends BaseController {
 		echo json_encode($data);
 	}
 	
+	public function postGetEncounterDate($eid)
+	{
+		$data = DB::table('encounters')->where('eid', '=', $eid)->first();
+		echo $data->encounter_DOS;
+	}
+	
 	public function postGetBillingNotes()
 	{
 		$result = DB::table('demographics_notes')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();

@@ -40,13 +40,17 @@
 	<div id="messages_rx_dialog" title="Prescribing Medications Helper">
 		<div id="messages_rx_main">
 			<div id="orders_rx_header" style="display:none">
-				<button type="button" id="rcopia_orders_rx" style="display:none" class="nosh_button">Update from RCopia</button> 
+				<?php if(Session::get('rcopia') == 'y') {?>
+					<button type="button" id="rcopia_orders_rx" class="nosh_button">Update from RCopia</button> 
+				<?php }?>
 				<button type="button" id="save_orders_rx" class="nosh_button_save">Save Prescriptions</button> 
 				<button type="button" id="cancel_orders_rx_helper"  class="nosh_button_cancel">Cancel</button> 
 				<br><br>
 			</div>
 			<div id="messages_rx_header" style="display:none">
-				<button type="button" id="rcopia_rx_helper" style="display:none"  class="nosh_button">Update from RCopia</button> 
+				<?php if(Session::get('rcopia') == 'y') {?>
+					<button type="button" id="rcopia_rx_helper" class="nosh_button">Update from RCopia</button> 
+				<?php }?>
 				<button type="button" id="save_rx_helper"  class="nosh_button_save">Save Prescriptions to Message</button> 
 				<button type="button" id="cancel_rx_helper"  class="nosh_button_cancel">Cancel</button> 
 				<br><br>
