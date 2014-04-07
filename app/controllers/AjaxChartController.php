@@ -3294,9 +3294,14 @@ class AjaxChartController extends BaseController {
 	public function postPaymentSave()
 	{
 		$encounter = Encounters::find(Input::get('eid'));
-		$pid = $encounter->pid;
 		$id = Input::get('billing_core_id');
 		$query = Billing_core::find($id);
+		if ($encounter) {
+			$pid = $encounter->pid;
+		} else {
+			$query1 = DB::table('billing_core')->where('other_billing_id', '=', Input::get('other_billing_id'))->first();
+			$pid = $query1->pid;
+		}
 		$data = array(
 			'eid' => Input::get('eid'),
 			'other_billing_id' => Input::get('other_billing_id'),
@@ -4764,5 +4769,34 @@ class AjaxChartController extends BaseController {
 			$arr['message'] = "Unable to download instructions from Vivacare.  Try again later.";
 		}
 		echo json_encode($arr);
+	}
+	
+	public function postImageSave()
+	{
+		$result = Practiceinfo::find(Session::get('practice_id'));
+		$directory = $result->documents_dir . Session::get('pid');
+		$file_path = $directory . '/image_' . time() . '.png';
+		$image = imagecreatefrompng(Input::get('image'));
+		imagealphablending($image, false);
+		imagesavealpha($image, true);
+		imagepng($image, $file_path);
+		$data = array(
+			'image_location' => $file_path,
+			'pid' => Input::get('pid'),
+			'eid' => Input::get('eid'),
+			'image_description' => Input::get('image_description'),
+			'id' => Session::get('user_id'),
+			'encounter_provider' => Session::get('displayname')
+		);
+		if (Input::get('image_id') == '') {
+			DB::table('image')->insert($data);
+			$this->audit('Add');
+			$result = 'Image added!';
+		} else {
+			DB::table('image')->where("image_id", '=', Input::get('image_id'))->update($data);
+			$this->audit('Update');
+			$result = 'Image update!';
+		}
+		echo $result;
 	}
 }

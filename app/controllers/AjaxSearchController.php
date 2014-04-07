@@ -2298,4 +2298,28 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
+	
+	public function postImageSelect()
+	{
+		$gender = Session::get('gender');
+		if ($gender == 'male') {
+			$sex = 'm';
+		} else {
+			$sex = 'f';
+		}
+		$dir = "images/illustrations/" . $sex;
+		$full_dir = __DIR__."/../../public/" . $dir;
+		$files = scandir($full_dir);
+		$count = count($files);
+		$full_count=0;
+		$arr = array();
+		for ($i = 2; $i < $count; $i++) {
+			$line = $files[$i];
+			$file = $dir . "/" . $line;
+			$line1 = str_replace("_", " ", $line);
+			$name = str_replace(".jpg", "", $line1);
+			$arr[$file] = $name;
+		}
+		echo json_encode($arr);
+	}
 }

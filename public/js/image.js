@@ -29,10 +29,25 @@ $(document).ready(function() {
 		},
 		buttons: {
 			'Save': function() {
-				$('#wPaint').wPaint('clear');
+				var imageData = $("#wPaint").wPaint("image");
+				$("#image_data").val(imageData);
+				var str = $("#image_form").serialize();
+				$.ajax({
+					url: "ajaxchart/image-save",
+					type: "POST",
+					data: str,
+					success: function(data){
+						$.jGrowl(data);
+						$('#wPaint').wPaint('clear');
+						$('#image_form').clearForm();
+						$("#image_dialog").dialog('close');
+					}
+				});
 			},
 			Cancel: function() {
 				$('#wPaint').wPaint('clear');
+				$('#image_form').clearForm();
+				$("#image_dialog").dialog('close');
 			}
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
