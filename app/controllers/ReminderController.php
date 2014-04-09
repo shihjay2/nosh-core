@@ -528,11 +528,23 @@ class ReminderController extends BaseController {
 					} else {
 						$ndcid1 = '';
 						$medication_parts2 = explode(", ", $row6->rxl_medication);
-						$generic_name1 = $medication_parts2[0];
-						$form1 = $medication_parts2[1];
+						if (count($medication_parts2) > 1) {
+							$generic_name1 = $medication_parts2[0];
+							$form1 = $medication_parts2[1];
+						} else {
+							$generic_name1 = $medication_parts2[0];
+							$form1 = '';
+						}
 						$strength1 = $row6->rxl_dosage . " " . $row6->rxl_dosage_unit;
 					}
 					$sig_parts2 = explode(" ", $row6->rxl_sig);
+					if (count($sig_parts2) > 1) {
+						$dose = $sig_parts2[0];
+						$doseunit = $sig_parts2[1];
+					} else {
+						$dose = $sig_parts2[0];
+						$doseunit = '';
+					}
 					if ($row6->rxl_quantity != '') {
 						$quantity_parts2 = explode(" ", $row6->rxl_quantity);
 						$quantity1 = $quantity_parts2[0];
@@ -555,8 +567,8 @@ class ReminderController extends BaseController {
 					$xml6 .= "<GenericName>" . $generic_name1 . "</GenericName>";
 					$xml6 .= "<Form>" . $form1 . "</Form>";
 					$xml6 .= "<Strength>" . $strength1 . "</Strength></Drug>";
-					$xml6 .= "<Dose>" . $sig_parts2[0] . "</Dose>";
-					$xml6 .= "<DoseUnit>" . $sig_parts2[1] . "</DoseUnit>";
+					$xml6 .= "<Dose>" . $dose . "</Dose>";
+					$xml6 .= "<DoseUnit>" . $doseunit . "</DoseUnit>";
 					$xml6 .= "<Route>" . $row6->rxl_route . "</Route>";
 					$xml6 .= "<DoseTiming>" . $row6->rxl_frequency . "</DoseTiming>";
 					$xml6 .= "<DoseOther>" . $row6->rxl_instructions . "</DoseOther>";

@@ -39,6 +39,7 @@
 		<button type="button" id="preview_encounter" class="nosh_button_preview">Preview</button>
 		<button type="button" id="detail_encounter" class="nosh_button_edit">Details</button>
 		<button type="button" id="billing_encounter" class="nosh_button_cart">Billing</button>
+		<button type="button" id="image_encounter" class="nosh_button_image">Images</button>
 		<button type="button" id="save_draft" class="nosh_button_save">Save Draft</button>
 		<button type="button" id="sign_encounter" class="nosh_button_check">Sign</button>
 		<button type="button" id="delete_encounter" class="nosh_button_delete">Delete</button>

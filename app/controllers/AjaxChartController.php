@@ -4771,32 +4771,121 @@ class AjaxChartController extends BaseController {
 		echo json_encode($arr);
 	}
 	
+	public function postImageLoad()
+	{
+		$query = DB::table('image')->where('eid', '=', Session::get('eid'))->get();
+		$html = '';
+		if ($query) {
+			foreach ($query as $row) {
+				$pid = Session::get('pid');
+				$result = Practiceinfo::find(Session::get('practice_id'));
+				$directory = $result->documents_dir . Session::get('pid') . "/";
+				$new_directory = __DIR__.'/../../public/temp/';
+				$new_directory1 = '/temp/';
+				$file_path = str_replace($directory, $new_directory ,$row->image_location);
+				$file_path1 = str_replace($directory, $new_directory1 ,$row->image_location);
+				copy($row->image_location, $file_path);
+				$html .= HTML::image($file_path1, 'Image', array('border' => '0', 'id' => $row->image_id . "_image", 'style' => 'display:none;', 'title' => $row->image_description));
+			}
+		}
+		echo $html;
+	}
+	
+	public function postImageGet($image_id)
+	{
+		$query = DB::table('image')->where('image_id', '=', $image_id)->first();
+		$row = (array) $query;
+		echo json_encode($row);
+	}
+	
 	public function postImageSave()
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$result = Practiceinfo::find(Session::get('practice_id'));
+			$directory = $result->documents_dir . Session::get('pid');
+			$file_path = $directory . '/image_' . time() . '.png';
+			$image = imagecreatefrompng(Input::get('image'));
+			imagealphablending($image, false);
+			imagesavealpha($image, true);
+			imagepng($image, $file_path);
+			$data = array(
+				'image_location' => $file_path,
+				'pid' => Input::get('pid'),
+				'eid' => Input::get('eid'),
+				'image_description' => Input::get('image_description'),
+				'id' => Session::get('user_id'),
+				'encounter_provider' => Session::get('displayname')
+			);
+			if (Input::get('image_id') == '') {
+				DB::table('image')->insert($data);
+				$this->audit('Add');
+				$result = 'Image added!';
+			} else {
+				DB::table('image')->where("image_id", '=', Input::get('image_id'))->update($data);
+				$this->audit('Update');
+				$result = 'Image update!';
+			}
+			echo $result;
+		}
+	}
+	
+	public function postDeleteImage()
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$result = DB::table('image')->where('image_id', '=', Input::get('image_id'))->first();
+			$exists = file_exists($result->image_location);
+			$delete = FALSE;
+			if ($exists == TRUE) {
+				$delete = unlink($result->image_location);
+			} else {
+				$delete = TRUE;
+			}
+			if ($delete == TRUE) {
+				DB::table('image')->where('image_id', '=', Input::get('image_id'))->delete();
+				$this->audit('Delete');
+				$arr = 'Image deleted!';
+			} else {
+				$arr = 'Error deleting image!';
+			}
+			echo $arr;
+		}
+	}
+	
+	public function photoupload()
 	{
 		$result = Practiceinfo::find(Session::get('practice_id'));
 		$directory = $result->documents_dir . Session::get('pid');
-		$file_path = $directory . '/image_' . time() . '.png';
-		$image = imagecreatefrompng(Input::get('image'));
-		imagealphablending($image, false);
-		imagesavealpha($image, true);
-		imagepng($image, $file_path);
-		$data = array(
-			'image_location' => $file_path,
-			'pid' => Input::get('pid'),
-			'eid' => Input::get('eid'),
-			'image_description' => Input::get('image_description'),
-			'id' => Session::get('user_id'),
-			'encounter_provider' => Session::get('displayname')
-		);
-		if (Input::get('image_id') == '') {
-			DB::table('image')->insert($data);
-			$this->audit('Add');
-			$result = 'Image added!';
-		} else {
-			DB::table('image')->where("image_id", '=', Input::get('image_id'))->update($data);
-			$this->audit('Update');
-			$result = 'Image update!';
+		foreach (Input::file('file') as $file) {
+			if ($file) {
+				if ($file->getMimeType() != 'image/jpeg' && $file->getMimeType() != 'image/gif' && $file->getMimeType() != 'image/png') {
+					echo "This is not an image file.  Try again.";
+					exit (0);
+				}
+				$new_name = str_replace('.' . $file->getClientOriginalExtension(), '', $file->getClientOriginalName()) . '_' . time() . '.' . $file->getClientOriginalExtension();
+				$file->move($directory, $new_name);
+				$file_path = $directory . "/" . $new_name;
+				$data = array(
+					'image_location' => $file_path,
+					'pid' => Session::get('pid'),
+					'eid' => Session::get('eid'),
+					'image_description' => 'Photo uploaded ' . date('F jS, Y'),
+					'id' => Session::get('user_id'),
+					'encounter_provider' => Session::get('displayname')
+				);
+				DB::table('image')->insert($data);
+				$this->audit('Add');
+			}
 		}
-		echo $result;
+		echo 'Photos uploaded!';
 	}
 }

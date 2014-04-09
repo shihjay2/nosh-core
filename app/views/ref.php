@@ -10,7 +10,7 @@
 </div>
 <div id="messages_ref_edit_fields" title="">
 	<form id="edit_messages_ref_form">
-		<div class="pure-form nosh_provider_exclude"><label for="messages_ref_provider_list">Provider:</label><select id ="messages_ref_provider_list" name="id" class="text" required></select></div>
+		<div class="pure-form nosh_provider_exclude"><label for="messages_ref_provider_list">Provider:</label><select id ="messages_ref_provider_list" name="id" class="text" required></select><br><br></div>
 		<div id="messages_ref_status"></div>
 		<input type="hidden" name="orders_id" id="messages_ref_orders_id"/>
 		<input type="hidden" name="t_messages_id" id="messages_ref_t_messages_id"/>
@@ -22,7 +22,7 @@
 					<div class="pure-form pure-form-stacked"><label for="messages_ref_orders">Preview:</label><textarea name="orders_referrals" id="messages_ref_orders" rows="10" style="width:95%" class="text" placeholder="Type a few letters of order to search." required></textarea></div>
 				</div>
 				<div class="pure-u-11-24">
-					<div class="pure-form pure-form-stacked"><label for="messages_ref_template">Choose Template:</label><select id="messages_ref_template" class="text ui-widget-content ui-corner-all"></select></div>
+					<div class="pure-form pure-form-stacked"><label for="messages_ref_template">Choose Template:</label><select id="messages_ref_template" class="text"></select></div>
 					<button type="button" id="messages_ref_template_save" class="nosh_button_copy">Copy</button><button type="button" id="messages_ref_orderslist_link" class="nosh_button_edit">Edit Templates</button><button type="button" id="messages_ref_orders_clear" class="nosh_button_cancel messages_ref_button_clear">Clear</button>
 					<div class="ref_template_div">
 						<br><div id="messages_ref_form" class="ui-widget pure-form"></div>

@@ -927,6 +927,30 @@ class BaseController extends Controller {
 		} else {
 			$data['pe'] = '';
 		}
+		$imagesInfo = DB::table('image')->where('eid', '=', $eid)->get();
+		$html = '';
+		if ($imagesInfo) {
+			$data['images'] = '<br><h4>Images:</h4><p class="view">';
+			$k = 0;
+			foreach ($imagesInfo as $imagesInfo_row) {
+				$directory = $practiceInfo->documents_dir . $pid . "/";
+				$new_directory = __DIR__.'/../../public/temp/';
+				$new_directory1 = '/temp/';
+				$file_path = str_replace($directory, $new_directory ,$imagesInfo_row->image_location);
+				$file_path1 = str_replace($directory, $new_directory1 ,$imagesInfo_row->image_location);
+				copy($imagesInfo_row->image_location, $file_path);
+				if ($k != 0) {
+					$data['images'] .= '<br><br>';
+				}
+				$data['images'] .= HTML::image($file_path1, 'Image', array('border' => '0'));
+				if ($imagesInfo_row->image_description != '') {
+					$data['images'] .= '<br>' . $imagesInfo_row->image_description . '<br>';
+				}
+				$k++;
+			}
+		} else {
+			$data['images'] = '';
+		}
 		$labsInfo = Labs::find($eid);
 		if ($labsInfo) {
 			$data['labs'] = '<br><h4>Laboratory Testing:</h4><p class="view">';

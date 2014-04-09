@@ -3,6 +3,7 @@
 	<?php if(Session::get('rcopia') == 'y') {?>
 		<button type="button" id="rcopia_update_allergies" class="nosh_button">Update from RCopia</button>
 	<?php }?>
+	<br><br>
 	<table id="allergies" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="allergies_pager" class="scroll" style="text-align:center;"></div><br>
 	<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>

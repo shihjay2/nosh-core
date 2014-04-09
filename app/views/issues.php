@@ -2,32 +2,32 @@
 	<div id="issues_pmh_header" style="display:none">
 		<button type="button" id="copy_oh_pmh_all_issues">Copy All Active Issues</button>
 		<button type="button" id="copy_oh_pmh_one_issue">Copy Issue</button>
-		<hr class="ui-state-default"/>
+		<br><br>
 	</div>
 	<div id="issues_psh_header" style="display:none">
 		<button type="button" id="copy_oh_psh_all_issues">Copy All Active Issues</button>
 		<button type="button" id="copy_oh_psh_one_issue">Copy Issue</button>
-		<hr class="ui-state-default"/>
+		<br><br>
 	</div>
 	<div id="issues_lab_header" style="display:none">
 		<button type="button" id="copy_lab_all_issues">Copy All Active Issues</button>
 		<button type="button" id="copy_lab_one_issue">Copy Issue</button>
-		<hr class="ui-state-default"/>
+		<br><br>
 	</div>
 	<div id="issues_rad_header" style="display:none">
 		<button type="button" id="copy_rad_all_issues">Copy All Active Issues</button>
 		<button type="button" id="copy_rad_one_issue">Copy Issue</button>
-		<hr class="ui-state-default"/>
+		<br><br>
 	</div>
 	<div id="issues_cp_header" style="display:none">
 		<button type="button" id="copy_cp_all_issues">Copy All Active Issues</button> 
 		<button type="button" id="copy_cp_one_issue">Copy Issue</button>
-		<hr class="ui-state-default"/>
+		<br><br>
 	</div>
 	<div id="issues_ref_header" style="display:none">
 		<button type="button" id="copy_ref_all_issues">Copy All Active Issues</button> 
 		<button type="button" id="copy_ref_one_issue">Copy Issue</button>
-		<hr class="ui-state-default"/>
+		<br><br>
 	</div>
 	<div id="issues_assessment_header" style="display:none">
 		Select Issue as Diagnosis:<br>
@@ -41,7 +41,7 @@
 		<button type="button" id="copy_assessment_issue_8" class="copy_assessment_issue_class">#8</button>
 		<button type="button" id="copy_assessment_issue_9" class="copy_assessment_issue_class">Additional Diagnosis</button>
 		<button type="button" id="copy_assessment_issue_10" class="copy_assessment_issue_class">Differential Diagnosis</button>
-		<hr class="ui-state-default"/>
+		<br><br>
 	</div>
 	<table id="issues" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="issues_pager" class="scroll" style="text-align:center;"></div><br>

@@ -10,7 +10,7 @@
 </div>
 <div id="messages_rad_edit_fields" title="">
 	<form id="edit_messages_rad_form">
-		<div class="pure-form nosh_provider_exclude"><label for="messages_rad_provider_list">Provider:</label><select id ="messages_rad_provider_list" name="id" class="text" required></select></div>
+		<div class="pure-form nosh_provider_exclude"><label for="messages_rad_provider_list">Provider:</label><select id ="messages_rad_provider_list" name="id" class="text" required></select><br><br></div>
 		<div id="messages_rad_status"></div>
 		<input type="hidden" name="orders_id" id="messages_rad_orders_id"/>
 		<input type="hidden" name="t_messages_id" id="messages_rad_t_messages_id"/>

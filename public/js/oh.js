@@ -248,7 +248,9 @@ $(document).ready(function() {
 				url: "ajaxencounter/get-oh",
 				dataType: "json",
 				success: function(data){
-					$('#oh_sh').val(data.response.oh_sh);
+					if (data.message != 'n') {
+						$('#oh_sh').val(data.response.oh_sh);
+					}
 				}
 			});
 			$.ajax({
@@ -330,131 +332,6 @@ $(document).ready(function() {
 	$('#oh_sh_reset').click(function(){
 		$("#oh_sh").val('');
 	});
-	$('#save_oh_sh_form').click(function(){
-		var old = $("#oh_sh").val();
-		var old1 = old.trim();
-		var a = $("#sh1").val();
-		var b = $("#sh2").val();
-		var c = $("#sh3").val();
-		var d = $("#oh_sh_marital_status").val();
-		var d0 = $("#oh_sh_marital_status_old").val();
-		var e = $("#oh_sh_partner_name").val();
-		var e0 = $("#oh_sh_partner_name").val();
-		var f = $("#sh4").val();
-		var g = $("#sh5").val();
-		var h = $("#sh6").val();
-		var i = $("#sh7").val();
-		var j = $("#sh8").val();
-		var k = $("input[name='sh9']:checked").val();
-		var l = $("input[name='sh10']:checked").val();
-		var m = $("input[name='sh11']:checked").val();
-		if(a){
-			var a1 = 'Family members in the household: ' + a + '\n';
-		} else {
-			var a1 = '';
-		}
-		if(b){
-			var b1 = 'Children: ' + b + '\n';
-		} else {
-			var b1 = '';
-		}
-		if(c){
-			var c1 = 'Pets: ' + c + '\n';
-		} else {
-			var c1 = '';
-		}
-		if(d){
-			var d1 = 'Marital status: ' + d + '\n';
-		} else {
-			var d1 = '';
-		}
-		if(e){
-			var e1 = 'Partner name: ' + e + '\n';
-		} else {
-			var e1 = '';
-		}
-		if(f){
-			var f1 = 'Diet: ' + f + '\n';
-		} else {
-			var f1 = '';
-		}
-		if(g){
-			var g1 = 'Exercise: ' + g + '\n';
-		} else {
-			var g1 = '';
-		}
-		if(h){
-			var h1 = 'Sleep: ' + h + '\n';
-		} else {
-			var h1 = '';
-		}
-		if(i){
-			var i1 = 'Hobbies: ' + i + '\n';
-		} else {
-			var i1 = '';
-		}
-		if(j){
-			var j1 = 'Child care arrangements: ' + j + '\n';
-		} else {
-			var j1 = '';
-		}
-		if(k){
-			var k1 = k + '\n';
-		} else {
-			var k1 = '';
-		}
-		if(l){
-			var l1 = l + '\n';
-		} else {
-			var l1 = '';
-		}
-		if(m){
-			var m1 = m + '\n';
-		} else {
-			var m1 = '';
-		}
-		var full = d1+e1+a1+b1+c1+f1+g1+h1+i1+j1+k1+l1+m1;
-		var full1 = full.trim();
-		if (old1 != '') {
-			var n = old1+'\n'+full1+'\n';
-		} else {
-			var n = full1+'\n';
-		}
-		var o = n.length;
-		$("#oh_sh").val(n).caret(o);
-		if(d != d0 || e != e0) {
-			$.ajax({
-				type: "POST",
-				url: "ajaxencounter/edit-demographics/sh",
-				data: "marital_status=" + d + "&partner_name=" + e,
-				success: function(data){
-					$.jGrowl(data);
-				}
-			});
-		}
-		var sh9_y = $('#sh9_y').attr('checked');
-		var sh9_n = $('#sh9_n').attr('checked');
-		if(sh9_y){
-			$.ajax({
-				type: "POST",
-				url: "ajaxencounter/edit-demographics/sex",
-				data: "status=yes",
-				success: function(data){
-					$.jGrowl(data);
-				}
-			});
-		}
-		if(sh9_n){
-			$.ajax({
-				type: "POST",
-				url: "ajaxencounter/edit-demographics/sex",
-				data: "status=no",
-				success: function(data){
-					$.jGrowl(data);
-				}
-			});
-		}
-	});
 	$('#cancel_oh_sh_form').click(function(){
 		$('#oh_sh_form').clearForm();
 	});
@@ -491,7 +368,9 @@ $(document).ready(function() {
 				url: "ajaxencounter/get-oh",
 				dataType: "json",
 				success: function(data){
-					$('#oh_etoh').val(data.response.oh_etoh);
+					if (data.message != 'n') {
+						$('#oh_etoh').val(data.response.oh_etoh);
+					}
 				}
 			});
 			$("#oh_etoh").focus();
@@ -530,6 +409,7 @@ $(document).ready(function() {
 			}, 
 			Cancel: function() {
 				$("#oh_etoh_dialog_form").clearForm();
+				$('#oh_etoh_form').clearForm();
 				$("#oh_etoh_dialog").dialog('close');
 			}
 		},
@@ -551,24 +431,6 @@ $(document).ready(function() {
 			$('#oh_etoh_text').val('');
 		}
 	});
-	$('#save_oh_etoh_form').click(function(){
-		var old = $("#oh_etoh").val();
-		var old1 = old.trim();
-		var a = $("input[name='oh_etoh_select']:checked").val();
-		var a0 = $("#oh_etoh_text").val();
-		if(a){
-			var a1 = a + a0;
-		} else {
-			var a1 = '';
-		}
-		if (old1 != '') {
-			var b = old1+'\n'+a1+'\n';
-		} else {
-			var b = a1+'\n';
-		}
-		var c = b.length;
-		$("#oh_etoh").val(b).caret(c);
-	});
 	$('#cancel_oh_etoh_form').click(function(){
 		$('#oh_etoh_form').clearForm();
 	});
@@ -587,7 +449,9 @@ $(document).ready(function() {
 				url: "ajaxencounter/get-oh",
 				dataType: "json",
 				success: function(data){
-					$('#oh_tobacco').val(data.response.oh_tobacco);
+					if (data.message != 'n') {
+						$('#oh_tobacco').val(data.response.oh_tobacco);
+					}
 				}
 			});
 			$("#oh_tobacco").focus();
@@ -626,6 +490,7 @@ $(document).ready(function() {
 			}, 
 			Cancel: function() {
 				$("#oh_tobacco_dialog_form").clearForm();
+				$("#oh_tobacco_form").clearForm();
 				$("#oh_tobacco_dialog").dialog('close');
 			}
 		},
@@ -647,46 +512,6 @@ $(document).ready(function() {
 			$('#oh_tobacco_text').val('');
 		}
 	});
-	$('#save_oh_tobacco_form').click(function(){
-		var old = $("#oh_tobacco").val();
-		var old1 = old.trim();
-		var a = $("input[name='oh_tobacco_select']:checked").val();
-		var a0 = $("#oh_tobacco_text").val();
-		if(a){
-			var a1 = a + a0;
-		} else {
-			var a1 = '';
-		}
-		if (old1 != '') {
-			var b = old1+'\n'+a1+'\n';
-		} else {
-			var b = a1+'\n';
-		}
-		var c = b.length;
-		$("#oh_tobacco").val(b).caret(c);
-		var tobacco_y = $('#oh_tobacco_y').prop('checked');
-		var tobacco_n = $('#oh_tobacco_n').prop('checked');
-		if(tobacco_y){
-			$.ajax({
-				type: "POST",
-				url: "ajaxencounter/edit-demographics/tobacco",
-				data: "status=yes",
-				success: function(data){
-					$.jGrowl(data);
-				}
-			});
-		}
-		if(tobacco_n){
-			$.ajax({
-				type: "POST",
-				url: "ajaxencounter/edit-demographics/tobacco",
-				data: "status=no",
-				success: function(data){
-					$.jGrowl(data);
-				}
-			});
-		}
-	});
 	$('#cancel_oh_tobacco_form').click(function(){
 		$('#oh_tobacco_form').clearForm();
 	});
@@ -705,7 +530,9 @@ $(document).ready(function() {
 				url: "ajaxencounter/get-oh",
 				dataType: "json",
 				success: function(data){
-					$('#oh_drugs').val(data.response.oh_drugs);
+					if (data.message != 'n') {
+						$('#oh_drugs').val(data.response.oh_drugs);
+					}
 				}
 			});
 			$("#oh_drugs").focus();
@@ -744,6 +571,7 @@ $(document).ready(function() {
 			}, 
 			Cancel: function() {
 				$("#oh_drugs_dialog_form").clearForm();
+				$("#oh_drugs_form").clearForm();
 				$("#oh_drugs_dialog").dialog('close');
 			}
 		},
@@ -766,37 +594,6 @@ $(document).ready(function() {
 			$("#oh_drugs_text1").val('');
 		}
 	});
-	$('#save_oh_drugs_form').click(function(){
-		var old = $("#oh_drugs").val();
-		var old1 = old.trim();
-		var a = $("input[name='oh_drugs_select']:checked").val();
-		if(a){
-			if (a == 'No illicit drug use.') {
-				var a1 = a;
-			} else {
-				var a0 = $("#oh_drugs_text").val();
-				var a2 = $("#oh_drugs_text1").val();
-				var a1 = a + a0 + '\nFrequency of drug use: ' + a2;
-				$('#oh_drugs_input').hide();
-				$('#oh_drugs_text').val('');
-				$("#oh_drugs_text1").val('');
-				$("input[name='oh_drugs_select']").each(function(){
-					$(this).prop('checked', false);
-				});
-				$('#oh_drugs_form input[type="radio"]').button('refresh');
-			}
-		} else {
-			var a1 = '';
-			$('#oh_drugs_input').hide();
-		}
-		if (old1 != '') {
-			var b = old1+'\n'+a1+'\n';
-		} else {
-			var b = a1+'\n';
-		}
-		var c = b.length;
-		$("#oh_drugs").val(b).caret(c);
-	});
 	$('#cancel_oh_drugs_form').click(function(){
 		$('#oh_drugs_form').clearForm();
 	});
@@ -815,7 +612,9 @@ $(document).ready(function() {
 				url: "ajaxencounter/get-oh",
 				dataType: "json",
 				success: function(data){
-					$('#oh_employment').val(data.response.oh_employment);
+					if (data.message != 'n') {
+						$('#oh_employment').val(data.response.oh_employment);
+					}
 				}
 			});
 			$("#oh_employment").focus();
@@ -854,6 +653,7 @@ $(document).ready(function() {
 			}, 
 			Cancel: function() {
 				$("#oh_employment_dialog_form").clearForm();
+				$('#oh_employment_form').clearForm();
 				$("#oh_employment_dialog").dialog('close');
 			}
 		},
@@ -883,48 +683,6 @@ $(document).ready(function() {
 			$('#oh_employment_input').hide();
 			$("#oh_employment_employer").val('');
 			$("#oh_employment_text").val('');
-		}
-	});
-	$('#save_oh_employment_form').click(function(){
-		var old = $("#oh_employment").val();
-		var old1 = old.trim();
-		var a = $("input[name='oh_employment_select']:checked").val();
-		var b = $("#oh_employment_text").val();
-		var c = $("#oh_employment_employer").val();
-		var c0 = $("#oh_employment_employer_old").val();
-		if(a){
-			var a1 = a + '\n';
-		} else {
-			var a1 = '';
-		}
-		if(b){
-			var b1 = 'Employment field: ' + b + '\n';
-		} else {
-			var b1 = '';
-		}
-		if(c){
-			var c1 = 'Employer: ' + c + '\n';
-		} else {
-			var c1 = '';
-		}
-		var full = a1+b1+c1;
-		var full1 = full.trim();
-		if (old1 != '') {
-			var d = old1+'\n'+full1+'\n';
-		} else {
-			var d = full1+'\n';
-		}
-		var e = d.length;
-		$("#oh_employment").val(d).caret(e);
-		if(c != c0){
-			$.ajax({
-				type: "POST",
-				url: "ajaxencounter/edit-demographics/employer",
-				data: "employer=" + c,
-				success: function(data){
-					$.jGrowl(data);
-				}
-			});
 		}
 	});
 	$('#cancel_oh_employment_form').click(function(){

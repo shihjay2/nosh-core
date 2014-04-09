@@ -134,7 +134,7 @@ class AjaxLoginController extends BaseController {
 			echo json_encode($arr);
 			exit (0);
 		}
-		$result = Users::find($id);
+		$result = User::find($id);
 		if ($result->secret_answer == Input::get('secret_answer')) {
 			$arr['response'] = "OK";
 		} else {

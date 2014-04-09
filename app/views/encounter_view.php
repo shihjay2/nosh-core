@@ -15,6 +15,7 @@
 	<tr><td valign="top"><?php echo $oh;?></td></tr>
 	<tr><td valign="top"><?php echo $vitals;?></td></tr>
 	<tr><td valign="top"><?php echo $pe;?></td></tr>
+	<tr><td valign="top"><?php echo $images;?></td></tr>
 	<tr><td valign="top"><?php echo $labs;?></td></tr>
 	<tr><td valign="top"><?php echo $procedure;?></td></tr>
 	<tr><td valign="top"><?php echo $assessment;?></td></tr>

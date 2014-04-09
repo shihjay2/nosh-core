@@ -59,6 +59,7 @@ class ChartController extends BaseController {
 		$this->layout->script .= HTML::script('/js/financial.js');
 		$this->layout->script .= HTML::script('/js/office.js');
 		$this->layout->script .= HTML::script('/js/graph.js');
+		$this->layout->script .= HTML::script('/js/image.js');
 		$this->layout->search = View::make('search', $this->getSearchData())->render();
 		$this->layout->menu = View::make('menu', $this->getMenuData())->render();
 		$this->layout->content = View::make('chart', $data)->render();
@@ -84,6 +85,7 @@ class ChartController extends BaseController {
 		$this->layout->modules .= View::make('financial')->render();
 		$this->layout->modules .= View::make('office')->render();
 		$this->layout->modules .= View::make('graph')->render();
+		$this->layout->modules .= View::make('image')->render();
 		if($row->mtm_extension == 'y') {
 			$this->layout->content .= View::make('mtm')->render();
 			$this->layout->script .= HTML::script('/js/mtm.js');

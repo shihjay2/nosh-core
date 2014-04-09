@@ -879,7 +879,7 @@ class AjaxEncounterController extends BaseController {
 		}
 		DB::table('demographics')->where('pid', '=', Session::get('pid'))->update($data);
 		$this->audit('Update');
-		echo "Patient infomration updated.";
+		echo "Patient information updated.";
 	}
 	
 	// Vitals functions
@@ -2110,7 +2110,7 @@ class AjaxEncounterController extends BaseController {
 		$this->audit('Update');
 		if ($encounter->encounter_template == 'standardmedical') {
 			$table_array1 = array("hpi", "ros", "vitals", "pe", "labs", "procedure", "rx", "assessment", "plan");
-			$table_array2 = array("other_history", "orders", "billing", "billing_core");
+			$table_array2 = array("other_history", "orders", "billing", "billing_core", "image");
 			foreach($table_array1 as $table1) {
 				$table_query1 = DB::table($table1)->where('eid', '=', $eid)->first();
 				if ($table_query1) {
@@ -2135,6 +2135,9 @@ class AjaxEncounterController extends BaseController {
 					}
 					if ($table2 == 'billing_core') {
 						$primary = 'billing_core_id';
+					}
+					if ($table2 == 'image') {
+						$primary = 'image_id';
 					}
 					foreach ($table_query2 as $table_row) {
 						$data3 = (array) $table_row;

@@ -103,6 +103,7 @@ Route::group(array('before' => 'acl2'), function() {
 	Route::get('print_immunization_list', array('as' => 'print_immunization_list', 'uses' => 'ChartController@print_immunization_list'));
 	Route::get('csv_immunization', array('as' => 'csv_immunization', 'uses' => 'ChartController@csv_immunization'));
 	Route::get('print_plan', array('as' => 'print_plan', 'uses' => 'AjaxEncounterController@print_plan'));
+	Route::post('photoupload', array('as' => 'photopload', 'uses' => 'AjaxChartController@photoupload'));
 });
 Route::group(array('before' => 'acl4'), function() {
 });

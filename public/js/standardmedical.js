@@ -1,7 +1,5 @@
 $(document).ready(function() {
 	loadbuttons();
-	ros_dialog_open();
-	pe_dialog_open();
 	//setInterval(hpi_autosave('hpi'), 10000);
 	$("#encounter_tabs").tabs({
 		beforeLoad: function(event, ui) {
@@ -26,6 +24,7 @@ $(document).ready(function() {
 			}
 			if (id == "encounter_tabs_ros") {
 				check_ros_status();
+				ros_dialog_open();
 			}
 			if (old_id == "encounter_tabs_oh") {
 				oh_autosave();
@@ -95,6 +94,7 @@ $(document).ready(function() {
 			}
 			if (id == "encounter_tabs_pe") {
 				check_pe_status();
+				pe_dialog_open();
 			}
 			if (id == "encounter_tabs_labs") {
 				check_labs1();

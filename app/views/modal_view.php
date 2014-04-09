@@ -34,6 +34,7 @@
 	<?php echo $oh;?>
 	<?php echo $vitals;?>
 	<?php echo $pe;?>
+	<?php echo $images;?>
 	<?php echo $labs;?>
 	<?php echo $procedure;?>
 	<?php echo $assessment;?>

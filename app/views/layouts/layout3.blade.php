@@ -44,6 +44,7 @@
 				'group_id': '<?php echo Session::get('group_id'); ?>',
 				'calendar': '<?php echo asset('images/calendar.gif','Calendar', array('border' => '0')); ?>',
 				'error': '<?php echo route('home'); ?>',
+				'path': "/<?php $path = explode('/', route('home')); echo $path[3];?>/js/",
 				'logout_url': '<?php echo route('logout'); ?>',
 				'images': '<?php echo url('images'); ?>/',
 				'default_pos': '',
