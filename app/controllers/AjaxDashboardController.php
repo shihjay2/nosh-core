@@ -645,14 +645,10 @@ class AjaxDashboardController extends BaseController {
 				$practice = Practiceinfo::find(Session::get('practice_id'));
 				$data1 = array(
 					'practicename' => $practice->practice_name,
-					'url' => route('/'),
+					'url' => route('home'),
 					'token' => $token
 				);
-				Mail::send('emails.loginregistrationcode', $data1, function($message){
-					$message->to($result->email)
-						->from($practice->email, $practice->practice_name)
-						->subject('Patient Portal Registration Code');
-				});
+				$this->send_mail('emails.loginregistrationcode', $data1, 'Patient Portal Registration Code', $result->email, Session::get('practice_id'));
 			}
 			echo "Registration Code: " . $token;
 		}
