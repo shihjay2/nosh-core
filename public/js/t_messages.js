@@ -444,7 +444,7 @@ $(document).ready(function() {
 				},
 				minLength: 2
 			});
-			if (noshdata.group_id != "2") {
+			if (noshdata.group_id == "4") {
 				$(this).siblings('.ui-dialog-buttonpane').find('button').eq(1).hide();
 			} else {
 				$(this).siblings('.ui-dialog-buttonpane').find('button').eq(1).show();

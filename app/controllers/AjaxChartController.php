@@ -1816,7 +1816,7 @@ class AjaxChartController extends BaseController {
 	
 	public function postSignMessage()
 	{
-		if (Session::get('group_id') != '2') {
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
 			Auth::logout();
 			Session::flush();
 			header("HTTP/1.1 404 Page Not Found", true, 404);
