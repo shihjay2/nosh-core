@@ -14,6 +14,7 @@ $(document).ready(function() {
 		},
 		create: function(event, ui) {
 			check_ros_status();
+			ros_dialog_open();
 		},
 		activate: function(event, ui) {
 			var id = $(ui.newTab).attr('id');
