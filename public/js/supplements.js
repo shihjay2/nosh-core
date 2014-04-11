@@ -504,7 +504,7 @@ $(document).ready(function() {
 		if (old1 != '') {
 			var e = old1+'\n\n'+a1+b1+c1+d1;
 		} else {
-			var e = +a1+b1+c1+d1;
+			var e = a1+b1+c1+d1;
 		}
 		$("#t_messages_message").val(e);
 		$("#messages_supplements_main_form").clearForm();

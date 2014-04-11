@@ -51,7 +51,7 @@
 				<?php if(Session::get('rcopia') == 'y') {?>
 					<button type="button" id="rcopia_rx_helper" class="nosh_button">Update from RCopia</button> 
 				<?php }?>
-				<button type="button" id="save_rx_helper"  class="nosh_button_save">Save Prescriptions to Message</button> 
+				<button type="button" id="save_rx_helper" class="nosh_button_save">Save Prescriptions to Message</button> 
 				<button type="button" id="cancel_rx_helper"  class="nosh_button_cancel">Cancel</button> 
 				<br><br>
 			</div>
