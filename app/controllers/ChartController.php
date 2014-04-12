@@ -226,10 +226,10 @@ class ChartController extends BaseController {
 		return Response::download($file_path);
 	}
 	
-	public function print_invoice1($eid, $insurance_id_1='', $insurance_id_2='')
+	public function print_invoice1($eid, $insurance_id_1, $insurance_id_2)
 	{
 		ini_set('memory_limit','196M');
-		if ($insurance_id_1 != '') {
+		if ($insurance_id_1 != '0') {
 			$result = $this->billing_save_common($insurance_id_1, $insurance_id_2, $eid);
 		}
 		$user_id = Session::get('user_id');

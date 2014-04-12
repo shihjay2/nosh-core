@@ -707,7 +707,7 @@ $(document).ready(function() {
 	$("#invoice_encounter_charge").click(function(){
 		var item = jQuery("#billing_encounters").getGridParam('selrow');
 		if(item){
-			window.open("print_invoice1/" + item + "//");
+			window.open("print_invoice1/" + item + "/0/0");
 		} else {
 			$.jGrowl("Please select encounter to print invoice!");
 		}
@@ -798,6 +798,9 @@ $(document).ready(function() {
 	$("#print_invoice1").click(function(){
 		var ins1 = $("#billing_insurance_id_1").val();
 		var ins2 = $("#billing_insurance_id_2").val();
+		if (ins2 == '') {
+			ins2 = '0';
+		}
 		var eid = $("#billing_eid_1").val();
 		window.open("print_invoice1/" + eid + "/" + ins1 + "/" + ins2);
 		total_balance();
