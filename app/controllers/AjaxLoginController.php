@@ -89,7 +89,7 @@ class AjaxLoginController extends BaseController {
 				}
 			} else {
 				$row3 = Practiceinfo::find(Input::get('practice_id'));
-				$displayname = $this->session->userdata('displayname');
+				$displayname = Session::get('displayname');
 				$data_message2 = array(
 					'firstname' => Input::get('firstname'),
 					'lastname' => Input::get('lastname'),

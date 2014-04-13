@@ -24,7 +24,7 @@
 					<div class="pure-u-1-3"><label for="menu_middle">Middle Name:</label><input type="text" name="middle" id="menu_middle" class="text pure-input-1" /></div>
 					<div class="pure-u-1-3"><label for="menu_title">Title:</label><input type="text" name="title" id="menu_title" class="text pure-input-1" /></div>
 					<div class="pure-u-1-3"><label for="menu_DOB">Date of Birth:</label><input type="text" name="DOB" id="menu_DOB" class="text pure-input-1" required /></div>
-					<div class="pure-u-1-3"><label for="menu_gender">Gender:</label><select name="gender" id="menu_gender" class="text pure-input-1" required></select></div>
+					<div class="pure-u-1-3"><label for="menu_gender">Gender:</label><select name="sex" id="menu_gender" class="text pure-input-1" required></select></div>
 					<div class="pure-u-1-3"><label for="menu_ss">SSN:</label><input type="text" name="ss" id="menu_ss" class="text pure-input-1" /></div>
 					<div class="pure-u-1-3"><label for="menu_race">Race:</label><input type="text" name="race" id="menu_race" class="text pure-input-1" /></div>
 					<div class="pure-u-1-3"><label for="menu_marital_status">Marital Status:</label><select name="marital_status" id="menu_marital_status" class="text pure-input-1"></select></div>
