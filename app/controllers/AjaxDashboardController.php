@@ -362,7 +362,7 @@ class AjaxDashboardController extends BaseController {
 			'middle' => Input::get('middle'),
 			'nickname' => Input::get('nickname'),
 			'title' => Input::get('title'),
-			'sex' => Input::get('gender'),
+			'sex' => Input::get('sex'),
 			'DOB'=> $dob,
 			'ss' => Input::get('ss'),
 			'race' => Input::get('race'),
