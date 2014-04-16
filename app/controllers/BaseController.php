@@ -2763,8 +2763,10 @@ class BaseController extends Controller {
 			if ($result) {
 				if ($result->cpt_charge != '') {
 					$cpt_charge = $result->cpt_charge;
+					$unit = $result->unit;
 				} else {
 					$cpt_charge = '0';
+					$unit = '1';
 				}
 				$data = array(
 					'cpt' => $cpt,
@@ -2775,7 +2777,7 @@ class BaseController extends Controller {
 					'dos_t' => $dos2,
 					'payment' => '0',
 					'icd_pointer' => $icd_pointer,
-					'unit' => '1',
+					'unit' => $unit,
 					'billing_group' => '1',
 					'modifier' => '',
 					'practice_id' => $practice_id
