@@ -2757,30 +2757,32 @@ class BaseController extends Controller {
 	
 	protected function compile_procedure_billing($cpt, $eid, $pid, $dos2, $icd_pointer, $practice_id)
 	{
-		$query = Billing_core::where('cpt', '=', $cpt)->where('eid', '=', $eid)->get();
+		$query = DB::table('billing_core')->where('cpt', '=', $cpt)->where('eid', '=', $eid)->first();
 		if (!$query) {
-			$result = Cpt_relate::where('cpt', '=', $cpt)->where('practice_id', '=', $practice_id)->get();
+			$result = DB::table('cpt_relate')->where('cpt', '=', $cpt)->where('practice_id', '=', $practice_id)->first();
 			if ($result) {
-				$cpt_charge = $result->cpt_charge;
-			} else {
-				$cpt_charge = '0';
+				if ($result->cpt_charge != '') {
+					$cpt_charge = $result->cpt_charge;
+				} else {
+					$cpt_charge = '0';
+				}
+				$data = array(
+					'cpt' => $cpt,
+					'cpt_charge' => $cpt_charge,
+					'eid' => $eid,
+					'pid' => $pid,
+					'dos_f' => $dos2,
+					'dos_t' => $dos2,
+					'payment' => '0',
+					'icd_pointer' => $icd_pointer,
+					'unit' => '1',
+					'billing_group' => '1',
+					'modifier' => '',
+					'practice_id' => $practice_id
+				);
+				DB::table('billing_core')->insert($data);
+				$this->audit('Add');
 			}
-			$data = array(
-				'cpt' => $cpt,
-				'cpt_charge' => $result->cpt_charge,
-				'eid' => $eid,
-				'pid' => $pid,
-				'dos_f' => $dos2,
-				'dos_t' => $dos2,
-				'payment' => '0',
-				'icd_pointer' => $icd_pointer,
-				'unit' => '1',
-				'billing_group' => '1',
-				'modifier' => '',
-				'practice_id' => $practice_id
-			);
-			DB::table('billing_core')->insert($cpt3_data);
-			$this->audit('Add');
 		}
 	}
 	
