@@ -549,15 +549,15 @@ class ReminderController extends BaseController {
 					if ($row6->rxl_quantity != '') {
 						if(strpos($row6->rxl_quantity, ' ') !== false) {
 							$quantity_parts2 = explode(" ", $row6->rxl_quantity);
-							$quantity = $quantity_parts2[0];
-							$quantity_unit = $quantity_parts2[1];
+							$quantity1 = $quantity_parts2[0];
+							$quantity_unit1 = $quantity_parts2[1];
 						} else {
-							$quantity = $row6->rxl_quantity;
-							$quantity_unit = '';
+							$quantity1 = $row6->rxl_quantity;
+							$quantity_unit1 = '';
 						}
 					} else {
-						$quantity = '';
-						$quantity_unit = '';
+						$quantity1 = '';
+						$quantity_unit1 = '';
 					}
 					if ($row6->rxl_daw != '') {
 						$daw1 = 'n';
