@@ -349,7 +349,11 @@ class ReminderController extends BaseController {
 						$ndcid = '';
 						$medication_parts1 = explode(", ", $row3->rxl_medication);
 						$generic_name = $medication_parts1[0];
-						$form = $medication_parts1[1];
+						if (isset($medication_parts[1])) {
+							$form = $medication_parts1[1];
+						} else {
+							$form = '';
+						}
 						$strength = $row3->rxl_dosage . " " . $row3->rxl_dosage_unit;
 					}
 					if ($row3->rxl_sig != '') {
