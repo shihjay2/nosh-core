@@ -329,7 +329,7 @@ class ReminderController extends BaseController {
 		$query3 = Rx_list::where('rcopia_sync', '=', 'n')->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->get();
 		if ($query3) {
 			foreach ($query3 as $row3) {
-				if ($this->check_practice_id($row1->pid, $practice_id)) {
+				if ($this->check_practice_id($row3->pid, $practice_id)) {
 					$dm = explode(" ", $row3->rxl_date_active);
 					$dm1 = explode("-", $dm[0]);
 					$dm_final = $dm1[1] . "/" . $dm1[2] . "/" . $dm1[0];
