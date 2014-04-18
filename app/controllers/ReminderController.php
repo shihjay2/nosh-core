@@ -405,6 +405,7 @@ class ReminderController extends BaseController {
 					$xml3 .= "<StartDate>" . $dm_final . "</StartDate>";
 					$xml3 .= "<StopDate>" . $dn_final . "</StopDate>";
 					$xml3 .= "</Medication></MedicationList></Request></RCExtRequest>";
+					File::put('/noshdocuments/test_dummy.xml', $xml3);
 					$result3 = $this->rcopia($xml3, $practice_id);
 					$response3 = new SimpleXMLElement($result3);
 					$status3 = $response3->Response->MedicationList->Medication->Status . "";
@@ -546,12 +547,17 @@ class ReminderController extends BaseController {
 						$doseunit = '';
 					}
 					if ($row6->rxl_quantity != '') {
-						$quantity_parts2 = explode(" ", $row6->rxl_quantity);
-						$quantity1 = $quantity_parts2[0];
-						$quantity_unit1 = $quantity_parts2[1];
+						if(strpos($row6->rxl_quantity, ' ') !== false) {
+							$quantity_parts2 = explode(" ", $row6->rxl_quantity);
+							$quantity = $quantity_parts2[0];
+							$quantity_unit = $quantity_parts2[1];
+						} else {
+							$quantity = $row6->rxl_quantity;
+							$quantity_unit = '';
+						}
 					} else {
-						$quantity1 = '';
-						$quantity_unit1 = '';
+						$quantity = '';
+						$quantity_unit = '';
 					}
 					if ($row6->rxl_daw != '') {
 						$daw1 = 'n';
