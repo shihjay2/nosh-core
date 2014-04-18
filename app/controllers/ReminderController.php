@@ -665,6 +665,7 @@ class ReminderController extends BaseController {
 			$results = array();
 			$j = 0;
 			$result_last = '';
+			$from = '';
 			foreach ($hl7_lines as $line) {
 				$line_section = explode("|", $line);
 				if ($line_section[0] == "MSH") {
