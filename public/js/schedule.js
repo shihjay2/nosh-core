@@ -103,8 +103,14 @@ $(document).ready(function() {
 							} else {
 								$("#schedule_visit_type").focus();
 								$("#start").text($.fullCalendar.formatDate(date, 'dddd, MM/dd/yyyy, hh:mmTT'));
+								$("#start_date").val($.fullCalendar.formatDate(date, 'MM/dd/yyyy'));
+								$("#start_time").val($.fullCalendar.formatDate(date, 'hh:mmTT'));
+								$("#end").val('');
 								$("#schedule_visit_type").val('');
 								$("#reason").val('');
+								$("#until").val('');
+								$("#until_row").hide();
+								$('#repeat').val('');
 								$("#delete_form").hide("fast");
 								$("#patient_appt").show();
 								$("#start_form").show();
