@@ -409,7 +409,6 @@ class ReminderController extends BaseController {
 					$xml3 .= "<StartDate>" . $dm_final . "</StartDate>";
 					$xml3 .= "<StopDate>" . $dn_final . "</StopDate>";
 					$xml3 .= "</Medication></MedicationList></Request></RCExtRequest>";
-					File::put('/noshdocuments/test_dummy.xml', $xml3);
 					$result3 = $this->rcopia($xml3, $practice_id);
 					$response3 = new SimpleXMLElement($result3);
 					$status3 = $response3->Response->MedicationList->Medication->Status . "";

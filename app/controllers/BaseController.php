@@ -552,7 +552,7 @@ class BaseController extends Controller {
 		} else {
 			$data['ros'] = '';
 		}
-		$ohInfo = Other_history::find($eid);
+		$ohInfo = DB::table('other_history')->where('eid', '=', $eid)->first();
 		if ($ohInfo) {
 			$data['oh'] = '<br><h4>Other Pertinent History:</h4><p class="view">';
 			if ($ohInfo->oh_pmh != '') {
