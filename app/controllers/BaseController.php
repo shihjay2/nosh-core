@@ -4423,7 +4423,6 @@ class BaseController extends Controller {
 				"^Bx21b*^",
 				"^Bx21c*^",
 				"^Bx21d*^",
-				"^Bx21d*^",
 				"^Bx21e*^",
 				"^Bx21f*^",
 				"^Bx21g*^",
