@@ -127,6 +127,5 @@
 			<div class="pure-control-group"><label for="messages_pharmacy_fax_number">Fax Number:</label><input type="text" name="messages_pharmacy_fax_number" id="messages_pharmacy_fax_number" class="text" required/></div>
 		</form>
 		<button type="button" id="messages_add_fax_contact" class="nosh_button_add">Add Pharmacy Contact to Address Book</button>
-		<input type="button" id="messages_send_fax" value="Send Fax Queue" class="ui-button ui-state-default ui-corner-all"/> <input type="button" id="messages_save_fax" value="Save Fax Queue to Send Later" class="ui-button ui-state-default ui-corner-all"/> <input type="button" id="messages_cancel_fax" value="Cancel Fax Queue" class="ui-button ui-state-default ui-corner-all"/></div>
 	</div>
 <?php }?>
