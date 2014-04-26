@@ -3524,6 +3524,7 @@ class BaseController extends Controller {
 					$med_dosage_parts = explode(" ", $med_row->rxl_sig);
 					$med_dosage = $med_dosage_parts[0];
 					$med_dosage_unit = $med_dosage_parts[1];
+					$med_code = '';
 					if ($med_row->rxl_route == "by mouth") {
 						$med_code = "C38289";
 						$med_code_description = "Oropharyngeal Route of Administration";
