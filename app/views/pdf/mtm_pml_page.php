@@ -73,7 +73,7 @@
 			<input type="checkbox"/> vitamins<br>
 			<input type="checkbox"/> minerals<br>
 		</div>
-		<p style="width:6.62in;">If you go to the hospital or emergency room, take this list with you. Share this with your family or caregivers too.</p>
+		<p style="width:6.62in;float:left">If you go to the hospital or emergency room, take this list with you. Share this with your family or caregivers too.</p>
 		<div style="float:right;text-align:right;font-size:16">
 			<b class="smallcaps">Date Prepared <?php echo $date;?></b>
 		</div>

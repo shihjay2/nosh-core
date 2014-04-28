@@ -229,7 +229,7 @@ $(document).ready(function() {
 						}
 					}
 				});
-				if (success_doc == true) {
+				if (noshdata.success_doc == true) {
 					window.open("view_documents/" + id_doc);
 					noshdata.success_doc = false;
 					noshdata.id_doc = '';

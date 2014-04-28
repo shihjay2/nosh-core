@@ -3799,7 +3799,7 @@ class BaseController extends Controller {
 				$vitals_table .= '</content></td></tr>';
 				$vitals_code2 = "3141-9";
 				$vitals_description2 = "Body weight Measured";
-				$vitals_file_ = file_get_contents(__DIR__.'/../../public/vitals.xml');
+				$vitals_file = file_get_contents(__DIR__.'/../../public/vitals.xml');
 				$vitals_file = str_replace('?vitals_code?', $vitals_code2, $vitals_file);
 				$vitals_file = str_replace('?vitals_description?', $vitals_description2, $vitals_file);
 				$vitals_file = str_replace('?vitals_date?', date('Ymd', $this->human_to_unix($vitals_row->vitals_date)), $vitals_file);
@@ -3815,7 +3815,7 @@ class BaseController extends Controller {
 				$vitals_table .= '</content></td></tr>';
 				$vitals_code3 = "8480-6";
 				$vitals_description3 = "Intravascular Systolic";
-				$vitals_file_ = file_get_contents(__DIR__.'/../../public/vitals.xml');
+				$vitals_file = file_get_contents(__DIR__.'/../../public/vitals.xml');
 				$vitals_file = str_replace('?vitals_code?', $vitals_code3, $vitals_file);
 				$vitals_file = str_replace('?vitals_description?', $vitals_description3, $vitals_file);
 				$vitals_file = str_replace('?vitals_date?', date('Ymd', $this->human_to_unix($vitals_row->vitals_date)), $vitals_file);
