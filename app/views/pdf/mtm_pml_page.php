@@ -77,16 +77,16 @@
 		<div style="float:right;text-align:right;font-size:16">
 			<b class="smallcaps">Date Prepared <?php echo $date;?></b>
 		</div>
-		<div style="width:6.62in;height:0.2in"></div>
-		<div style="width:6.62in;min-height:0.45in;" class="surround_div1">
+		<div style="width:6.62in;height:0.2in;float:left"></div>
+		<div style="width:6.62in;min-height:0.45in;float:left" class="surround_div1">
 			<div class="content"><b>Allergies or side effects: <?php echo $allergies;?></div>
 		</div>
 		<?php echo $pmlItems;?>
-		<div style="width:6.62in;height:0.2in"></div>
-		<div style="width:6.62in;height:1.15in;" class="surround_div1 nobreak">
+		<div style="width:6.62in;height:0.2in;float:left"></div>
+		<div style="width:6.62in;height:1.15in;float:left" class="surround_div1 nobreak">
 			<div class="content"><b>Other Information:</div>
 		</div>
-		<p>If you have any questions about your medication list, call <?php echo $practicePhone;?>.</p>
+		<p style="width:6.62in;float:left">If you have any questions about your medication list, call <?php echo $practicePhone;?>.</p>
 		<div style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; font-family: Arial, Helvetica, sans-serif; font-size: 7;margin-left:auto;margin-right:auto;width:5in;">
 			According to the Paperwork Reduction Act of 1995, no persons are required to respond to a collection of information unless it displays a valid OMB<br>
 			control number. The valid OMB number for this information collection is 0938-XXXX. The time required to complete this information collection is<br>

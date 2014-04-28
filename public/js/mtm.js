@@ -230,7 +230,7 @@ $(document).ready(function() {
 					}
 				});
 				if (noshdata.success_doc == true) {
-					window.open("view_documents/" + id_doc);
+					window.open("view_documents/" + noshdata.id_doc);
 					noshdata.success_doc = false;
 					noshdata.id_doc = '';
 				}

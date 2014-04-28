@@ -4168,7 +4168,7 @@ class BaseController extends Controller {
 		$data['pmlItems'] = '';
 		if ($rx_query) {
 			foreach ($rx_query as $rx_row) {
-				$data['pmlItems'] .= '<div style="width:6.62in;height:0.2in"></div>';
+				$data['pmlItems'] .= '<div style="width:6.62in;height:0.2in;float:left"></div>';
 				$data['pmlItems'] .= '<table><tr><td colspan="2" style="min-height:0.23in;">';
 				$data['pmlItems'] .= '<b>Medication:</b><br>' . $rx_row->rxl_medication . ', ' . $rx_row->rxl_dosage . ' ' . $rx_row->rxl_dosage_unit . '</td></tr><tr><td colspan="2" style="min-height:0.23in;">';
 				if ($rx_row->rxl_sig == '') {
