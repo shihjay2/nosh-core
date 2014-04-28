@@ -244,7 +244,7 @@ class AjaxFinancialController extends BaseController {
 			->get();
 		if ($query) {
 			$arr['response'] = 'OK';
-			$arr['filename'] = time();
+			$arr['filename'] = date('Ymd', time());
 			if ($type == 'Pend') {
 				$printimage = '';
 				foreach ($query as $row) {
