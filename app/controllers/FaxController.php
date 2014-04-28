@@ -8,6 +8,7 @@ class FaxController extends BaseController {
 	
 	public function fax()
 	{
+		$ret = 'Fax module inactive';
 		$query1 = DB::table('practiceinfo')->get();
 		foreach ($query1 as $row1) {
 			$fax_type = $row1->fax_type;
@@ -15,7 +16,8 @@ class FaxController extends BaseController {
 			$smtp_pass = $row1->fax_email_password;
 			$smtp_host = $row1->fax_email_hostname;
 			if ($fax_type != "") {
-				Config::set('app.timezone' , $row1->timezone);
+				$ret = 'Fax module active<br>';
+				date_default_timezone_set($row1->timezone);
 				if ($fax_type === "efaxsend.com") {
 					$email_sender = "message@inbound.efax.com";
 					$email_subject = 'eFax from';
@@ -33,7 +35,9 @@ class FaxController extends BaseController {
 				$connection = imap_open($hostname,$smtp_user,$smtp_pass) or die('Cannot connect to Gmail: ' . imap_last_error());
 				$emails = imap_search($connection,$search_query);
 				if($emails) {
+					$ret .= 'Connection made and found mail that matched query<br>';
 					rsort($emails);
+					$i = 0;
 					foreach($emails as $messageNumber) {
 						$structure = imap_fetchstructure($connection, $messageNumber);
 						$flattenedParts = $this->flattenParts($structure->parts);
@@ -101,10 +105,14 @@ class FaxController extends BaseController {
 						}
 						DB::table('received')->insert($data);
 						$this->audit('Add');
+						$i++;
 					}
+					$ret .= 'Number of messages: ' . $i;
+				} else {
+					$ret .= 'No connection made.';
 				}
 			}
 		}
-		exit (0);
+		return $ret;
 	}
 }
