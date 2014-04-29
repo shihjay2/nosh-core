@@ -55,30 +55,15 @@ class FaxController extends BaseController {
 									$subject = explode(" ", $info->subject);
 									$from = str_replace('"', '', $subject[4]);
 									$pages = $subject[6];
-								} else {
-									if($part->subtype === "PLAIN") {
-										$message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
-										$from_pos_s = strpos($message, "From:");
-										$from_substr = substr($message, $from_pos_s);
-										if ($fax_type === "rcfax.com") {
-											$from_substr1 = strstr($from_substr, 'Received:', true);
-										} else {
-											$from_substr1 = strstr($from_substr, '=', true);
-										}
-										$from = strstr($from_substr1, ':');
-										$from = str_replace(": ", "", $from);
-										if ($fax_type === "rcfax.com") {
-											$pages_pos_s = strpos($message, "Pages:");
-											$pages_substr = substr($message, $pages_pos_s);
-											$pages_substr1 = strstr($pages_substr, 'To:', true);
-										} else {
-											$pages_pos_s = strpos($message, "Page");
-											$pages_substr = substr($message, $pages_pos_s);
-											$pages_substr1 = strstr($pages_substr, '=', true);
-										}
-										$pages = strstr($pages_substr1, ':');
-										$pages = str_replace(": ", "", $pages);
-									}
+								} elseif ($fax_type === "rcfax.com") {
+									$subject = str_replace("New Fax Message from ", "", $info->subject);
+									$subject_arr = explode(" on ", $subject);
+									$from = $subject_arr[0];
+									$message = $this->getPart($connection, $messageNumber, $partNumber, $part->encoding);
+									$message_part = explode("<strong>Pages:</strong></td>", $message);
+									$message_part1 = explode("</td>", $message_part[1]);
+									$message_part2 = explode(">", $message_part1[0]);
+									$pages = $message_part2[1];
 								}
 								$data['fileFrom'] = $from;
 								$data['filePages'] = $pages;
