@@ -58,7 +58,7 @@
 			<li>Fill in "My follow-up plan" and "Questions I want to ask."</li>
 		</ol>
 		<p>Have this action plan with you when you talk with your doctors, pharmacists, and other healthcare providers. Share this with your family or caregivers too.</p>
-		<div style="float:right;text-align:right;font-size:16">
+		<div style="width:6.62in;float:right;text-align:right;font-size:16">
 			<b class="smallcaps">Date Prepared <?php echo $date;?></b>
 		</div>
 		<?php echo $mapItems;?>
