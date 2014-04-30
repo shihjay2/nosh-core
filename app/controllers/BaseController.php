@@ -2796,18 +2796,19 @@ class BaseController extends Controller {
 	{
 		$practice_id = Session::get('practice_id');
 		if ($type == 'issues') {
-			$query = Issues::where('pid', '=', $pid)->where('issue_date_inactive', '=', '0000-00-00 00:00:00')->get();
+			$query = DB::table('issues')->where('pid', '=', $pid)->where('issue_date_inactive', '=', '0000-00-00 00:00:00')->first();
 		}
 		if ($type == 'medications') {
-			$query = Rx_list::where('pid', '=', $pid)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->get();
+			$query = DB::table('rx_list')->where('pid', '=', $pid)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->first();
 		}
-		if(count($query) > 1) {
-			$query1 = Alerts::where('pid', '=', $pid)
+		if($query) {
+			$query1 = DB::table('alerts')
+				->where('pid', '=', $pid)
 				->where('alert_date_complete', '=', '0000-00-00 00:00:00')
 				->where('alert_reason_not_complete', '=', '')
 				->where('alert', '=', 'Medication Therapy Management')
 				->where('practice_id', '=', $practice_id)
-				->get();
+				->first();
 			if (!$query1) {
 				$data = array(
 					'alert' => 'Medication Therapy Management',

@@ -206,6 +206,7 @@ $(document).ready(function() {
 							type: "POST",
 							url: "ajaxsearch/alertidset",
 							data: "alert_id=" + alert_id,
+							dataType: "json",
 							success: function(data){
 								window.location = data.url;
 							}

@@ -248,7 +248,7 @@ $(document).ready(function() {
 						if (data.message == 'OK') {
 							$.ajax({
 								type: "POST",
-								url: "ajaxchart/view-documents1/" + data.id,
+								url: "ajaxcommon/view-documents1/" + data.id,
 								dataType: "json",
 								success: function(data){
 									//$('#embedURL').PDFDoc( { source : data.html } );
