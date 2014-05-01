@@ -2220,7 +2220,7 @@ class AjaxSearchController extends BaseController {
 		echo json_encode($data);
 	}
 	
-	public function postVivacareData()
+	public function postVivacareData1()
 	{
 		set_time_limit(0);
 		ini_set('memory_limit','196M');
@@ -2254,6 +2254,38 @@ class AjaxSearchController extends BaseController {
 								'label' => $text,
 								'value' => $text,
 								'link' => $link_array[2],
+								'category' => $category
+							);
+						}
+					}
+				}
+			}
+		}
+		echo json_encode($data);
+	}
+	
+	public function postVivacareData()
+	{
+		set_time_limit(0);
+		ini_set('memory_limit','196M');
+		$practice = Practiceinfo::find(Session::get('practice_id'));
+		$data['response'] = "false";
+		if ($practice->vivacare != "") {
+			$html = new Htmldom("http://informationrx.com/" . $practice->vivacare);
+			if (isset($html)) {
+				$div = $html->find('[id=nav-topic-dropdown]',0);
+				$div1 = $html->find('[id=formselectA]',0);
+				if (isset($div)) {
+					$data['response'] = "true";
+					foreach ($div->find('select') as $select) {
+						$category = $select->id;
+						foreach ($select->find('option') as $option) {
+							$text = $option->innertext;
+							$link = $option->value;
+							$data['message'][] = array(
+								'label' => $text,
+								'value' => $text,
+								'link' => $link,
 								'category' => $category
 							);
 						}

@@ -4719,7 +4719,7 @@ class AjaxChartController extends BaseController {
 		echo $file;
 	}
 	
-	public function postPrintVivacare($link)
+	public function postPrintVivacare1($link)
 	{
 		set_time_limit(0);
 		ini_set('memory_limit','196M');
@@ -4750,6 +4750,51 @@ class AjaxChartController extends BaseController {
 			$directory = $result->documents_dir . Session::get('pid');
 			$file_path = $directory . '/instructions_' . time() . '.pdf';
 			$this->generate_pdf($html, $file_path);
+			while(!file_exists($file_path)) {
+				sleep(2);
+			}
+			$pages_data = array(
+				'documents_url' => $file_path,
+				'pid' => Session::get('pid'),
+				'documents_type' => 'Letters',
+				'documents_desc' => 'Instructions for ' . Session::get('ptname'),
+				'documents_from' => Session::get('displayname'),
+				'documents_viewed' => Session::get('displayname'),
+				'documents_date' => date("Y-m-d H:i:s", time())
+			);
+			$arr['message'] = "OK";
+			$arr['id'] = DB::table('documents')->insertGetId($pages_data);
+			$this->audit('Add');
+		} else {
+			$arr['message'] = "Unable to download instructions from Vivacare.  Try again later.";
+		}
+		echo json_encode($arr);
+	}
+	
+	public function postPrintVivacare($link)
+	{
+		set_time_limit(0);
+		ini_set('memory_limit','196M');
+		$practice = Practiceinfo::find(Session::get('practice_id'));
+		$html = new Htmldom("http://informationrx.com/" . $practice->vivacare . "/HealthTopic/" . $link);
+		if (isset($html)) {
+			$final_html = $this->page_intro('Patient Instructions', Session::get('practice_id'))->render();
+			$title = $html->find('h1',0);
+			$final_html .= '<div style="width:100%">';
+			$final_html .= '<h2 style="text-align: center;">';
+			$final_html .= trim(str_replace("Print Page", "", $title->plaintext));
+			$final_html .= '</h2>';
+			$div = $html->find('[class=col-main]',0);
+			$final_html .= $div->outertext;
+			$div1 = $html->find('[class=col-right]',0);
+			$final_html .= $div1->outertext;
+			$div2 = $html->find('[id=nav-topic]',0);
+			$final_html .= '<h2>Related Topics</h2>';
+			$final_html .= $div2->outertext;
+			$final_html .= '</div></body></html>';
+			$directory = $practice->documents_dir . Session::get('pid');
+			$file_path = $directory . '/instructions_' . time() . '.pdf';
+			$this->generate_pdf($final_html, $file_path);
 			while(!file_exists($file_path)) {
 				sleep(2);
 			}
