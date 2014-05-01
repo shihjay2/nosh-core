@@ -77,7 +77,8 @@ class AjaxSetupController extends BaseController {
 			'temp_unit' => Input::get('temp_unit'),
 			'hc_unit' => Input::get('hc_unit'),
 			'default_pos_id' => Input::get('default_pos_id'),
-			'documents_dir' => Input::get('documents_dir')
+			'documents_dir' => Input::get('documents_dir'),
+			'icd' => Input::get('icd')
 		);
 		DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->update($data);
 		$this->audit('Update');
@@ -1114,5 +1115,30 @@ class AjaxSetupController extends BaseController {
 			}
 			fclose($pos_handle);
 		}
+	}
+	
+	public function postUpdateIcd10()
+	{
+		DB::table('icd10')->truncate();
+		$wget = "wget http://www.cms.gov/Medicare/Coding/ICD10/Downloads/2014-ICD10-Code-Tables-and-Index.zip --directory-prefix='".__DIR__. "/../../public/import/'";
+		$last_line = system($wget, $return_val);
+		$zip = '2014-ICD10-Code-Tables-and-Index.zip';
+		$unzip = "unzip ".__DIR__."/../../import" . $zip . " Tabular.xml -d ".__DIR__."/../../import/";
+		exec($unzip);
+		$xml = simplexml_load_file(__DIR__.'/../../import/Tabular.xml');
+		$i = 0;
+		$result = $xml->xpath('//diag');
+		foreach ($result as $row) {
+			if (!$row->diag) {
+				$data = array(
+					'icd10' => $row->name,
+					'icd10_description' => $row->desc
+				);
+				DB::table('icd10')->insert($data);
+				$i++;
+			}
+		}
+		unlink(__DIR__.'/../../import/Tabular.xml');
+		return "Records added: " . $i;
 	}
 }

@@ -87,7 +87,7 @@ $(document).ready(function() {
 	$("#assessment_icd_search").autocomplete({
 		source: function (req, add){
 			$.ajax({
-				url: "ajaxsearch/icd9",
+				url: "ajaxsearch/icd",
 				dataType: "json",
 				type: "POST",
 				data: req,

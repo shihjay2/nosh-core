@@ -349,7 +349,7 @@ $(document).ready(function() {
 			$("#messages_ref_codes").autocomplete({
 				source: function (req, add){
 					$.ajax({
-						url: "ajaxsearch/icd9",
+						url: "ajaxsearch/icd",
 						dataType: "json",
 						type: "POST",
 						data: "term=" + extractLast(req.term),

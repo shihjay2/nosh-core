@@ -2320,8 +2320,7 @@ class BaseController extends Controller {
 				$bill_Box17A = $this->string_format($npi, 17);
 			}
 		}
-		// Modify in the future so that it allows 0 for icd-10
-		$bill_Box21A = '9';
+		$bill_Box21A = $practiceInfo->icd;
 		if ($result2->insurance_box_31 == 'n') {
 			$bill_Box31 = $this->string_format($provider, 21);
 		} else {

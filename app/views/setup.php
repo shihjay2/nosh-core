@@ -58,6 +58,11 @@
 					<option value="in">Inches</option>
 					<option value="cm">Centimeters</option>
 				</select><input type="hidden" id="hc_unit_old"/>
+				<label for="hc_unit">ICD database:</label>
+				<select name="icd" id="icd" class="text" required>
+					<option value="9">ICD-9</option>
+					<option value="10">ICD-10</option>
+				</select><input type="hidden" id="icd_old"/>
 			</form>
 		</div>
 		<h3>Practice Logo</h3>

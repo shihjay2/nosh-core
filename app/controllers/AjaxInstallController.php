@@ -600,6 +600,9 @@ class AjaxInstallController extends BaseController {
 		if ($practice->version < "1.8.0") {
 			$this->update180();
 		}
+		if ($practice->version < "1.8.1") {
+			$this->update181();
+		}
 		return Redirect::to('/');
 	}
 	
@@ -878,5 +881,21 @@ class AjaxInstallController extends BaseController {
 		DB::table('calendar')->update($calendar);
 		// Update version
 		DB::table('practiceinfo')->update(array('version' => '1.8.0'));
+	}
+	
+	public function update181()
+	{
+		$db_name = $_ENV['mysql_database'];
+		$db_username = $_ENV['mysql_username'];
+		$db_password = $_ENV['mysql_password'];
+		$icd10_sql_file = __DIR__."/../../import/icd10.sql";
+		$icd10_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $icd10_sql_file;
+		system($icd10_command);
+		$practiceinfo_data = array(
+			'icd' => '9',
+			'version' => '1.8.1.'
+		);
+		// Update version
+		DB::table('practiceinfo')->update($practiceinfo_data);
 	}
 }

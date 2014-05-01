@@ -163,7 +163,7 @@ $(document).ready(function() {
 						return;
 					}
 					$.ajax({
-						url: "ajaxsearch/icd9",
+						url: "ajaxsearch/icd",
 						dataType: "json",
 						type: "POST",
 						data: req,

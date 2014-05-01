@@ -1025,31 +1025,57 @@ class AjaxSearchController extends BaseController {
 		echo json_encode($data);
 	}
 	
-	public function postIcd9()
+	public function postIcd()
 	{
+		$practice = Practiceinfo::find(Session::get('practice_id'));
 		$q = strtolower(Input::get('term'));
 		if (!$q) return;
 		$data['response'] = 'false';
-		$query = DB::table('icd9')->select('icd9', 'icd9_description');
-		$pos = explode(',', $q);
-		if ($pos == FALSE) {
-			$query->where('icd9_description', 'LIKE', "%$q%");
-		} else {
-			foreach ($pos as $p) {
-				$query->where('icd9_description', 'LIKE', "%$p%");
+		if ($practice->icd == '9') {
+			$query = DB::table('icd9')->select('icd9', 'icd9_description');
+			$pos = explode(',', $q);
+			if ($pos == FALSE) {
+				$query->where('icd9_description', 'LIKE', "%$q%");
+			} else {
+				foreach ($pos as $p) {
+					$query->where('icd9_description', 'LIKE', "%$p%");
+				}
 			}
-		}
-		$query->orWhere('icd9', 'LIKE', "%$q%");
-		$result = $query->get();
-		if ($result) {
-			$data['message'] = array();
-			$data['response'] = 'true';
-			foreach ($result as $row) {
-				$records = $row->icd9_description . ' [' . $row->icd9 . ']';
-				$data['message'][] = array(
-					'label' => $records,
-					'value' => $records
-				);
+			$query->orWhere('icd9', 'LIKE', "%$q%");
+			$result = $query->get();
+			if ($result) {
+				$data['message'] = array();
+				$data['response'] = 'true';
+				foreach ($result as $row) {
+					$records = $row->icd9_description . ' [' . $row->icd9 . ']';
+					$data['message'][] = array(
+						'label' => $records,
+						'value' => $records
+					);
+				}
+			}
+		} else {
+			$query = DB::table('icd10')->select('icd10', 'icd10_description');
+			$pos = explode(',', $q);
+			if ($pos == FALSE) {
+				$query->where('icd10_description', 'LIKE', "%$q%");
+			} else {
+				foreach ($pos as $p) {
+					$query->where('icd10_description', 'LIKE', "%$p%");
+				}
+			}
+			$query->orWhere('icd10', 'LIKE', "%$q%");
+			$result = $query->get();
+			if ($result) {
+				$data['message'] = array();
+				$data['response'] = 'true';
+				foreach ($result as $row) {
+					$records = $row->icd10_description . ' [' . $row->icd10 . ']';
+					$data['message'][] = array(
+						'label' => $records,
+						'value' => $records
+					);
+				}
 			}
 		}
 		echo json_encode($data);
