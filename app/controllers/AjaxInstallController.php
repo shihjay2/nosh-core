@@ -893,7 +893,7 @@ class AjaxInstallController extends BaseController {
 		system($icd10_command);
 		$practiceinfo_data = array(
 			'icd' => '9',
-			'version' => '1.8.1.'
+			'version' => '1.8.1'
 		);
 		// Update version
 		DB::table('practiceinfo')->update($practiceinfo_data);
