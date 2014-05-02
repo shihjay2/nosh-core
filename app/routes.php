@@ -178,7 +178,7 @@ Route::filter('update', function()
 		Artisan::call('migrate:install');
 	}
 	Artisan::call('migrate');
-	$current_version = "1.8.0";
+	$current_version = "1.8.1";
 	$row = Practiceinfo::find(1);
 	// Check version number
 	if ($row->version < $current_version) {
