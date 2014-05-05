@@ -447,4 +447,8 @@ $(document).ready(function() {
 	$("#mtm_list").click(function() {
 		$("#mtm_dialog").dialog('open');
 	});
+	if (noshdata.mtm != '') {
+		$("#mtm_dialog").dialog('open');
+		noshdata.mtm = '';
+	}
 });

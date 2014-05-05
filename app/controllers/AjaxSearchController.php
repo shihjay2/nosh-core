@@ -111,6 +111,24 @@ class AjaxSearchController extends BaseController {
 		}
 	}
 	
+	public function postMtmset()
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			if (Session::get('mtm') != FALSE) {
+				Session::forget('mtm');
+			}
+			Session::put('mtm', 'open');
+			$data['message'] = 'OK';
+			$data['url'] = route('chart');
+			echo json_encode($data);
+		}
+	}
+	
 	public function postNewpatient()
 	{
 		$dob = date('Y-m-d', strtotime(Input::get('DOB')));

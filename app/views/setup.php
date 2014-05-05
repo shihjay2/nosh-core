@@ -61,7 +61,7 @@
 				<label for="hc_unit">ICD database:</label>
 				<select name="icd" id="icd" class="text" required>
 					<option value="9">ICD-9</option>
-					<option value="10">ICD-10</option>
+					<option value="0">ICD-10</option>
 				</select><input type="hidden" id="icd_old"/>
 			</form>
 		</div>

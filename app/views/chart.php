@@ -13,6 +13,7 @@
 	noshdata.maxTime = '<?php echo $maxTime;?>';
 	noshdata.schedule_increment = '<?php echo $schedule_increment;?>';
 	noshdata.financial = '<?php if(Session::get('financial')) { echo Session::get('financial');} ?>';
+	noshdata.mtm = '<?php if(Session::get('mtm')) { echo Session::get('mtm');} ?>';
 </script>
 <div id="nosh_chart_div" style="width:100%">
 	<div style="height:480px;float:left;">

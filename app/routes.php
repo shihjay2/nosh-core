@@ -67,6 +67,7 @@ Route::group(array('before' => 'acl1'), function() {
 		Session::forget('t_messages_id');
 		Session::forget('alert_id');
 		Session::forget('financial');
+		Session::forget('mtm');
 		return Redirect::to('/');
 	}));
 	Route::post('documentsupload', array('as' => 'documentsupload', 'uses' => 'AjaxChartController@documentsupload'));
