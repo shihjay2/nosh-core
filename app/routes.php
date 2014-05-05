@@ -90,6 +90,7 @@ Route::group(array('before' => 'acl1'), function() {
 	Route::get('print_batch/{type}/{filename}', array('as' => 'print_batch', 'uses' => 'ChartController@print_batch'));
 	Route::get('financial_query_print/{id}', array('as' => 'financial_query_print', 'uses' => 'ChartController@financial_query_print'));
 	Route::get('export_demographics/{type}', array('as' => 'export_demographics', 'uses' => 'ChartController@export_demographics'));
+	Route::get('export_address_csv', array('as' => 'export_address_csv', 'uses' => 'HomeController@export_address_csv'));
 });
 Route::group(array('before' => 'acl2'), function() {
 	Route::get('encounter', array('as' => 'encounter', function()

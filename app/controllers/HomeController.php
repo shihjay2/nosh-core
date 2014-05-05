@@ -220,4 +220,25 @@ class HomeController extends BaseController {
 		$file_path = $result->filePath;
 		return Response::download($file_path);
 	}
+	
+	public function export_address_csv()
+	{
+		$query = DB::table('addressbook')->get();
+		$i = 0;
+		$csv = '';
+		foreach ($query as $row) {
+			$array_row = (array) $row;
+			$array_values = array_values($array_row);
+			if ($i == 0) {
+				$array_key = array_keys($array_row);
+				$csv .= implode(';', $array_key);
+				$csv .= "\n" . implode(';', $array_values);
+			} else {
+				$csv .= "\n" . implode(';', $array_values);
+			}
+		}
+		$file_path = __DIR__."/../../public/temp/" . time() . "_addressbook.txt";
+		File::put($file_path, $csv);
+		return Response::download($file_path);
+	}
 }

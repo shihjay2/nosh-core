@@ -1349,7 +1349,9 @@ $(document).ready(function() {
 			reload_grid("all_contacts_list");
 		}
 	});
-	
+	$("#export_address_csv").click(function(){
+		window.open("export_address_csv");
+	});
 	$("#messaging_add_contact").click(function(){
 		$('#messaging_contact_form').clearForm();
 		$('#contacts_dialog').dialog('open');

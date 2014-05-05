@@ -33,10 +33,15 @@
 			</div>
 			<h3>Address Book</h3>
 			<div>
-				<button type="button" id="import_csv" class="nosh_button">Import CSV File</button><br><br>
-				<div class="pure-form">
-					<label for="search_all_contact">Search:</label><input type="text" size="50" id="search_all_contact" class="text" onkeydown="doSearch1(arguments[0]||event)"/><br><br> 
+				<div class="pure-g">
+					<div class="pure-form pure-u-4-5">
+						<label for="search_all_contact">Search:</label><input type="text" size="50" id="search_all_contact" class="text" onkeydown="doSearch1(arguments[0]||event)"/><br><br> 
+					</div>
+					<div class="pure-u-1-5">
+						<button type="button" id="export_address_csv" class="nosh_button" style="width:125px">Export CSV File</button><br><button type="button" id="import_csv" class="nosh_button" style="width:125px">Import CSV File</button> 
+					</div>
 				</div>
+				<br>
 				<table id="all_contacts_list" class="scroll" cellpadding="0" cellspacing="0"></table>
 				<div id="all_contacts_list_pager" class="scroll" style="text-align:center;"></div><br>
 				<button type="button" id="messaging_add_contact" class="nosh_button_add">Add Contact</button>
