@@ -241,4 +241,48 @@ class HomeController extends BaseController {
 		File::put($file_path, $csv);
 		return Response::download($file_path);
 	}
+	
+	public function print_entire_ccda()
+	{
+		if (Session::get('group_id') != '1') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			ini_set('memory_limit','196M');
+			$practice_id = Session::get('practice_id');
+			$query = Demographics_relate::where('practice_id', '=', $practice_id)->get();
+			$zip_file_name = 'ccda_' . $practice_id . '.zip';
+			$zip_file = __DIR__.'/../../public/temp/' . $zip_file_name;
+			if (file_exists($zip_file)) {
+				unlink($zip_file);
+			}
+			$zip = new ZipArchive();
+			if ($zip->open($zip_file, ZipArchive::CREATE) !== TRUE) {
+				exit("Cannot open <$zip_file>\n");
+			}
+			$files_array = array();
+			foreach ($query as $row) {
+				$filename = 'ccda_' . $row->pid . "_" . time() . ".xml";
+				$file = __DIR__.'/../../public/temp/' . $filename;
+				$ccda = $this->generate_ccda('',$row->pid);
+				File::put($file, $ccda);
+				$zip->addFile($file, $filename);
+			}
+			$zip->close();
+			$headers = array(
+				'Content-Description' => 'file Transfer',
+				'Content-Type' => 'application/octet-stream',
+				'Content-Transfer-Encoding' => 'binary',
+				'Expires' => 0,
+				'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+				'Pragma' => 'public',
+				'Content-Length' => File::size($file),
+				'Content-Disposition' => 'inline; filename="' . $zip_file_name . '"'
+			);
+			$fileContent = File::get($zip_file);
+			return Response::make($fileContent, 200, $headers);
+		}
+	}
 }

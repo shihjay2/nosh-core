@@ -112,6 +112,7 @@ Route::group(array('before' => 'acl4'), function() {
 Route::group(array('before' => 'acl5'), function() {
 	Route::post('practicelogoupload', array('as' => 'practicelogoupload', 'uses' => 'AjaxSetupController@practicelogoupload'));
 	Route::post('cpt_update', array('as' => 'cpt_update', 'uses' => 'AjaxSetupController@cpt_update'));
+	Route::get('print_entire_ccda', array('as' => 'print_entire_ccda', 'uses' => 'HomeController@print_entire_ccda'));
 });
 Route::get('logout', array('as' => 'logout', 'uses' => 'LoginController@logout'));
 Route::get('reminder', array('as' => 'reminder', 'uses' => 'ReminderController@reminder'));

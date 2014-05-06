@@ -871,15 +871,18 @@ class AjaxDashboardController extends BaseController {
 			if (file_exists($zip_file_name)) {
 				unlink($zip_file_name);
 			}
-			Zipper::make($zip_file_name);
+			$zip = new ZipArchive();
+			if ($zip->open($zip_file_name, ZipArchive::CREATE) !== TRUE) {
+				exit("Cannot open <$zip_file_name>\n");
+			}
 			foreach ($query as $row) {
 				$file = $this->print_chart($row->pid, 'file', '', 'all');
-				Zipper::add($file);
+				$zip->addFile($file);
 				$i++;
 				$percent = round($i/$total*100);
 				Session::put('print_chart_percent', $percent);
 			}
-			Zipper::close();
+			$zip->close();
 			$data['response'] = true;
 			$data['html'] = HTML::secureLink('temp/charts_' . $practice_id . '.zip', 'Download ZIP File');
 			echo json_encode($data);

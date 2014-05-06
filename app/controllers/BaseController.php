@@ -3173,7 +3173,7 @@ class BaseController extends Controller {
 		return "E-mail sent.";
 	}
 	
-	protected function generate_ccda($hippa_id)
+	protected function generate_ccda($hippa_id='',$pid='')
 	{
 		$ccda = file_get_contents(__DIR__.'/../../public/ccda.xml');
 		$practice_info = Practiceinfo::find(Session::get('practice_id'));
@@ -3181,7 +3181,9 @@ class BaseController extends Controller {
 		$date_format = "YmdHisO";
 		$ccda = str_replace('?effectiveTime?', date($date_format), $ccda);
 		$ccda_name = time() . '_ccda.xml';
-		$pid = Session::get('pid');
+		if ($pid == '') {
+			$pid = Session::get('pid');
+		}
 		$ccda = str_replace('?pid?', $pid, $ccda);
 		$demographics = Demographics::find($pid);
 		$ccda = str_replace('?ss?', $demographics->ss, $ccda);
@@ -3202,6 +3204,7 @@ class BaseController extends Controller {
 		$ccda = str_replace('?gender?', $gender, $ccda);
 		$ccda = str_replace('?gender_full?', $gender_full, $ccda);
 		$ccda = str_replace('?dob?', date('Ymd', $this->human_to_unix($demographics->DOB)), $ccda);
+		$marital_code = "U";
 		if ($demographics->marital_status == 'Annulled') {
 			$marital_code = "N";
 		}
@@ -3281,18 +3284,24 @@ class BaseController extends Controller {
 		$ccda = str_replace('?user_title?', $user->title, $ccda);
 		$date_format1 = "Ymd";
 		$ccda = str_replace('?effectiveTimeShort?', date($date_format1), $ccda);
-		$hippa_info = Hippa::find($hippa_id);
-		$ccda = str_replace('?hippa_provider?', $hippa_info->hippa_provider, $ccda);
 		$ccda = str_replace('?lang_code?', $demographics->lang_code, $ccda);
-		$ccda = str_replace('?encounter_role?', $hippa_info->hippa_role, $ccda);
-		if ($hippa_info->hippa_role == "Primary Care Provider") {
-			$hippa_role_code = "PP";
-		}
-		if ($hippa_info->hippa_role == "Consulting Provider") {
-			$hippa_role_code = "CP";
-		}
-		if ($hippa_info->hippa_role == "Referring Provider") {
-			$hippa_role_code = "RP";
+		if ($hippa_id != '') {
+			$hippa_info = Hippa::find($hippa_id);
+			$ccda = str_replace('?hippa_provider?', $hippa_info->hippa_provider, $ccda);
+			$ccda = str_replace('?encounter_role?', $hippa_info->hippa_role, $ccda);
+			if ($hippa_info->hippa_role == "Primary Care Provider") {
+				$hippa_role_code = "PP";
+			}
+			if ($hippa_info->hippa_role == "Consulting Provider") {
+				$hippa_role_code = "CP";
+			}
+			if ($hippa_info->hippa_role == "Referring Provider") {
+				$hippa_role_code = "RP";
+			}
+		} else {
+			$ccda = str_replace('?hippa_provider?', '', $ccda);
+			$ccda = str_replace('?encounter_role?', '', $ccda);
+			$hippa_role_code = "";
 		}
 		$ccda = str_replace('?encounter_role_code?', $hippa_role_code, $ccda);
 		$recent_encounter_query = DB::table('encounters')->where('pid', '=', $pid)
@@ -3302,19 +3311,30 @@ class BaseController extends Controller {
 			->orderBy('encounter_DOS', 'desc')
 			->take(1)
 			->first();
-		$ccda = str_replace('?eid?', $recent_encounter_query->eid, $ccda);
-		$encounter_info = Encounters::find($recent_encounter_query->eid);
-		$provider_info = User::find($encounter_info->user_id);
-		$provider_info1 = Providers::find($encounter_info->user_id);
-		$ccda = str_replace('?npi?', $provider_info1->npi, $ccda);
-		$ccda = str_replace('?provider_title?', $provider_info->title, $ccda);
-		$ccda = str_replace('?provider_firstname?', $provider_info->firstname, $ccda);
-		$ccda = str_replace('?provider_lastname?', $provider_info->lastname, $ccda);
-		$ccda = str_replace('?encounter_dos?', date('Ymd', $this->human_to_unix($encounter_info->encounter_DOS)), $ccda);
-		$assessment_info = Assessment::find($recent_encounter_query->eid);
-		$ccda = str_replace('?icd9?', $assessment_info->assessment_icd1, $ccda);
-		$assessment_info1 = DB::table('icd9')->where('icd9', '=', $assessment_info->assessment_icd1)->first();
-		$ccda = str_replace('?icd9_description?', $assessment_info1->icd9_description, $ccda);
+		if ($recent_encounter_query) {
+			$ccda = str_replace('?eid?', $recent_encounter_query->eid, $ccda);
+			$encounter_info = Encounters::find($recent_encounter_query->eid);
+			$provider_info = User::find($encounter_info->user_id);
+			$provider_info1 = Providers::find($encounter_info->user_id);
+			$ccda = str_replace('?npi?', $provider_info1->npi, $ccda);
+			$ccda = str_replace('?provider_title?', $provider_info->title, $ccda);
+			$ccda = str_replace('?provider_firstname?', $provider_info->firstname, $ccda);
+			$ccda = str_replace('?provider_lastname?', $provider_info->lastname, $ccda);
+			$ccda = str_replace('?encounter_dos?', date('Ymd', $this->human_to_unix($encounter_info->encounter_DOS)), $ccda);
+			$assessment_info = Assessment::find($recent_encounter_query->eid);
+			$ccda = str_replace('?icd9?', $assessment_info->assessment_icd1, $ccda);
+			$assessment_info1 = DB::table('icd9')->where('icd9', '=', $assessment_info->assessment_icd1)->first();
+			$ccda = str_replace('?icd9_description?', $assessment_info1->icd9_description, $ccda);
+		} else {
+			$ccda = str_replace('?eid?', '', $ccda);
+			$ccda = str_replace('?npi?', '', $ccda);
+			$ccda = str_replace('?provider_title?', '', $ccda);
+			$ccda = str_replace('?provider_firstname?', '', $ccda);
+			$ccda = str_replace('?provider_lastname?', '', $ccda);
+			$ccda = str_replace('?encounter_dos?', '', $ccda);
+			$ccda = str_replace('?icd9?', '', $ccda);
+			$ccda = str_replace('?icd9_description?', '', $ccda);
+		}
 		$allergies_query = DB::table('allergies')->where('pid', '=', $pid)->get();
 		$allergies_table = "";
 		$allergies_file_final = "";
@@ -3369,91 +3389,93 @@ class BaseController extends Controller {
 		$e = 1;
 		$encounters_table = "";
 		$encounters_file_final = "";
-		foreach($encounters_query as $encounters_row) {
-			$encounters_table .= "<tr>";
-			$encounters_table .= "<td><content ID='Encounter" . $e . "'>" . $encounters_row->encounter_cc . "</content></td>";
-			$encounters_table .= "<td>" . $encounters_row->encounter_provider . "</td>";
-			$encounters_table .= "<td>" . $practice_info->practice_name . "</td>";
-			$encounters_table .= "<td>" . date('m-d-Y', $this->human_to_unix($encounters_row->encounter_DOS)) . "</td>";
-			$encounters_table .= "</tr>";
-			$encounters_file = file_get_contents(__DIR__.'/../../public/encounters.xml');
-			$encounters_number = "#Encounter" . $e;
-			$billing = DB::table('billing_core')
-				->where('eid', '=', $encounters_row->eid)
-				->where('billing_group', '=', '1')
-				->where('cpt', 'NOT LIKE', "sp%")
-				->orderBy('cpt_charge', 'desc')
-				->take(1)
-				->first();
-			$cpt_query = DB::table('cpt_relate')->where('cpt', '=', $billing->cpt)->first();
-			if ($cpt_query) {
-				$cpt_result = DB::table('cpt_relate')->where('cpt', '=', $billing->cpt)->first();
-			} else {
-				$cpt_result = DB::table('cpt')->where('cpt', '=', $billing->cpt)->first();
+		if ($encounters_query) {
+			foreach($encounters_query as $encounters_row) {
+				$encounters_table .= "<tr>";
+				$encounters_table .= "<td><content ID='Encounter" . $e . "'>" . $encounters_row->encounter_cc . "</content></td>";
+				$encounters_table .= "<td>" . $encounters_row->encounter_provider . "</td>";
+				$encounters_table .= "<td>" . $practice_info->practice_name . "</td>";
+				$encounters_table .= "<td>" . date('m-d-Y', $this->human_to_unix($encounters_row->encounter_DOS)) . "</td>";
+				$encounters_table .= "</tr>";
+				$encounters_file = file_get_contents(__DIR__.'/../../public/encounters.xml');
+				$encounters_number = "#Encounter" . $e;
+				$billing = DB::table('billing_core')
+					->where('eid', '=', $encounters_row->eid)
+					->where('billing_group', '=', '1')
+					->where('cpt', 'NOT LIKE', "sp%")
+					->orderBy('cpt_charge', 'desc')
+					->take(1)
+					->first();
+				$cpt_query = DB::table('cpt_relate')->where('cpt', '=', $billing->cpt)->first();
+				if ($cpt_query) {
+					$cpt_result = DB::table('cpt_relate')->where('cpt', '=', $billing->cpt)->first();
+				} else {
+					$cpt_result = DB::table('cpt')->where('cpt', '=', $billing->cpt)->first();
+				}
+				$provider_info2 = User::find($encounters_row->user_id);
+				$encounters_file = str_replace('?encounter_cc?', $encounters_row->encounter_cc, $encounters_file);
+				$encounters_file = str_replace('?encounter_number?', $encounters_row->eid, $encounters_file);
+				$encounters_file = str_replace('?encounter_code?', $billing->cpt, $encounters_file);
+				$encounters_file = str_replace('?encounter_code_desc?', $cpt_result->cpt_description, $encounters_file);
+				$encounters_file = str_replace('?encounter_provider?', $encounters_row->encounter_provider, $encounters_file);
+				$encounters_file = str_replace('?encounter_dos1?', date('m-d-Y', $this->human_to_unix($encounters_row->encounter_DOS)), $encounters_file);
+				$encounters_file = str_replace('?provider_firstname?', $provider_info2->firstname, $encounters_file);
+				$encounters_file = str_replace('?provider_lastname?', $provider_info2->lastname, $encounters_file);
+				$encounters_file = str_replace('?provider_title?', $provider_info2->title, $encounters_file);
+				$encounters_file = str_replace('?encounter_dos?', date('Ymd', $this->human_to_unix($encounters_row->encounter_DOS)), $encounters_file);
+				$encounters_file = str_replace('?practiceinfo_street_address?', $practice_info->street_address1, $encounters_file);
+				$encounters_file = str_replace('?practiceinfo_city?', $practice_info->city, $encounters_file);
+				$encounters_file = str_replace('?practiceinfo_state?', $practice_info->state, $encounters_file);
+				$encounters_file = str_replace('?practiceinfo_zip?', $practice_info->zip, $encounters_file);
+				$encounters_file = str_replace('?practiceinfo_phone?', $practice_info->phone, $encounters_file);
+				$encounters_file = str_replace('?practice_name?', $practice_info->practice_name, $encounters_file);
+				$encounter_random_id1 = $this->gen_uuid();
+				$encounter_random_id2 = $this->gen_uuid();
+				$encounter_random_id3 = $this->gen_uuid();
+				$encounters_file = str_replace('?encounter_random_id1?', $encounter_random_id1, $encounters_file);
+				$encounters_file = str_replace('?encounter_random_id2?', $encounter_random_id2, $encounters_file);
+				$assessment_info1 = Assessment::find($encounters_row->eid);
+				$dx_array[] = $assessment_info1->assessment_icd1;
+				if ($assessment_info1->assessment_icd2 != "") {
+					$dx_array[] = $assessment_info1->assessment_icd2;
+				}
+				if ($assessment_info1->assessment_icd3 != "") {
+					$dx_array[] = $assessment_info1->assessment_icd3;
+				}
+				if ($assessment_info1->assessment_icd4 != "") {
+					$dx_array[] = $assessment_info1->assessment_icd4;
+				}
+				if ($assessment_info1->assessment_icd5 != "") {
+					$dx_array[] = $assessment_info1->assessment_icd5;
+				}
+				if ($assessment_info1->assessment_icd6 != "") {
+					$dx_array[] = $assessment_info1->assessment_icd6;
+				}
+				if ($assessment_info1->assessment_icd7 != "") {
+					$dx_array[] = $assessment_info1->assessment_icd7;
+				}
+				if ($assessment_info1->assessment_icd8 != "") {
+					$dx_array[] = $assessment_info1->assessment_icd8;
+				}
+				$encounter_diagnosis = '';
+				foreach ($dx_array as $dx_item) {
+					$dx_file = file_get_contents(__DIR__.'/../../public/encounter_diagnosis.xml');
+					$dx_random_id1 = $this->gen_uuid();
+					$dx_random_id2 = $this->gen_uuid();
+					$dx_random_id3 = $this->gen_uuid();
+					$dx_file = str_replace('?dx_random_id1?', $dx_random_id1, $dx_file);
+					$dx_file = str_replace('?dx_random_id2?', $dx_random_id2, $dx_file);
+					$dx_file = str_replace('?dx_random_id3?', $dx_random_id3, $dx_file);
+					$dx_file = str_replace('?icd9?', $dx_item, $dx_file);
+					$dx_file = str_replace('?encounter_dos?', date('Ymd', $this->human_to_unix($encounter_info->encounter_DOS)), $dx_file);
+					$dx_info = DB::table('icd9')->where('icd9', '=', $dx_item)->first();
+					$dx_file = str_replace('?icd9_description?', $dx_info->icd9_description, $dx_file);
+					$encounter_diagnosis .= $dx_file;
+				}
+				$encounters_file = str_replace('?encounter_diagnosis?', $encounter_diagnosis, $encounters_file);
+				$encounters_file_final .= $encounters_file;
+				$e++;
 			}
-			$provider_info2 = User::find($encounters_row->user_id);
-			$encounters_file = str_replace('?encounter_cc?', $encounters_row->encounter_cc, $encounters_file);
-			$encounters_file = str_replace('?encounter_number?', $encounters_row->eid, $encounters_file);
-			$encounters_file = str_replace('?encounter_code?', $billing->cpt, $encounters_file);
-			$encounters_file = str_replace('?encounter_code_desc?', $cpt_result->cpt_description, $encounters_file);
-			$encounters_file = str_replace('?encounter_provider?', $encounters_row->encounter_provider, $encounters_file);
-			$encounters_file = str_replace('?encounter_dos1?', date('m-d-Y', $this->human_to_unix($encounters_row->encounter_DOS)), $encounters_file);
-			$encounters_file = str_replace('?provider_firstname?', $provider_info2->firstname, $encounters_file);
-			$encounters_file = str_replace('?provider_lastname?', $provider_info2->lastname, $encounters_file);
-			$encounters_file = str_replace('?provider_title?', $provider_info2->title, $encounters_file);
-			$encounters_file = str_replace('?encounter_dos?', date('Ymd', $this->human_to_unix($encounters_row->encounter_DOS)), $encounters_file);
-			$encounters_file = str_replace('?practiceinfo_street_address?', $practice_info->street_address1, $encounters_file);
-			$encounters_file = str_replace('?practiceinfo_city?', $practice_info->city, $encounters_file);
-			$encounters_file = str_replace('?practiceinfo_state?', $practice_info->state, $encounters_file);
-			$encounters_file = str_replace('?practiceinfo_zip?', $practice_info->zip, $encounters_file);
-			$encounters_file = str_replace('?practiceinfo_phone?', $practice_info->phone, $encounters_file);
-			$encounters_file = str_replace('?practice_name?', $practice_info->practice_name, $encounters_file);
-			$encounter_random_id1 = $this->gen_uuid();
-			$encounter_random_id2 = $this->gen_uuid();
-			$encounter_random_id3 = $this->gen_uuid();
-			$encounters_file = str_replace('?encounter_random_id1?', $encounter_random_id1, $encounters_file);
-			$encounters_file = str_replace('?encounter_random_id2?', $encounter_random_id2, $encounters_file);
-			$assessment_info1 = Assessment::find($encounters_row->eid);
-			$dx_array[] = $assessment_info1->assessment_icd1;
-			if ($assessment_info1->assessment_icd2 != "") {
-				$dx_array[] = $assessment_info1->assessment_icd2;
-			}
-			if ($assessment_info1->assessment_icd3 != "") {
-				$dx_array[] = $assessment_info1->assessment_icd3;
-			}
-			if ($assessment_info1->assessment_icd4 != "") {
-				$dx_array[] = $assessment_info1->assessment_icd4;
-			}
-			if ($assessment_info1->assessment_icd5 != "") {
-				$dx_array[] = $assessment_info1->assessment_icd5;
-			}
-			if ($assessment_info1->assessment_icd6 != "") {
-				$dx_array[] = $assessment_info1->assessment_icd6;
-			}
-			if ($assessment_info1->assessment_icd7 != "") {
-				$dx_array[] = $assessment_info1->assessment_icd7;
-			}
-			if ($assessment_info1->assessment_icd8 != "") {
-				$dx_array[] = $assessment_info1->assessment_icd8;
-			}
-			$encounter_diagnosis = '';
-			foreach ($dx_array as $dx_item) {
-				$dx_file = file_get_contents(__DIR__.'/../../public/encounter_diagnosis.xml');
-				$dx_random_id1 = $this->gen_uuid();
-				$dx_random_id2 = $this->gen_uuid();
-				$dx_random_id3 = $this->gen_uuid();
-				$dx_file = str_replace('?dx_random_id1?', $dx_random_id1, $dx_file);
-				$dx_file = str_replace('?dx_random_id2?', $dx_random_id2, $dx_file);
-				$dx_file = str_replace('?dx_random_id3?', $dx_random_id3, $dx_file);
-				$dx_file = str_replace('?icd9?', $dx_item, $dx_file);
-				$dx_file = str_replace('?encounter_dos?', date('Ymd', $this->human_to_unix($encounter_info->encounter_DOS)), $dx_file);
-				$dx_info = DB::table('icd9')->where('icd9', '=', $dx_item)->first();
-				$dx_file = str_replace('?icd9_description?', $dx_info->icd9_description, $dx_file);
-				$encounter_diagnosis .= $dx_file;
-			}
-			$encounters_file = str_replace('?encounter_diagnosis?', $encounter_diagnosis, $encounters_file);
-			$encounters_file_final .= $encounters_file;
-			$e++;
 		}
 		$ccda = str_replace('?encounters_table?', $encounters_table, $ccda);
 		$ccda = str_replace('?encounters_file?', $encounters_file_final, $ccda);
@@ -3617,59 +3639,61 @@ class BaseController extends Controller {
 		}
 		$ccda = str_replace('?med_table?', $med_table, $ccda);
 		$ccda = str_replace('?med_file?', $med_file_final, $ccda);
-		$orders_query = DB::table('orders')->where('eid', '=', $recent_encounter_query->eid)->get();
 		$orders_table = "";
 		$orders_file_final = "";
-		if ($orders_query) {
-			foreach ($orders_query as $orders_row) {
-				if ($orders_row->orders_labs != '') {
-					$orders_labs_array = explode("\n",$orders_row->orders_labs);
-					$n1 = 1;
-					foreach ($orders_labs_array as $orders_labs_row) {
-						$orders_table .= "<tr>";
-						$orders_table .= "<td><content ID='orders_labs_" . $n1 . "'>" . $orders_labs_row . "</td>";
-						$orders_table .= "<td>" . date('m-d-Y', $this->human_to_unix($orders_row->orders_date)) . "</td>";
-						$orders_table .= "</tr>";
-						$orders_file_final .= $this->get_snomed_code($orders_labs_row, $orders_row->orders_date, '#orders_lab_' . $n1);
-						$n1++;
-					}
-				}
-				if ($orders_row->orders_radiology != '') {
-					$orders_rad_array = explode("\n",$orders_row->orders_radiology);
-					$n2 = 1;
-					foreach ($orders_rad_array as $orders_rad_row) {
-						$orders_table .= "<tr>";
-						$orders_table .= "<td><content ID='orders_rad_" . $n2 . "'>" . $orders_rad_row . "</td>";
-						$orders_table .= "<td>" . date('m-d-Y', $this->human_to_unix($orders_row->orders_date)) . "</td>";
-						$orders_table .= "</tr>";
-						$orders_file_final .= $this->get_snomed_code($orders_rad_row, $orders_row->orders_date, '#orders_rad_' . $n2);
-						$n2++;
-					}
-				}
-				if ($orders_row->orders_cp != '') {
-					$orders_cp_array = explode("\n",$orders_row->orders_cp);
-					$n3 = 1;
-					foreach ($orders_cp_array as $orders_cp_row) {
-						$orders_table .= "<tr>";
-						$orders_table .= "<td><content ID='orders_cp_" . $n3 . "'>" . $orders_cp_row . "</td>";
-						$orders_table .= "<td>" . date('m-d-Y', $this->human_to_unix($orders_row->orders_date)) . "</td>";
-						$orders_table .= "</tr>";
-						$orders_file_final .= $this->get_snomed_code($orders_cp_row, $orders_row->orders_date, '#orders_cp_' . $n3);
-						$n3++;
-					}
-				}
-				if ($orders_row->orders_referrals != '') {
-					$referral_orders = explode("\nRequested action:\n",$orders_row->orders_referrals);
-					if (count($referral_orders) > 1) {
-						$orders_ref_array = explode("\n",$referral_orders[0]);
-						$n4 = 1;
-						foreach ($orders_ref_array as $orders_ref_row) {
+		if ($recent_encounter_query) {
+			$orders_query = DB::table('orders')->where('eid', '=', $recent_encounter_query->eid)->get();
+			if ($orders_query) {
+				foreach ($orders_query as $orders_row) {
+					if ($orders_row->orders_labs != '') {
+						$orders_labs_array = explode("\n",$orders_row->orders_labs);
+						$n1 = 1;
+						foreach ($orders_labs_array as $orders_labs_row) {
 							$orders_table .= "<tr>";
-							$orders_table .= "<td><content ID='orders_ref_" . $n4 . "'>" . $orders_ref_row . "</td>";
+							$orders_table .= "<td><content ID='orders_labs_" . $n1 . "'>" . $orders_labs_row . "</td>";
 							$orders_table .= "<td>" . date('m-d-Y', $this->human_to_unix($orders_row->orders_date)) . "</td>";
 							$orders_table .= "</tr>";
-							$orders_file_final .= $this->get_snomed_code($orders_ref_row, $orders_row->orders_date, '#orders_ref_' . $n4);
-							$n4++;
+							$orders_file_final .= $this->get_snomed_code($orders_labs_row, $orders_row->orders_date, '#orders_lab_' . $n1);
+							$n1++;
+						}
+					}
+					if ($orders_row->orders_radiology != '') {
+						$orders_rad_array = explode("\n",$orders_row->orders_radiology);
+						$n2 = 1;
+						foreach ($orders_rad_array as $orders_rad_row) {
+							$orders_table .= "<tr>";
+							$orders_table .= "<td><content ID='orders_rad_" . $n2 . "'>" . $orders_rad_row . "</td>";
+							$orders_table .= "<td>" . date('m-d-Y', $this->human_to_unix($orders_row->orders_date)) . "</td>";
+							$orders_table .= "</tr>";
+							$orders_file_final .= $this->get_snomed_code($orders_rad_row, $orders_row->orders_date, '#orders_rad_' . $n2);
+							$n2++;
+						}
+					}
+					if ($orders_row->orders_cp != '') {
+						$orders_cp_array = explode("\n",$orders_row->orders_cp);
+						$n3 = 1;
+						foreach ($orders_cp_array as $orders_cp_row) {
+							$orders_table .= "<tr>";
+							$orders_table .= "<td><content ID='orders_cp_" . $n3 . "'>" . $orders_cp_row . "</td>";
+							$orders_table .= "<td>" . date('m-d-Y', $this->human_to_unix($orders_row->orders_date)) . "</td>";
+							$orders_table .= "</tr>";
+							$orders_file_final .= $this->get_snomed_code($orders_cp_row, $orders_row->orders_date, '#orders_cp_' . $n3);
+							$n3++;
+						}
+					}
+					if ($orders_row->orders_referrals != '') {
+						$referral_orders = explode("\nRequested action:\n",$orders_row->orders_referrals);
+						if (count($referral_orders) > 1) {
+							$orders_ref_array = explode("\n",$referral_orders[0]);
+							$n4 = 1;
+							foreach ($orders_ref_array as $orders_ref_row) {
+								$orders_table .= "<tr>";
+								$orders_table .= "<td><content ID='orders_ref_" . $n4 . "'>" . $orders_ref_row . "</td>";
+								$orders_table .= "<td>" . date('m-d-Y', $this->human_to_unix($orders_row->orders_date)) . "</td>";
+								$orders_table .= "</tr>";
+								$orders_file_final .= $this->get_snomed_code($orders_ref_row, $orders_row->orders_date, '#orders_ref_' . $n4);
+								$n4++;
+							}
 						}
 					}
 				}
@@ -3715,119 +3739,125 @@ class BaseController extends Controller {
 		}
 		$ccda = str_replace('?issues_table?', $issues_table, $ccda);
 		$ccda = str_replace('?issues_file?', $issues_file_final, $ccda);
-		$proc_query = DB::table('procedure')->where('eid', '=', $recent_encounter_query->eid)->get();
 		$proc_table = "";
 		$proc_file_final = "";
-		if ($proc_query) {
-			$m = 1;
-			foreach ($proc_query as $proc_row) {
-				$proc_table .= "<tr>";
-				$proc_table .= "<td><content ID='proc" . $m . "'>" . $proc_row->proc_type . "</content></td>";
-				$proc_table .= "<td>" . date('m-d-Y', $this->human_to_unix($proc_row->proc_date)) . "</td>";
-				$proc_table .= "</tr>";
-				$proc_file = file_get_contents(__DIR__.'/../../public/proc.xml');
-				$proc_file = str_replace('?proc_date?', date('Ymd', $this->human_to_unix($proc_row->proc_date)), $proc_file);
-				$proc_file = str_replace('?proc_type?', $proc_row->proc_type, $proc_file);
-				$proc_file = str_replace('?proc_cpt?', $proc_row->proc_cpt, $proc_file);
-				$proc_file = str_replace('?practiceinfo_street_address?', $practice_info->street_address1, $proc_file);
-				$proc_file = str_replace('?practiceinfo_city?', $practice_info->city, $proc_file);
-				$proc_file = str_replace('?practiceinfo_state?', $practice_info->state, $proc_file);
-				$proc_file = str_replace('?practiceinfo_zip?', $practice_info->zip, $proc_file);
-				$proc_file = str_replace('?practiceinfo_phone?', $practice_info->phone, $proc_file);
-				$proc_file = str_replace('?practice_name?', $practice_info->practice_name, $proc_file);
-				$proc_number = "#proc" . $m;
-				$proc_random_id1 = $this->gen_uuid();
-				$proc_file = str_replace('?proc_random_id1?', $proc_random_id1, $proc_file);
-				$proc_file_final .= $proc_file;
-				$m++;
+		if ($recent_encounter_query) {
+			$proc_query = DB::table('procedure')->where('eid', '=', $recent_encounter_query->eid)->get();
+			if ($proc_query) {
+				$m = 1;
+				foreach ($proc_query as $proc_row) {
+					$proc_table .= "<tr>";
+					$proc_table .= "<td><content ID='proc" . $m . "'>" . $proc_row->proc_type . "</content></td>";
+					$proc_table .= "<td>" . date('m-d-Y', $this->human_to_unix($proc_row->proc_date)) . "</td>";
+					$proc_table .= "</tr>";
+					$proc_file = file_get_contents(__DIR__.'/../../public/proc.xml');
+					$proc_file = str_replace('?proc_date?', date('Ymd', $this->human_to_unix($proc_row->proc_date)), $proc_file);
+					$proc_file = str_replace('?proc_type?', $proc_row->proc_type, $proc_file);
+					$proc_file = str_replace('?proc_cpt?', $proc_row->proc_cpt, $proc_file);
+					$proc_file = str_replace('?practiceinfo_street_address?', $practice_info->street_address1, $proc_file);
+					$proc_file = str_replace('?practiceinfo_city?', $practice_info->city, $proc_file);
+					$proc_file = str_replace('?practiceinfo_state?', $practice_info->state, $proc_file);
+					$proc_file = str_replace('?practiceinfo_zip?', $practice_info->zip, $proc_file);
+					$proc_file = str_replace('?practiceinfo_phone?', $practice_info->phone, $proc_file);
+					$proc_file = str_replace('?practice_name?', $practice_info->practice_name, $proc_file);
+					$proc_number = "#proc" . $m;
+					$proc_random_id1 = $this->gen_uuid();
+					$proc_file = str_replace('?proc_random_id1?', $proc_random_id1, $proc_file);
+					$proc_file_final .= $proc_file;
+					$m++;
+				}
 			}
 		}
 		$ccda = str_replace('?proc_table?', $proc_table, $ccda);
 		$ccda = str_replace('?proc_file?', $proc_file_final, $ccda);
-		$other_history_row = DB::table('other_history')->where('eid', '=', $recent_encounter_query->eid)->first();
 		$other_history_table = "";
 		$other_history_file = "";
-		if ($other_history_row) {
-			if ($other_history_row->oh_tobacco != '') {
-				$other_history_table .= "<td>Smoking Status</td>";
-				$other_history_table .= "<td><content ID='other_history1'>" . $other_history_row->oh_tobacco . "</td>";
-				$other_history_table .= "<td>" . date('m-d-Y', $this->human_to_unix($other_history_row->oh_date)) . "</td>";
-				$other_history_table .= "</tr>";
-				$other_history_table .= "<tr>";
-				if ($demographics->tobacco == 'yes') {
-					$other_history_code = "77176002";
-					$other_history_description = "Smoker";
-				} else {
-					$other_history_code = "8392000";
-					$other_history_description = "Non-Smoker";
+		if ($recent_encounter_query) {
+			$other_history_row = DB::table('other_history')->where('eid', '=', $recent_encounter_query->eid)->first();
+			if ($other_history_row) {
+				if ($other_history_row->oh_tobacco != '') {
+					$other_history_table .= "<td>Smoking Status</td>";
+					$other_history_table .= "<td><content ID='other_history1'>" . $other_history_row->oh_tobacco . "</td>";
+					$other_history_table .= "<td>" . date('m-d-Y', $this->human_to_unix($other_history_row->oh_date)) . "</td>";
+					$other_history_table .= "</tr>";
+					$other_history_table .= "<tr>";
+					if ($demographics->tobacco == 'yes') {
+						$other_history_code = "77176002";
+						$other_history_description = "Smoker";
+					} else {
+						$other_history_code = "8392000";
+						$other_history_description = "Non-Smoker";
+					}
+					$other_history_file = file_get_contents(__DIR__.'/../../public/social_history.xml');
+					$other_history_file = str_replace('?other_history_code?', $other_history_code, $other_history_file);
+					$other_history_file = str_replace('?other_history_description?', $other_history_description, $other_history_file);
+					$other_history_file = str_replace('?other_history_date?', date('Ymd', $this->human_to_unix($other_history_row->oh_date)), $other_history_file);
 				}
-				$other_history_file = file_get_contents(__DIR__.'/../../public/social_history.xml');
-				$other_history_file = str_replace('?other_history_code?', $other_history_code, $other_history_file);
-				$other_history_file = str_replace('?other_history_description?', $other_history_description, $other_history_file);
-				$other_history_file = str_replace('?other_history_date?', date('Ymd', $this->human_to_unix($other_history_row->oh_date)), $other_history_file);
 			}
 		}
 		$ccda = str_replace('?other_history_table?', $other_history_table, $ccda);
 		$ccda = str_replace('?other_history_file?', $other_history_file, $ccda);
-		$vitals_row = DB::table('vitals')->where('eid', '=', $recent_encounter_query->eid)->first();
 		$vitals_table = "";
 		$vitals_file_final = "";
-		if ($vitals_row) {
-			$vitals_table .= '<thead><tr><th align="right">Date / Time: </th><th>' . date('m-d-Y h:i A', $this->human_to_unix($vitals_row->vitals_date)) . '</th></tr></thead><tbody>';
-			$vitals_file_final .= '               <entry typeCode="DRIV"><organizer classCode="CLUSTER" moodCode="EVN"><templateId root="2.16.840.1.113883.10.20.22.4.26"/><id root="';
-			$vitals_file_final .= $this->gen_uuid() . '"/><code code="46680005" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED-CT" displayName="Vital signs"/><statusCode code="completed"/><effectiveTime value="';
-			$vitals_file_final .= date('Ymd', $this->human_to_unix($vitals_row->vitals_date)) . '"/>';
-			if ($vitals_row->height != '') {
-				$vitals_table .= '<tr><th align="left">Height</th><td><content ID="vit_height">';
-				$vitals_table .= $vitals_row->height . ' ' . $practice_info->height_unit;
-				$vitals_table .= '</content></td></tr>';
-				$vitals_code1 = "8302-2";
-				$vitals_description1 = "Body height";
-				$vitals_file = file_get_contents(__DIR__.'/../../public/vitals.xml');
-				$vitals_file = str_replace('?vitals_code?', $vitals_code1, $vitals_file);
-				$vitals_file = str_replace('?vitals_description?', $vitals_description1, $vitals_file);
-				$vitals_file = str_replace('?vitals_date?', date('Ymd', $this->human_to_unix($vitals_row->vitals_date)), $vitals_file);
-				$vitals_file = str_replace('?vitals_id?', '#vit_height', $vitals_file);
-				$vitals_file = str_replace('?vitals_value?', $vitals_row->height, $vitals_file);
-				$vitals_file = str_replace('?vitals_unit?', $practice_info->height_unit, $vitals_file);
-				$vitals_random_id1 = $this->gen_uuid();
-				$vitals_file = str_replace('?vitals_random_id1?', $vitals_random_id1, $vitals_file);
+		if ($recent_encounter_query) {
+			$vitals_row = DB::table('vitals')->where('eid', '=', $recent_encounter_query->eid)->first();
+			if ($vitals_row) {
+				$vitals_table .= '<thead><tr><th align="right">Date / Time: </th><th>' . date('m-d-Y h:i A', $this->human_to_unix($vitals_row->vitals_date)) . '</th></tr></thead><tbody>';
+				$vitals_file_final .= '               <entry typeCode="DRIV"><organizer classCode="CLUSTER" moodCode="EVN"><templateId root="2.16.840.1.113883.10.20.22.4.26"/><id root="';
+				$vitals_file_final .= $this->gen_uuid() . '"/><code code="46680005" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED-CT" displayName="Vital signs"/><statusCode code="completed"/><effectiveTime value="';
+				$vitals_file_final .= date('Ymd', $this->human_to_unix($vitals_row->vitals_date)) . '"/>';
+				if ($vitals_row->height != '') {
+					$vitals_table .= '<tr><th align="left">Height</th><td><content ID="vit_height">';
+					$vitals_table .= $vitals_row->height . ' ' . $practice_info->height_unit;
+					$vitals_table .= '</content></td></tr>';
+					$vitals_code1 = "8302-2";
+					$vitals_description1 = "Body height";
+					$vitals_file = file_get_contents(__DIR__.'/../../public/vitals.xml');
+					$vitals_file = str_replace('?vitals_code?', $vitals_code1, $vitals_file);
+					$vitals_file = str_replace('?vitals_description?', $vitals_description1, $vitals_file);
+					$vitals_file = str_replace('?vitals_date?', date('Ymd', $this->human_to_unix($vitals_row->vitals_date)), $vitals_file);
+					$vitals_file = str_replace('?vitals_id?', '#vit_height', $vitals_file);
+					$vitals_file = str_replace('?vitals_value?', $vitals_row->height, $vitals_file);
+					$vitals_file = str_replace('?vitals_unit?', $practice_info->height_unit, $vitals_file);
+					$vitals_random_id1 = $this->gen_uuid();
+					$vitals_file = str_replace('?vitals_random_id1?', $vitals_random_id1, $vitals_file);
+				}
+				if ($vitals_row->weight != '') {
+					$vitals_table .= '<tr><th align="left">Weight</th><td><content ID="vit_weight">';
+					$vitals_table .= $vitals_row->weight . ' ' . $practice_info->weight_unit;
+					$vitals_table .= '</content></td></tr>';
+					$vitals_code2 = "3141-9";
+					$vitals_description2 = "Body weight Measured";
+					$vitals_file = file_get_contents(__DIR__.'/../../public/vitals.xml');
+					$vitals_file = str_replace('?vitals_code?', $vitals_code2, $vitals_file);
+					$vitals_file = str_replace('?vitals_description?', $vitals_description2, $vitals_file);
+					$vitals_file = str_replace('?vitals_date?', date('Ymd', $this->human_to_unix($vitals_row->vitals_date)), $vitals_file);
+					$vitals_file = str_replace('?vitals_id?', '#vit_weight', $vitals_file);
+					$vitals_file = str_replace('?vitals_value?', $vitals_row->weight, $vitals_file);
+					$vitals_file = str_replace('?vitals_unit?', $practice_info->weight_unit, $vitals_file);
+					$vitals_random_id2 = $this->gen_uuid();
+					$vitals_file = str_replace('?vitals_random_id1?', $vitals_random_id2, $vitals_file);
+				}
+				if ($vitals_row->bp_systolic != '' && $vitals_row->bp_diastolic) {
+					$vitals_table .= '<tr><th align="left">Blood Pressure</th><td><content ID="vit_bp">';
+					$vitals_table .= $vitals_row->bp_systolic . '/' . $vitals_row->bp_diastolic . ' mmHg';
+					$vitals_table .= '</content></td></tr>';
+					$vitals_code3 = "8480-6";
+					$vitals_description3 = "Intravascular Systolic";
+					$vitals_file = file_get_contents(__DIR__.'/../../public/vitals.xml');
+					$vitals_file = str_replace('?vitals_code?', $vitals_code3, $vitals_file);
+					$vitals_file = str_replace('?vitals_description?', $vitals_description3, $vitals_file);
+					$vitals_file = str_replace('?vitals_date?', date('Ymd', $this->human_to_unix($vitals_row->vitals_date)), $vitals_file);
+					$vitals_file = str_replace('?vitals_id?', '#vit_bp', $vitals_file);
+					$vitals_file = str_replace('?vitals_value?', $vitals_row->bp_systolic, $vitals_file);
+					$vitals_file = str_replace('?vitals_unit?', "mmHg", $vitals_file);
+					$vitals_random_id3 = $this->gen_uuid();
+					$vitals_file = str_replace('?vitals_random_id1?', $vitals_random_id3, $vitals_file);
+				} 
+				$vitals_table .= '</tbody>';
+				$vitals_file_final .= '                  </organizer>';
+				$vitals_file_final .= '               </entry>';
 			}
-			if ($vitals_row->weight != '') {
-				$vitals_table .= '<tr><th align="left">Weight</th><td><content ID="vit_weight">';
-				$vitals_table .= $vitals_row->weight . ' ' . $practice_info->weight_unit;
-				$vitals_table .= '</content></td></tr>';
-				$vitals_code2 = "3141-9";
-				$vitals_description2 = "Body weight Measured";
-				$vitals_file = file_get_contents(__DIR__.'/../../public/vitals.xml');
-				$vitals_file = str_replace('?vitals_code?', $vitals_code2, $vitals_file);
-				$vitals_file = str_replace('?vitals_description?', $vitals_description2, $vitals_file);
-				$vitals_file = str_replace('?vitals_date?', date('Ymd', $this->human_to_unix($vitals_row->vitals_date)), $vitals_file);
-				$vitals_file = str_replace('?vitals_id?', '#vit_weight', $vitals_file);
-				$vitals_file = str_replace('?vitals_value?', $vitals_row->weight, $vitals_file);
-				$vitals_file = str_replace('?vitals_unit?', $practice_info->weight_unit, $vitals_file);
-				$vitals_random_id2 = $this->gen_uuid();
-				$vitals_file = str_replace('?vitals_random_id1?', $vitals_random_id2, $vitals_file);
-			}
-			if ($vitals_row->bp_systolic != '' && $vitals_row->bp_diastolic) {
-				$vitals_table .= '<tr><th align="left">Blood Pressure</th><td><content ID="vit_bp">';
-				$vitals_table .= $vitals_row->bp_systolic . '/' . $vitals_row->bp_diastolic . ' mmHg';
-				$vitals_table .= '</content></td></tr>';
-				$vitals_code3 = "8480-6";
-				$vitals_description3 = "Intravascular Systolic";
-				$vitals_file = file_get_contents(__DIR__.'/../../public/vitals.xml');
-				$vitals_file = str_replace('?vitals_code?', $vitals_code3, $vitals_file);
-				$vitals_file = str_replace('?vitals_description?', $vitals_description3, $vitals_file);
-				$vitals_file = str_replace('?vitals_date?', date('Ymd', $this->human_to_unix($vitals_row->vitals_date)), $vitals_file);
-				$vitals_file = str_replace('?vitals_id?', '#vit_bp', $vitals_file);
-				$vitals_file = str_replace('?vitals_value?', $vitals_row->bp_systolic, $vitals_file);
-				$vitals_file = str_replace('?vitals_unit?', "mmHg", $vitals_file);
-				$vitals_random_id3 = $this->gen_uuid();
-				$vitals_file = str_replace('?vitals_random_id1?', $vitals_random_id3, $vitals_file);
-			} 
-			$vitals_table .= '</tbody>';
-			$vitals_file_final .= '                  </organizer>';
-			$vitals_file_final .= '               </entry>';
 		}
 		$ccda = str_replace('?vitals_table?', $vitals_table, $ccda);
 		$ccda = str_replace('?vitals_file?', $vitals_file_final, $ccda);

@@ -20,6 +20,7 @@
 						<br><?php echo HTML::image('images/schedule.png', 'Setup schedule', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_admin_schedule">Administer schedule</a>
 						<br><?php echo HTML::image('images/newencounter.png', 'View system logs', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_logs">View system logs</a>
 						<br><?php echo HTML::image('images/printmgr.png', 'Export all charts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="print_entire_charts" title="">Export all charts</a>
+						<br><?php echo HTML::image('images/printmgr.png', 'Export all charts in C-CDA format', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="print_entire_ccda" title="">Export all charts in C-CDA format</a>
 						<br><?php echo HTML::image('images/download.png', 'Export all patient Demographics', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="generate_csv_patient_demographics" title="">Export all patient demographics</a>
 						<?php if($saas_admin == "y") { ?>
 							<br><?php echo HTML::image('images/kdisknav.png', 'Restore the database', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="restore_database_link">Restore the database</a>

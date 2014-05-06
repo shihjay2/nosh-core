@@ -726,7 +726,7 @@ $(document).ready(function() {
 					$("#print_entire_charts_progress_div").show();
 					$.ajax({
 						type: "POST",
-						url: "ajaxdashboard/print_entire_chart",
+						url: "ajaxdashboard/print-entire-chart",
 						dataType: 'json',
 						success: function(data1){
 							if (data1.response == true) {
@@ -754,6 +754,9 @@ $(document).ready(function() {
 			}
 		});
 	}
+	$("#print_entire_ccda").click(function(){
+		window.open("print_entire_ccda");
+	}).tooltip({ content: "Clicking on this will create a ZIP file with individual C-CDA files for every patient in your practice." });
 	$("#generate_csv_patient_demographics").click(function(){
 		$.ajax({
 			type: "POST",
