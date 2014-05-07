@@ -221,7 +221,7 @@ class AjaxScheduleController extends BaseController {
 				$events = $this->add_closed2('tuesday', $row3->maxTime, $row3->tue_c, $events, $start, $end);
 			}
 		} else {
-			$events = $this->add_closed3('tuesday', $minTime, $maxTime, $events, $start, $end);
+			$events = $this->add_closed3('tuesday', $row3->minTime, $row3->maxTime, $events, $start, $end);
 		}
 		if ($row3->wed_o != '') {
 			$comp4o = strtotime($row3->wed_o);

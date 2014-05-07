@@ -11,8 +11,8 @@
 |
 */
 
-Route::any('/', array('as' => 'home', 'before' => 'version_check|installfix|needinstall|update|auth', 'uses' => 'HomeController@dashboard'));
-Route::any('login', array('as' => 'login', 'uses' => 'LoginController@action'));
+Route::any('/', array('as' => 'home', 'before' => 'force.ssl|version_check|installfix|needinstall|update|auth', 'uses' => 'HomeController@dashboard'));
+Route::any('login', array('as' => 'login', 'before' => 'force.ssl', 'uses' => 'LoginController@action'));
 Route::get('start/{practicehandle}', function($practicehandle = null)
 {
 	if ($practicehandle != null) {
@@ -23,13 +23,13 @@ Route::get('start/{practicehandle}', function($practicehandle = null)
 	}
 	return Redirect::to('/');
 });
-Route::get('install', array('as' => 'install', 'before' => 'installfix|noinstall', 'uses' => 'InstallController@view'));
+Route::get('install', array('as' => 'install', 'before' => 'force.ssl|installfix|noinstall', 'uses' => 'InstallController@view'));
 Route::get('install_fix', array('as' => 'install_fix', 'uses' => 'InstallController@install_fix'));
 Route::get('update', array('as' => 'update', 'uses' => 'AjaxInstallController@update'));
 Route::get('update_system', array('as' => 'update_system', 'uses' => 'BackupController@update_system'));
 Route::get('set_version', array('as' => 'set_version', 'uses' => 'AjaxInstallController@set_version'));
-Route::get('bluebutton/{id}', array('as' => 'bluebutton', 'before' => 'auth', 'uses' => 'AjaxCommonController@bluebutton'));
-Route::group(array('before' => 'csrf_header'), function() {
+Route::get('bluebutton/{id}', array('as' => 'bluebutton', 'before' => 'force.ssl|auth', 'uses' => 'AjaxCommonController@bluebutton'));
+Route::group(array('before' => 'force.ssl|csrf_header'), function() {
 	Route::controller('ajaxinstall', 'AjaxInstallController');
 	Route::controller('ajaxlogin', 'AjaxLoginController');
 	Route::controller('ajaxdashboard', 'AjaxDashboardController');
@@ -38,18 +38,18 @@ Route::group(array('before' => 'csrf_header'), function() {
 	Route::controller('ajaxcommon', 'AjaxCommonController');
 	Route::controller('ajaxschedule', 'AjaxScheduleController');
 });
-Route::group(array('before' => 'csrf_header|session_check|acl1'), function() {
+Route::group(array('before' => 'force.ssl|csrf_header|session_check|acl1'), function() {
 	Route::controller('ajaxchart', 'AjaxChartController');
 	Route::controller('ajaxfinancial', 'AjaxFinancialController');
 	Route::controller('ajaxoffice', 'AjaxOfficeController');
 });
-Route::group(array('before' => 'csrf_header|session_check|acl2'), function() {
+Route::group(array('before' => 'force.ssl|csrf_header|session_check|acl2'), function() {
 	Route::controller('ajaxencounter', 'AjaxEncounterController');
 });
-Route::group(array('before' => 'csrf_header|session_check|acl5'), function() {
+Route::group(array('before' => 'force.ssl|csrf_header|session_check|acl5'), function() {
 	Route::controller('ajaxsetup', 'AjaxSetupController');
 });
-Route::group(array('before' => 'acl1'), function() {
+Route::group(array('before' => 'force.ssl|acl1'), function() {
 	Route::get('chart', array('as' => 'chart', 'uses' => 'ChartController@main'));
 	Route::get('messaging', array('as' => 'messaging', 'uses' => 'HomeController@showWelcome'));
 	Route::get('schedule', array('as' => 'schedule', 'uses' => 'HomeController@showWelcome'));
@@ -92,7 +92,7 @@ Route::group(array('before' => 'acl1'), function() {
 	Route::get('export_demographics/{type}', array('as' => 'export_demographics', 'uses' => 'ChartController@export_demographics'));
 	Route::get('export_address_csv', array('as' => 'export_address_csv', 'uses' => 'HomeController@export_address_csv'));
 });
-Route::group(array('before' => 'acl2'), function() {
+Route::group(array('before' => 'force.ssl|acl2'), function() {
 	Route::get('encounter', array('as' => 'encounter', function()
 	{
 		Session::put('encounter_active', 'y');
@@ -107,14 +107,14 @@ Route::group(array('before' => 'acl2'), function() {
 	Route::get('print_plan', array('as' => 'print_plan', 'uses' => 'AjaxEncounterController@print_plan'));
 	Route::post('photoupload', array('as' => 'photopload', 'uses' => 'AjaxChartController@photoupload'));
 });
-Route::group(array('before' => 'acl4'), function() {
+Route::group(array('before' => 'force.ssl|acl4'), function() {
 });
-Route::group(array('before' => 'acl5'), function() {
+Route::group(array('before' => 'force.ssl|acl5'), function() {
 	Route::post('practicelogoupload', array('as' => 'practicelogoupload', 'uses' => 'AjaxSetupController@practicelogoupload'));
 	Route::post('cpt_update', array('as' => 'cpt_update', 'uses' => 'AjaxSetupController@cpt_update'));
 	Route::get('print_entire_ccda', array('as' => 'print_entire_ccda', 'uses' => 'HomeController@print_entire_ccda'));
 });
-Route::get('logout', array('as' => 'logout', 'uses' => 'LoginController@logout'));
+Route::get('logout', array('as' => 'logout', 'before' => 'force.ssl', 'uses' => 'LoginController@logout'));
 Route::get('reminder', array('as' => 'reminder', 'uses' => 'ReminderController@reminder'));
 Route::get('fax', array('as' => 'fax', 'uses' => 'FaxController@fax'));
 Route::get('footerpdf', array("as" => "footerpdf", function()
@@ -270,6 +270,13 @@ Route::filter('acl5', function()
 		Session::flush();
 		header("HTTP/1.1 404 Page Not Found", true, 404);
 		exit("You cannot do this.");
+	}
+});
+
+Route::filter('force.ssl', function()
+{
+	if (!Request::secure()) {
+		return Redirect::secure(Request::path());
 	}
 });
 
