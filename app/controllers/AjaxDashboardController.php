@@ -1188,6 +1188,15 @@ class AjaxDashboardController extends BaseController {
 			} else {
 				DB::table('cpt_relate')->insert($data_relate);
 				$this->audit('Add');
+				$query = DB::table('cpt')->where('cpt', '=', Input::get('cpt'))->first();
+				if (!$query) {
+					$data_cpt = array(
+						'cpt' => Input::get('cpt'),
+						'cpt_description' => Input::get('cpt_description')
+					);
+					DB::table('cpt')->insert($data_cpt);
+					$this->audit('Add');
+				}
 				$arr['message'] = "  CPT added!";
 			}
 			$arr['charge'] = $charge;

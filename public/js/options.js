@@ -1282,5 +1282,9 @@ function doSearch(ev){
 }
 function gridReload(){ 
 	var mask = jQuery("#search_all_cpt").val();
-	jQuery("#cpt_list_config").setGridParam({url:"ajaxdashboard/cpt-list/"+mask,page:1}).trigger("reloadGrid");
+	if (mask != '') {
+		jQuery("#cpt_list_config").setGridParam({url:"ajaxdashboard/cpt-list/"+mask,page:1}).trigger("reloadGrid");
+	} else {
+		jQuery("#cpt_list_config").trigger("reloadGrid");
+	}
 }

@@ -24,6 +24,11 @@ class AjaxInstallController extends BaseController {
 		$phone = Input::get('phone');
 		$fax = Input::get('fax');
 		$documents_dir = Input::get('documents_dir');
+		// Clean up documents directory string
+		$check_string = substr($documents_dir, -1);
+		if ($check_string != '/') {
+			$documents_dir .= '/';
+		}
 		// Insert Administrator
 		$data1 = array(
 			'username' => $username,
@@ -54,11 +59,6 @@ class AjaxInstallController extends BaseController {
 			'active' => 'Y'
 		);
 		DB::table('practiceinfo')->insert($data2);
-		// Clean up documents directory string
-		$check_string = substr($documents_dir, -1);
-		if ($check_string != '/') {
-			$documents_dir .= '/';
-		}
 		// Insert groups
 		$data3 = array(
 			'id' => '1',
