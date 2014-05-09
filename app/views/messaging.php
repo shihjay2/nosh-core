@@ -60,10 +60,12 @@
 			<label for="messages_subject">Subject:</label>
 			<input type="text" name="subject" id="messages_subject" style="width:400px" class="text"/>
 		</div>
-		<div class="pure-control-group">
-			<label for="messages_patient">Concerning this patient (optional):</label>
-			<input type="text" name="patient_name" id="messages_patient" style="width:400px" class="text"/>
-		</div>
+		<?php if(Session::get('group_id') != '100') {?>
+			<div class="pure-control-group">
+				<label for="messages_patient">Concerning this patient (optional):</label>
+				<input type="text" name="patient_name" id="messages_patient" style="width:400px" class="text"/>
+			</div>
+		<?php }?>
 		<div class="pure-control-group">
 			<label for="messages_to">To:</label>
 			<select id="messages_to" name="message_to[]" style="width:400px" multiple="multiple" class="text multiselect"></select>
