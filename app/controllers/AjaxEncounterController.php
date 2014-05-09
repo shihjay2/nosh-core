@@ -110,12 +110,15 @@ class AjaxEncounterController extends BaseController {
 		$hpi = Hpi::find($eid);
 		$pe = Pe::find($eid);
 		$assessment = Assessment::find($eid);
+		$encounter = Encounters::find($eid);
 		$billing = Billing::where('eid', '=', $eid)->first();
 		if (!$hpi) {
 			$error .= "Missing History of Present Illness<br>";
 		}
-		if (!$pe) {
-			$error .= "Missing Physical Exam<br>";
+		if ($encounter->encounter_template == 'standardmedical') {
+			if (!$pe) {
+				$error .= "Missing Physical Exam<br>";
+			}
 		}
 		if (!$assessment) {
 			$error .= "Missing Assessment<br>";
