@@ -107,7 +107,7 @@
 			<div class="pure-u-1"><label for="messages_lab_location_address">Address:</label><input type="text" name="street_address1" id="messages_lab_location_address" class="text pure-input-1"/></div>
 			<div class="pure-u-1"><label for="messages_lab_location_address2">Address2:</label><input type="text" name="street_address2" id="messages_lab_location_address2" class="text pure-input-1"/></div>
 			<div class="pure-u-1-3"><label for="messages_lab_location_city">City:</label><input type="text" name="city" id="messages_lab_location_city" class="text pure-input-1"/></div>
-			<div class="pure-u-1-3"><label for="messages_lab_location_state">State:</label><select name="state" id="messages_lab_location_state" class="text pure-input-1"></div>
+			<div class="pure-u-1-3"><label for="messages_lab_location_state">State:</label><select name="state" id="messages_lab_location_state" class="text pure-input-1"></select></div>
 			<div class="pure-u-1-3"><label for="messages_lab_location_zip">Zip:</label><input type="text" name="zip" id="messages_lab_location_zip" class="text pure-input-1"/></div>
 			<div class="pure-u-1-3"><label for="messages_lab_location_phone">Phone:</label><input type="text" name="phone" id="messages_lab_location_phone" class="text pure-input-1"/></div>
 			<div class="pure-u-1-3"><label for="messages_lab_location_fax">Fax:</label><input type="text" name="fax" id="messages_lab_location_fax" class="text pure-input-1"/></div>
