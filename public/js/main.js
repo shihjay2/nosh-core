@@ -932,6 +932,21 @@ $(document).ready(function() {
 	});
 	var tz = jstz.determine();
 	$.cookie('nosh_tz', tz.name(), { path: '/' });
+	$.ajax({
+		url: "ajaxsearch/provider-select",
+		dataType: "json",
+		type: "POST",
+		success: function(data){
+			$("#messages_lab_provider_list").addOption({"":"Select a provider for the order."}, false);
+			$("#messages_lab_provider_list").addOption(data, false);
+			$("#messages_rad_provider_list").addOption({"":"Select a provider for the order."}, false);
+			$("#messages_rad_provider_list").addOption(data, false);
+			$("#messages_cp_provider_list").addOption({"":"Select a provider for the order."}, false);
+			$("#messages_cp_provider_list").addOption(data, false);
+			$("#messages_ref_provider_list").addOption({"":"Select a provider for the order."}, false);
+			$("#messages_ref_provider_list").addOption(data, false);
+		}
+	});
 });
 $(document).on("click", ".ui-jqgrid-titlebar", function() {
 	$(".ui-jqgrid-titlebar-close", this).click();

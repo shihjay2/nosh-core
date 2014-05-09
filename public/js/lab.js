@@ -56,16 +56,6 @@ $(document).ready(function() {
 			 	height: "100%",
 			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#messages_lab_list_pager',{search:false,edit:false,add:false,del:false});
-			$("#messages_lab_provider_list").removeOption(/./);
-			$.ajax({
-				url: "ajaxsearch/provider-select",
-				dataType: "json",
-				type: "POST",
-				success: function(data){
-					$("#messages_lab_provider_list").addOption({"":"Select a provider for the order."}, false);
-					$("#messages_lab_provider_list").addOption(data, false);
-				}
-			});
 		},
 		buttons: {
 			'Save': function() {

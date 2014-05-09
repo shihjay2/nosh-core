@@ -55,16 +55,6 @@ $(document).ready(function() {
 			 	height: "100%",
 			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#messages_ref_list_pager',{search:false,edit:false,add:false,del:false});
-			$("#messages_ref_provider_list").removeOption(/./);
-			$.ajax({
-				url: "ajaxsearch/provider-select",
-				dataType: "json",
-				type: "POST",
-				success: function(data){
-					$("#messages_ref_provider_list").addOption({"":"Select a provider for the order."}, false);
-					$("#messages_ref_provider_list").addOption(data, false);
-				}
-			});
 		},
 		buttons: {
 			'Save': function() {
