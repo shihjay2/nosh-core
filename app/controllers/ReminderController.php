@@ -342,20 +342,17 @@ class ReminderController extends BaseController {
 					}
 					if ($row3->rxl_ndcid != '') {
 						$ndcid = $row3->rxl_ndcid;
-						$generic_name = '';
-						$form = '';
-						$strength = '';
 					} else {
 						$ndcid = '';
-						$medication_parts1 = explode(", ", $row3->rxl_medication);
-						$generic_name = $medication_parts1[0];
-						if (isset($medication_parts[1])) {
-							$form = $medication_parts1[1];
-						} else {
-							$form = '';
-						}
-						$strength = $row3->rxl_dosage . " " . $row3->rxl_dosage_unit;
 					}
+					$medication_parts1 = explode(", ", $row3->rxl_medication);
+					$generic_name = $medication_parts1[0];
+					if (isset($medication_parts[1])) {
+						$form = $medication_parts1[1];
+					} else {
+						$form = '';
+					}
+					$strength = $row3->rxl_dosage . " " . $row3->rxl_dosage_unit;
 					if ($row3->rxl_sig != '') {
 						if(strpos($row3->rxl_sig, ' ') !== false) {
 							$sig_parts1 = explode(" ", $row3->rxl_sig);

@@ -3527,6 +3527,7 @@ class BaseController extends Controller {
 		$ccda = str_replace('?imm_table?', $imm_table, $ccda);
 		$ccda = str_replace('?imm_file?', $imm_file_final, $ccda);
 		$med_query = DB::table('rx_list')->where('pid', '=', $pid)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->get();
+		$sup_query = DB::table('sup_list')->where('pid', '=', $pid)->where('sup_date_inactive', '=', '0000-00-00 00:00:00')->get();
 		$med_table = "";
 		$med_file_final = "";
 		if ($med_query) {
@@ -3631,6 +3632,107 @@ class BaseController extends Controller {
 					$med_rxnorm_code = '';
 					$med_name = $med_row->rxl_medication . ' ' . $med_row->rxl_dosage . ' ' . $med_row->rxl_dosage_unit ;
 				}
+				$med_file = str_replace('?med_rxnorm_code?', $med_rxnorm_code, $med_file);
+				$med_file = str_replace('?med_name?', $med_name, $med_file);
+				$med_file_final .= $med_file;
+				$k++;
+			}
+		}
+		if ($sup_query) {
+			foreach ($sup_query as $sup_row) {
+				$med_table .= "<tr>";
+				$med_table .= "<td><content ID='med" . $k . "'>" . $sup_row->sup_supplement . ' ' . $sup_row->sup_dosage . ' ' . $sup_row->sup_dosage_unit . "</content></td>";
+				if ($sup_row->sup_sig == '') {
+					$instructions = $sup_row->sup_instructions;
+					$med_dosage = '';
+					$med_dosage_unit = '';
+					$med_code = '';
+					$med_code_description = '';
+					$med_period = '';
+				} else {
+					$instructions = $sup_row->sup_sig . ' ' . $sup_row->sup_route . ' ' . $sup_row->sup_frequency;
+					$med_dosage_parts = explode(" ", $sup_row->sup_sig);
+					$med_dosage = $med_dosage_parts[0];
+					$med_dosage_unit = '';
+					if (isset($med_dosage_parts[1])) {
+						$med_dosage_unit = $med_dosage_parts[1];
+					}
+					$med_code = '';
+					$med_code_description = '';
+					if ($sup_row->sup_route == "by mouth") {
+						$med_code = "C38289";
+						$med_code_description = "Oropharyngeal Route of Administration";
+					}
+					if ($sup_row->sup_route == "per rectum") {
+						$med_code = "C38295";
+						$med_code_description = "Rectal Route of Administration";
+					}
+					if ($sup_row->sup_route == "subcutaneously") {
+						$med_code = "C38299";
+						$med_code_description = "Subcutaneous Route of Administration";
+					}
+					if ($sup_row->sup_route == "intravenously") {
+						$med_code = "C38273";
+						$med_code_description = "Intravascular Route of Administration";
+					}
+					if ($sup_row->sup_route == "intramuscularly") {
+						$med_code = "C28161";
+						$med_code_description = "Intramuscular Route of Administration";
+					}
+					$med_period = '';
+					$med_freq_array_1 = array("once daily", "every 24 hours", "once a day", "1 time a day", "QD");
+					$med_freq_array_2 = array("twice daily", "every 12 hours", "two times a day", "2 times a day", "BID", "q12h", "Q12h");
+					$med_freq_array_3 = array("three times daily", "every 8 hours", "three times a day", "3 times daily", "3 times a day", "TID", "q8h", "Q8h");
+					$med_freq_array_4 = array("every six hours", "every 6 hours", "four times daily", "4 times a day", "four times a day", "4 times daily", "QID", "q6h", "Q6h");
+					$med_freq_array_5 = array("every four hours", "every 4 hours", "six times a day", "6 times a day", "six times daily", "6 times daily", "q4h", "Q4h");
+					$med_freq_array_6 = array("every three hours", "every 3 hours", "eight times a day", "8 times a day", "eight times daily", "8 times daily", "q3h", "Q3h");
+					$med_freq_array_7 = array("every two hours", "every 2 hours", "twelve times a day", "12 times a day", "twelve times daily", "12 times daily", "q2h", "Q2h");
+					$med_freq_array_8 = array("every hour", "every 1 hour", "every one hour", "q1h", "Q1h");
+					if (in_array($sup_row->sup_frequency, $med_freq_array_1)) {
+						$med_period = "24";
+					}
+					if (in_array($sup_row->sup_frequency, $med_freq_array_2)) {
+						$med_period = "12";
+					}
+					if (in_array($sup_row->sup_frequency, $med_freq_array_3)) {
+						$med_period = "8";
+					}
+					if (in_array($sup_row->sup_frequency, $med_freq_array_4)) {
+						$med_period = "6";
+					}
+					if (in_array($sup_row->sup_frequency, $med_freq_array_5)) {
+						$med_period = "4";
+					}
+					if (in_array($sup_row->sup_frequency, $med_freq_array_6)) {
+						$med_period = "3";
+					}
+					if (in_array($sup_row->sup_frequency, $med_freq_array_7)) {
+						$med_period = "2";
+					}
+					if (in_array($sup_row->sup_frequency, $med_freq_array_8)) {
+						$med_period = "1";
+					}
+				}
+				$med_table .= "<td>" . $instructions . "</td>";
+				$med_table .= "<td>" . date('m-d-Y', $this->human_to_unix($sup_row->sup_date_active)) . "</td>";
+				$med_table .= "<td>Active</td>";
+				$med_table .= "<td>" . $sup_row->sup_reason . "</td>";
+				$med_table .= "</tr>";
+				$med_file = file_get_contents(__DIR__.'/../../public/medications.xml');
+				$med_number = "#med" . $k;
+				$med_random_id1 = $this->gen_uuid();
+				$med_random_id2 = $this->gen_uuid();
+				$med_file = str_replace('?med_random_id1?', $med_random_id1, $med_file);
+				$med_file = str_replace('?med_random_id2?', $med_random_id2, $med_file);
+				$med_file = str_replace('?med_number?', $med_number, $med_file);
+				$med_file = str_replace('?med_date_active?', date('Ymd', $this->human_to_unix($sup_row->sup_date_active)), $med_file);
+				$med_file = str_replace('?med_code?', $med_code, $med_file);
+				$med_file = str_replace('?med_code_description?', $med_code_description, $med_file);
+				$med_file = str_replace('?med_period?', $med_period, $med_file);
+				$med_file = str_replace('?med_dosage?', $med_dosage, $med_file);
+				$med_file = str_replace('?med_dosage_unit?', $med_dosage_unit, $med_file);
+				$med_rxnorm_code = '';
+				$med_name = $sup_row->sup_supplement . ' ' . $sup_row->sup_dosage . ' ' . $sup_row->sup_dosage_unit ;
 				$med_file = str_replace('?med_rxnorm_code?', $med_rxnorm_code, $med_file);
 				$med_file = str_replace('?med_name?', $med_name, $med_file);
 				$med_file_final .= $med_file;
