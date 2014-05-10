@@ -22,7 +22,21 @@ $(document).ready(function() {
 			$.jGrowl("Please complete the form");
 		}
 	}
-	
+	$.ajax({
+		url: "ajaxsearch/provider-select",
+		dataType: "json",
+		type: "POST",
+		success: function(data){
+			$("#messages_lab_provider_list").addOption({"":"Select a provider for the order."}, false);
+			$("#messages_lab_provider_list").addOption(data, false);
+			$("#messages_rad_provider_list").addOption({"":"Select a provider for the order."}, false);
+			$("#messages_rad_provider_list").addOption(data, false);
+			$("#messages_cp_provider_list").addOption({"":"Select a provider for the order."}, false);
+			$("#messages_cp_provider_list").addOption(data, false);
+			$("#messages_ref_provider_list").addOption({"":"Select a provider for the order."}, false);
+			$("#messages_ref_provider_list").addOption(data, false);
+		}
+	});
 	if (noshdata.encounter_active == 'y') {
 		$("#nosh_chart_div").hide('blind');
 		$("#nosh_encounter_div").show('blind');
