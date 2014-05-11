@@ -65,6 +65,16 @@ class AjaxSetupController extends BaseController {
 		echo $result;
 	}
 	
+	public function postCheckpt($pid)
+	{
+		$query = DB::table('demographics_relate')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->first();
+		if ($query) {
+			echo "true";
+		} else {
+			echo "false";
+		}
+	}
+	
 	public function postSetup2()
 	{
 		$data = array(

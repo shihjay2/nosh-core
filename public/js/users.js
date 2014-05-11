@@ -1,4 +1,20 @@
 $(document).ready(function() {
+	function checkpt(value, colname) {
+		var result = null;
+		$.ajax({
+			url: "ajaxsetup/checkpt/" + value,
+			type: "POST",
+			async: false,
+			success: function(data){
+				if(data =='true'){
+					result = [true,""];
+				} else {
+					result = [false,"Please enter valid patient ID"];
+				}
+			}
+		});
+		return result;
+	}
 	$("#users_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
@@ -135,7 +151,7 @@ $(document).ready(function() {
 					{name:'title',index:'title',width:1,editable:true,hidden:true,editrules:{edithidden:true}},
 					{name:'displayname',index:'displayname',width:300},
 					{name:'email',index:'email',width:1,editable:true,hidden:true,editrules:{edithidden:true, email:true, required:true},formoptions:{elmsuffix:"(*)"}},
-					{name:'pid',index:'pid',width:1,editable:true,hidden:true,editrules:{edithidden:true, required:true},editoptions:{dataInit:function(elem){ 
+					{name:'pid',index:'pid',width:1,editable:true,hidden:true,editrules:{edithidden:true, required:true, custom:true, custom_func:checkpt},editoptions:{dataInit:function(elem){ 
 						$(elem).autocomplete({
 							source: function (req, add){
 								$.ajax({
