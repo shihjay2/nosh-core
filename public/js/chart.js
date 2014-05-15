@@ -513,6 +513,18 @@ $(document).ready(function() {
 			}
 		}
 	});
+	var myUpload3 = $("#chart_import_csv").upload({
+		action: 'csvupload',
+		onComplete: function(data){
+			var data1 = JSON.parse(data);
+			$.jGrowl(data1.message);
+			if (data1.message != 'Error with CSV file!') {
+				$("#csv_form").html('');
+				$("#csv_form").html(data1.html);
+				$("#csv_dialog").dialog('open');
+			}
+		}
+	});
 	$("#ccda_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
@@ -904,6 +916,47 @@ $(document).ready(function() {
 	});
 	$("#print_ccr").click(function() {
 		window.open("print_ccr");
+	});
+	$("#csv_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 580, 
+		width: 925, 
+		draggable: false,
+		resizable: false,
+		buttons: {
+			'Save': function() {
+				var bValid = true;
+				$("#csv_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				if (bValid) {
+					var str = $("#csv_form").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxchart/import-csv",
+							data: str,
+							success: function(data){
+								$.jGrowl(data,{sticky:true});
+								$('#csv_form').clearForm();
+								$('#csv_dialog').dialog('close');
+							}
+						});
+					} else {
+						$.jGrowl("Please complete the form");
+					}
+				}
+			},
+			Cancel: function() {
+				$('#csv_form').clearForm();
+				$('#csv_dialog').dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 
 	//Encounters section

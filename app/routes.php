@@ -91,6 +91,7 @@ Route::group(array('before' => 'force.ssl|acl1'), function() {
 	Route::get('financial_query_print/{id}', array('as' => 'financial_query_print', 'uses' => 'ChartController@financial_query_print'));
 	Route::get('export_demographics/{type}', array('as' => 'export_demographics', 'uses' => 'ChartController@export_demographics'));
 	Route::get('export_address_csv', array('as' => 'export_address_csv', 'uses' => 'HomeController@export_address_csv'));
+	Route::post('csvupload', array('as' => 'csvupload', 'uses' => 'AjaxChartController@import_csv'));
 });
 Route::group(array('before' => 'force.ssl|acl2'), function() {
 	Route::get('encounter', array('as' => 'encounter', function()
@@ -285,4 +286,4 @@ Route::filter('force.ssl', function()
 	//echo route('home');
 //}));
 
-//Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));
+Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));

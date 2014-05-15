@@ -31,6 +31,7 @@
 			<div class="pure-u-1-2"><?php echo HTML::image('images/chart1.png', 'Print Continuity of Care Record', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="print_ccr">Print Continuity of Care Record</a></div>
 			<div class="pure-u-1-2"><?php echo HTML::image('images/chart1.png', 'Import C-CDA', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="import_ccda">Import C-CDA (Consolidated Clinical Document Architecture)</a></div>
 		<?php }?>
+		<div class="pure-u-1-2"><?php echo HTML::image('images/download.png', 'Import CSV', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="chart_import_csv">Import CSV File</a></div>
 		</div>
 	</div>
 </div>
@@ -158,4 +159,7 @@
 			<button type="button" id="edit_nosh_imm" class="nosh_button_edit">Edit</button>
 		</div>
 	</div>
+</div>
+<div id="csv_dialog" title="Assign the CSV headers to the NOSH database fields...">
+	<form class="pure-form pure-form-stacked" id="csv_form"></form>
 </div>

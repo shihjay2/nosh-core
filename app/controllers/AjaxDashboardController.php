@@ -343,7 +343,6 @@ class AjaxDashboardController extends BaseController {
 	public function postEditDemographics()
 	{
 		$pid = Session::get('pid');
-		$date_active = date('Y-m-d H:i:s', strtotime(Input::get('issue_date_active')));
 		$dob = date('Y-m-d', strtotime(Input::get('DOB')));
 		if (Input::get('reminder_method')=="Cellular Phone") {
 			$meta = array("(", ")", "-", " ");

@@ -2568,12 +2568,12 @@ class AjaxChartController extends BaseController {
 				$date_expiration = '';
 			} else {
 				$date_expiration = date('Y-m-d H:i:s', strtotime(Input::get('imm_expiration')));
-			}	
+			}
 			if (Input::get('imm_elsewhere')=='Yes') {
 				$imm_elsewhere = 'Yes';
 			} else {
 				$imm_elsewhere = 'No';
-			}	
+			}
 			$data = array(
 				'imm_immunization' => Input::get('imm_immunization'),
 				'imm_sequence' => Input::get('imm_sequence'),
@@ -2591,7 +2591,7 @@ class AjaxChartController extends BaseController {
 				'imm_cvxcode' => Input::get('imm_cvxcode'),
 				'pid' => $pid,
 				'eid' => ''
-			);	
+			);
 			if(Input::get('imm_id') == '') {
 				DB::table('immunizations')->insert($data);
 				$this->audit('Add');
@@ -3198,7 +3198,7 @@ class AjaxChartController extends BaseController {
 	
 	public function postGetPayment()
 	{
-		$result = Billing_core::find(Input::get('id'));
+		$result = DB::table('billing_core')->where('billing_core_id', '=', Input::get('id'))->first();
 		echo json_encode($result);
 	}
 	
@@ -4666,14 +4666,6 @@ class AjaxChartController extends BaseController {
 		echo $i . ' Continuity of Care Record(s) Imported!';
 	}
 	
-	public function postCcdaTest()
-	{
-		//$file = "/var/www/nosh/temp/1390329128_ccda.xml";
-		$file = "/var/www/nosh/temp/ccda_1_1395370691_0.xml";
-		$result = File::get($file);
-		echo $result;
-	}
-	
 	public function ccdaupload()
 	{
 		$pid = Session::get('pid');
@@ -4932,5 +4924,302 @@ class AjaxChartController extends BaseController {
 			}
 		}
 		echo 'Photos uploaded!';
+	}
+	
+	public function import_csv()
+	{
+		$pid = Session::get('pid');
+		$directory = Session::get('documents_dir') . $pid;
+		$arr = array();
+		foreach (Input::file('file') as $file) {
+			if ($file) {
+				$file->move($directory, $file->getClientOriginalName());
+				$file_path = $directory . '/' . $file->getClientOriginalName();
+				while(!file_exists($file_path)) {
+					sleep(2);
+				}
+				$csv = File::get($file_path);
+				$delimiter = $this->getCSVDelimiter($file_path);
+				Config::set('formatter::formatter.csv.delimiter', $delimiter);
+				Config::set('formatter::formatter.csv.enclosure', '');
+				Config::set('formatter::formatter.csv.newline', "\n");
+				Config::set('formatter::formatter.csv.regex_newline', '\n');
+				Config::set('formatter::formatter.csv.escape', '\\');
+				$result = Formatter::make($csv, 'csv')->to_array();
+				if (empty(Formatter::$errors)) {
+					$keys = array_keys($result[0]);
+					$i = 0;
+					$arr['html'] = '<input type="hidden" name="file_path" value="' . $file_path . '"/>';
+					$arr['message'] = 'CSV file analyzed!';
+					foreach ($keys as $key) {
+						$id = 'csv_' . $key;
+						$arr['html'] .= '<div class="pure-control-group">';
+						$arr['html'] .= '<label for="' . $id . '">' . $key . '</label>';
+						$arr['html'] .= Form::select($key, array(
+							''=>'Select NOSH database field.',
+							'null'=>'Do not import this field.',
+							'Allergies' => array('allergies_date_active'=>'Date Active','allergies_med'=>'Medication','allergies_reaction'=>'Reaction'),
+							'Billing' => array('dos_f'=>'Date of Service - Start','dos_t'=>'Date of Service - End','payment_date'=>'Payment Date','payment'=>'Payment Amount','payment_type'=>'Payment Type'),
+							'Demographics' => array('lastname'=>'Last Name','firstname'=>'First Name','middle'=>'Middle Name','nickname'=>'Nickname','title'=>'Title','sex'=>'Gender','DOB'=>'Date of Birth','ss'=>'Social Security Number','race'=>'Race','ethnicity'=>'Ethnicity','language'=>'Language','address'=>'Address','city'=>'City','state'=>'State','zip'=>'Zip','phone_home'=>'Home Phone','phone_work'=>'Work Phone','phone_cell'=>'Cell Phone','email'=>'Email','marital_status'=>'Marital Status','partner_name'=>'Partner Name','employer'=>'Employer','emergency_contact'=>'Emergency Contact Name','emergency_phone'=>'Emergency Contact Phone','caregiver'=>'Caregiver','guardian_lastname'=>'Guardian Last Name','guardian_firstname'=>'Guardian First Name','guardian_address'=>'Guardian Address','guardian_city'=>'Guardian City','guardian_state'=>'Guardian State','guardian_zip'=>'Guardian Zip','guardian_phone_home'=>'Guardian Home Phone','guardian_phone_work'=>'Guardian Work Phone','guardian_phone_cell'=>'Guardian Cell Phone','guardian_email'=>'Guardian E-mail','guardian_relationship'=>'Guardian Relationship'),
+							'Immunizations' => array('imm_date'=>'Date','imm_immunization'=>'Immunization','imm_sequence'=>'Sequence','imm_body_site'=>'Body Site','imm_dosage'=>'Dosage','imm_dosage_unit'=>'Dosage Unit','imm_route'=>'Route','imm_lot'=>'LOT number','imm_manufacturer'=>'Manufacturer','imm_expiration'=>'Expiration Date','imm_brand'=>'Brand'),
+							'Insurance' => array('insurance_plan_name'=>'Plan Name','insurance_id_num'=>'Policy Number','insurance_group'=>'Group Number','insurance_relationship'=>'Relationship to Insured','insurance_copay'=>'Copay Amount','insurance_deductible'=>'Deductible Amount','insurance_insu_lastname'=>'Insured Last Name','insurance_insu_firstname'=>'Insured First Name','insurance_insu_address'=>'Insured Address','insurance_insu_city'=>'Insured City','insurance_insu_state'=>'Insured State','insurance_insu_zip'=>'Insured Zip','insurance_insu_phone'=>'Insured Phone','insurance_insu_dob'=>'Insured Date of Birth','insurance_insu_gender'=>'Insured Gender','street_address1'=>'Insurance Plan Address 1','street_address2'=>'Insurance Plan Address 2','insurance_city'=>'Insurance Plan City','insurance_state'=>'Insurance Plan State','insurance_zip'=>'Insurance Plan Zip'),
+							'Issues' => array('issue'=>'Issue','issue_date_active'=>'Date Active'),
+							'Medications' => array('rxl_date_active'=>'Date Active','rxl_date_prescribed'=>'Date Prescribed','rxl_medication'=>'Medication','rxl_dosage'=>'Dosage','rxl_dosage_unit'=>'Dosage Unit','rxl_sig'=>'SIG','rxl_route'=>'Route','rxl_frequency'=>'Frequency','rxl_instructions'=>'Instructions','rxl_quantity'=>'Quantity','rxl_refill'=>'Refills','rxl_reason'=>'Reason'),
+							'Supplements' => array('sup_date_active'=>'Date Active','sup_date_prescribed'=>'Date Prescribed','sup_supplement'=>'Supplement','sup_dosage'=>'Dosage','sup_dosage_unit'=>'Dosage Unit','sup_sig'=>'SIG','sup_route'=>'Route','sup_frequency'=>'Frequency','sup_instructions'=>'Instructions','sup_quantity'=>'Quantity','sup_reason'=>'Reason'),
+							'Tests' => array('test_name'=>'Test Name','test_datetime'=>'Date of Test','test_result'=>'Result','test_units'=>'Result Units','test_reference'=>'Reference Range','test_flags'=>'Flags','test_type'=>'Test Type (Laboratory or Imaging)')
+						), array('id'=>$id,'required','style'=>'width:300px','class'=>'text'));
+						$arr['html'] .= '</div>';
+						$arr['file'] = $file_path;
+					}
+				} else {
+					unlink($file_path);
+					$arr['message'] = 'Error with CSV file!';
+				}
+			}
+		}
+		return $arr;
+	}
+	
+	public function postImportCsv()
+	{
+		$pid = Session::get('pid');
+		$data = Input::all();
+		$csv = File::get($data['file_path']);
+		$delimiter = $this->getCSVDelimiter($data['file_path']);
+		$csv_line = explode("\n", $csv);
+		$csv_headers = explode($delimiter, $csv_line[0]);
+		$new_header_array = array();
+		foreach ($csv_headers as $header) {
+			$new_header_array[] = $data[$header];
+		}
+		$csv_line[0] = implode($delimiter, $new_header_array);
+		$csv_final = implode("\n", $csv_line);
+		Config::set('formatter::formatter.csv.delimiter', $delimiter);
+		Config::set('formatter::formatter.csv.enclosure', '');
+		Config::set('formatter::formatter.csv.newline', "\n");
+		Config::set('formatter::formatter.csv.regex_newline', '\n');
+		Config::set('formatter::formatter.csv.escape', '\\');
+		$result = Formatter::make($csv_final, 'csv')->to_array();
+		$i = 0;
+		$message = '';
+		$allergies_array = array('allergies_date_active','allergies_med','allergies_reaction');
+		$billing_array = array('dos_f','dos_t','payment_date','payment','payment_type');
+		$demographics_array = array('lastname','firstname','middle','nickname','title','sex','DOB','ss','race','ethnicity','language','address','city','state','zip','phone_home','phone_work','phone_cell','email','marital_status','partner_name','employer','emergency_contact','emergency_phone','caregiver','guardian_firstname','guardian_lastname','guardian_code','guardian_address','guardian_city','guardian_state','guardian_zip','guardian_phone_home','guardian_phone_work','guardian_phone_cell','guardian_email','guardian_relationship');
+		$immunizations_array = array('imm_date','imm_immunization','imm_sequence','imm_body_site','imm_dosage','imm_dosage_unit','imm_route','imm_lot','imm_manufacturer','imm_expiration','imm_brand');
+		$insurance_array = array('insurance_plan_name','insurance_id_num','insurance_group','insurance_relationship','insurance_copay','insurance_deductible','insurance_insu_lastname','insurance_insu_firstname','insurance_insu_address','insurance_insu_city','insurance_insu_state','insurance_insu_zip','insurance_insu_phone','insurance_insu_dob','insurance_insu_gender','street_address1','street_address2','insurance_city','insurance_state','insurance_zip');
+		$issues_array = array('issue','issue_date_active');
+		$medications_array = array('rxl_date_active','rxl_date_prescribed','rxl_medication','rxl_dosage','rxl_dosage_unit','rxl_sig','rxl_route','rxl_frequency','rxl_instructions','rxl_quantity','rxl_refill','rxl_reason');
+		$supplements_array = array('sup_date_active','sup_date_prescribed','sup_supplement','sup_dosage','sup_dosage_unit','sup_sig','sup_route','sup_frequency','sup_instructions','sup_quantity','sup_reason');
+		$tests_array = array('test_name','test_datetime','test_result','test_units','test_reference','test_flags','test_type');
+		foreach ($result as $field) {
+			$allergies = array();
+			$billing = array();
+			$demographics = array();
+			$immunizations = array();
+			$insurance = array();
+			$issues = array();
+			$medications = array();
+			$supplements = array();
+			$tests = array();
+			while ($value = current($field)) {
+				$key = key($field);
+				if (in_array($key, $allergies_array)) {
+					$allergies[$key] = $value;
+				}
+				if (in_array($key, $billing_array)) {
+					$billing[$key] = $value;
+				}
+				if (in_array($key, $demographics_array)) {
+					$demographics[$key] = $value;
+				}
+				if (in_array($key, $immunizations_array)) {
+					$immunizations[$key] = $value;
+				}
+				if (in_array($key, $insurance_array)) {
+					$insurance[$key] = $value;
+				}
+				if (in_array($key, $issues_array)) {
+					$issues[$key] = $value;
+				}
+				if (in_array($key, $medications_array)) {
+					$medications[$key] = $value;
+				}
+				if (in_array($key, $supplements_array)) {
+					$supplements[$key] = $value;
+				}
+				if (in_array($key, $tests_array)) {
+					$tests[$key] = $value;
+				}
+				next($field);
+			}
+			if (!empty($allergies)) {
+				if (!empty($allergies['allergies_date_active'])) {
+					$allergies['allergies_date_active'] = date('Y-m-d H:i:s', strtotime($allergies['allergies_date_active']));
+				} else {
+					$allergies['allergies_date_active'] = date('Y-m-d H:i:s', time());
+				}
+				$allergies['pid'] = $pid;
+				$allergies['allergies_date_inactive'] = '';
+				$allergies['rcopia_sync'] = 'n';
+				DB::table('allergies')->insert($allergies);
+				$this->audit('Add');
+				$message .= 'Added ' . $allergies['allergies_med'] . 'to allergies list.<br>';
+			}
+			if (!empty($billing)) {
+				if (!empty($billing['dos_f'])) {
+					$billing['dos_f'] = date('m/d/Y', strtotime($billing['dos_f']));
+					$billing_query_enc = DB::table('billing_core')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->where('eid', '!=', '0')->where('dos_f', '=', $billing['dos_f'])->first(); 
+					$billing_query_oth = DB::table('billing_core')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->where('eid', '=', '0')->where('dos_f', '=', $billing['dos_f'])->first();
+					$billing['practice_id'] = Session::get('practice_id');
+					$billing['pid'] = $pid;
+					if ($billing_query_enc) {
+						$billing['eid'] = $billing_query_enc->eid;
+						$dos = $billing['dos_f'];
+						$billing['dos_f'] = date('m/d/Y', strtotime($billing['payment_date']));
+						unset($billing['payment_date']);
+						DB::table('billing_core')->insert($billing);
+						$this->audit('Add');
+						$message .= 'Added payment information to encounter with date of service of ' . $dos . '.</br>';
+					} elseif ($billing_query_oth) {
+						$billing['other_billing_id'] = $billing_query_oth->other_billing_id;
+						$dos = $billing['dos_f'];
+						$billing['dos_f'] = date('m/d/Y', strtotime($billing['payment_date']));
+						unset($billing['payment_date']);
+						DB::table('billing_core')->insert($billing);
+						$this->audit('Add');
+						$message .= 'Added payment information to miscellaneous bill with date of service of ' . $dos . '.</br>';
+					} else {
+						$message .= 'Unable to import bill since Date of Service did not match any previous encounters or miscellaneous bills for this patient.<br>';
+					}
+					
+				} else {
+					$message .= 'Unable to import bill since Date of Service was not provided.<br>';
+				}
+			}
+			if (!empty($demographics)) {
+				if (!empty($demographics['DOB'])) {
+					$demographics['DOB'] = date('Y-m-d', strtotime($demographics['DOB']));
+				}
+				if (!empty($demographics['sex'])) {
+					$demographics['sex'] = strtolower(substr($demographics['sex'],0,1));
+				}
+				DB::table('demographics')->where('pid', '=', $pid)->update($demographics);
+				$message .= 'Updated demographics.<br>';
+			}
+			if (!empty($immunizations)) {
+				if (!empty($immunizations['imm_date'])) {
+					$immunizations['imm_date'] = date('Y-m-d H:i:s', strtotime($immunizations['imm_date']));
+					$immunizations['pid'] = $pid;
+					$immunizations['imm_elsewhere'] = 'Yes';
+					if (!empty($immunizations['imm_expiration'])) {
+						$immunizations['imm_expiration'] = date('Y-m-d H:i:s', strtotime($immunizations['imm_expiration']));
+					}
+					DB::table('immunizations')->insert($immunizations);
+					$this->audit('Add');
+					$message .= 'Added ' . $immunizations['imm_immunization'] . ' to the immunization list.<br>';
+				} else {
+					$message .= 'No immunization added due to missing date of immunization.<br>';
+				}
+			}
+			if (!empty($insurance)) {
+				if (!empty($insurance['insurance_plan_name'])) {
+					$address_query = DB::table('addressbook')->where('facility', '=', $insurance['insurance_plan_name'])->where('specialty', '=', 'Insurance')->first();
+					if ($address_query) {
+						$insurance['address_id'] = $address_query->address_id;
+					} else {
+						$address_data = array(
+							'displayname' => $insurance['insurance_plan_name'],
+							'facility' => $insurance['insurance_plan_name'],
+							'street_address1' => $insurance['street_address1'],
+							'street_address2' => $insurance['street_address2'],
+							'city' => $insurance['insurance_city'],
+							'state' => $insurance['insurance_state'],
+							'zip' => $insurance['insurance_zip'],
+							'specialty' => 'Insurance',
+							'insurance_box_31' => 'n',
+							'insurance_box_32a' => 'n'
+						);
+						$insurance['address_id'] = DB::table('addressbook')->insertGetId($address_data);
+						$message .= 'Added ' . $insurance['insurance_plan_name'] . ' to the addressbook.<br>';
+					}
+					unset($insurance['street_address1']);
+					unset($insurance['street_address2']);
+					unset($insurance['insurance_city']);
+					unset($insurance['insurance_state']);
+					unset($insurance['insurance_zip']);
+					if (!empty($insurance['insurance_insu_dob'])) {
+						$insurance['insurance_insu_dob'] = date('Y-m-d', strtotime($insurance['insurance_insu_dob']));
+					}
+					if (!empty($insurance['insurance_insu_gender'])) {
+						$insurance['insurance_insu_gender'] = strtolower(substr($insurance['insurance_insu_gender'],0,1));
+					}
+					$insurance['insurance_plan_active'] = 'Yes';
+					$insurance['pid'] = $pid;
+					DB::table('insurance')->insert($insurance);
+					$this->audit('Add');
+					$message .= 'Added ' . $insurance['insurance_plan_name'] . ' to the insurance list.<br>';
+				} else {
+					$message .= 'No insurance information added due to missing plan name.<br>';
+				}
+			}
+			if (!empty($issues)) {
+				if (!empty($issues['issue_date_active'])) {
+					$issues['issue_date_active'] = date('Y-m-d H:i:s', strtotime($issues['issue_date_active']));
+				} else {
+					$issues['issue_date_active'] = date('Y-m-d H:i:s', time());
+				}
+				$issues['pid'] = $pid;
+				$issues['issue_date_inactive'] = '';
+				$issues['rcopia_sync'] = 'n';
+				DB::table('issues')->insert($issues);
+				$this->audit('Add');
+				$message .= 'Added ' . $issues['issue'] . 'to issues list.<br>';
+			}
+			if (!empty($medications)) {
+				if (!empty($medications['rxl_date_active'])) {
+					$medications['rxl_date_active'] = date('Y-m-d H:i:s', strtotime($medications['rxl_date_active']));
+				} else {
+					$medications['rxl_date_active'] = date('Y-m-d H:i:s', time());
+				}
+				$medications['pid'] = $pid;
+				$medications['rcopia_sync'] = 'n';
+				$medications['id'] = Session::get('user_id');
+				$medications['rxl_provider'] = Session::get('displayname');
+				$medications['rxl_date_old'] = '';
+				$medications['rxl_date_inactive'] = '';
+				DB::table('rx_list')->insert($medications);
+				$this->audit('Add');
+				$message .= 'Added ' . $medications['rxl_medication'] . 'to medications list.<br>';
+			}
+			if (!empty($supplements)) {
+				if (!empty($supplements['sup_date_active'])) {
+					$supplements['sup_date_active'] = date('Y-m-d H:i:s', strtotime($supplements['sup_date_active']));
+				} else {
+					$supplements['sup_date_active'] = date('Y-m-d H:i:s', time());
+				}
+				$supplements['pid'] = $pid;
+				$supplements['id'] = '';
+				$supplements['sup_provider'] = '';
+				$supplements['sup_date_inactive'] = '';
+				DB::table('sup_list')->insert($supplements);
+				$this->audit('Add');
+				$message .= 'Added ' . $supplements['sup_supplement'] . 'to supplements list.<br>';
+			}
+			if (!empty($tests)) {
+				if (!empty($tests['test_datetime'])) {
+					$tests['test_datetime'] = date('Y-m-d H:i:s', strtotime($tests['test_datetime']));
+					$tests['pid'] = $pid;
+					$tests['practice_id'] = Session::get('practice_id');
+					DB::table('tests')->insert($tests);
+					$this->audit('Add');
+					$message .= 'Added ' . $tests['test_name'] . 'to tests list.<br>';
+				} else {
+					$message .= 'No test results added due to missing date of test.<br>';
+				}
+			}
+			$i++;
+		}
+		$message .= 'Read ' . $i . ' lines in the CSV file.';
+		return $message;
 	}
 }

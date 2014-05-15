@@ -5256,4 +5256,51 @@ class BaseController extends Controller {
 		}
 		return $return_array;
 	}
+	
+	protected function getCSVDelimiter($fileName)
+	{
+		//detect these delimeters
+		$delA = array(";", ",", "|", "\t");
+		$linesA = array();
+		$resultA = array();
+		$maxLines = 20; //maximum lines to parse for detection, this can be higher for more precision
+		$lines = count(file($fileName));
+		if ($lines < $maxLines) {//if lines are less than the given maximum
+			$maxLines = $lines;
+		}
+		//load lines
+		foreach ($delA as $key => $del) {
+			$rowNum = 0;
+			if (($handle = fopen($fileName, "r")) !== false) {
+				$linesA[$key] = array();
+				while ((($data = fgetcsv($handle, 1000, $del)) !== false) && ($rowNum < $maxLines)) {
+					$linesA[$key][] = count($data);
+					$rowNum++;
+				}
+				fclose($handle);
+			}
+		}
+		foreach ($delA as $key => $del) {
+			$discr = 0;
+			foreach ($linesA[$key] as $actNum) {
+				if ($actNum == 1) {
+					$resultA[$key] = 65535; //there is only one column with this delimeter in this line, so this is not our delimiter, set this discrepancy to high
+					break;
+				}
+				foreach ($linesA[$key] as $actNum2) {
+					$discr += abs($actNum - $actNum2);
+				}
+				$resultA[$key] = $discr;
+			}
+		}
+		$delRes = 65535;
+		foreach ($resultA as $key => $res) {
+			if ($res < $delRes) {
+				$delRes = $res;
+				$delKey = $key;
+			}
+		}
+		$delimiter = $delA[$delKey];
+		return $delimiter;
+	}
 }

@@ -611,7 +611,7 @@ $(document).ready(function() {
 	$("#billing_payment_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
-		height: 200, 
+		height: 250, 
 		width: 500, 
 		draggable: false,
 		resizable: false,

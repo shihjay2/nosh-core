@@ -1146,7 +1146,7 @@ class AjaxMessagingController extends BaseController {
 				$csv = File::get($file_path);
 				$result = Formatter::make($csv, 'csv')->to_array();
 				if (empty(Formatter::$errors)) {
-					$i = 1;
+					$i = 0;
 					foreach ($result as $field) {
 						if($field['firstname'] == '' OR $field['lastname'] == '') {
 							$field['displayname'] = $field['facility'];
