@@ -427,4 +427,5 @@ $(document).ready(function() {
 		$("#pe_skin_dialog").dialog('open');
 		$("#pe_skin1").focus();
 	});
+	swipe();
 });

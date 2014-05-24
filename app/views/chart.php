@@ -42,6 +42,7 @@
 		<button type="button" id="detail_encounter" class="nosh_button_edit">Details</button>
 		<button type="button" id="billing_encounter" class="nosh_button_cart">Billing</button>
 		<button type="button" id="image_encounter" class="nosh_button_image">Images</button>
+		<button type="button" id="copy_encounter" class="nosh_button_copy">Copy</button>
 		<button type="button" id="save_draft" class="nosh_button_save">Save Draft</button>
 		<button type="button" id="sign_encounter" class="nosh_button_check">Sign</button>
 		<button type="button" id="delete_encounter" class="nosh_button_delete">Delete</button>
@@ -162,4 +163,27 @@
 </div>
 <div id="csv_dialog" title="Assign the CSV headers to the NOSH database fields...">
 	<form class="pure-form pure-form-stacked" id="csv_form"></form>
+</div>
+<div id="textdump_group" title="Template Groups">
+	<form id="textdump_group_form" class="pure-form">
+		<input type="text" style="width:95%" name="textdump_group_add" id="textdump_group_add" placeholder="Add template group here"/>
+		<input type="hidden" name="target" id="textdump_group_target"/>
+	</form><br>
+	<div id="textdump_group_html" title="Click on a group to open templates."></div>
+</div>
+<div id="textdump" title="Template">
+	<input type="hidden" id="textdump_input"/>
+	<form id="textdump_form" class="pure-form">
+		<input type="text" style="width:95%" name="textdump_add" id="textdump_add" placeholder="Add text to template here"/>
+		<input type="hidden" name="target" id="textdump_target"/>
+		<input type="hidden" name="group" id="textdump_group_item">
+	</form><br>
+	<div id="textdump_html" title="Click on a text to copy it to the preview."></div>
+</div>
+<div id="copy_encounter_dialog" title="Copy Encounter">
+	<form id="copy_encounter_form" class="pure-form">
+		<label for="copy_encounter_from">Copy encounter from:</label>
+		<select name="copy_encounter_from" id="copy_encounter_from" style="width:500px" class="text" required></select>
+	</form><br>
+	<?php echo HTML::image('images/important.png','Important Message', array('border' => '0', 'height' => '40', 'width' => '40'));?>Copying form a encounter will erase all previously entered items for this current encounter!
 </div>

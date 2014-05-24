@@ -1,33 +1,38 @@
 <div id="configuration_dialog" title="Configuration">
+	<button type="button" id="import_template" class="nosh_button_forward">Import Form or Text Templates</button>
+	<br><br>
 	<div id="configuration_accordion">
 		<?php if(Session::get('group_id') == '2') {?>
-			<h3 class="configuration_hpi"><a href="#">HPI Templates</a></h3>
+			<h3 class="configuration_hpi"><a href="#">HPI Forms</a></h3>
 			<div class="configuration_hpi">
 				<table id="hpi_forms_list" class="scroll" cellpadding="0" cellspacing="0"></table>
 				<div id="hpi_forms_list_pager" class="scroll" style="text-align:center;"></div><br>
 				<button type="button" id="add_hpi_forms" class="nosh_button_add">Add</button>
 				<button type="button" id="edit_hpi_forms" class="nosh_button_edit">Edit</button>
 				<button type="button" id="delete_hpi_forms" class="nosh_button_delete">Delete</button>
+				<button type="button" id="export_hpi_forms" class="nosh_button_extlink export_template">Export</button>
 			</div>
 		<?php }?>
 		<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
-			<h3 class="configuration_ros"><a href="#">ROS Templates</a></h3>
+			<h3 class="configuration_ros"><a href="#">ROS Forms</a></h3>
 			<div class="configuration_ros">
 				<table id="ros_forms_list" class="scroll" cellpadding="0" cellspacing="0"></table>
 				<div id="ros_forms_list_pager" class="scroll" style="text-align:center;"></div><br>
 				<button type="button" id="add_ros_forms" class="nosh_button_add">Add</button>
 				<button type="button" id="edit_ros_forms" class="nosh_button_edit">Edit</button>
 				<button type="button" id="delete_ros_forms" class="nosh_button_delete">Delete</button>
+				<button type="button" id="export_ros_forms" class="nosh_button_extlink">Export</button>
 			</div>
 		<?php }?>
 		<?php if(Session::get('group_id') == '2') {?>
-			<h3 class="configuration_pe"><a href="#">PE Templates</a></h3>
+			<h3 class="configuration_pe"><a href="#">PE Forms</a></h3>
 			<div class="configuration_pe">
 				<table id="pe_forms_list" class="scroll" cellpadding="0" cellspacing="0"></table>
 				<div id="pe_forms_list_pager" class="scroll" style="text-align:center;"></div><br>
 				<button type="button" id="add_pe_forms" class="nosh_button_add">Add</button>
 				<button type="button" id="edit_pe_forms" class="nosh_button_edit">Edit</button>
 				<button type="button" id="delete_pe_forms" class="nosh_button_delete">Delete</button>
+				<button type="button" id="export_pe_forms" class="nosh_button_extlink">Export</button>
 			</div>
 		<?php }?>
 		<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
@@ -84,14 +89,23 @@
 				<button type="button" id="configuration_orders_ref1_delete" class="configuration_orders_button nosh_button_delete">Delete Personal</button><br><br>
 			</div>
 		<?php }?>
+		<h3><a href="#">Text Templates</a></h3>
+		<div>
+			<table id="textdump_list" class="scroll" cellpadding="0" cellspacing="0"></table>
+			<div id="textdump_list_pager" class="scroll" style="text-align:center;"></div><br>
+			<button type="button" id="add_textdump_group" class="nosh_button_add">Add</button>
+			<button type="button" id="edit_textdump_group" class="nosh_button_edit">Edit</button>
+			<button type="button" id="delete_textdump_group" class="nosh_button_delete">Delete</button>
+			<button type="button" id="export_textdump" class="nosh_button_extlink">Export</button>
+		</div>
 		<h3><a href="#">CPT</a></h3>
 		<div>
 			Search: <input type="text" size="50" id="search_all_cpt" class="text ui-widget-content ui-corner-all" onkeydown="doSearch(arguments[0]||event)"/><br><br> 
 			<table id="cpt_list_config" class="scroll" cellpadding="0" cellspacing="0"></table>
 			<div id="cpt_list_config_pager" class="scroll" style="text-align:center;"></div><br>
-			<button type="button" id="add_cpt" class="nosh_button_add">Add CPT Code</button>
-			<button type="button" id="edit_cpt" class="nosh_button_edit">Edit CPT Code</button>
-			<button type="button" id="delete_cpt" class="nosh_button_delete">Delete CPT Code</button>
+			<button type="button" id="add_cpt" class="nosh_button_add">Add</button>
+			<button type="button" id="edit_cpt" class="nosh_button_edit">Edit</button>
+			<button type="button" id="delete_cpt" class="nosh_button_delete">Delete</button>
 		</div>
 		<h3><a href="#">Patient Forms</a></h3>
 		<div>
@@ -260,5 +274,20 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
-</script>
+<div id="configuration_textdump_group_dialog" title="">
+	<form id="configuration_textdump_group_form" class="pure-form pure-form-stacked">
+		<input type="hidden" name="template_id" id="configuration_textdump_group_template_id"/>
+		<div class="pure-control-group"><label for="configuration_textdump_group_template_name">Target Field</label><select id="configuration_textdump_group_template_name" name="template_name" style="width:290px" class="text" required></select></div>
+		<div class="pure-control-group"><label for="configuration_textdump_array">Group</label><input type="text" id="configuration_textdump_group_group" name="group" style="width:290px" class="text" required/></div>
+	</form>
+</div>
+<div id="configuration_textdump_dialog" title="">
+	<form id="configuration_textdump_form" class="pure-form pure-form-stacked">
+		<input type="hidden" name="template_id" id="configuration_textdump_template_id"/>
+		<input type="hidden" name="group" id="configuration_textdump_group"/>
+		<input type="hidden" name="template_name" id="configuration_textdump_template_name"/>
+		<input type="hidden" id="configuration_textdump_subgrid_table_id"/>
+		<div class="pure-control-group"><label for="configuration_textdump_array">Template Text</label><input type="text" id="configuration_textdump_array" name="array" style="width:290px" class="text" required/></div>
+		<div class="pure-control-group"><label for="configuration_textdump_default">Default Normal?</label><select id="configuration_textdump_default" name="default"></select></div>
+	</form>
+</div>

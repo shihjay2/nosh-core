@@ -88,7 +88,7 @@ $(document).ready(function() {
 	$("#oh_pmh").focus().autocomplete({
 		source: function (req, add){
 			$.ajax({
-				url: "ajaxsearch/icd9",
+				url: "ajaxsearch/icd",
 				dataType: "json",
 				type: "POST",
 				data: "term=" + extractLast(req.term),
@@ -146,7 +146,7 @@ $(document).ready(function() {
 	$("#oh_psh").autocomplete({
 		source: function (req, add){
 			$.ajax({
-				url: "ajaxsearch/icd9",
+				url: "ajaxsearch/icd",
 				dataType: "json",
 				type: "POST",
 				data: "term=" + extractLast(req.term),
@@ -191,7 +191,7 @@ $(document).ready(function() {
 			$("#fh_icd").autocomplete({
 				source: function (req, add){
 					$.ajax({
-						url: "ajaxsearch/icd9",
+						url: "ajaxsearch/icd",
 						dataType: "json",
 						type: "POST",
 						data: req,
@@ -689,4 +689,5 @@ $(document).ready(function() {
 		$('#oh_employment_form').clearForm();
 	});
 	setInterval(oh_autosave, 10000);
+	swipe();
 });

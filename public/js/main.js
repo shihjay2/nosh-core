@@ -81,6 +81,27 @@ function loadbuttons() {
 	$(".nosh_button_next").button({text: false, icons: {primary: "ui-icon-seek-next"}});
 	$(".nosh_button_prev").button({text: false, icons: {primary: "ui-icon-seek-prev"}});
 }
+function swipe(){
+	if(supportsTouch === true){
+		$('.textdump').swipe({
+			excludedElements:'button, input, select, a, .noSwipe',
+			tap: function(){
+				$(this).swipe('disable');
+				$(this).focus();
+				$(this).on('focusout', function() {
+					$(this).swipe('enable');
+				});
+			},
+			swipeRight: function(){
+				var elem = $(this);
+				textdump(elem);
+			}
+		});
+		$('.textdump_text').text('Swipe right');
+	} else {
+		$('.textdump_text').text('Click right arrow key');
+	}
+}
 function menu_update(type) {
 	$.ajax({
 		type: "POST",
@@ -914,7 +935,6 @@ $(document).idleTimeout({
 	logout_url: noshdata.logout_url,
 	sessionAlive: false
 });
-var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 $(document).ready(function() {
 	loadbuttons();
 	$(".nosh_tooltip").tooltip();
@@ -932,6 +952,12 @@ $(document).ready(function() {
 	});
 	var tz = jstz.determine();
 	$.cookie('nosh_tz', tz.name(), { path: '/' });
+	$('.textdump').swipe({
+		swipeRight: function(){
+			var elem = $(this);
+			textdump(elem);
+		}
+	});
 });
 $(document).on("click", ".ui-jqgrid-titlebar", function() {
 	$(".ui-jqgrid-titlebar-close", this).click();
@@ -1951,4 +1977,409 @@ $(document).on('keydown', ':text', function(e){
 	if(e.keyCode==13) {
 		e.preventDefault();
 	}
-});  
+});
+$(document).on('keydown', '.textdump', function(e){
+	if(e.keyCode==39) {
+		e.preventDefault();
+		var id = $(this).attr('id');
+		$.ajax({
+			type: "POST",
+			url: "ajaxsearch/textdump-group/" + id,
+			success: function(data){
+				$("#textdump_group_html").html('');
+				$("#textdump_group_html").append(data);
+				$(".edittextgroup").button({text: false, icons: {primary: "ui-icon-pencil"}});
+				$(".deletetextgroup").button({text: false, icons: {primary: "ui-icon-trash"}});
+				$(".normaltextgroup").button({text: false, icons: {primary: "ui-icon-check"}});
+				$('.textdump_group_item_text').editable('destroy');
+				$('.textdump_group_item_text').editable({
+					toggle:'manual',
+					ajaxOptions: {
+						headers: {"cache-control":"no-cache"},
+						beforeSend: function(request) {
+							return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
+						},
+						error: function(xhr) {
+							if (xhr.status == "404" ) {
+								alert("Route not found!");
+								//window.location.replace(noshdata.error);
+							} else {
+								if(xhr.responseText){
+									var response1 = $.parseJSON(xhr.responseText);
+									var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
+									alert(error);
+								}
+							}
+						}
+					}
+				});
+				$("#textdump_group_target").val(id);
+				$("#textdump_group").dialog("option", "position", { my: 'left top', at: 'right top', of: '#'+id });
+				$("#textdump_group").dialog('open');
+			}
+		});
+	}
+});
+$(document).on('click', '.textdump_group_item', function(){
+	var id = $("#textdump_group_target").val();
+	var group = $(this).text();
+	$("#textdump_group_item").val(group);
+	$.ajax({
+		type: "POST",
+		url: "ajaxsearch/textdump/" + id,
+		data: 'group='+group,
+		success: function(data){
+			$("#textdump_html").html('');
+			$("#textdump_html").append(data);
+			$(".edittexttemplate").button({text: false, icons: {primary: "ui-icon-pencil"}});
+			$(".deletetexttemplate").button({text: false, icons: {primary: "ui-icon-trash"}});
+			$(".normaltexttemplate").button({text: false, icons: {primary: "ui-icon-check"}});
+			$('.textdump_item_text').editable('destroy');
+			$('.textdump_item_text').editable({
+				toggle:'manual',
+				ajaxOptions: {
+					headers: {"cache-control":"no-cache"},
+					beforeSend: function(request) {
+						return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
+					},
+					error: function(xhr) {
+						if (xhr.status == "404" ) {
+							alert("Route not found!");
+							//window.location.replace(noshdata.error);
+						} else {
+							if(xhr.responseText){
+								var response1 = $.parseJSON(xhr.responseText);
+								var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
+								alert(error);
+							}
+						}
+					}
+				}
+			});
+			$("#textdump_target").val(id);
+			$("#textdump").dialog("option", "position", { my: 'left top', at: 'right top', of: '#'+id });
+			$("#textdump").dialog('open');
+		}
+	});
+});
+$(document).on('click', '.textdump_item', function() {
+	if ($(this).find(':first-child').hasClass("ui-state-error") == false) {
+		var a = '';
+		var id = $("#textdump_target").val();
+		var old = $("#"+id).val();
+		if ($("#textdump_input").val() == '') {
+			if (old != '') {
+				a += '\n' + $("#textdump_group_item").val() + ": ";
+			} else {
+				a += $("#textdump_group_item").val() + ": ";
+			}
+		}
+		a += $(this).text();
+		if (old != '') {
+			var b = old + '\n' + a;
+		} else {
+			var b = a;
+		}
+		$("#"+id).val(b);
+		var old1 = $("#textdump_input").val();
+		if (old1 != '') {
+			var c = old1 + '\n' + a;
+		} else {
+			var c = a;
+		}
+		$("#textdump_input").val(c);
+		$(this).find(':first-child').addClass("ui-state-error ui-corner-all");
+	}
+});
+$(document).on('click', '.edittextgroup', function(e) {
+	var id = $(this).attr('id');
+	e.stopPropagation();
+	$("#"+id+"_b").editable('show', true);
+});
+$(document).on('click', '.edittexttemplate', function(e) {
+	var id = $(this).attr('id');
+	e.stopPropagation();
+	$("#"+id+"_span").editable('show', true);
+});
+$(document).on('click', '.deletetextgroup', function() {
+	var id = $(this).attr('id');
+	var template_id = id.replace('deletetextgroup_','');
+	$.ajax({
+		type: "POST",
+		url: "ajaxsearch/deletetextdumpgroup/" + template_id,
+		success: function(data){
+			$("#textgroupdiv_"+template_id).remove();
+		}
+	});
+});
+$(document).on('click', '.deletetexttemplate', function() {
+	var id = $(this).attr('id');
+	var template_id = id.replace('deletetexttemplate_','');
+	$.ajax({
+		type: "POST",
+		url: "ajaxsearch/deletetextdump/" + template_id,
+		success: function(data){
+			$("#texttemplatediv_"+template_id).remove();
+		}
+	});
+});
+$(document).on('click', '.normaltextgroup', function() {
+	var id = $("#textdump_group_target").val();
+	var a = $(this).val();
+	var old = $("#"+id).val();
+	if (a != 'No normal values set.') {
+		if ($(this).prop('checked')) {
+			if (old != '') {
+				var b = old + '\n' + a;
+			} else {
+				var b = a;
+			}
+			$("#"+id).val(b);
+		} else {
+			var a1 = a + '  ';
+			var c = old.replace(a1,'');
+			c = c.replace(a, '');
+			$("#" +id).val(c); 
+		}
+	} else {
+		$.jGrowl(a);
+	}
+});
+$(document).on('click', '.normaltexttemplate', function() {
+	var id = $(this).attr('id');
+	var template_id = id.replace('normaltexttemplate_','');
+	if ($(this).prop('checked')) {
+		$.ajax({
+			type: "POST",
+			url: "ajaxsearch/defaulttextdump/" + template_id,
+			success: function(data){
+				$.jGrowl('Template marked as normal default!');
+				$("#textdump_group_html").html('');
+				$("#textdump_group_html").append(data);
+				$(".edittextgroup").button({text: false, icons: {primary: "ui-icon-pencil"}});
+				$(".deletetextgroup").button({text: false, icons: {primary: "ui-icon-trash"}});
+				$(".normaltextgroup").button({text: false, icons: {primary: "ui-icon-check"}});
+				$('.textdump_group_item_text').editable('destroy');
+				$('.textdump_group_item_text').editable({
+					toggle:'manual',
+					ajaxOptions: {
+						headers: {"cache-control":"no-cache"},
+						beforeSend: function(request) {
+							return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
+						},
+						error: function(xhr) {
+							if (xhr.status == "404" ) {
+								alert("Route not found!");
+								//window.location.replace(noshdata.error);
+							} else {
+								if(xhr.responseText){
+									var response1 = $.parseJSON(xhr.responseText);
+									var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
+									alert(error);
+								}
+							}
+						}
+					}
+				});
+			}
+		});
+	} else {
+		$.ajax({
+			type: "POST",
+			url: "ajaxsearch/undefaulttextdump/" + template_id,
+			success: function(data){
+				$.jGrowl('Template unmarked as normal default!');
+				$("#textdump_group_html").html('');
+				$("#textdump_group_html").append(data);
+				$(".edittextgroup").button({text: false, icons: {primary: "ui-icon-pencil"}});
+				$(".deletetextgroup").button({text: false, icons: {primary: "ui-icon-trash"}});
+				$(".normaltextgroup").button({text: false, icons: {primary: "ui-icon-check"}});
+				$('.textdump_group_item_text').editable('destroy');
+				$('.textdump_group_item_text').editable({
+					toggle:'manual',
+					ajaxOptions: {
+						headers: {"cache-control":"no-cache"},
+						beforeSend: function(request) {
+							return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
+						},
+						error: function(xhr) {
+							if (xhr.status == "404" ) {
+								alert("Route not found!");
+								//window.location.replace(noshdata.error);
+							} else {
+								if(xhr.responseText){
+									var response1 = $.parseJSON(xhr.responseText);
+									var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
+									alert(error);
+								}
+							}
+						}
+					}
+				});
+			}
+		});
+	}
+});
+$(document).on('keydown', '#textdump_group_add', function(e){
+	if(e.keyCode==13) {
+		e.preventDefault();
+		var a = $("#textdump_group_add").val();
+		if (a != '') {
+			var str = $("#textdump_group_form").serialize();
+			if(str){
+				$.ajax({
+					type: "POST",
+					url: "ajaxsearch/add-text-template-group",
+					data: str,
+					dataType: 'json',
+					success: function(data){
+						$.jGrowl(data.message);
+						var app = '<div id="textgroupdiv_' + data.id + '" style="width:99%" class="pure-g"><div class="pure-u-3-4"><input type="checkbox" id="normaltextgroup_' + data.id + '" class="normaltextgroup" value="No normal values set."><label for="normaltextgroup_' + data.id + '">Normal</label> <b id="edittextgroup_' + data.id + '_b" class="textdump_group_item textdump_group_item_text" data-type="text" data-pk="' + data.id + '" data-name="group" data-url="ajaxsearch/edit-text-template-group" data-title="Group">' + a + '</b></div><div class="pure-u-1-4" style="overflow:hidden"><div style="width:200px;"><button type="button" id="edittextgroup_' + data.id + '" class="edittextgroup">Edit</button><button type="button" id="deletetextgroup_' + data.id + '" class="deletetextgroup">Remove</button></div></div><hr class="ui-state-default"/></div>';
+						$("#textdump_group_html").append(app);
+						$(".edittextgroup").button({text: false, icons: {primary: "ui-icon-pencil"}});
+						$(".deletetextgroup").button({text: false, icons: {primary: "ui-icon-trash"}});
+						$(".normaltextgroup").button({text: false, icons: {primary: "ui-icon-check"}});
+						$('.textdump_group_item_text').editable('destroy');
+						$('.textdump_group_item_text').editable({
+							toggle:'manual',
+							ajaxOptions: {
+								headers: {"cache-control":"no-cache"},
+								beforeSend: function(request) {
+									return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
+								},
+								error: function(xhr) {
+									if (xhr.status == "404" ) {
+										alert("Route not found!");
+										//window.location.replace(noshdata.error);
+									} else {
+										if(xhr.responseText){
+											var response1 = $.parseJSON(xhr.responseText);
+											var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
+											alert(error);
+										}
+									}
+								}
+							}
+						});
+						$("#textdump_group_add").val('');
+					}
+				});
+			} else {
+				$.jGrowl("Please complete the form");
+			}
+		} else {
+			$.jGrowl("No text to add!");
+		}
+	}
+});
+$(document).on('keydown', '#textdump_add', function(e){
+	if(e.keyCode==13) {
+		e.preventDefault();
+		var a = $("#textdump_add").val();
+		if (a != '') {
+			var str = $("#textdump_form").serialize();
+			if(str){
+				$.ajax({
+					type: "POST",
+					url: "ajaxsearch/add-text-template",
+					data: str,
+					dataType: 'json',
+					success: function(data){
+						$.jGrowl(data.message);
+						var app = '<div id="texttemplatediv_' + data.id + '" style="width:99%" class="pure-g"><div class="textdump_item pure-u-2-3"><span id="edittexttemplate_' + data.id + '_span" class="textdump_item_text ui-state-error" data-type="text" data-pk="' + data.id + '" data-name="array" data-url="ajaxsearch/edit-text-template" data-title="Item">' + a + '</span></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:400px;"><input type="checkbox" id="normaltexttemplate_' + data.id + '" class="normaltexttemplate" value="normal"><label for="normaltexttemplate_' + data.id + '">Mark as Default Normal</label><button type="button" id="edittexttemplate_' + data.id + '" class="edittexttemplate">Edit</button><button type="button" id="deletetexttemplate_' + data.id + '" class="deletetexttemplate">Remove</button></div></div><hr class="ui-state-default"/></div>';
+						$("#textdump_html").append(app);
+						$(".edittexttemplate").button({text: false, icons: {primary: "ui-icon-pencil"}});
+						$(".deletetexttemplate").button({text: false, icons: {primary: "ui-icon-trash"}});
+						$(".normaltexttemplate").button({text: false, icons: {primary: "ui-icon-check"}});
+						$('.textdump_item_text').editable('destroy');
+						$('.textdump_item_text').editable({
+							toggle:'manual',
+							ajaxOptions: {
+								headers: {"cache-control":"no-cache"},
+								beforeSend: function(request) {
+									return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
+								},
+								error: function(xhr) {
+									if (xhr.status == "404" ) {
+										alert("Route not found!");
+										//window.location.replace(noshdata.error);
+									} else {
+										if(xhr.responseText){
+											var response1 = $.parseJSON(xhr.responseText);
+											var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
+											alert(error);
+										}
+									}
+								}
+							}
+						});
+						var a1 = '';
+						if ($("#textdump_input").val() == '') {
+							a1 += '\n' + $("#textdump_group_item").val() + ": ";
+						}
+						a1 += a;
+						var id = $("#textdump_target").val();
+						var old = $("#"+id).val();
+						if (old != '') {
+							var b = old + '\n' + a1;
+						} else {
+							var b = a1;
+						}
+						$("#"+id).val(b);
+						var old1 = $("#textdump_input").val();
+						if (old1 != '') {
+							var c = old1 + '\n' + a1;
+						} else {
+							var c = a1;
+						}
+						$("#textdump_input").val(c);
+						$("#textdump_add").val('');
+					}
+				});
+			} else {
+				$.jGrowl("Please complete the form");
+			}
+		} else {
+			$.jGrowl("No text to add!");
+		}
+	}
+});
+function textdump(elem) {
+	var id = $(elem).attr('id');
+	$.ajax({
+		type: "POST",
+		url: "ajaxsearch/textdump-group/" + id,
+		success: function(data){
+			$("#textdump_group_html").html('');
+			$("#textdump_group_html").append(data);
+			$(".edittextgroup").button({text: false, icons: {primary: "ui-icon-pencil"}});
+			$(".deletetextgroup").button({text: false, icons: {primary: "ui-icon-trash"}});
+			$(".normaltextgroup").button({text: false, icons: {primary: "ui-icon-check"}});
+			$('.textdump_group_item_text').editable('destroy');
+			$('.textdump_group_item_text').editable({
+				toggle:'manual',
+				ajaxOptions: {
+					headers: {"cache-control":"no-cache"},
+					beforeSend: function(request) {
+						return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
+					},
+					error: function(xhr) {
+						if (xhr.status == "404" ) {
+							alert("Route not found!");
+							//window.location.replace(noshdata.error);
+						} else {
+							if(xhr.responseText){
+								var response1 = $.parseJSON(xhr.responseText);
+								var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
+								alert(error);
+							}
+						}
+					}
+				}
+			});
+			$("#textdump_group_target").val(id);
+			$("#textdump_group").dialog("option", "position", { my: 'left top', at: 'right top', of: '#'+id });
+			$("#textdump_group").dialog('open');
+		}
+	});
+}

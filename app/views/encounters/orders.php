@@ -17,8 +17,8 @@
 					<?php }?>
 				</div>
 				<div class="pure-u-3-4">
-					<label for="orders_plan">Recommendations:</label>
-					<textarea style="width:95%" rows="10" name="plan" id="orders_plan" class="text"></textarea>
+					<label for="orders_plan">Recommendations: <span class="textdump_text"></span> for templates.</label>
+					<textarea style="width:95%" rows="10" name="plan" id="orders_plan" class="text textdump"></textarea>
 				</div>
 				<div class="pure-u-1-4">
 					<br><button type="button" id="orders_schedule" class="nosh_button_calendar" style="width:105px">Schedule</button>

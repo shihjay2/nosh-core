@@ -2114,42 +2114,46 @@ class AjaxEncounterController extends BaseController {
 		if ($encounter->encounter_template == 'standardmedical') {
 			$table_array1 = array("hpi", "ros", "vitals", "pe", "labs", "procedure", "rx", "assessment", "plan");
 			$table_array2 = array("other_history", "orders", "billing", "billing_core", "image");
-			foreach($table_array1 as $table1) {
-				$table_query1 = DB::table($table1)->where('eid', '=', $eid)->first();
-				if ($table_query1) {
-					$data2 = (array) $table_query1;
-					unset($data2['eid']);
-					$data2['eid'] = $new_eid;
-					DB::table($table1)->insert($data2);
-					$this->audit('Add');
-				}
+		}
+		if ($encounter->encounter_template == 'clinicalsupport') {
+			$table_array1 = array("hpi", "labs", "procedure", "rx", "assessment", "plan");
+			$table_array2 = array("other_history", "orders", "billing", "billing_core", "image");
+		}
+		foreach($table_array1 as $table1) {
+			$table_query1 = DB::table($table1)->where('eid', '=', $eid)->first();
+			if ($table_query1) {
+				$data2 = (array) $table_query1;
+				unset($data2['eid']);
+				$data2['eid'] = $new_eid;
+				DB::table($table1)->insert($data2);
+				$this->audit('Add');
 			}
-			foreach($table_array2 as $table2) {
-				$table_query2 = DB::table($table2)->where('eid', '=', $eid)->get();
-				if ($table_query2) {
-					if ($table2 == 'other_history') {
-						$primary = 'oh_id';
-					}
-					if ($table2 == 'orders') {
-						$primary = 'orders_id';
-					}
-					if ($table2 == 'billing') {
-						$primary = 'bill_id';
-					}
-					if ($table2 == 'billing_core') {
-						$primary = 'billing_core_id';
-					}
-					if ($table2 == 'image') {
-						$primary = 'image_id';
-					}
-					foreach ($table_query2 as $table_row) {
-						$data3 = (array) $table_row;
-						unset($data3['eid']);
-						unset($data3[$primary]);
-						$data3['eid'] = $new_eid;
-						DB::table($table2)->insert($data3);
-						$this->audit('Add');
-					}
+		}
+		foreach($table_array2 as $table2) {
+			$table_query2 = DB::table($table2)->where('eid', '=', $eid)->get();
+			if ($table_query2) {
+				if ($table2 == 'other_history') {
+					$primary = 'oh_id';
+				}
+				if ($table2 == 'orders') {
+					$primary = 'orders_id';
+				}
+				if ($table2 == 'billing') {
+					$primary = 'bill_id';
+				}
+				if ($table2 == 'billing_core') {
+					$primary = 'billing_core_id';
+				}
+				if ($table2 == 'image') {
+					$primary = 'image_id';
+				}
+				foreach ($table_query2 as $table_row) {
+					$data3 = (array) $table_row;
+					unset($data3['eid']);
+					unset($data3[$primary]);
+					$data3['eid'] = $new_eid;
+					DB::table($table2)->insert($data3);
+					$this->audit('Add');
 				}
 			}
 		}
@@ -2178,5 +2182,54 @@ class AjaxEncounterController extends BaseController {
 	public function postGetPreviousVersions($eid)
 	{
 		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, false);
+	}
+	
+	public function postCopyEncounter()
+	{
+		$eid = Input::get('copy_encounter_from');
+		$encounter = Encounters::find(Session::get('eid'));
+		if ($encounter->encounter_template == 'standardmedical') {
+			$table_array1 = array("hpi", "ros", "vitals", "pe", "labs", "procedure", "rx", "assessment", "plan");
+			$table_array2 = array("other_history");
+		}
+		if ($encounter->encounter_template == 'clinicalsupport') {
+			$table_array1 = array("hpi", "labs", "procedure", "rx", "assessment", "plan");
+			$table_array2 = array("other_history");
+		}
+		foreach($table_array1 as $table1) {
+			$table_query1 = DB::table($table1)->where('eid', '=', $eid)->first();
+			if ($table_query1) {
+				$data2 = (array) $table_query1;
+				unset($data2['eid']);
+				$data2['eid'] = Session::get('eid');
+				$query1 = DB::table($table1)->where('eid', '=', Session::get('eid'))->first();
+				if ($query1) {
+					DB::table($table1)->where('eid', '=', Session::get('eid'))->update($data2);
+					$this->audit('Update');
+				} else {
+					DB::table($table1)->insert($data2);
+					$this->audit('Add');
+				}
+			}
+		}
+		$table_query2 = DB::table('other_history')->where('eid', '=', $eid)->get();
+		if ($table_query2) {
+			foreach ($table_query2 as $table_row) {
+				$data3 = (array) $table_row;
+				unset($data3['eid']);
+				unset($data3['oh_id']);
+				$data3['eid'] = Session::get('eid');
+				$query2 = DB::table('other_history')->where('eid', '=', Session::get('eid'))->first();
+				if ($query2) {
+					$data3[$primary] = $query2->oh_id;
+					DB::table('other_history')->where('oh_id', '=', $query2->oh_id)->update($data3);
+					$this->audit('Update');
+				} else {
+					DB::table('other_history')->insert($data3);
+					$this->audit('Add');
+				}
+			}
+		}
+		echo "Copied previous encounter elements to new encounter.";
 	}
 }

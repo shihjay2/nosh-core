@@ -23,7 +23,7 @@
 				<div id="hpi_form" class="pure-g">
 					<div class="pure-u-13-24">
 						<form class="pure-form pure-form-stacked">
-							<label for="hpi">Preview:</label><textarea style="width:95%" rows="16" name="hpi" id="hpi" class="text"></textarea><input type="hidden" name="hpi_old" id="hpi_old"/>
+							<label for="hpi">Preview: <span class="textdump_text"></span> for templates.</label><textarea style="width:95%" rows="16" name="hpi" id="hpi" class="text textdump"></textarea><input type="hidden" name="hpi_old" id="hpi_old"/>
 						</form>
 						<br><button type="button" id="hpi_reset" class="reset nosh_button">Clear</button><?php echo $cpe;?><?php echo $wcc;?><?php echo $preg;?><?php echo $mtm;?>
 					</div>
@@ -69,4 +69,3 @@
 		</div>
 	</div>
 </div>
-

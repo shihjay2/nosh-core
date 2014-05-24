@@ -862,11 +862,11 @@ class ReminderController extends BaseController {
 					DB::table('messaging')->insert($data_message);
 					$this->audit('Add');
 				}
-				$file1 = str_replace('/srv/ftp/shared/import', '', $file);
+				$file1 = str_replace('/srv/ftp/shared/import/', '', $file);
 				rename($file, $practice_row->documents_dir . $file1);
 				$full_count++;
 			} else {
-				$file1 = str_replace('/srv/ftp/shared/import', '', $file);
+				$file1 = str_replace('/srv/ftp/shared/import/', '', $file);
 				rename($file, $practice_row->documents_dir . $file1 . '.error');
 			}
 		}

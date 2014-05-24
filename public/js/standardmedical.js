@@ -495,4 +495,5 @@ $(document).ready(function() {
 		var intro = age + gender + " here for a Medication Therapy Management encounter.";
 		$("#hpi").val(old1+intro);
 	});
+	swipe();
 });

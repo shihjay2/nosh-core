@@ -106,7 +106,10 @@ Route::group(array('before' => 'force.ssl|acl2'), function() {
 	Route::get('print_immunization_list', array('as' => 'print_immunization_list', 'uses' => 'ChartController@print_immunization_list'));
 	Route::get('csv_immunization', array('as' => 'csv_immunization', 'uses' => 'ChartController@csv_immunization'));
 	Route::get('print_plan', array('as' => 'print_plan', 'uses' => 'AjaxEncounterController@print_plan'));
-	Route::post('photoupload', array('as' => 'photopload', 'uses' => 'AjaxChartController@photoupload'));
+	Route::post('photoupload', array('as' => 'photoupload', 'uses' => 'AjaxChartController@photoupload'));
+	Route::get('templatedownload/{template_id}', array('as' => 'templatedownload', 'uses' => 'AjaxDashboardController@templatedownload'));
+	Route::get('texttemplatedownload/{template_id}', array('as' => 'texttemplatedownload', 'uses' => 'AjaxDashboardController@texttemplatedownload'));
+	Route::post('templateupload', array('as' => 'templateupload', 'uses' => 'AjaxDashboardController@templateupload'));
 });
 Route::group(array('before' => 'force.ssl|acl4'), function() {
 });

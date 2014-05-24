@@ -94,4 +94,5 @@ $(document).ready(function() {
 		$("#procedure_ebl").val('');
 	});
 	setInterval(proc_autosave, 10000);
+	swipe();
 });

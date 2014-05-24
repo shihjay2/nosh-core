@@ -102,8 +102,8 @@
 			<br><button type="button" id="assessment_notes_reset"  class="nosh_button_cancel">Clear</button>
 		</div>
 		<div class="pure-u-5-6">
-			<label for="assessment_notes">Assessment discussion:</label>
-			<textarea rows="4" style="width:500px" name="assessment_notes" id="assessment_notes" class="text"></textarea>
+			<label for="assessment_notes">Assessment discussion: <span class="textdump_text"></span> for templates.</label>
+			<textarea rows="4" style="width:500px" name="assessment_notes" id="assessment_notes" class="text textdump"></textarea>
 		</div>
 	</div>
 </form>

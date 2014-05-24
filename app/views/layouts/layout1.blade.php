@@ -18,6 +18,7 @@
 				'logout_url': '<?php echo route('logout'); ?>',
 				'images': '<?php echo url('images'); ?>/'
 			};
+			var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 		</script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>

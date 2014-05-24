@@ -1093,4 +1093,103 @@ $(document).ready(function() {
 			}
 		}
 	});
+	$("#textdump_group").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 300, 
+		width: 400, 
+		draggable: false,
+		resizable: false,
+		close: function (event, ui) {
+			$("#textdump_group_target").val('');
+			$("#textdump_group_add").val('');
+			$("#textdump_group_html").html('');
+		}
+	});
+	$("#textdump").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 300, 
+		width: 400, 
+		draggable: false,
+		resizable: false,
+		close: function (event, ui) {
+			$("#textdump_target").val('');
+			$("#textdump_input").val('');
+			$("#textdump_add").val('');
+			$("#textdump_group_item").val('');
+			$("#textdump_html").html('');
+		},
+		buttons: {
+			Cancel: function() {
+				var id = $("#textdump_target").val();
+				var a = $("#textdump_input").val();
+				var b = $("#"+id).val();
+				var c = b.replace(a, "");
+				$("#"+id).val(c);
+				$("#textdump").dialog('close');
+			}
+		}
+	});
+	$("#textdump_group_html").tooltip();
+	$("#textdump_html").tooltip();
+	$("#copy_encounter").click(function(){
+		$("#copy_encounter_dialog").dialog('open');
+	});
+	$("#copy_encounter_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 300, 
+		width: 550, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		open: function(event, ui) {
+			$.ajax({
+				type: "POST",
+				url: "ajaxsearch/previous-encounters",
+				dataType: "json",
+				success: function(data){
+					$("#copy_encounter_from").removeOption(/./);
+					$("#copy_encounter_from").addOption(data,false);
+				}
+			});
+		},
+		buttons: {
+			'Copy': function() {
+				if(confirm('Are you sure you want to copy this encounter into the current?')){ 
+					var bValid = true;
+					$("#copy_encounter_form").find("[required]").each(function() {
+						var input_id = $(this).attr('id');
+						var id1 = $("#" + input_id); 
+						var text = $("label[for='" + input_id + "']").html();
+						bValid = bValid && checkEmpty(id1, text);
+					});
+					if (bValid) {
+						var str = $("#copy_encounter_form").serialize();
+						if(str){
+							$.ajax({
+								type: "POST",
+								url: "ajaxencounter/copy-encounter",
+								data: str,
+								success: function(data){
+									$.jGrowl(data);
+									$("#copy_encounter_form").clearForm();
+									$("#copy_encounter_dialog").dialog('close');
+								}
+							});
+						} else {
+							$.jGrowl("Please complete the form");
+						}
+					}
+				}
+			},
+			Cancel: function() {
+				$("#copy_encounter_form").clearForm();
+				$("#copy_encounter_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
 });

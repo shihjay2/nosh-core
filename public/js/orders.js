@@ -283,4 +283,5 @@ $(document).ready(function() {
 		$("#schedule_dialog").dialog('open');
 	});
 	setInterval(orders_autosave, 10000);
+	swipe();
 });

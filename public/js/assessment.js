@@ -191,4 +191,5 @@ $(document).ready(function() {
 		$("#assessment_notes").val('');
 	});
 	setInterval(assessment_autosave, 10000);
+	swipe();
 });

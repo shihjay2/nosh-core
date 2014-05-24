@@ -160,4 +160,5 @@ $(document).ready(function() {
 	$('#situation_reset').click(function(){
 		$("#situation").val('');
 	});
+	swipe();
 });

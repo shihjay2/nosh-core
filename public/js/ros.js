@@ -437,4 +437,5 @@ $(document).ready(function() {
 			//}
 		}
 	});
+	swipe();
 });

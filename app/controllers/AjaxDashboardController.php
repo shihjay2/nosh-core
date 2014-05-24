@@ -1245,6 +1245,81 @@ class AjaxDashboardController extends BaseController {
 		}
 	}
 	
+	public function templatedownload($id)
+	{
+		$result = DB::table('templates')->where('template_id', '=', $id)->first();
+		$array_row = (array) $result;
+		unset($array_row['template_id']);
+		unset($array_row['practice_id']);
+		$array_values = array_values($array_row);
+		$array_key = array_keys($array_row);
+		$csv = implode("\t", $array_key);
+		$csv .= "\n" . implode("\t", $array_values);
+		$file_path = __DIR__."/../../public/temp/" . time() . "_" . $result->category . "_template.txt";
+		File::put($file_path, $csv);
+		return Response::download($file_path);
+	}
+	
+	public function templateupload()
+	{
+		$directory = __DIR__.'/../../public/temp';
+		$i = 0;
+		$error = '';
+		foreach (Input::file('file') as $file) {
+			if ($file) {
+				$file->move($directory, $file->getClientOriginalName());
+				$file_path = $directory . '/' . $file->getClientOriginalName();
+				while(!file_exists($file_path)) {
+					sleep(2);
+				}
+				$csv = File::get($file_path);
+				Config::set('formatter::formatter.csv.delimiter', "\t");
+				Config::set('formatter::formatter.csv.enclosure', '');
+				Config::set('formatter::formatter.csv.newline', "\n");
+				Config::set('formatter::formatter.csv.regex_newline', '\n');
+				Config::set('formatter::formatter.csv.escape', '\\');
+				$result = Formatter::make($csv, 'csv')->to_array();
+				if (empty(Formatter::$errors)) {
+					foreach ($result as $row) {
+						$row['practice_id'] = Session::get('practice_id');
+						DB::table('templates')->insert($row);
+						$i++;
+					}
+				} else {
+					$error = '<br>Error processing file:<br>';
+					$error .= implode('<br>', Formatter::$errors);
+				}
+				unlink($file_path);
+			} else {
+				$error = '<br>Invalid file!';
+			}
+		}
+		return "Imported " . $i . " templates." . $error;
+	}
+	
+	public function texttemplatedownload($id)
+	{
+		$result = DB::table('templates')->where('template_id', '=', $id)->first();
+		$array_row = (array) $result;
+		unset($array_row['template_id']);
+		unset($array_row['practice_id']);
+		$array_values = array_values($array_row);
+		$array_key = array_keys($array_row);
+		$csv = implode("\t", $array_key);
+		$csv .= "\n" . implode("\t", $array_values);
+		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $result->template_name)->where('group', '=', $result->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->get();
+		foreach ($query as $row) {
+			$array_row1 = (array) $row;
+			unset($array_row1['template_id']);
+			unset($array_row1['practice_id']);
+			$array_values1 = array_values($array_row1);
+			$csv .= "\n" . implode("\t", $array_values1);
+		}
+		$file_path = __DIR__."/../../public/temp/" . time() . "_" . $result->group . "_template.txt";
+		File::put($file_path, $csv);
+		return Response::download($file_path);
+	}
+	
 	public function postPatientFormsList()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1851,6 +1926,176 @@ class AjaxDashboardController extends BaseController {
 			}
 		}
 		echo $message;
+	}
+	
+	public function postTextdumpList()
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$page = Input::get('page');
+			$limit = Input::get('rows');
+			$sidx = Input::get('sidx');
+			$sord = Input::get('sord');
+			$practice_id = Session::get('practice_id');
+			$pid = Session::get('pid');
+			$query = DB::table('templates')
+				->where('category', '=', 'text')
+				->where('practice_id', '=', $practice_id)
+				->where('array', '=', '')
+				->get();
+			if($query) { 
+				$count = count($query);
+				$total_pages = ceil($count/$limit); 
+			} else { 
+				$count = 0;
+				$total_pages = 0;
+			}
+			if ($page > $total_pages) $page=$total_pages;
+			$start = $limit*$page - $limit;
+			if($start < 0) $start = 0;
+			$query1 = DB::table('templates')
+				->where('category', '=', 'text')
+				->where('practice_id', '=', $practice_id)
+				->where('array', '=', '')
+				->orderBy($sidx, $sord)
+				->skip($start)
+				->take($limit)
+				->get();
+			$response['page'] = $page;
+			$response['total'] = $total_pages;
+			$response['records'] = $count;
+			if ($query1) {
+				$records1 = array();
+				$i = 0;
+				foreach ($query1 as $row) {
+					$records1[$i]['template_id'] = $row->template_id;
+					$records1[$i]['template_name'] = $row->template_name;
+					$records1[$i]['group'] = $row->group;
+					$i++;
+				}
+				$response['rows'] = $records1;
+			} else {
+				$response['rows'] = '';
+			}
+			echo json_encode($response);
+		}
+	}
+	
+	public function postTextdumpList1($id)
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$group = DB::table('templates')->where('template_id', '=', $id)->first();
+			$page = Input::get('page');
+			$limit = Input::get('rows');
+			$sidx = Input::get('sidx');
+			$sord = Input::get('sord');
+			$practice_id = Session::get('practice_id');
+			$pid = Session::get('pid');
+			$query = DB::table('templates')
+				->where('category', '=', 'text')
+				->where('practice_id', '=', $practice_id)
+				->where('array', '!=', '')
+				->where('group', '=', $group->group)
+				->get();
+			if($query) { 
+				$count = count($query);
+				$total_pages = ceil($count/$limit); 
+			} else { 
+				$count = 0;
+				$total_pages = 0;
+			}
+			if ($page > $total_pages) $page=$total_pages;
+			$start = $limit*$page - $limit;
+			if($start < 0) $start = 0;
+			$query1 = DB::table('templates')
+				->where('category', '=', 'text')
+				->where('practice_id', '=', $practice_id)
+				->where('array', '!=', '')
+				->where('group', '=', $group->group)
+				->orderBy($sidx, $sord)
+				->skip($start)
+				->take($limit)
+				->get();
+			$response['page'] = $page;
+			$response['total'] = $total_pages;
+			$response['records'] = $count;
+			if ($query1) {
+				$records1 = array();
+				$i = 0;
+				foreach ($query1 as $row) {
+					$records1[$i]['template_id'] = $row->template_id;
+					$records1[$i]['template_name'] = $row->template_name;
+					$records1[$i]['array'] = $row->array;
+					$records1[$i]['group'] = $row->group;
+					$records1[$i]['default'] = $row->default;
+					$i++;
+				}
+				$response['rows'] = $records1;
+			} else {
+				$response['rows'] = '';
+			}
+			echo json_encode($response);
+		}
+	}
+	
+	public function postSaveTextdumpgroup()
+	{
+		$data = array(
+			'array' => '',
+			'category' => 'text',
+			'template_name' => Input::get('template_name'),
+			'practice_id' => Session::get('practice_id'),
+			'group' => Input::get('group')
+		);
+		if (Input::get('template_id') != '') {
+			$group = DB::table('templates')->where('template_id', '=', Input::get('template_id'))->first();
+			$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $group->template_name)->where('group', '=', $group->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->get();
+			foreach ($query as $row) {
+				$data1 = array(
+					'group' => Input::get('group')
+				);
+				DB::table('templates')->where('template_id', '=', $row->template_id)->update($data1);
+				$this->audit('Update');
+			}
+			DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($data);
+			$this->audit('Update');
+			$arr = "Group updated";
+		} else {
+			DB::table('templates')->insert($data);
+			$this->audit('Add');
+			$arr = "Group added";
+		}
+		echo $arr;
+	}
+	
+	public function postSaveTextdump()
+	{
+		$data = array(
+			'array' => Input::get('array'),
+			'category' => 'text',
+			'template_name' => Input::get('template_name'),
+			'practice_id' => Session::get('practice_id'),
+			'group' => Input::get('group')
+		);
+		if (Input::get('template_id') != '') {
+			DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($data);
+			$this->audit('Update');
+			$arr = "Template updated";
+		} else {
+			DB::table('templates')->insert($data);
+			$this->audit('Add');
+			$arr = "Template added";
+		}
+		echo $arr;
 	}
 	
 	public function postCheckFax()

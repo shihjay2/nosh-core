@@ -13,7 +13,7 @@
 					<button type="button" id="oh_pmh_issues" class="nosh_button" style="width:75px">Issues</button>
 				</div>
 				<div class="pure-u-4-5">
-					<label for="oh_pmh">Past Medical History:</label><textarea style="width:95%" rows="4" name="oh_pmh" id="oh_pmh" class="text" placeholder="Type a few letters to search and select from ICD9 database."></textarea>
+					<label for="oh_pmh">Past Medical History: <span class="textdump_text"></span> for templates.</label><textarea style="width:95%" rows="4" name="oh_pmh" id="oh_pmh" class="text textdump" placeholder="Type a few letters to search and select from ICD9 database."></textarea>
 					<label for="oh_pmh_pf_template">Patient Forms for Past Medical History:</label><select id="oh_pmh_pf_template"></select>
 				</div>
 				<div class="pure-u-1-5">
@@ -21,7 +21,7 @@
 					<button type="button" id="oh_psh_issues" class="nosh_button" style="width:75px">Issues</button>
 				</div>
 				<div class="pure-u-4-5">
-					<label for="oh_psh">Past Surgical History:</label><textarea style="width:95%" rows="4" name="oh_psh" id="oh_psh" class="text" placeholder="Type a few letters to search and select from ICD9 database."></textarea>
+					<label for="oh_psh">Past Surgical History: <span class="textdump_text"></span> for templates.</label><textarea style="width:95%" rows="4" name="oh_psh" id="oh_psh" class="text textdump" placeholder="Type a few letters to search and select from ICD9 database."></textarea>
 					<label for="oh_psh_pf_template">Patient Forms for Past Surgical History:</label><select id="oh_psh_pf_template"></select>
 				</div>
 				<div class="pure-u-1-5">
@@ -29,7 +29,7 @@
 					<button type="button" id="oh_fh_icd" class="nosh_button" style="width:75px">ICD</button>
 				</div>
 				<div class="pure-u-4-5">
-					<label for="oh_fh">Family History:</label><textarea style="width:95%" rows="4" name="oh_fh" id="oh_fh" class="text"></textarea>
+					<label for="oh_fh">Family History: <span class="textdump_text"></span> for templates.</label><textarea style="width:95%" rows="4" name="oh_fh" id="oh_fh" class="text textdump"></textarea>
 					<label for="oh_fh_pf_template">Patient Forms for Family History:</label><select id="oh_fh_pf_template"></select>
 				</div>
 			</div>
@@ -64,7 +64,7 @@
 	<div class="pure-g">
 		<div class="pure-u-13-24">
 			<form id="oh_sh_dialog_form" class="pure-form pure-form-stacked">
-				<label for="oh_sh">Preview:</label><textarea name="oh_sh" id="oh_sh" rows="20" style="width:95%" class="text"></textarea>
+				<label for="oh_sh">Preview: <span class="textdump_text"></span> for templates.</label><textarea name="oh_sh" id="oh_sh" rows="20" style="width:95%" class="text textdump"></textarea>
 			</form>
 		</div>
 		<div class="pure-u-11-24">
@@ -109,7 +109,7 @@
 	<div class="pure-g">
 		<div class="pure-u-13-24">
 			<form id="oh_etoh_dialog_form" class="pure-form pure-form-stacked">
-				<label for="oh_etoh">Preview:</label><textarea name="oh_etoh" id="oh_etoh" rows="20" style="width:95%" class="text"></textarea>
+				<label for="oh_etoh">Preview: <span class="textdump_text"></span> for templates.</label><textarea name="oh_etoh" id="oh_etoh" rows="20" style="width:95%" class="text textdump"></textarea>
 			</form>
 		</div>
 		<div class="pure-u-11-24">
@@ -131,7 +131,7 @@
 	<div class="pure-g">
 		<div class="pure-u-13-24">
 			<form id="oh_tobacco_dialog_form" class="pure-form pure-form-stacked">
-				<label for="oh_tobacco">Preview:</label><textarea name="oh_tobacco" id="oh_tobacco" rows="20" style="width:95%" class="text"></textarea>
+				<label for="oh_tobacco">Preview: <span class="textdump_text"></span> for templates.</label><textarea name="oh_tobacco" id="oh_tobacco" rows="20" style="width:95%" class="text textdump"></textarea>
 			</form>
 		</div>
 		<div class="pure-u-11-24">
@@ -153,7 +153,7 @@
 	<div class="pure-g">
 		<div class="pure-u-13-24">
 			<form id="oh_drugs_dialog_form" class="pure-form pure-form-stacked">
-				<label for="oh_drugs">Preview:</label><textarea name="oh_drugs" id="oh_drugs" rows="20" style="width:95%" class="text"></textarea>
+				<label for="oh_drugs">Preview: <span class="textdump_text"></span> for templates.</label><textarea name="oh_drugs" id="oh_drugs" rows="20" style="width:95%" class="text textdump"></textarea>
 			</form>
 		</div>
 		<div class="pure-u-11-24">
@@ -176,7 +176,7 @@
 	<div class="pure-g">
 		<div class="pure-u-13-24">
 			<form id="oh_employment_dialog_form" class="pure-form pure-form-stacked">
-				<label for="oh_employment">Preview:</label><textarea name="oh_employment" id="oh_employment" rows="20" style="width:95%" class="text"></textarea>
+				<label for="oh_employment">Preview: <span class="textdump_text"></span> for templates.</label><textarea name="oh_employment" id="oh_employment" rows="20" style="width:95%" class="text textdump"></textarea>
 			</form>
 		</div>
 		<div class="pure-u-11-24">

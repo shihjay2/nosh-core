@@ -13,7 +13,7 @@
 			<div id="situation_form" class="pure-g">
 				<div class="pure-u-13-24">
 					<form class="pure-form pure-form-stacked">
-						<label for="situation">Preview:</label><textarea style="width:95%" rows="16" name="situation" id="situation" class="text"></textarea><input type="hidden" name="situation_old" id="situation_old"/>
+						<label for="situation">Preview: <span class="textdump_text"></span> for templates.</label><textarea style="width:95%" rows="16" name="situation" id="situation" class="text textdump"></textarea><input type="hidden" name="situation_old" id="situation_old"/>
 					</form>
 					<br><button type="button" id="situation_reset" class="reset nosh_button">Clear</button>
 				</div>

@@ -846,4 +846,5 @@ $(document).ready(function() {
 			}
 		});
 	});
+	swipe();
 });

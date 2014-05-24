@@ -2398,4 +2398,199 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
+	
+	public function postTextdumpGroup($target)
+	{
+		$arr = '';
+		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('practice_id', '=', Session::get('practice_id'))->where('array', '=', '')->get();
+		foreach ($query as $row) {
+			$norm = 'No normal values set.';
+			$query1 = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('group', '=', $row->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->where('default', '=', 'normal')->get();
+			if ($query1) {
+				$norm = $row->group . ': ';
+				$i = 0;
+				foreach ($query1 as $row1) {
+					if ($i > 0) {
+						$norm .= "\n";
+					}
+					$norm .= $row1->array;
+					$i++;
+				}
+			}
+			$arr .= '<div id="textgroupdiv_' . $row->template_id . '" style="width:99%" class="pure-g"><div class="pure-u-3-4"><input type="checkbox" id="normaltextgroup_' . $row->template_id . '" class="normaltextgroup" value="' . $norm . '"/><label for="normaltextgroup_' . $row->template_id . '">Normal</label> <b id="edittextgroup_' . $row->template_id . '_b" class="textdump_group_item textdump_group_item_text" data-type="text" data-pk="' . $row->template_id . '" data-name="group" data-url="ajaxsearch/edit-text-template-group" data-title="Group">' . $row->group . '</b></div><div class="pure-u-1-4" style="overflow:hidden"><div style="width:200px;"><button type="button" id="edittextgroup_' . $row->template_id . '" class="edittextgroup">Edit</button><button type="button" id="deletetextgroup_' . $row->template_id . '" class="deletetextgroup">Remove</button></div></div><hr class="ui-state-default"/></div>';
+		}
+		echo $arr;
+	}
+	
+	public function postTextdump($target)
+	{
+		$arr = '';
+		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('group', '=', Input::get('group'))->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->get();
+		foreach ($query as $row) {
+			if ($row->default == 'normal') {
+				$arr .= '<div id="texttemplatediv_' . $row->template_id . '" style="width:99%" class="pure-g"><div class="textdump_item pure-u-2-3"><span id="edittexttemplate_' . $row->template_id . '_span" class="textdump_item_text" data-type="text" data-pk="' . $row->template_id . '" data-name="array" data-url="ajaxsearch/edit-text-template" data-title="Item">' . $row->array . '</span></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:400px;"><input type="checkbox" id="normaltexttemplate_' . $row->template_id . '" class="normaltexttemplate" value="normal" checked><label for="normaltexttemplate_' . $row->template_id . '">Mark as Default Normal</label><button type="button" id="edittexttemplate_' . $row->template_id . '" class="edittexttemplate">Edit</button><button type="button" id="deletetexttemplate_' . $row->template_id . '" class="deletetexttemplate">Remove</button></div></div><hr class="ui-state-default"/></div>';
+			} else {
+				$arr .= '<div id="texttemplatediv_' . $row->template_id . '" style="width:99%" class="pure-g"><div class="textdump_item pure-u-2-3"><span id="edittexttemplate_' . $row->template_id . '_span" class="textdump_item_text" data-type="text" data-pk="' . $row->template_id . '" data-name="array" data-url="ajaxsearch/edit-text-template" data-title="Item">' . $row->array . '</span></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:400px;"><input type="checkbox" id="normaltexttemplate_' . $row->template_id . '" class="normaltexttemplate" value="normal"><label for="normaltexttemplate_' . $row->template_id . '">Mark as Default Normal</label><button type="button" id="edittexttemplate_' . $row->template_id . '" class="edittexttemplate">Edit</button><button type="button" id="deletetexttemplate_' . $row->template_id . '" class="deletetexttemplate">Remove</button></div></div><hr class="ui-state-default"/></div>';
+			}
+		}
+		echo $arr;
+	}
+	
+	public function postAddTextTemplate()
+	{
+		$data = array(
+			'array' => Input::get('textdump_add'),
+			'category' => 'text',
+			'template_name' => Input::get('target'),
+			'practice_id' => Session::get('practice_id'),
+			'group' => Input::get('group')
+		);
+		$arr['id'] = DB::table('templates')->insertGetId($data);
+		$this->audit('Add');
+		$arr['message'] = "Text added";
+		echo json_encode($arr);
+	}
+	
+	public function postAddTextTemplateGroup()
+	{
+		$data = array(
+			'array' => '',
+			'category' => 'text',
+			'template_name' => Input::get('target'),
+			'practice_id' => Session::get('practice_id'),
+			'group' => Input::get('textdump_group_add')
+		);
+		$arr['id'] = DB::table('templates')->insertGetId($data);
+		$this->audit('Add');
+		$arr['message'] = "Group added";
+		echo json_encode($arr);
+	}
+	
+	public function postEditTextTemplateGroup()
+	{
+		$group = DB::table('templates')->where('template_id', '=', Input::get('pk'))->first();
+		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $group->template_name)->where('group', '=', $group->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->get();
+		foreach ($query as $row) {
+			$data1 = array(
+				'group' => Input::get('value')
+			);
+			DB::table('templates')->where('template_id', '=', $row->template_id)->update($data1);
+			$this->audit('Update');
+		}
+		$data = array(
+			'group' => Input::get('value')
+		);
+		DB::table('templates')->where('template_id', '=', Input::get('pk'))->update($data);
+		$this->audit('Update');
+		echo "Group updated";
+	}
+	
+	public function postEditTextTemplate()
+	{
+		$data = array(
+			'array' => Input::get('value')
+		);
+		DB::table('templates')->where('template_id', '=', Input::get('pk'))->update($data);
+		$this->audit('Update');
+		echo "Text updated";
+	}
+	
+	public function postDeletetextdump($id)
+	{
+		$item = DB::table('templates')->where('template_id', '=', $id)->first();
+		DB::table('templates')->where('template_id', '=', $id)->delete();
+		$this->audit('Delete');
+		echo 'Text deleted';
+	}
+	
+	public function postDeletetextdumpgroup($id)
+	{
+		$group = DB::table('templates')->where('template_id', '=', $id)->first();
+		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $group->template_name)->where('group', '=', $group->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->get();
+		foreach ($query as $row) {
+			DB::table('templates')->where('template_id', '=', $row->template_id)->delete();
+			$this->audit('Delete');
+		}
+		DB::table('templates')->where('template_id', '=', $id)->delete();
+		$this->audit('Delete');
+		echo 'Group deleted';
+	}
+	
+	public function postDefaulttextdump($id)
+	{
+		$data = array(
+			'default' => 'normal'
+		);
+		DB::table('templates')->where('template_id', '=', $id)->update($data);
+		$this->audit('Update');
+		$query2 = DB::table('templates')->where('template_id', '=', $id)->first();
+		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $query2->template_name)->where('practice_id', '=', Session::get('practice_id'))->where('array', '=', '')->get();
+		$arr = '';
+		foreach ($query as $row) {
+			$norm = 'No normal values set.';
+			$query1 = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $query2->template_name)->where('group', '=', $row->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->where('default', '=', 'normal')->get();
+			if ($query1) {
+				$norm = $row->group . ': ';
+				$i = 0;
+				foreach ($query1 as $row1) {
+					if ($i > 0) {
+						$norm .= "\n";
+					}
+					$norm .= $row1->array;
+					$i++;
+				}
+			}
+			$arr .= '<div id="textgroupdiv_' . $row->template_id . '" style="width:99%" class="pure-g"><div class="pure-u-3-4"><input type="checkbox" id="normaltextgroup_' . $row->template_id . '" class="normaltextgroup" value="' . $norm . '"/><label for="normaltextgroup_' . $row->template_id . '">Normal</label> <b id="edittextgroup_' . $row->template_id . '_b" class="textdump_group_item textdump_group_item_text" data-type="text" data-pk="' . $row->template_id . '" data-name="group" data-url="ajaxsearch/edit-text-template-group" data-title="Group">' . $row->group . '</b></div><div class="pure-u-1-4" style="overflow:hidden"><div style="width:200px;"><button type="button" id="edittextgroup_' . $row->template_id . '" class="edittextgroup">Edit</button><button type="button" id="deletetextgroup_' . $row->template_id . '" class="deletetextgroup">Remove</button></div></div><hr class="ui-state-default"/></div>';
+		}
+		echo $arr;
+	}
+	
+	public function postUndefaulttextdump($id)
+	{
+		$data = array(
+			'default' => ''
+		);
+		DB::table('templates')->where('template_id', '=', $id)->update($data);
+		$this->audit('Update');
+		$query2 = DB::table('templates')->where('template_id', '=', $id)->first();
+		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $query2->template_name)->where('practice_id', '=', Session::get('practice_id'))->where('array', '=', '')->get();
+		$arr = '';
+		foreach ($query as $row) {
+			$norm = 'No normal values set.';
+			$query1 = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $query2->template_name)->where('group', '=', $row->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->where('default', '=', 'normal')->get();
+			if ($query1) {
+				$norm = $row->group . ': ';
+				$i = 0;
+				foreach ($query1 as $row1) {
+					if ($i > 0) {
+						$norm .= "\n";
+					}
+					$norm .= $row1->array;
+					$i++;
+				}
+			}
+			$arr .= '<div id="textgroupdiv_' . $row->template_id . '" style="width:99%" class="pure-g"><div class="pure-u-3-4"><input type="checkbox" id="normaltextgroup_' . $row->template_id . '" class="normaltextgroup" value="' . $norm . '"/><label for="normaltextgroup_' . $row->template_id . '">Normal</label> <b id="edittextgroup_' . $row->template_id . '_b" class="textdump_group_item textdump_group_item_text" data-type="text" data-pk="' . $row->template_id . '" data-name="group" data-url="ajaxsearch/edit-text-template-group" data-title="Group">' . $row->group . '</b></div><div class="pure-u-1-4" style="overflow:hidden"><div style="width:200px;"><button type="button" id="edittextgroup_' . $row->template_id . '" class="edittextgroup">Edit</button><button type="button" id="deletetextgroup_' . $row->template_id . '" class="deletetextgroup">Remove</button></div></div><hr class="ui-state-default"/></div>';
+		}
+		echo $arr;
+	}
+	
+	public function postPreviousEncounters()
+	{
+		$encounter = Encounters::find(Session::get('eid'));
+		$query = DB::table('encounters')->where('pid', '=', Session::get('pid'))
+			->where('addendum', '=', 'n')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->orderBy('encounter_DOS', 'asc')
+			->where('encounter_template', '=', $encounter->encounter_template)
+			->get();
+		$data = array();
+		if ($query) {
+			foreach ($query as $row) {
+				$key = $row->eid;
+				$value = date('Y-m-d', $this->human_to_unix($row->encounter_DOS)) . ' (Chief complaint: ' . $row->encounter_cc . ')';
+				$data[$key] = $value;
+			}
+		}
+		echo json_encode($data);
+	}
 }

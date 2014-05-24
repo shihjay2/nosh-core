@@ -21,7 +21,7 @@
 		</div>
 		<div class="pure-u-1-6"><br><button type="button" id="procedure_description_reset" class="nosh_button_cancel">Clear</button></div>
 		<div class="pure-u-5-6">
-			<label for="">Description:</label><textarea style="width:500px" rows="10" name="proc_description" id="procedure_description" class="text" required></textarea>
+			<label for="">Description: <span class="textdump_text"></span> for templates.</label><textarea style="width:500px" rows="10" name="proc_description" id="procedure_description" class="text textdump" required></textarea>
 		</div>
 		<div class="pure-u-1-6"><br><button type="button" id="procedure_complications_reset" class="nosh_button_cancel">Clear</button></div>
 		<div class="pure-u-5-6">
