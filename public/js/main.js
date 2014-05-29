@@ -222,13 +222,15 @@ function check_labs1() {
 	});
 }
 function total_balance() {
-	$.ajax({
-		type: "POST",
-		url: "ajaxchart/total-balance",
-		success: function(data){
-			$('#total_balance').html(data);
-		}
-	});
+	if (noshdata.pid != '') {
+		$.ajax({
+			type: "POST",
+			url: "ajaxchart/total-balance",
+			success: function(data){
+				$('#total_balance').html(data);
+			}
+		});
+	}
 }
 function hpi_autosave(type) {
 	var old0 = $("#"+type+"_old").val();
