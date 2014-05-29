@@ -2024,6 +2024,8 @@ $(document).on('click', '.textdump_group_item', function(){
 	var id = $("#textdump_group_target").val();
 	var group = $(this).text();
 	$("#textdump_group_item").val(group);
+	var id1 = $(this).attr('id');
+	$("#textdump_group_id").val(id1);
 	$.ajax({
 		type: "POST",
 		url: "ajaxsearch/textdump/" + id,

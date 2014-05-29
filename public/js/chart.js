@@ -1100,6 +1100,12 @@ $(document).ready(function() {
 		width: 400, 
 		draggable: false,
 		resizable: false,
+		focus: function (event, ui) {
+			var id = $("#textdump_group_id").val();
+			if (id != '') {
+				$("#"+id).focus();
+			}
+		},
 		close: function (event, ui) {
 			$("#textdump_group_target").val('');
 			$("#textdump_group_add").val('');

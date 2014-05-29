@@ -51,12 +51,12 @@ class AjaxLoginController extends BaseController {
 					$demographics_relate = Demographics_relate::where('pid', '=', $result->pid)->get();
 					foreach ($demographics_relate as $demographics_relate_row) {
 						$row1 = Practiceinfo::where('practice_id', '=', $demographics_relate_row->practice_id)->first();
-						if ($demographics_relate_row->id != "") {
+						if ($demographics_relate_row->id != "" && $demographics_relate_row->id != "0") {
 							$arr['response'] = "5";
 							$row2 = User::where('id', '=', $demographics_relate_row->id)->first();
 							$data_message['practicename'] = $row1->practice_name;
 							$data_message['username'] = $row2->username;
-							$data_message['url'] = route('/');
+							$data_message['url'] = route('home');
 							$this->send_mail('emails.loginregistration', $data_message, 'Patient Portal Registration Message', Input::get('email'), $demographics_relate_row->practice_id);
 						} else {
 							$data1 = array(
@@ -78,7 +78,7 @@ class AjaxLoginController extends BaseController {
 							$this->audit('Update');
 							$data_message1['practicename'] = $row1->practice_name;
 							$data_message1['username'] = Input::get('username');
-							$data_message1['url'] = route('/');
+							$data_message1['url'] = route('home');
 							$this->send_mail('emails.loginregistrationconfirm', $data_message1, 'Patient Portal Registration Confirmation', Input::get('email'), $demographics_relate_row->practice_id);
 						}
 					}

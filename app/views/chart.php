@@ -168,6 +168,7 @@
 	<form id="textdump_group_form" class="pure-form">
 		<input type="text" style="width:95%" name="textdump_group_add" id="textdump_group_add" placeholder="Add template group here"/>
 		<input type="hidden" name="target" id="textdump_group_target"/>
+		<input type="hidden" id="textdump_group_id">
 	</form><br>
 	<div id="textdump_group_html" title="Click on a group to open templates."></div>
 </div>

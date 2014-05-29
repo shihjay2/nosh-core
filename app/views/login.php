@@ -67,7 +67,7 @@
 	</div>
 	<div id="new_password_dialog" title="Create Password">
 		<form id="new_password_form" class="pure-form pure-form-aligned">
-			<input type="hidden" name="id" id="new_password_id" value="" />
+			<input type="hidden" name="id" id="new_password_id"/>
 			<div class="pure-control-group"><label for="new_password1">Password:</label><input type="password" style="width:300px" id="new_password1" name="new_password" class="text ui-widget-content ui-corner-all" /></div>
 			<div class="pure-control-group"><label for="new_password_confirm1">Confirm Password:</label><input type="password" style="width:300px" id="new_password_confirm1" name="new_password_confirm1" class="text ui-widget-content ui-corner-all" /></div>
 			<hr class="ui-state-default"/>

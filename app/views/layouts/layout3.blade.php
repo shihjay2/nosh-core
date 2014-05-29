@@ -12,7 +12,10 @@
 		<meta name="copyright" content="Copyright (c) <?php echo date("Y");?> Michael Chen, MD" />
 		<meta name="token" content="{{ Session::token() }}">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.3.0/pure-min.css">
+		<link type="text/css" href="https://code.jquery.com/ui/1.11.0-beta.2/themes/cupertino/jquery-ui.css" rel="Stylesheet" />
+<!--
 		<link type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/cupertino/jquery-ui.css" rel="Stylesheet" />
+-->
 		<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 		<?php echo HTML::style('css/main.css'); ?>
 		<?php echo HTML::style('css/jquery.jgrowl.css'); ?>
@@ -79,12 +82,16 @@
 			var fields = {"hpi":"History of Present Illness","situation":"Situation","ros_gen":"ROS - General","ros_eye":"ROS - Eye","ros_ent":"ROS - Ears, Nose, Throat","ros_resp":"ROS - Respiratory","ros_cv":"ROS - Cardiovascular","ros_gi":"ROS - Gastrointestinal","ros_gu":"ROS - Genitourinary","ros_mus":"ROS - Musculoskeletal","ros_neuro":"ROS - Neurological","ros_psych":"ROS - Psychological","ros_heme":"ROS - Hematological","ros_endocrine":"ROS - Endocrine","ros_skin":"ROS - Skin","ros_wcc":"ROS - Well Child Check","oh_pmh":"Past Medical History","oh_psh":"Past Surgical History","oh_fh":"Family History","oh_sh":"Social History","oh_etoh":"Alcohol Use","oh_tobacco":"Tobacco Use","oh_drugs":"Illicit Drug Use","oh_employment":"Employment","pe_gen1":"PE - Constitutional","pe_eye1":"PE - Eye - Conjunctiva and Lids","pe_eye2":"PE - Eye - Pupil and Iris","pe_eye3":"PE - Eye - Fundoscopic","pe_ent1":"PE - ENT - External Ear and Nose","pe_ent1":"PE - ENT - Canals and Tympanic Membranes","pe_ent1":"PE - ENT - Hearing Assessment","pe_ent1":"PE - ENT - Sinuses, Mucosa, Septum, and Turbinates","pe_ent1":"PE - ENT - Lips, Teeth, and Gums","pe_ent1":"PE - ENT - Oropharynx","pe_neck1":"PE - Neck - General","pe_neck2":"PE - Neck - Thryoid","pe_resp1":"PE - Respiratory - Effort","pe_resp2":"PE - Respiratory - Percussion","pe_resp3":"PE - Respiratory - Palpation","pe_resp4":"PE - Respiratory - Auscultation","pe_cv1":"PE - Cardiovascular - Palpation","pe_cv2":"PE - Cardiovascular - Auscultation","pe_cv3":"PE - Cardiovascular - Carotid Arteries","pe_cv4":"PE - Cardiovascular - Abdominal Aorta","pe_cv5":"PE - Cardiovascular - Femoral Arteries","pe_cv6":"PE - Cardiovascular - Extremities","pe_ch1":"PE - Chest - Inspection","pe_ch2":"PE - Chest - Palpation","pe_gi1":"PE - Gastrointestinal - Masses and Tenderness","pe_gi2":"PE - Gastrointestinal - Liver and Spleen","pe_gi3":"PE - Gastrointestinal - Hernia","pe_gi4":"PE - Gastrointestinal - Anus, Perineum, and Rectum","pe_gu1":"PE - Genitourinary - Genitalia","pe_gu2":"PE - Genitourinary - Urethra","pe_gu3":"PE - Genitourinary - Bladder","pe_gu4":"PE - Genitourinary - Cervix","pe_gu5":"PE - Genitourinary - Uterus","pe_gu6":"PE - Genitourinary - Adnexa","pe_gu7":"PE - Genitourinary - Scrotum","pe_gu8":"PE - Genitourinary - Penis","pe_gu9":"PE - Genitourinary - Prostate","pe_lymph1":"PE - Lymphatic - Neck","pe_lymph2":"PE - Lymphatic - Axillae","pe_lymph3":"PE - Lymphatic - Groin","pe_ms1":"PE - Musculoskeletal - Gait and Station","pe_ms2":"PE - Musculoskeletal - Digit and Nails","pe_ms3":"PE - Musculoskeletal - Shoulder","pe_ms4":"PE - Musculoskeletal - Elbow","pe_ms5":"PE - Musculoskeletal - Wrist","pe_ms6":"PE - Musculoskeletal - Hand","pe_ms7":"PE - Musculoskeletal - Hip","pe_ms8":"PE - Musculoskeletal - Knee","pe_ms9":"PE - Musculoskeletal - Ankle","pe_ms10":"PE - Musculoskeletal - Foot","pe_ms11":"PE - Musculoskeletal - Cervical Spine","pe_ms12":"PE - Musculoskeletal - Thoracic and Lumbar Spine","pe_neuro1":"PE - Neurological - Cranial Nerves","pe_neuro2":"PE - Neurological - Deep Tendon Reflexes","pe_neuro3":"PE - Neurological - Sensationa and Motor","pe_psych1":"PE - Psychiatric - Judgement","pe_psych2":"PE - Psychiatric - Orientation","pe_psych3":"PE - Psychiatric - Memory","pe_psych4":"PE - Psychiatric - Mood and Affect","pe_skin1":"PE - Skin - Inspection","pe_skin2":"PE - Skin - Palpation","proc_description":"Procedure - Description","assessment_notes":"Assessement Discussion","messages_ref_orders":"Referral Reason","orders_plan":"Orders - Recommendations"};
 			var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 		</script>
+		<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script type="text/javascript" src="https://code.jquery.com/ui/1.11.0-beta.2/jquery-ui.min.js"></script>
+<!--
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+-->
 		<?php echo HTML::script('js/jquery.maskedinput.min.js'); ?>
 		<?php echo HTML::script('js/jquery.jgrowl.js'); ?>
 		<?php echo HTML::script('js/jquery.selectboxes.js'); ?>
-		<?php echo HTML::script('js/jquery-migrate-1.1.0.js'); ?>
+		<?php echo HTML::script('js/jquery-migrate-1.2.1.js'); ?>
 		<?php echo HTML::script('js/jquery.ajaxQueue.js'); ?>
 		<?php echo HTML::script('js/i18n/grid.locale-en.js'); ?>
 		<?php echo HTML::script('js/jquery.jqGrid.min.js'); ?>

@@ -3,7 +3,7 @@
 		<title>{{ $title }}</title>
 		<meta name="token" content="{{ Session::token() }}">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.3.0/pure-min.css">
-		<link type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/cupertino/jquery-ui.css" rel="Stylesheet" />
+		<link type="text/css" href="https://code.jquery.com/ui/1.11.0-beta.2/themes/cupertino/jquery-ui.css" rel="Stylesheet" />
 		<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 		<?php echo HTML::style('css/main.css'); ?>
 		<?php echo HTML::style('css/jquery.jgrowl.css'); ?>
@@ -20,12 +20,12 @@
 			};
 			var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 		</script>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script type="text/javascript" src="https://code.jquery.com/ui/1.11.0-beta.2/jquery-ui.min.js"></script>
 		<?php echo HTML::script('js/jquery.maskedinput.min.js'); ?>
 		<?php echo HTML::script('js/jquery.jgrowl.js'); ?>
 		<?php echo HTML::script('js/jquery.selectboxes.js'); ?>
-		<?php echo HTML::script('js/jquery-migrate-1.1.0.js'); ?>
+		<?php echo HTML::script('js/jquery-migrate-1.2.1.js'); ?>
 		<?php echo HTML::script('js/i18n/grid.locale-en.js'); ?>
 		<?php echo HTML::script('js/jquery.jqGrid.min.js'); ?>
 		<?php echo HTML::script('js/jquery-idleTimeout.js'); ?>
