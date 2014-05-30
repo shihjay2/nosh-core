@@ -48,6 +48,7 @@ function openencounter() {
 		dataType: "json",
 		success: function(data){
 			$("#encounter_tags").tagit("fill",data);
+			$('#dialog_load').dialog('close');
 		}
 	});
 }
@@ -289,7 +290,6 @@ function vitals_autosave() {
 			var a = $("#" + input_id).val();
 			var b = $("#" + input_id + "_old").val();
 			if (a != b) {
-				console.log(input_id+","+a+","+b);
 				bValid = true;
 			}
 		}
@@ -588,7 +588,7 @@ function ros_dialog_open() {
 					$('#'+key+'_form').dform(value);
 					ros_form_load();
 				});
-				
+				$('#dialog_load').dialog('close');
 			}
 		});
 		$.ajax({
@@ -680,6 +680,7 @@ function pe_dialog_open() {
 					$('#'+key+'_form').dform(value);
 					pe_form_load();
 				});
+				$('#dialog_load').dialog('close');
 			}
 		});
 		$.ajax({
@@ -963,9 +964,6 @@ $(document).ready(function() {
 });
 $(document).on("click", ".ui-jqgrid-titlebar", function() {
 	$(".ui-jqgrid-titlebar-close", this).click();
-});
-$(document).ajaxStop(function() {
-  $('#dialog_load').dialog('close');
 });
 $(document).on('click', '#save_oh_sh_form', function(){
 	var old = $("#oh_sh").val();

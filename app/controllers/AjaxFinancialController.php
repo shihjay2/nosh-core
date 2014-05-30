@@ -443,7 +443,7 @@ class AjaxFinancialController extends BaseController {
 			$i = 0;
 			foreach ($query1 as $row) {
 				if (is_null($row->insuranceplan)) {
-					$row['insuranceplan'] = 'Cash Only';
+					$row->insuranceplan = 'Cash Only';
 				}
 				$response['rows'][$i]['id']=$row->insuranceplan; 
 				$response['rows'][$i]['cell']=array($row->insuranceplan,$row->ins_patients_seen);
