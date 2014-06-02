@@ -9,11 +9,13 @@
 			<strong>Last Encounter:</strong> <?php echo $lastvisit;?><br>
 			<strong>Next Appointment:</strong> <?php echo $nextvisit;?><br><br>
 			<div class="pure-g" style="font-size:1.1em">
+<!--
 				<div class="pure-u-1-2"><?php echo HTML::image('images/chart2.png', 'Encounters', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="encounter_list" title="Past encounters" class="nosh_tooltip">Encounters</a></div>
 				<div class="pure-u-1-2"><?php echo HTML::image('images/newmessage.png', 'Messages', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="messages_list" title="Telephone messages and e-mail encounters" class="nosh_tooltip">Messages</a></div>
 				<div class="pure-u-1-2"><?php echo HTML::image('images/search.png', 'Documents', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="documents_list" title="Lab, imaging, cardiopulmonary, referral, and other associated documents for this patient." class="nosh_tooltip">Documents</a></div>
 				<div class="pure-u-1-2"><?php echo HTML::image('images/billing.png', 'Billing', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="billing_list" title="Past claims, payments, and balances for this patient" class="nosh_tooltip">Billing</a></div>
 				<div class="pure-u-1-2"><?php echo HTML::image('images/printmgr.png', 'Send Records', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="print_list" title="Print, fax, and create C-CDA documents of this patient's records." class="nosh_tooltip">Send Records</a></div>
+-->
 				<div class="pure-u-1-2"><?php echo HTML::image('images/prevent.png', 'Prevention', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="prevention_list" title="View prevention recommendations from U.S. Preventatitve Services Task Force and the CDC" class="nosh_tooltip">Prevention</a></div>
 				<div class="pure-u-1-2"><?php echo HTML::image('images/sign.png', 'Orders', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="order_list" title="View pending order and historical order history for the patient" class="nosh_tooltip">Orders</a></div>
 				<?php if($mtm == 'y') {?>
@@ -42,18 +44,22 @@
 			<div id="menu_accordion_medications-list_load"><?php echo HTML::image('images/indicator.gif', 'Loading', array('border' => '0', 'style' => 'vertical-align:middle;')); ?> Loading...</div>
 			<div id="menu_accordion_medications-list_content" class="menu_accordion_content"></div>
 		</div>
-		<h3><button class="supplements_list nosh_button_edit">Edit</button><a href="#"><?php echo HTML::image('images/supplements.png', 'Supplements', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> Supplements</a></h3>
-		<div id="menu_accordion_supplements-list">
-			<a href="#" class="supplements_list">Edit and View Details</a><br>
-			<div id="menu_accordion_supplements-list_load"><?php echo HTML::image('images/indicator.gif', 'Loading', array('border' => '0', 'style' => 'vertical-align:middle;')); ?> Loading...</div>
-			<div id="menu_accordion_supplements-list_content" class="menu_accordion_content"></div>
-		</div>
-		<h3><button class="immunizations_list nosh_button_edit">Edit</button><a href="#"><?php echo HTML::image('images/immunization.png', 'Immunizations', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> Immunizations</a></h3>
-		<div id="menu_accordion_immunizations-list">
-			<a href="#" class="immunizations_list">Edit and View Details</a><br>
-			<div id="menu_accordion_immunizations-list_load"><?php echo HTML::image('images/indicator.gif', 'Loading', array('border' => '0', 'style' => 'vertical-align:middle;')); ?> Loading...</div>
-			<div id="menu_accordion_immunizations-list_content" class="menu_accordion_content"></div>
-		</div>
+		<?php if($supplements == 'y') {?>
+			<h3><button class="supplements_list nosh_button_edit">Edit</button><a href="#"><?php echo HTML::image('images/supplements.png', 'Supplements', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> Supplements</a></h3>
+			<div id="menu_accordion_supplements-list">
+				<a href="#" class="supplements_list">Edit and View Details</a><br>
+				<div id="menu_accordion_supplements-list_load"><?php echo HTML::image('images/indicator.gif', 'Loading', array('border' => '0', 'style' => 'vertical-align:middle;')); ?> Loading...</div>
+				<div id="menu_accordion_supplements-list_content" class="menu_accordion_content"></div>
+			</div>
+		<?php }?>
+		<?php if($immunizations == 'y') {?>
+			<h3><button class="immunizations_list nosh_button_edit">Edit</button><a href="#"><?php echo HTML::image('images/immunization.png', 'Immunizations', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> Immunizations</a></h3>
+			<div id="menu_accordion_immunizations-list">
+				<a href="#" class="immunizations_list">Edit and View Details</a><br>
+				<div id="menu_accordion_immunizations-list_load"><?php echo HTML::image('images/indicator.gif', 'Loading', array('border' => '0', 'style' => 'vertical-align:middle;')); ?> Loading...</div>
+				<div id="menu_accordion_immunizations-list_content" class="menu_accordion_content"></div>
+			</div>
+		<?php }?>
 		<h3><button class="allergies_list nosh_button_edit">Edit</button><a href="#"><?php echo HTML::image('images/important.png', 'Allergies', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> Allergies</a></h3>
 		<div id="menu_accordion_allergies-list">
 			<a href="#" class="allergies_list">Edit and View Details</a><br>

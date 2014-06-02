@@ -548,6 +548,61 @@ class BaseController extends Controller {
 				$data['ros'] .= nl2br($rosInfo->ros_wcc);
 				$data['ros'] .= '<br /><br />';
 			}
+			if ($rosInfo->ros_psych1 != '') {
+				$data['ros'] .= '<strong>Depression: </strong>';
+				$data['ros'] .= nl2br($rosInfo->ros_psych1);
+				$data['ros'] .= '<br /><br />';
+			}
+			if ($rosInfo->ros_psych2 != '') {
+				$data['ros'] .= '<strong>Anxiety: </strong>';
+				$data['ros'] .= nl2br($rosInfo->ros_psych2);
+				$data['ros'] .= '<br /><br />';
+			}
+			if ($rosInfo->ros_psych3 != '') {
+				$data['ros'] .= '<strong>Bipolar: </strong>';
+				$data['ros'] .= nl2br($rosInfo->ros_psych3);
+				$data['ros'] .= '<br /><br />';
+			}
+			if ($rosInfo->ros_psych4 != '') {
+				$data['ros'] .= '<strong>Mood Disorders: </strong>';
+				$data['ros'] .= nl2br($rosInfo->ros_psych4);
+				$data['ros'] .= '<br /><br />';
+			}
+			if ($rosInfo->ros_psych5 != '') {
+				$data['ros'] .= '<strong>ADHD: </strong>';
+				$data['ros'] .= nl2br($rosInfo->ros_psych5);
+				$data['ros'] .= '<br /><br />';
+			}
+			if ($rosInfo->ros_psych6 != '') {
+				$data['ros'] .= '<strong>PTSD: </strong>';
+				$data['ros'] .= nl2br($rosInfo->ros_psych6);
+				$data['ros'] .= '<br /><br />';
+			}
+			if ($rosInfo->ros_psych7 != '') {
+				$data['ros'] .= '<strong>Substance Related Disorder: </strong>';
+				$data['ros'] .= nl2br($rosInfo->ros_psych7);
+				$data['ros'] .= '<br /><br />';
+			}
+			if ($rosInfo->ros_psych8 != '') {
+				$data['ros'] .= '<strong>Obsessive Compulsive Disorder: </strong>';
+				$data['ros'] .= nl2br($rosInfo->ros_psych8);
+				$data['ros'] .= '<br /><br />';
+			}
+			if ($rosInfo->ros_psych9 != '') {
+				$data['ros'] .= '<strong>Social Anxiety Disorder: </strong>';
+				$data['ros'] .= nl2br($rosInfo->ros_psych9);
+				$data['ros'] .= '<br /><br />';
+			}
+			if ($rosInfo->ros_psych10 != '') {
+				$data['ros'] .= '<strong>Autistic Disorder: </strong>';
+				$data['ros'] .= nl2br($rosInfo->ros_psych10);
+				$data['ros'] .= '<br /><br />';
+			}
+			if ($rosInfo->ros_psych11 != '') {
+				$data['ros'] .= "<strong>Asperger's Disorder: </strong>";
+				$data['ros'] .= nl2br($rosInfo->ros_psych11);
+				$data['ros'] .= '<br /><br />';
+			}
 			$data['ros'] .= '</p>';
 		} else {
 			$data['ros'] = '';
@@ -593,6 +648,21 @@ class BaseController extends Controller {
 			if ($ohInfo->oh_employment != '') {
 				$data['oh'] .= '<strong>Employment: </strong>';
 				$data['oh'] .= nl2br($ohInfo->oh_employment);
+				$data['oh'] .= '<br /><br />';
+			}
+			if ($ohInfo->oh_psychosocial != '') {
+				$data['oh'] .= '<strong>Psychosocial: </strong>';
+				$data['oh'] .= nl2br($ohInfo->oh_psychosocial);
+				$data['oh'] .= '<br /><br />';
+			}
+			if ($ohInfo->oh_developmental != '') {
+				$data['oh'] .= '<strong>Developmental: </strong>';
+				$data['oh'] .= nl2br($ohInfo->oh_developmental);
+				$data['oh'] .= '<br /><br />';
+			}
+			if ($ohInfo->oh_medtrials != '') {
+				$data['oh'] .= '<strong>Past Medication Trials: </strong>';
+				$data['oh'] .= nl2br($ohInfo->oh_medtrials);
 				$data['oh'] .= '<br /><br />';
 			}
 			if ($ohInfo->oh_meds != '') {
@@ -687,7 +757,7 @@ class BaseController extends Controller {
 		if ($peInfo) {
 			$data['pe'] = '<br><h4>Physical Exam:</h4><p class="view">';
 			if ($peInfo->pe_gen1 != '') {
-				$data['pe'] .= '<strong>Constitutional: </strong>';
+				$data['pe'] .= '<strong>General: </strong>';
 				$data['pe'] .= nl2br($peInfo->pe_gen1);
 				$data['pe'] .= '<br /><br />';
 			}
@@ -921,6 +991,16 @@ class BaseController extends Controller {
 				if($peInfo->pe_psych4 != '') {
 					$data['pe'] .= ' ' . nl2br($peInfo->pe_psych4);
 				}
+				$data['pe'] .= '<br /><br />';
+			}
+			if ($peInfo->pe_constitutional1 != '') {
+				$data['pe'] .= '<strong>Constitutional: </strong>';
+				$data['pe'] .= nl2br($peInfo->pe_constitutional1);
+				$data['pe'] .= '<br /><br />';
+			}
+			if ($peInfo->pe_mental1 != '') {
+				$data['pe'] .= '<strong>Mental Status Examination: </strong>';
+				$data['pe'] .= nl2br($peInfo->pe_mental1);
 				$data['pe'] .= '<br /><br />';
 			}
 			$data['pe'] .= '</p>';
@@ -1212,6 +1292,16 @@ class BaseController extends Controller {
 			if ($planInfo->followup != '') {
 				$data['plan'] .= '<strong>Followup: </strong>';
 				$data['plan'] .= nl2br($planInfo->followup);
+				$data['plan'] .= '<br /><br />';
+			}
+			if ($planInfo->goals != '') {
+				$data['plan'] .= '<strong>Goals/Measures: </strong>';
+				$data['plan'] .=nl2br($planInfo->goals);
+				$data['plan'] .= '<br /><br />';
+			}
+			if ($planInfo->tp != '') {
+				$data['plan'] .= '<strong>Treatment Plan Notes: </strong>';
+				$data['plan'] .= nl2br($planInfo->tp);
 				$data['plan'] .= '<br /><br />';
 			}
 			if ($planInfo->duration != '') {
@@ -1743,6 +1833,8 @@ class BaseController extends Controller {
 		} else {
 			$menu_data['nextvisit'] = 'None.';
 		}
+		$menu_data['supplements'] = $row->supplements_menu_item;
+		$menu_data['immunizations'] = $row->immunizations_menu_item;
 		return $menu_data;
 	}
 	

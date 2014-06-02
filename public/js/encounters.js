@@ -14,6 +14,9 @@ $(document).ready(function() {
 		if (cellvalue == 'clinicalsupport') {
 			return 'Clinical Support Visit';
 		}
+		if (cellvalue == 'standardpsych') {
+			return 'Annual Psychiatric Evaluation';
+		}
 	}
 	$("#encounter_view_dialog").dialog({ 
 		bgiframe: true, 

@@ -340,6 +340,226 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
+	$("#ros_psych1_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 575, 
+		width: 850, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				ros_dialog_save('psych1');
+			},
+			Cancel: function() {
+				$("#ros_psych1_dialog_form").clearForm();
+				$("#ros_psych1_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#ros_psych2_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 575, 
+		width: 850, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				ros_dialog_save('psych2');
+			},
+			Cancel: function() {
+				$("#ros_psych2_dialog_form").clearForm();
+				$("#ros_psych2_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#ros_psych3_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 575, 
+		width: 850, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				ros_dialog_save('psych3');
+			},
+			Cancel: function() {
+				$("#ros_psych3_dialog_form").clearForm();
+				$("#ros_psych3_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#ros_psych4_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 575, 
+		width: 850, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				ros_dialog_save('psych4');
+			},
+			Cancel: function() {
+				$("#ros_psych4_dialog_form").clearForm();
+				$("#ros_psych4_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#ros_psych5_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 575, 
+		width: 850, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				ros_dialog_save('psych5');
+			},
+			Cancel: function() {
+				$("#ros_psych5_dialog_form").clearForm();
+				$("#ros_psych5_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#ros_psych6_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 575, 
+		width: 850, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				ros_dialog_save('psych6');
+			},
+			Cancel: function() {
+				$("#ros_psych6_dialog_form").clearForm();
+				$("#ros_psych6_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#ros_psych7_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 575, 
+		width: 850, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				ros_dialog_save('psych7');
+			},
+			Cancel: function() {
+				$("#ros_psych7_dialog_form").clearForm();
+				$("#ros_psych7_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#ros_psych8_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 575, 
+		width: 850, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				ros_dialog_save('psych8');
+			},
+			Cancel: function() {
+				$("#ros_psych8_dialog_form").clearForm();
+				$("#ros_psych8_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#ros_psych9_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 575, 
+		width: 850, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				ros_dialog_save('psych9');
+			},
+			Cancel: function() {
+				$("#ros_psych9_dialog_form").clearForm();
+				$("#ros_psych9_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#ros_psych10_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 575, 
+		width: 850, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				ros_dialog_save('psych10');
+			},
+			Cancel: function() {
+				$("#ros_psych10_dialog_form").clearForm();
+				$("#ros_psych10_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#ros_psych11_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 575, 
+		width: 850, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				ros_dialog_save('psych11');
+			},
+			Cancel: function() {
+				$("#ros_psych11_dialog_form").clearForm();
+				$("#ros_psych11_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
 	$('.ros_tooltip').tooltip({
 		items: ".ros_tooltip",
 		hide: false,

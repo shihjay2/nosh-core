@@ -160,6 +160,9 @@ function check_oh_status() {
 			$('#button_oh_meds_status').html(data.meds_status);
 			$('#button_oh_supplements_status').html(data.supplements_status);
 			$('#button_oh_allergies_status').html(data.allergies_status);
+			$('#button_oh_psychosocial_status').html(data.psychosocial_status);
+			$('#button_oh_developmental_status').html(data.developmental_status);
+			$('#button_oh_medtrials_status').html(data.medtrials_status);
 		}
 	});
 }
@@ -183,6 +186,17 @@ function check_ros_status() {
 			$('#button_ros_endocrine_status').html(data.endocrine);
 			$('#button_ros_skin_status').html(data.skin);
 			$('#button_ros_wcc_status').html(data.wcc);
+			$('#button_ros_psych1_status').html(data.psych1);
+			$('#button_ros_psych2_status').html(data.psych2);
+			$('#button_ros_psych3_status').html(data.psych3);
+			$('#button_ros_psych4_status').html(data.psych4);
+			$('#button_ros_psych5_status').html(data.psych5);
+			$('#button_ros_psych6_status').html(data.psych6);
+			$('#button_ros_psych7_status').html(data.psych7);
+			$('#button_ros_psych8_status').html(data.psych8);
+			$('#button_ros_psych9_status').html(data.psych9);
+			$('#button_ros_psych10_status').html(data.psych10);
+			$('#button_ros_psych11_status').html(data.psych11);
 		}
 	});
 }
@@ -206,6 +220,8 @@ function check_pe_status() {
 			$('#button_pe_neuro_status').html(data.neuro);
 			$('#button_pe_psych_status').html(data.psych);
 			$('#button_pe_skin_status').html(data.skin);
+			$('#button_pe_constitutional_status').html(data.constitutional);
+			$('#button_pe_mental_status').html(data.mental);
 		}
 	});
 }

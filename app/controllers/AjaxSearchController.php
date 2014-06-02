@@ -69,6 +69,9 @@ class AjaxSearchController extends BaseController {
 			}
 			Session::put('eid', Input::get('eid'));
 			Session::put('encounter_active', 'y');
+			$encounter = DB::table('encounters')->where('eid', '=', Input::get('eid'))->first();
+			Session::put('encounter_template', $encounter->encounter_template);
+			Session::put('encounter_DOS', $encounter->encounter_DOS);
 			$data['message'] = 'OK';
 			$data['url'] = route('chart');
 			echo json_encode($data);

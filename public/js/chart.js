@@ -64,7 +64,7 @@ $(document).ready(function() {
 			}
 		});
 	});
-	$("#encounter_template").addOption({'standardmedical':'Standard Medical Visit','clinicalsupport':'Clinical Support Visit'}, false).tooltip();
+	$("#encounter_template").addOption({'standardmedical':'Standard Medical Visit','standardpsych':'Annual Psychiatric Evaluation','clinicalsupport':'Clinical Support Visit'}, false).tooltip();
 	$("#encounter_location").val(noshdata.default_pos);
 	$("#encounter_date").mask("99/99/9999").datepicker();
 	$("#encounter_time").timepicker({
@@ -1197,5 +1197,69 @@ $(document).ready(function() {
 			}
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#creditcard_type").addOption({"":"Select a credit card type","MasterCard":"MasterCard","Visa":"Visa","Discover":"Discover","Amex":"American Express"}, false);
+	$("#creditcard_expiration").mask("99/9999");
+	$("#creditcard_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 300, 
+		width: 400, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		open: function (event, ui) {
+			$.ajax({
+				type: "POST",
+				url: "ajaxchart/get-creditcard",
+				dataType: "json",
+				success: function(data){
+					if (data.message == 'y') {
+						$.each(data, function(key, value){
+							if (key != 'message') {
+								$("#creditcard_form :input[name='" + key + "']").val(value);
+							}
+						});
+					}
+				}
+			});
+		},
+		buttons: {
+			'Save': function() {
+				var bValid = true;
+				$("#creditcard_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				if (bValid) {
+					var str = $("#creditcard_form").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxchart/save-creditcard",
+							data: str,
+							success: function(data){
+								$.jGrowl(data);
+								$("#creditcard_form").clearForm();
+								$("#creditcard_dialog").dialog('close');
+							}
+						});
+					} else {
+						$.jGrowl("Please complete the form");
+					}
+				}
+			},
+			Cancel: function() {
+				$("#creditcard_form").clearForm();
+				$("#creditcard_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#add_creditcard").click(function() {
+		$("#creditcard_dialog").dialog('open');
 	});
 });

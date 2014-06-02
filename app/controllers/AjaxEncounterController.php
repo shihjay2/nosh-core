@@ -62,6 +62,7 @@ class AjaxEncounterController extends BaseController {
 		$this->audit('Update');
 		Session::put('eid', $eid);
 		Session::put('encounter_DOS', $encounter_DOS);
+		Session::put('encounter_template', Input::get('encounter_template'));
 		$arr['eid'] = $eid;
 		$arr['message'] = "Encounter created!";
 		echo json_encode($arr);
@@ -234,6 +235,16 @@ class AjaxEncounterController extends BaseController {
 			$data2['mtm'] = $result->mtm_extension;
 			$data['orders'] = View::make('encounters.orders', $data2)->render();
 		}
+		if ($row->encounter_template == 'standardpsych') {
+			$data['ros'] = View::make('encounters.ros')->render();
+			$data['oh'] = View::make('encounters.oh')->render();
+			$data1['practiceInfo'] = $result;
+			$data['vitals'] = View::make('encounters.vitals', $data1)->render();
+			$data['pe'] = View::make('encounters.pe')->render();
+			$data['assessment'] = View::make('encounters.assessment')->render();
+			$data2['mtm'] = $result->mtm_extension;
+			$data['orders'] = View::make('encounters.orders', $data2)->render();
+		}
 		return View::make('encounters.' . $row->encounter_template, $data);
 	}
 	
@@ -355,6 +366,17 @@ class AjaxEncounterController extends BaseController {
 		$data['endocrine'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
 		$data['skin'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
 		$data['wcc'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+		$data['psych1'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+		$data['psych2'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+		$data['psych3'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+		$data['psych4'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+		$data['psych5'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+		$data['psych6'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+		$data['psych7'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+		$data['psych8'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+		$data['psych9'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+		$data['psych10'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+		$data['psych11'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
 		$data['message'] = 'Review of Systems Unchanged!';
 		$row = DB::table('ros')->where('eid', '=', Session::get('eid'))->first();
 		if ($row) {
@@ -399,6 +421,39 @@ class AjaxEncounterController extends BaseController {
 			}
 			if ($row->ros_wcc) {
 				$data['wcc'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->ros_psych1) {
+				$data['psych1'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->ros_psych2) {
+				$data['psych2'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->ros_psych3) {
+				$data['psych3'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->ros_psych4) {
+				$data['psych4'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->ros_psych5) {
+				$data['psych5'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->ros_psych6) {
+				$data['psych6'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->ros_psych7) {
+				$data['psych7'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->ros_psych8) {
+				$data['psych8'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->ros_psych9) {
+				$data['psych9'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->ros_psych10) {
+				$data['psych10'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->ros_psych11) {
+				$data['psych11'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
 			}
 			$data['message'] = 'Review of Systems Updated!';
 		} else {
@@ -667,6 +722,21 @@ class AjaxEncounterController extends BaseController {
 			} else {
 				$data['employment_status'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
 			}
+			if ($row->oh_psychosocial) {
+				$data['psychosocial_status'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			} else {
+				$data['psychosocial_status'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->oh_developmental) {
+				$data['developmental_status'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			} else {
+				$data['developmental_status'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->oh_medtrials) {
+				$data['medtrials_status'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			} else {
+				$data['medtrials_status'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
 			$data['message'] = 'Other History Updated!';
 		} else {
 			$data['sh_status'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
@@ -677,6 +747,9 @@ class AjaxEncounterController extends BaseController {
 			$data['tobacco_status'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
 			$data['drugs_status'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
 			$data['employment_status'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			$data['psychosocial_status'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			$data['developmental_status'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			$data['medtrials_status'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
 			$data['message'] = 'Other History Unchanged!';
 		}
 		echo json_encode($data);
@@ -725,6 +798,30 @@ class AjaxEncounterController extends BaseController {
 				'pid' => $pid,
 				'encounter_provider' => $encounter_provider,
 				'oh_employment' => Input::get('oh_employment')
+			);
+		}
+		if ($item == 'psychosocial') {
+			$data = array(
+				'eid' => $eid,
+				'pid' => $pid,
+				'encounter_provider' => $encounter_provider,
+				'oh_psychosocial' => Input::get('oh_psychosocial')
+			);
+		}
+		if ($item == 'developmental') {
+			$data = array(
+				'eid' => $eid,
+				'pid' => $pid,
+				'encounter_provider' => $encounter_provider,
+				'oh_developmental' => Input::get('oh_developmental')
+			);
+		}
+		if ($item == 'medtrials') {
+			$data = array(
+				'eid' => $eid,
+				'pid' => $pid,
+				'encounter_provider' => $encounter_provider,
+				'oh_medtrials' => Input::get('oh_medtrials')
 			);
 		}
 		if ($item == 'meds') {
@@ -1068,6 +1165,8 @@ class AjaxEncounterController extends BaseController {
 		$data['neuro'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
 		$data['psych'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
 		$data['skin'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+		$data['constitutional'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+		$data['mental'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
 		$data['message'] = 'Physical Examination Unchanged!';
 		$row = DB::table('pe')->where('eid', '=', Session::get('eid'))->first();
 		if ($row) {
@@ -1112,6 +1211,12 @@ class AjaxEncounterController extends BaseController {
 			}
 			if ($row->pe_skin1 || $row->pe_skin2) {
 				$data['skin'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->pe_constitutional1) {
+				$data['constitutional'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
+			}
+			if ($row->pe_mental1) {
+				$data['mental'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));
 			}
 			$data['message'] = 'Physical Examination Updated!';
 		}
@@ -1625,7 +1730,9 @@ class AjaxEncounterController extends BaseController {
 			'encounter_provider' => Session::get('displayname'),
 			'plan' => Input::get('plan'),
 			'duration' => Input::get('duration'),
-			'followup' => Input::get('followup')
+			'followup' => Input::get('followup'),
+			'goals' => Input::get('goals'),
+			'tp' => Input::get('tp')
 		);
 		if ($count) {
 			DB::table('plan')->where('eid', '=', $eid)->update($data);

@@ -39,8 +39,10 @@
 			<button type="button" id="button_oh_sh" class="nosh_button" style="width:125px">Social History</button><br><br>
 			<span id="button_oh_meds_status" class="oh_tooltip"></span>
 			<button type="button" id="button_oh_meds" class="nosh_button" style="width:125px">Medications</button><br><br>
-			<span id="button_oh_supplements_status" class="oh_tooltip"></span>
-			<button type="button" id="button_oh_supplements" class="nosh_button" style="width:125px">Supplements</button><br><br>
+			<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'clinicalsupport') {?>
+				<span id="button_oh_supplements_status" class="oh_tooltip"></span>
+				<button type="button" id="button_oh_supplements" class="nosh_button" style="width:125px">Supplements</button><br><br>
+			<?php }?>
 			<span id="button_oh_allergies_status" class="oh_tooltip"></span>
 			<button type="button" id="button_oh_allergies" class="nosh_button" style="width:125px">Allergies</button><br><br>
 			<span id="button_oh_etoh_status" class="oh_tooltip"></span>
@@ -50,7 +52,15 @@
 			<span id="button_oh_drugs_status" class="oh_tooltip"></span>
 			<button type="button" id="button_oh_drugs" class="nosh_button" style="width:125px">Illicit Drug Use</button><br><br>
 			<span id="button_oh_employment_status" class="oh_tooltip"></span>
-			<button type="button" id="button_oh_employment" class="nosh_button" style="width:125px">Employment</button>
+			<button type="button" id="button_oh_employment" class="nosh_button" style="width:125px">Employment</button><br><br>
+			<?php if (Session::get('encounter_template') == 'standardpsych') {?>
+				<span id="button_oh_psychosocial_status" class="oh_tooltip"></span>
+				<button type="button" id="button_oh_psychosocial" class="nosh_button" style="width:125px">Psychosocial</button><br><br>
+				<span id="button_oh_developmental_status" class="oh_tooltip"></span>
+				<button type="button" id="button_oh_developmental" class="nosh_button" style="width:125px">Developmental</button><br><br>
+				<span id="button_oh_medtrials_status" class="oh_tooltip"></span>
+				<button type="button" id="button_oh_medtrials" class="nosh_button" style="width:125px">Medication Trials</button><br><br>
+			<?php }?>
 		</div>
 	</div>
 </form>
@@ -195,6 +205,45 @@
 					<label for="oh_employment_text">Employment Field:</label><input type="text" name="oh_employment_text" id="oh_employment_text" style="width:300px" class="text" /><br>
 					<label for="oh_employment_employer">Employer:</label><input type="text" name="employer" id="oh_employment_employer" style="width:300px" class="text"/><input type="hidden" id="oh_employment_employer_old">
 				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div id="oh_psychosocial_dialog" title="Psychosocial">
+	<div class="pure-g">
+		<div class="pure-u-13-24">
+			<form id="oh_psychosocial_dialog_form" class="pure-form pure-form-stacked">
+				<label for="oh_psychosocial">Preview: <span class="textdump_text"></span> for templates.</label><textarea name="oh_psychosocial" id="oh_psychosocial" rows="20" style="width:95%" class="text textdump"></textarea>
+			</form>
+		</div>
+		<div class="pure-u-11-24">
+			<form id="oh_psychosocial_form" class="pure-form">
+			</form>
+		</div>
+	</div>
+</div>
+<div id="oh_developmental_dialog" title="Developmental">
+	<div class="pure-g">
+		<div class="pure-u-13-24">
+			<form id="oh_developmental_dialog_form" class="pure-form pure-form-stacked">
+				<label for="oh_developmental">Preview: <span class="textdump_text"></span> for templates.</label><textarea name="oh_developmental" id="oh_developmental" rows="20" style="width:95%" class="text textdump"></textarea>
+			</form>
+		</div>
+		<div class="pure-u-11-24">
+			<form id="oh_developmental_form" class="pure-form">
+			</form>
+		</div>
+	</div>
+</div>
+<div id="oh_medtrials_dialog" title="Past Medication Trials">
+	<div class="pure-g">
+		<div class="pure-u-13-24">
+			<form id="oh_medtrials_dialog_form" class="pure-form pure-form-stacked">
+				<label for="oh_medtrials">Preview: <span class="textdump_text"></span> for templates.</label><textarea name="oh_medtrials" id="oh_medtrials" rows="20" style="width:95%" class="text textdump"></textarea>
+			</form>
+		</div>
+		<div class="pure-u-11-24">
+			<form id="oh_medtrials_form" class="pure-form">
 			</form>
 		</div>
 	</div>

@@ -88,7 +88,9 @@ class AjaxSetupController extends BaseController {
 			'hc_unit' => Input::get('hc_unit'),
 			'default_pos_id' => Input::get('default_pos_id'),
 			'documents_dir' => Input::get('documents_dir'),
-			'icd' => Input::get('icd')
+			'icd' => Input::get('icd'),
+			'supplements_menu_item' => Input::get('supplements_menu_item'),
+			'immunizations_menu_item' => Input::get('immunizations_menu_item')
 		);
 		DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->update($data);
 		$this->audit('Update');

@@ -1,6 +1,6 @@
 $(document).ready(function() {
-	var windowHeight = $(window).height() - 115;
-	$('#menucontainer').css('max-height', windowHeight);
+	//var windowHeight = $(window).height() - 115;
+	//$('#menucontainer').css('max-height', windowHeight);
 	$.ajax({
 		type: "POST",
 		url: "ajaxchart/demographics-load",
@@ -17,7 +17,7 @@ $(document).ready(function() {
 		}
 	});
 	$("#menu_accordion").accordion({
-		heightStyle: "fill",
+		//heightStyle: "fill",
 		activate: function (event, ui) {
 			var id = ui.newPanel[0].id;
 			if (id != "menu_accordion_chart") {

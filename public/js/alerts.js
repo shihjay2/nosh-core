@@ -250,7 +250,7 @@ $(document).ready(function() {
 	});
 	$("#alert_date_active").mask("99/99/9999");
 	$("#alert_date_active").datepicker();
-	$("#add_alert").click(function(){
+	$(".add_alert").click(function(){
 		$('#edit_alert_form').clearForm();
 		var currentDate = getCurrentDate();
 		$('#alert_date_active').val(currentDate);

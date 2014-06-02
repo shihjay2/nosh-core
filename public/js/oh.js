@@ -688,6 +688,201 @@ $(document).ready(function() {
 	$('#cancel_oh_employment_form').click(function(){
 		$('#oh_employment_form').clearForm();
 	});
+	$("#oh_psychosocial_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 500, 
+		width: 800, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		open: function(event, ui) {
+			$.ajax({
+				type: "POST",
+				url: "ajaxencounter/get-oh",
+				dataType: "json",
+				success: function(data){
+					if (data.message != 'n') {
+						$('#oh_psychosocial').val(data.response.oh_psychosocial);
+					}
+				}
+			});
+			$("#oh_psychosocial").focus();
+		},
+		buttons: {
+			'Save': function() {
+				var str = $("#oh_psychosocial_dialog_form").serialize();
+				$.ajax({
+					type: "POST",
+					url: "ajaxencounter/oh-save1/psychosocial",
+					data: str,
+					success: function(data){
+						$.jGrowl(data);
+						$("#oh_psychosocial_dialog_form").clearForm();
+						$('#oh_psychosocial_form').clearForm();
+						$("#oh_psychosocial_dialog").dialog('close');
+						check_oh_status();
+					}
+				});
+			},
+			'Copy From Most Recent Encounter': function() {
+				$.ajax({
+					type: "POST",
+					url: "ajaxencounter/copy-oh/psychosocial",
+					dataType: "json",
+					success: function(data){
+						if(data.callback == 'Items copied from last encounter!'){
+							$.jGrowl(data.callback);
+							$("#oh_psychosocial").val(data.oh_psychosocial);
+						} else {
+							$.jGrowl(data.callback);
+							$("#oh_psychosocial").val('');
+						}
+					}
+				});
+			}, 
+			Cancel: function() {
+				$("#oh_psychosocial_dialog_form").clearForm();
+				$("#oh_psychosocial_form").clearForm();
+				$("#oh_psychosocial_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#button_oh_psychosocial").click(function() {
+		$("#oh_psychosocial_dialog").dialog('open');
+	});
+	$("#oh_developmental_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 500, 
+		width: 800, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		open: function(event, ui) {
+			$.ajax({
+				type: "POST",
+				url: "ajaxencounter/get-oh",
+				dataType: "json",
+				success: function(data){
+					if (data.message != 'n') {
+						$('#oh_developmental').val(data.response.oh_developmental);
+					}
+				}
+			});
+			$("#oh_developmental").focus();
+		},
+		buttons: {
+			'Save': function() {
+				var str = $("#oh_developmental_dialog_form").serialize();
+				$.ajax({
+					type: "POST",
+					url: "ajaxencounter/oh-save1/developmental",
+					data: str,
+					success: function(data){
+						$.jGrowl(data);
+						$("#oh_developmental_dialog_form").clearForm();
+						$('#oh_developmental_form').clearForm();
+						$("#oh_developmental_dialog").dialog('close');
+						check_oh_status();
+					}
+				});
+			},
+			'Copy From Most Recent Encounter': function() {
+				$.ajax({
+					type: "POST",
+					url: "ajaxencounter/copy-oh/developmental",
+					dataType: "json",
+					success: function(data){
+						if(data.callback == 'Items copied from last encounter!'){
+							$.jGrowl(data.callback);
+							$("#oh_developmental").val(data.oh_developmental);
+						} else {
+							$.jGrowl(data.callback);
+							$("#oh_developmental").val('');
+						}
+					}
+				});
+			}, 
+			Cancel: function() {
+				$("#oh_developmental_dialog_form").clearForm();
+				$("#oh_developmental_form").clearForm();
+				$("#oh_developmental_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#button_oh_developmental").click(function() {
+		$("#oh_developmental_dialog").dialog('open');
+	});
+	$("#oh_medtrials_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 500, 
+		width: 800, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		open: function(event, ui) {
+			$.ajax({
+				type: "POST",
+				url: "ajaxencounter/get-oh",
+				dataType: "json",
+				success: function(data){
+					if (data.message != 'n') {
+						$('#oh_medtrials').val(data.response.oh_medtrials);
+					}
+				}
+			});
+			$("#oh_medtrials").focus();
+		},
+		buttons: {
+			'Save': function() {
+				var str = $("#oh_medtrials_dialog_form").serialize();
+				$.ajax({
+					type: "POST",
+					url: "ajaxencounter/oh-save1/drugs",
+					data: str,
+					success: function(data){
+						$.jGrowl(data);
+						$("#oh_medtrials_dialog_form").clearForm();
+						$('#oh_medtrials_form').clearForm();
+						$("#oh_medtrials_dialog").dialog('close');
+						check_oh_status();
+					}
+				});
+			},
+			'Copy From Most Recent Encounter': function() {
+				$.ajax({
+					type: "POST",
+					url: "ajaxencounter/copy-oh/drugs",
+					dataType: "json",
+					success: function(data){
+						if(data.callback == 'Items copied from last encounter!'){
+							$.jGrowl(data.callback);
+							$("#oh_medtrials").val(data.oh_medtrials);
+						} else {
+							$.jGrowl(data.callback);
+							$("#oh_medtrials").val('');
+						}
+					}
+				});
+			}, 
+			Cancel: function() {
+				$("#oh_medtrials_dialog_form").clearForm();
+				$("#oh_medtrials_form").clearForm();
+				$("#oh_medtrials_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#button_oh_medtrials").click(function() {
+		$("#oh_medtrials_dialog").dialog('open');
+	});
 	setInterval(oh_autosave, 10000);
 	swipe();
 });

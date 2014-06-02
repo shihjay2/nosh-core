@@ -152,6 +152,13 @@ class AjaxChartController extends BaseController {
 				}
 				$result .= '</p>';
 			}
+			$result .= '<p class="tips"><strong>Credit Card on File: ';
+			if ($row->creditcard_number != '') {
+				$result .= 'Yes';
+			} else {
+				$result .= 'No';
+			}
+			$result .= '</strong></p>';
 		} else {
 			$result .= 'None available.';
 		}
@@ -359,6 +366,9 @@ class AjaxChartController extends BaseController {
 		}
 		$eid = Input::get('eid');
 		Session::put('eid', $eid);
+		$encounter = DB::table('encounters')->where('eid', '=', $eid)->first();
+		Session::put('encounter_template', $encounter->encounter_template);
+		Session::put('encounter_DOS', $encounter->encounter_DOS);
 	}
 	
 	// Issues functions
@@ -5221,5 +5231,32 @@ class AjaxChartController extends BaseController {
 		}
 		$message .= 'Read ' . $i . ' lines in the CSV file.';
 		return $message;
+	}
+	
+	public function postGetCreditcard()
+	{
+		$query = DB::table('demographics')->select('creditcard_number', 'creditcard_expiration', 'creditcard_type')->where('pid', '=', Session::get('pid'))->first();
+		$data = array();
+		if ($query) {
+			$data['message'] = 'y';
+			$data['creditcard_number'] = $query->creditcard_number;
+			$data['creditcard_expiration'] = $query->creditcard_expiration;
+			$data['creditcard_type'] = $query->creditcard_type;
+		} else {
+			$data['message'] = 'n';
+		}
+		echo json_encode($data);
+	}
+	
+	public function postSaveCreditcard()
+	{
+		$data = array(
+			'creditcard_number' => Input::get('creditcard_number'),
+			'creditcard_expiration' => Input::get('creditcard_expiration'),
+			'creditcard_type' => Input::get('creditcard_type')
+		);
+		DB::table('demographics')->where('pid', '=', Session::get('pid'))->update($data);
+		$this->audit('Update');
+		echo "Credit Card Information Updated!";
 	}
 }

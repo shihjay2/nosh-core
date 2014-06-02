@@ -2,7 +2,7 @@
 	<table id="alerts" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="alerts_pager1" class="scroll" style="text-align:center;"></div><br>
 	<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
-		<button type="button" id="add_alert" class="nosh_button_add">Add</button> 
+		<button type="button" id="add_alert" class="nosh_button_add add_alert">Add</button> 
 		<button type="button" id="edit_alert" class="nosh_button_edit">Edit</button>
 		<button type="button" id="complete_alert" class="nosh_button_check">Mark as Completed</button> 
 		<button type="button" id="incomplete_alert" class="nosh_button_cancel">Mark as Incomplete</button>

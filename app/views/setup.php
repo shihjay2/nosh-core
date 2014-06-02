@@ -63,6 +63,16 @@
 					<option value="9">ICD-9</option>
 					<option value="0">ICD-10</option>
 				</select><input type="hidden" id="icd_old"/>
+				<label for="supplements_menu_item">Include Supplements in Chart Menu</label>
+				<select name="supplements_menu_item" id="supplements_menu_item" class="text" required>
+					<option value="n">No</option>
+					<option value="y">Yes</option>
+				</select><input type="hidden" id="supplements_menu_item_old"/>
+				<label for="immunizations_menu_item">Include Immunizations in Chart Menu</label>
+				<select name="immunizations_menu_item" id="immunizations_menu_item" class="text" required>
+					<option value="n">No</option>
+					<option value="y">Yes</option>
+				</select><input type="hidden" id="immunizations_menu_item_old"/>
 			</form>
 		</div>
 		<h3>Practice Logo</h3>

@@ -15,7 +15,19 @@
 	noshdata.financial = '<?php if(Session::get('financial')) { echo Session::get('financial');} ?>';
 	noshdata.mtm = '<?php if(Session::get('mtm')) { echo Session::get('mtm');} ?>';
 </script>
+<div id="nosh_chart_common_div" style="width:100%">
+	<fieldset class="ui-corner-all">
+		<div class="pure-g">
+			<div class="pure-u-1-5"><?php echo HTML::image('images/chart2.png', 'Encounters', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="encounter_list" title="Past encounters" class="nosh_tooltip">Encounters</a></div>
+			<div class="pure-u-1-5"><?php echo HTML::image('images/newmessage.png', 'Messages', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="messages_list" title="Telephone messages and e-mail encounters" class="nosh_tooltip">Messages</a></div>
+			<div class="pure-u-1-5"><?php echo HTML::image('images/search.png', 'Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="documents_list" title="Lab, imaging, cardiopulmonary, referral, and other associated documents for this patient." class="nosh_tooltip">Documents</a></div>
+			<div class="pure-u-1-5"><?php echo HTML::image('images/billing.png', 'Billing', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="billing_list" title="Past claims, payments, and balances for this patient" class="nosh_tooltip">Billing</a></div>
+			<div class="pure-u-1-5"><?php echo HTML::image('images/printmgr.png', 'Coordination of Care', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="print_list" title="Print, fax, and create C-CDA documents of this patient's records." class="nosh_tooltip">Coordination of Care</a></div>
+		</div>
+	</fieldset>
+</div>
 <div id="nosh_chart_div" style="width:100%">
+	<br>
 	<div style="height:480px;float:left;">
 		<div class="pure-g">
 		<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
@@ -23,6 +35,8 @@
 			<div class="pure-u-1-2"><?php echo HTML::image('images/newencounter.png', 'New Encounter', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="new_encounter">New Encounter</a></div>
 			<div class="pure-u-1-2"><?php echo HTML::image('images/newletter.png', 'New Letter', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="new_letter">New Letter</a></div>
 		<?php }?>
+		<div class="pure-u-1-2"><?php echo HTML::image('images/alert.png', 'New Alert', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="new_alert" class="add_alert">New Alert</a></div>
+		<div class="pure-u-1-2"><?php echo HTML::image('images/reminder.png', 'Add/Edit Credit Card Information', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="add_creditcard">Add/Edit Credit Card Information</a></div>
 		<div class="pure-u-1-2"><?php echo HTML::image('images/email.png', 'Send Message to Patient', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="create_patient_message">Send Message to Patient</a></div>
 		<div class="pure-u-1-2"><?php echo HTML::image('images/printmgr.png', 'Print Chart', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="print_chart">Print Chart</a></div>
 		<div class="pure-u-1-2"><?php echo HTML::image('images/download.png', 'Import New Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="new_import">Import New Documents</a></div>
@@ -187,4 +201,14 @@
 		<select name="copy_encounter_from" id="copy_encounter_from" style="width:500px" class="text" required></select>
 	</form><br>
 	<?php echo HTML::image('images/important.png','Important Message', array('border' => '0', 'height' => '40', 'width' => '40'));?>Copying form a encounter will erase all previously entered items for this current encounter!
+</div>
+<div id="creditcard_dialog" title="Add Credit Card on File">
+	<form id="creditcard_form" class="pure-form pure-form-stacked">
+		<label for="creditcard_number">Credit Card Number</label>
+		<input type="text" style="width:95%" name="creditcard_number" id="creditcard_number" placeholder="Add Card Number Number Here"/>
+		<label for="creditcard_type">Credit Card Type</label>
+		<select style="width:95%" name="creditcard_type" id="creditcard_type"></select>
+		<label for="creditcard_expiration">Expiration Date</label>
+		<input type="text" style="width:95%" name="creditcard_expiration" id="creditcard_expiration"/>
+	</form>
 </div>

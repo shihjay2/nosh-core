@@ -350,6 +350,46 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
+	$("#pe_constitutional_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 575, 
+		width: 800, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				pe_dialog_save('pe_constitutional_dialog');
+			},
+			Cancel: function() {
+				pe_clear_dialog_form('pe_constitutional_dialog');
+				$("#pe_constitutional_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#pe_mental_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 575, 
+		width: 800, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				pe_dialog_save('pe_mental_dialog');
+			},
+			Cancel: function() {
+				pe_clear_dialog_form('pe_mental_dialog');
+				$("#pe_mental_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
 	$('.pe_tooltip').tooltip({
 		items: ".pe_tooltip",
 		hide: false,
@@ -426,6 +466,14 @@ $(document).ready(function() {
 	$("#button_pe_skin").button().click(function() {
 		$("#pe_skin_dialog").dialog('open');
 		$("#pe_skin1").focus();
+	});
+	$("#button_pe_constitutional").button().click(function() {
+		$("#pe_constitutional_dialog").dialog('open');
+		$("#pe_constitutional1").focus();
+	});
+	$("#button_pe_mental").button().click(function() {
+		$("#pe_mental_dialog").dialog('open');
+		$("#pe_mental1").focus();
 	});
 	swipe();
 });
