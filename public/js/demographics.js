@@ -213,7 +213,9 @@ $(document).ready(function() {
 		},
 		close: function(event, ui) {
 			$('#edit_demographics_form').clearForm();
-			menu_update('demographics');
+			if(noshdata.group_id != '100') {
+				menu_update('demographics');
+			}
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
