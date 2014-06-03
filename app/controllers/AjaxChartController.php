@@ -3435,7 +3435,12 @@ class AjaxChartController extends BaseController {
 		} else {
 			$billing_notes = nl2br($result->billing_notes);
 		}
-		echo "<strong>Total Balance: $" .  number_format($total_balance, 2, '.', ',') . "</strong><br><br><strong>Billing Notes: </strong>" . $billing_notes . "<br>";
+		$note = "<strong>Total Balance: $" .  number_format($total_balance, 2, '.', ',') . "</strong><br><br><strong>Billing Notes: </strong>" . $billing_notes . "<br>";
+		$cc = DB::table('demographics')->where('pid', '=', $pid)->first();
+		if ($cc->creditcard_number != '') {
+			$note .= "<br><strong>Credit Card on File: </strong><br>Number: " . $cc->creditcard_number . "<br>Type: " . $cc->creditcard_type . "<br>Expiration Date: " . $cc->creditcard_expiration . "<br>";
+		}
+		echo $note;
 	}
 	
 	public function postBillingSave($eid)

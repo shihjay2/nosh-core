@@ -3,7 +3,9 @@
 	<input type="hidden" id="billing_list_other_billing_id"/>
 	<fieldset class="ui-corner-all">
 		<div id="total_balance"></div>
-		<button type="button" id="billing_notes" class="nosh_button_edit">Edit Billing Notes</button><button type="button" class="nosh_button insurance_billing">Insurance</button>
+		<button type="button" id="billing_notes" class="nosh_button_edit">Edit Billing Notes</button> 
+		<button type="button" class="nosh_button insurance_billing">Insurance</button> 
+		<button type="button" class="nosh_button add_creditcard">Add/Edit Credit Card on File</button> 
 	</fieldset><br>
 	<table id="billing_encounters" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="billing_encounters_pager" class="scroll" style="text-align:center;"></div><br>

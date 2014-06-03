@@ -1259,7 +1259,7 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#add_creditcard").click(function() {
+	$(".add_creditcard").click(function() {
 		$("#creditcard_dialog").dialog('open');
 	});
 });
