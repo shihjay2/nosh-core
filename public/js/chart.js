@@ -1245,6 +1245,7 @@ $(document).ready(function() {
 								$.jGrowl(data);
 								$("#creditcard_form").clearForm();
 								$("#creditcard_dialog").dialog('close');
+								total_balance();
 							}
 						});
 					} else {
