@@ -34,7 +34,7 @@
 				<span id="button_pe_skin_status" class="pe_tooltip"></span>
 				<input type="hidden" id="num_pe_skin" value="2"/><button type="button" id="button_pe_skin" class="nosh_button pe_menu_button">Skin</button><br><br>
 			</div>
-		<?php } if (Session::get('encounter_template') == 'standardpsych') {?>
+		<?php } if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
 			<div class="pure-u-1-2">
 				<span id="button_pe_constitutional_status" class="pe_tooltip"></span>
 				<input type="hidden" id="num_pe_constitutional" value="1"/><button type="button" id="button_pe_constitutional" class="nosh_button pe_menu_button">Constitutional</button><br><br>
@@ -1177,7 +1177,7 @@
 			</div>
 		</div>
 	</div>
-<?php } if (Session::get('encounter_template') == 'standardpsych') {?>
+<?php } if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
 	<div id="pe_constitutional_dialog" class="pe_dialog" title="Constitutional">
 		<input type="checkbox" id="pe_constitutional_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_constitutional_normal">All Normal</label>
 		<br><hr class="ui-state-default" style="width:99%"/>

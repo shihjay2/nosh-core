@@ -53,7 +53,7 @@
 			<button type="button" id="button_oh_drugs" class="nosh_button" style="width:125px">Illicit Drug Use</button><br><br>
 			<span id="button_oh_employment_status" class="oh_tooltip"></span>
 			<button type="button" id="button_oh_employment" class="nosh_button" style="width:125px">Employment</button><br><br>
-			<?php if (Session::get('encounter_template') == 'standardpsych') {?>
+			<?php if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
 				<span id="button_oh_psychosocial_status" class="oh_tooltip"></span>
 				<button type="button" id="button_oh_psychosocial" class="nosh_button" style="width:125px">Psychosocial</button><br><br>
 				<span id="button_oh_developmental_status" class="oh_tooltip"></span>

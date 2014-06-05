@@ -7,7 +7,9 @@
 			<strong>Age:</strong> <span id="menu_age"></span><br>
 			<strong>Gender:</strong> <span id="menu_gender1"></span><br>
 			<strong>Last Encounter:</strong> <?php echo $lastvisit;?><br>
-			<strong>Next Appointment:</strong> <?php echo $nextvisit;?><br><br>
+			<strong>Next Appointment:</strong> <?php echo $nextvisit;?><br>
+			<?php echo $psych;?>
+			<br>
 			<div class="pure-g" style="font-size:1.1em">
 <!--
 				<div class="pure-u-1-2"><?php echo HTML::image('images/chart2.png', 'Encounters', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="encounter_list" title="Past encounters" class="nosh_tooltip">Encounters</a></div>

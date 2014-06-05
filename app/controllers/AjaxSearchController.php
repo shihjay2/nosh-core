@@ -2584,11 +2584,19 @@ class AjaxSearchController extends BaseController {
 			->where('addendum', '=', 'n')
 			->where('practice_id', '=', Session::get('practice_id'))
 			->orderBy('encounter_DOS', 'asc')
-			->where('encounter_template', '=', $encounter->encounter_template)
-			->get();
+			->where('eid', '!=', Session::get('eid'));
+		if ($encounter->encounter_template == 'standardpsych' || $encounter->encounter_template == 'standardpsych1') {
+			$query->where(function($query_array1) {
+				$query_array1->where('encounter_template', '=', 'standardpsych')
+				->orWhere('encounter_template', '=', 'standardpsych1');
+			});
+		} else {
+			$query->where('encounter_template', '=', $encounter->encounter_template);
+		}
+		$result = $query->get();
 		$data = array();
-		if ($query) {
-			foreach ($query as $row) {
+		if ($result) {
+			foreach ($result as $row) {
 				$key = $row->eid;
 				$value = date('Y-m-d', $this->human_to_unix($row->encounter_DOS)) . ' (Chief complaint: ' . $row->encounter_cc . ')';
 				$data[$key] = $value;

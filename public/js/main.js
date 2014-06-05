@@ -579,7 +579,7 @@ function get_ros_templates(group, id, type) {
 	});
 }
 function ros_dialog_open() {
-	if ($('#ros_skin_form').html() == '') {
+	if ($('#ros_skin_form').html() == '' || $('#ros_psych11_form').html() == '') {
 		$('#dialog_load').dialog('option', 'title', "Loading templates...").dialog('open');
 		$.ajax({
 			type: "POST",
@@ -1386,7 +1386,7 @@ $(document).on("change", '.ros_template_div select', function() {
 	$("#" + parent_id_entry).val(b); 
 });
 $(document).on('focusin', '.ros_template_div input[type="text"]', function() {
-	old_text = $(this).val();
+	noshdata.old_text = $(this).val();
 });
 $(document).on('focusout', '.ros_template_div input[type="text"]', function() {
 	var a = $(this).val();
@@ -1441,42 +1441,42 @@ $(document).on('focusout', '.ros_template_div input[type="text"]', function() {
 		var a_pointer2 = a.lastIndexOf('.');
 		if (!!old) {
 			if (!!start_text) {
-				var c = start_text + mid_text + ': ' + a + end_text;
-				if (old_text != '') {
-					var c_old = start_text + mid_text + ': ' + old_text + end_text;
+				var c = start_text + mid_text + ': ' + a + end_text + '  ';
+				if (noshdata.old_text != '') {
+					var c_old = start_text + mid_text + ': ' + noshdata.old_text + end_text;
 				}
 			} else {
 				if (a_pointer != a_pointer2) {
-					var c = a + '.';
+					var c = a + '.  ';
 				} else {
-					var c = a;
+					var c = a + '  ';
 				}
 			}
-			if (old_text != '') {
-				var old_text_pointer = old_text.length - 1;
-				var old_text_pointer2 = old_text.lastIndexOf('.');
+			if (noshdata.old_text != '') {
+				var old_text_pointer = noshdata.old_text.length - 1;
+				var old_text_pointer2 = noshdata.old_text.lastIndexOf('.');
 				if (old_text_pointer != old_text_pointer2) {
-					var old_text1 = old_text + '.';
+					var old_text1 = noshdata.old_text + '.';
 				} else {
-					var old_text1 = old_text;
+					var old_text1 = noshdata.old_text;
 				}
 				if (!!start_text) {
 					var b = old.replace(c_old, c);
 				} else {
 					var b = old.replace(old_text1, c);
 				}
-				old_text = '';
+				noshdata.old_text = '';
 			} else {
 				var b = old + ' ' + c;
 			}
 		} else {
 			if (!!start_text) {
-				var b = start_text + mid_text + ': ' + a + end_text;
+				var b = start_text + mid_text + ': ' + a + end_text + '  ';
 			} else {
 				if (a_pointer != a_pointer2) {
-					var b = a + '.';
+					var b = a + '.  ';
 				} else {
-					var b = a;
+					var b = a + '  ';
 				}
 			}
 		}
@@ -1682,7 +1682,7 @@ $(document).on("change", '.pe_template_div select', function() {
 	$("#" + parent_id_entry).val(b); 
 });
 $(document).on("focusin", '.pe_template_div input[type="text"]', function() {
-	old_text = $(this).val();
+	noshdata.old_text = $(this).val();
 });
 $(document).on("focusout", '.pe_template_div input[type="text"]', function() {
 	var a = $(this).val();
@@ -1733,42 +1733,42 @@ $(document).on("focusout", '.pe_template_div input[type="text"]', function() {
 		var a_pointer2 = a.lastIndexOf('.');
 		if (!!old) {
 			if (!!start_text) {
-				var c = start_text + mid_text + ': ' + a + end_text;
-				if (old_text != '') {
-					var c_old = start_text + mid_text + ': ' + old_text + end_text;
+				var c = start_text + mid_text + ': ' + a + end_text + '  ';
+				if (noshdata.old_text != '') {
+					var c_old = start_text + mid_text + ': ' + noshdata.old_text + end_text;
 				}
 			} else {
 				if (a_pointer != a_pointer2) {
-					var c = a + '.';
+					var c = a + '.  ';
 				} else {
-					var c = a;
+					var c = a + '  ';
 				}
 			}
-			if (old_text != '') {
-				var old_text_pointer = old_text.length - 1;
-				var old_text_pointer2 = old_text.lastIndexOf('.');
+			if (noshdata.old_text != '') {
+				var old_text_pointer = noshdata.old_text.length - 1;
+				var old_text_pointer2 = noshdata.old_text.lastIndexOf('.');
 				if (old_text_pointer != old_text_pointer2) {
-					var old_text1 = old_text + '.';
+					var old_text1 = noshdata.old_text + '.';
 				} else {
-					var old_text1 = old_text;
+					var old_text1 = noshdata.old_text;
 				}
 				if (!!start_text) {
 					var b = old.replace(c_old, c);
 				} else {
 					var b = old.replace(old_text1, c);
 				}
-				old_text = '';
+				noshdata.old_text = '';
 			} else {
 				var b = old + ' ' + c;
 			}
 		} else {
 			if (!!start_text) {
-				var b = start_text + mid_text + ': ' + a + end_text;
+				var b = start_text + mid_text + ': ' + a + end_text + '  ';
 			} else {
 				if (a_pointer != a_pointer2) {
-					var b = a + '.';
+					var b = a + '.  ';
 				} else {
-					var b = a;
+					var b = a + '  ';
 				}
 			}
 		}

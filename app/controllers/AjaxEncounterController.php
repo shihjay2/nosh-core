@@ -143,6 +143,23 @@ class AjaxEncounterController extends BaseController {
 			);
 			DB::table('encounters')->where('eid', '=', Session::get('eid'))->update($data);
 			$this->audit('Update');
+			if ($encounter->encounter_template == 'standardpsych') {
+				$psych_date = strtotime($encounter->encounter_DOS) + 31556926;
+				$description = 'Schedule Annual Psychiatric Evaluation Appointment for ' . date('F jS, Y', $psych_date);
+				$data1 = array(
+					'alert' => 'Annual Psychiatric Evaluation Reminder',
+					'alert_description' => $description,
+					'alert_date_active' => date('Y-m-d H:i:s', time()),
+					'alert_date_complete' => '',
+					'alert_reason_not_complete' => '',
+					'alert_provider' => Session::get('user_id'),
+					'orders_id' => '',
+					'pid' => $pid,
+					'practice_id' => Session::get('practice_id')
+				);
+				DB::table('alerts')->insert($data1);
+				$this->audit('Add');
+			}
 			Session::forget('eid');
 			echo 'Encounter Signed!';
 		}
@@ -235,7 +252,7 @@ class AjaxEncounterController extends BaseController {
 			$data2['mtm'] = $result->mtm_extension;
 			$data['orders'] = View::make('encounters.orders', $data2)->render();
 		}
-		if ($row->encounter_template == 'standardpsych') {
+		if ($row->encounter_template == 'standardpsych' || $row->encounter_template == 'standardpsych1') {
 			$data['ros'] = View::make('encounters.ros')->render();
 			$data['oh'] = View::make('encounters.oh')->render();
 			$data1['practiceInfo'] = $result;
@@ -2301,6 +2318,10 @@ class AjaxEncounterController extends BaseController {
 		}
 		if ($encounter->encounter_template == 'clinicalsupport') {
 			$table_array1 = array("hpi", "labs", "procedure", "rx", "assessment", "plan");
+			$table_array2 = array("other_history");
+		}
+		if ($encounter->encounter_template == 'standardpsych' || $encounter->encounter_template == 'standardpsych1') {
+			$table_array1 = array("hpi", "ros", "vitals", "pe", "rx", "assessment", "plan");
 			$table_array2 = array("other_history");
 		}
 		foreach($table_array1 as $table1) {

@@ -36,7 +36,7 @@
 					<button type="button" id="button_ros_wcc" class="nosh_button ros_menu_button">Well Child Visit</button>
 				<?php }?>
 			</div>
-		<?php } if (Session::get('encounter_template') == 'standardpsych') {?>
+		<?php } if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
 			<div class="pure-u-1-2">
 				<span id="button_ros_psych1_status" class="ros_tooltip"></span>
 				<button type="button" id="button_ros_psych1" class="nosh_button ros_menu_button">Depression</button><br><br>
@@ -321,7 +321,7 @@
 			</div>
 		</div>
 	</div>
-<?php } if (Session::get('encounter_template') == 'standardpsych') {?>
+<?php } if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
 	<div id="ros_psych1_dialog" title="Depression" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">

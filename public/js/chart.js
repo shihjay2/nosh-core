@@ -64,7 +64,7 @@ $(document).ready(function() {
 			}
 		});
 	});
-	$("#encounter_template").addOption({'standardmedical':'Standard Medical Visit','standardpsych':'Annual Psychiatric Evaluation','clinicalsupport':'Clinical Support Visit'}, false).tooltip();
+	$("#encounter_template").addOption({'standardmedical':'Standard Medical Visit','standardpsych':'Annual Psychiatric Evaluation','standardpsych1':'Psychiatric Encounter','clinicalsupport':'Clinical Support Visit'}, false).tooltip();
 	$("#encounter_location").val(noshdata.default_pos);
 	$("#encounter_date").mask("99/99/9999").datepicker();
 	$("#encounter_time").timepicker({

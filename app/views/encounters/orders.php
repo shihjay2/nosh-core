@@ -22,7 +22,7 @@
 					<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'clinicalsupport') {?>
 						<label for="orders_plan">Recommendations: <span class="textdump_text"></span> for templates.</label>
 						<textarea style="width:95%" rows="10" name="plan" id="orders_plan" class="text textdump"></textarea>
-					<?php } if (Session::get('encounter_template') == 'standardpsych') {?>
+					<?php } if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
 						<label for="orders_plan">Goals/Measures: <span class="textdump_text"></span> for templates.</label>
 						<textarea style="width:95%" rows="10" name="goals" id="orders_goals" class="text textdump"></textarea>
 					<?php }?>
@@ -34,7 +34,7 @@
 					<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'clinicalsupport') {?>
 						<label for="orders_followup">Follow Up:</label>
 						<textarea style="width:95%" rows="10" name="followup" id="orders_followup" class="text"></textarea>
-					<?php } if (Session::get('encounter_template') == 'standardpsych') {?>
+					<?php } if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
 						<label for="orders_plan">Treatment Plan: <span class="textdump_text"></span> for templates.</label>
 						<textarea style="width:95%" rows="10" name="tp" id="orders_tp" class="text textdump"></textarea>
 					<?php }?>

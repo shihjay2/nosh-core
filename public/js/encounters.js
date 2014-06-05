@@ -17,6 +17,9 @@ $(document).ready(function() {
 		if (cellvalue == 'standardpsych') {
 			return 'Annual Psychiatric Evaluation';
 		}
+		if (cellvalue == 'standardpsych1') {
+			return 'Psychiatric Encounter';
+		}
 	}
 	$("#encounter_view_dialog").dialog({ 
 		bgiframe: true, 

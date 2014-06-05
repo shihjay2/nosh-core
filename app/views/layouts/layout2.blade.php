@@ -55,7 +55,8 @@
 				'schedule_increment': '',
 				'type': '',
 				'filename': '',
-				'financial': ''
+				'financial': '',
+				'old_text': ''
 			};
 			var gender = {"m":"Male","f":"Female"};
 			var marital = {"":"","Single":"Single","Married":"Married","Common law":"Common law","Domestic partner":"Domestic partner","Registered domestic partner":"Registered domestic partner","Interlocutory":"Interlocutory","Living together":"Living together","Legally Separated":"Legally Separated","Divorced":"Divorced","Separated":"Separated","Widowed":"Widowed","Other":"Other","Unknown":"Unknown","Unmarried":"Unmarried","Unreported":"Unreported"};

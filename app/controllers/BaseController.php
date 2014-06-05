@@ -1833,6 +1833,58 @@ class BaseController extends Controller {
 		} else {
 			$menu_data['nextvisit'] = 'None.';
 		}
+		$row3 = Encounters::where('pid', '=', Session::get('pid'))
+			->where('eid', '!=', '')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->where('encounter_template', '=', 'standardpsych')
+			->where('addendum', '=', 'n')
+			->orderBy('eid', 'desc')
+			->first();
+		if ($row3) {
+			$psych_date = strtotime($row3->encounter_DOS);
+			$new_psych_date = $psych_date + 31556926;
+			$psych_query = Encounters::where('pid', '=', Session::get('pid'))
+				->where('eid', '!=', '')
+				->where('practice_id', '=', Session::get('practice_id'))
+				->where('addendum', '=', 'n')
+				->where(function($query_array1) {
+					$query_array1->where('encounter_template', '=', 'standardpsych')
+					->orWhere('encounter_template', '=', 'standardpsych1');
+				})
+				->orderBy('eid', 'desc')
+				->get();
+			$tp_date = '';
+			if ($psych_query) {
+				$i = 0;
+				$psych_comp = '';
+				$psych_comp1 = '';
+				$tp_eid = '';
+				foreach($psych_query as $psych_row) {
+					$planInfo = Plan::find($psych_row->eid);
+					if ($i == 0) {
+						$psych_comp = $planInfo->goals;
+						$psych_comp .= $planInfo->tp;
+						$tp_eid = $psych_row->eid;
+						$tp_eid1 = $tp_eid;
+					} else {
+						$psych_comp1 = $planInfo->goals;
+						$psych_comp1 .= $planInfo->tp;
+						$tp_eid1 = $psych_row->eid;
+					}
+					if ($psych_comp1 != $psych_comp && $i != 0) {
+						$tp = DB::table('encounters')->where('eid', '=', $tp_eid)->first();
+						$tp_date = '<strong>Most recent TP adjustment:</strong> ' .  date('F jS, Y', strtotime($tp->encounter_DOS)) . '<br>';
+						break;
+					} else {
+						$i++;
+						$tp_eid = $tp_eid1;
+					}
+				}
+			}
+			$menu_data['psych'] = '<strong>Last Annual Psychiatric Eval:</strong> ' .  date('F jS, Y', $psych_date) . '<br><strong>Next Annual Psychiatric Eval Due:</strong> ' . date('F jS, Y', $new_psych_date) . '<br>' . $tp_date;
+		} else {
+			$menu_data['psych'] = '';
+		}
 		$menu_data['supplements'] = $row->supplements_menu_item;
 		$menu_data['immunizations'] = $row->immunizations_menu_item;
 		return $menu_data;
