@@ -101,10 +101,10 @@ $(document).ready(function() {
 							rows:"4",
 							cols:"30",
 							dataInit:function(elem){ 
-								function split( val ) {
+								function split1( val ) {
 									return val.split( /;\s*/ );
 								}
-								function extractLast( term ) {
+								function extractLast1( term ) {
 									return split( term ).pop();
 								}
 								$(elem).autocomplete({
@@ -113,7 +113,7 @@ $(document).ready(function() {
 											url: "ajaxsearch/search-issues",
 											dataType: "json",
 											type: "POST",
-											data: "term=" + extractLast(req.term),
+											data: "term=" + extractLast1(req.term),
 											success: function(data){
 												if(data.response =='true'){
 													add(data.message);
@@ -122,7 +122,7 @@ $(document).ready(function() {
 										});
 									},
 									search: function() {
-										var term = extractLast( this.value );
+										var term = extractLast1( this.value );
 										if ( term.length < 2 ) {
 											return false;
 										}
@@ -131,7 +131,7 @@ $(document).ready(function() {
 										return false;
 									},
 									select: function(event, ui){
-										var terms = split( this.value );
+										var terms = split1( this.value );
 										terms.pop();
 										terms.push( ui.item.value );
 										terms.push( "" );
@@ -447,4 +447,8 @@ $(document).ready(function() {
 	$("#mtm_list").click(function() {
 		$("#mtm_dialog").dialog('open');
 	});
+	if (noshdata.mtm != '') {
+		$("#mtm_dialog").dialog('open');
+		noshdata.mtm = '';
+	}
 });
