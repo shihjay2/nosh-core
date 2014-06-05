@@ -874,7 +874,7 @@ $(document).ready(function() {
 						}
 					});
 				} else {
-					alert("Please complete the form");
+					$.jGrowl("Please complete the form");
 				}
 			},
 			'Draft': function() {
@@ -891,7 +891,7 @@ $(document).ready(function() {
 						}
 					});
 				} else {
-					alert("Please complete the form");
+					$.jGrowl("Please complete the form");
 				}
 			},
 			Cancel: function() {

@@ -65,16 +65,6 @@ class AjaxSetupController extends BaseController {
 		echo $result;
 	}
 	
-	public function postCheckpt($pid)
-	{
-		$query = DB::table('demographics_relate')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->first();
-		if ($query) {
-			echo "true";
-		} else {
-			echo "false";
-		}
-	}
-	
 	public function postSetup2()
 	{
 		$data = array(
@@ -88,9 +78,7 @@ class AjaxSetupController extends BaseController {
 			'hc_unit' => Input::get('hc_unit'),
 			'default_pos_id' => Input::get('default_pos_id'),
 			'documents_dir' => Input::get('documents_dir'),
-			'icd' => Input::get('icd'),
-			'supplements_menu_item' => Input::get('supplements_menu_item'),
-			'immunizations_menu_item' => Input::get('immunizations_menu_item')
+			'icd' => Input::get('icd')
 		);
 		DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->update($data);
 		$this->audit('Update');
