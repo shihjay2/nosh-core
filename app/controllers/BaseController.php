@@ -1861,23 +1861,25 @@ class BaseController extends Controller {
 				$tp_eid = '';
 				foreach($psych_query as $psych_row) {
 					$planInfo = Plan::find($psych_row->eid);
-					if ($i == 0) {
-						$psych_comp = $planInfo->goals;
-						$psych_comp .= $planInfo->tp;
-						$tp_eid = $psych_row->eid;
-						$tp_eid1 = $tp_eid;
-					} else {
-						$psych_comp1 = $planInfo->goals;
-						$psych_comp1 .= $planInfo->tp;
-						$tp_eid1 = $psych_row->eid;
-					}
-					if ($psych_comp1 != $psych_comp && $i != 0) {
-						$tp = DB::table('encounters')->where('eid', '=', $tp_eid)->first();
-						$tp_date = '<strong>Most recent TP adjustment:</strong> ' .  date('F jS, Y', strtotime($tp->encounter_DOS)) . '<br>';
-						break;
-					} else {
-						$i++;
-						$tp_eid = $tp_eid1;
+					if ($planInfo) {
+						if ($i == 0) {
+							$psych_comp = $planInfo->goals;
+							$psych_comp .= $planInfo->tp;
+							$tp_eid = $psych_row->eid;
+							$tp_eid1 = $tp_eid;
+						} else {
+							$psych_comp1 = $planInfo->goals;
+							$psych_comp1 .= $planInfo->tp;
+							$tp_eid1 = $psych_row->eid;
+						}
+						if ($psych_comp1 != $psych_comp && $i != 0) {
+							$tp = DB::table('encounters')->where('eid', '=', $tp_eid)->first();
+							$tp_date = '<strong>Most recent TP adjustment:</strong> ' .  date('F jS, Y', strtotime($tp->encounter_DOS)) . '<br>';
+							break;
+						} else {
+							$i++;
+							$tp_eid = $tp_eid1;
+						}
 					}
 				}
 			}
