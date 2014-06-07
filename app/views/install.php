@@ -57,7 +57,7 @@
 				</div>
 				<div class="pure-control-group">
 					<?php echo Form::label('documents_dir', 'System Directory for Patient Documents:');?>
-					<?php echo Form::text('documents_dir','',array('id'=>'documents_dir','required','style'=>'width:500px','class'=>'text', 'title'=>'Format: /directory/subdirectory/subdirectory/', 'readonly'));?>
+					<?php echo Form::text('documents_dir','',array('id'=>'documents_dir','style'=>'width:500px','class'=>'text', 'title'=>'Format: /directory/subdirectory/subdirectory/', 'readonly'));?>
 				</div>
 				<div class="pure-control-group">
 					<?php echo Form::label('smtp_user', 'Gmail Username for Sending E-mail:');?>

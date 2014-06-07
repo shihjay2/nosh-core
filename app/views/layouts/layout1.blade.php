@@ -40,6 +40,7 @@
 		<?php echo HTML::script('js/jstz-1.0.4.min.js'); ?>
 		<?php echo HTML::script('js/jquery.cookie.js'); ?>
 		<?php echo HTML::script('js/main.js'); ?>
+		<?php echo HTML::script('js/jquery.touchswipe.min.js'); ?>
 		{{ $script }}
 	</head>
 	<body>
