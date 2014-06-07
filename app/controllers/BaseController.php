@@ -3460,15 +3460,31 @@ class BaseController extends Controller {
 			$encounter_info = Encounters::find($recent_encounter_query->eid);
 			$provider_info = User::find($encounter_info->user_id);
 			$provider_info1 = Providers::find($encounter_info->user_id);
-			$ccda = str_replace('?npi?', $provider_info1->npi, $ccda);
+			if ($provider_info1) {
+				$npi = $provider_info1->npi;
+			} else {
+				$npi = '';
+			}
+			$ccda = str_replace('?npi?', $npi, $ccda);
 			$ccda = str_replace('?provider_title?', $provider_info->title, $ccda);
 			$ccda = str_replace('?provider_firstname?', $provider_info->firstname, $ccda);
 			$ccda = str_replace('?provider_lastname?', $provider_info->lastname, $ccda);
 			$ccda = str_replace('?encounter_dos?', date('Ymd', $this->human_to_unix($encounter_info->encounter_DOS)), $ccda);
 			$assessment_info = Assessment::find($recent_encounter_query->eid);
-			$ccda = str_replace('?icd9?', $assessment_info->assessment_icd1, $ccda);
-			$assessment_info1 = DB::table('icd9')->where('icd9', '=', $assessment_info->assessment_icd1)->first();
-			$ccda = str_replace('?icd9_description?', $assessment_info1->icd9_description, $ccda);
+			if ($assessment_info) {
+				$recent_icd = $assessment_info->assessment_icd1;
+				$assessment_info1 = DB::table('icd9')->where('icd9', '=', $recent_icd)->first();
+				if ($assessment_info1) {
+					$recent_icd_description = $assessment_info1->icd9_description;
+				} else {
+					$recent_icd_description = '';
+				}
+			} else {
+				$recent_icd = '';
+				$recent_icd_description = '';
+			}
+			$ccda = str_replace('?icd9?', $recent_icd, $ccda);
+			$ccda = str_replace('?icd9_description?', $recent_icd_description, $ccda);
 		} else {
 			$ccda = str_replace('?eid?', '', $ccda);
 			$ccda = str_replace('?npi?', '', $ccda);
@@ -3550,22 +3566,42 @@ class BaseController extends Controller {
 					->orderBy('cpt_charge', 'desc')
 					->take(1)
 					->first();
-				$cpt_query = DB::table('cpt_relate')->where('cpt', '=', $billing->cpt)->first();
-				if ($cpt_query) {
-					$cpt_result = DB::table('cpt_relate')->where('cpt', '=', $billing->cpt)->first();
+				if ($billing) {
+					$cpt_query = DB::table('cpt_relate')->where('cpt', '=', $billing->cpt)->first();
+					if ($cpt_query) {
+						$cpt_result = DB::table('cpt_relate')->where('cpt', '=', $billing->cpt)->first();
+					} else {
+						$cpt_result = DB::table('cpt')->where('cpt', '=', $billing->cpt)->first();
+					}
+					$encounter_code = $billing->cpt;
+					if ($cpt_result) {
+						$cpt_description = $cpt_result->cpt_description;
+					} else {
+						$cpt_description = '';
+					}
 				} else {
-					$cpt_result = DB::table('cpt')->where('cpt', '=', $billing->cpt)->first();
+					$encounter_code = '';
+					$cpt_description = '';
 				}
 				$provider_info2 = User::find($encounters_row->user_id);
+				if ($provider_info2) {
+					$provider_firstname = $provider_info2->firstname;
+					$provider_lastname = $provider_info2->lastname;
+					$provider_title = $provider_info2->title;
+				} else {
+					$provider_firstname = '';
+					$provider_lastname = '';
+					$provider_title = '';
+				}
 				$encounters_file = str_replace('?encounter_cc?', $encounters_row->encounter_cc, $encounters_file);
 				$encounters_file = str_replace('?encounter_number?', $encounters_row->eid, $encounters_file);
-				$encounters_file = str_replace('?encounter_code?', $billing->cpt, $encounters_file);
-				$encounters_file = str_replace('?encounter_code_desc?', $cpt_result->cpt_description, $encounters_file);
+				$encounters_file = str_replace('?encounter_code?', $encounter_code, $encounters_file);
+				$encounters_file = str_replace('?encounter_code_desc?', $cpt_description, $encounters_file);
 				$encounters_file = str_replace('?encounter_provider?', $encounters_row->encounter_provider, $encounters_file);
 				$encounters_file = str_replace('?encounter_dos1?', date('m-d-Y', $this->human_to_unix($encounters_row->encounter_DOS)), $encounters_file);
-				$encounters_file = str_replace('?provider_firstname?', $provider_info2->firstname, $encounters_file);
-				$encounters_file = str_replace('?provider_lastname?', $provider_info2->lastname, $encounters_file);
-				$encounters_file = str_replace('?provider_title?', $provider_info2->title, $encounters_file);
+				$encounters_file = str_replace('?provider_firstname?', $provider_firstname, $encounters_file);
+				$encounters_file = str_replace('?provider_lastname?', $provider_lastname, $encounters_file);
+				$encounters_file = str_replace('?provider_title?', $provider_title, $encounters_file);
 				$encounters_file = str_replace('?encounter_dos?', date('Ymd', $this->human_to_unix($encounters_row->encounter_DOS)), $encounters_file);
 				$encounters_file = str_replace('?practiceinfo_street_address?', $practice_info->street_address1, $encounters_file);
 				$encounters_file = str_replace('?practiceinfo_city?', $practice_info->city, $encounters_file);
@@ -3579,42 +3615,49 @@ class BaseController extends Controller {
 				$encounters_file = str_replace('?encounter_random_id1?', $encounter_random_id1, $encounters_file);
 				$encounters_file = str_replace('?encounter_random_id2?', $encounter_random_id2, $encounters_file);
 				$assessment_info1 = Assessment::find($encounters_row->eid);
-				$dx_array[] = $assessment_info1->assessment_icd1;
-				if ($assessment_info1->assessment_icd2 != "") {
-					$dx_array[] = $assessment_info1->assessment_icd2;
-				}
-				if ($assessment_info1->assessment_icd3 != "") {
-					$dx_array[] = $assessment_info1->assessment_icd3;
-				}
-				if ($assessment_info1->assessment_icd4 != "") {
-					$dx_array[] = $assessment_info1->assessment_icd4;
-				}
-				if ($assessment_info1->assessment_icd5 != "") {
-					$dx_array[] = $assessment_info1->assessment_icd5;
-				}
-				if ($assessment_info1->assessment_icd6 != "") {
-					$dx_array[] = $assessment_info1->assessment_icd6;
-				}
-				if ($assessment_info1->assessment_icd7 != "") {
-					$dx_array[] = $assessment_info1->assessment_icd7;
-				}
-				if ($assessment_info1->assessment_icd8 != "") {
-					$dx_array[] = $assessment_info1->assessment_icd8;
-				}
 				$encounter_diagnosis = '';
-				foreach ($dx_array as $dx_item) {
-					$dx_file = file_get_contents(__DIR__.'/../../public/encounter_diagnosis.xml');
-					$dx_random_id1 = $this->gen_uuid();
-					$dx_random_id2 = $this->gen_uuid();
-					$dx_random_id3 = $this->gen_uuid();
-					$dx_file = str_replace('?dx_random_id1?', $dx_random_id1, $dx_file);
-					$dx_file = str_replace('?dx_random_id2?', $dx_random_id2, $dx_file);
-					$dx_file = str_replace('?dx_random_id3?', $dx_random_id3, $dx_file);
-					$dx_file = str_replace('?icd9?', $dx_item, $dx_file);
-					$dx_file = str_replace('?encounter_dos?', date('Ymd', $this->human_to_unix($encounter_info->encounter_DOS)), $dx_file);
-					$dx_info = DB::table('icd9')->where('icd9', '=', $dx_item)->first();
-					$dx_file = str_replace('?icd9_description?', $dx_info->icd9_description, $dx_file);
-					$encounter_diagnosis .= $dx_file;
+				if ($assessment_info1) {
+					$dx_array[] = $assessment_info1->assessment_icd1;
+					if ($assessment_info1->assessment_icd2 != "") {
+						$dx_array[] = $assessment_info1->assessment_icd2;
+					}
+					if ($assessment_info1->assessment_icd3 != "") {
+						$dx_array[] = $assessment_info1->assessment_icd3;
+					}
+					if ($assessment_info1->assessment_icd4 != "") {
+						$dx_array[] = $assessment_info1->assessment_icd4;
+					}
+					if ($assessment_info1->assessment_icd5 != "") {
+						$dx_array[] = $assessment_info1->assessment_icd5;
+					}
+					if ($assessment_info1->assessment_icd6 != "") {
+						$dx_array[] = $assessment_info1->assessment_icd6;
+					}
+					if ($assessment_info1->assessment_icd7 != "") {
+						$dx_array[] = $assessment_info1->assessment_icd7;
+					}
+					if ($assessment_info1->assessment_icd8 != "") {
+						$dx_array[] = $assessment_info1->assessment_icd8;
+					}
+					foreach ($dx_array as $dx_item) {
+						$dx_file = file_get_contents(__DIR__.'/../../public/encounter_diagnosis.xml');
+						$dx_random_id1 = $this->gen_uuid();
+						$dx_random_id2 = $this->gen_uuid();
+						$dx_random_id3 = $this->gen_uuid();
+						$dx_file = str_replace('?dx_random_id1?', $dx_random_id1, $dx_file);
+						$dx_file = str_replace('?dx_random_id2?', $dx_random_id2, $dx_file);
+						$dx_file = str_replace('?dx_random_id3?', $dx_random_id3, $dx_file);
+						$dx_file = str_replace('?icd9?', $dx_item, $dx_file);
+						$dx_file = str_replace('?encounter_dos?', date('Ymd', $this->human_to_unix($encounter_info->encounter_DOS)), $dx_file);
+						$dx_info = DB::table('icd9')->where('icd9', '=', $dx_item)->first();
+						if ($dx_info) {
+							$icd_description = $dx_info->icd9_description;
+						} else {
+							$icd_description = '';
+						}
+						$dx_file = str_replace('?icd9_description?', $icd_description, $dx_file);
+						$encounter_diagnosis .= $dx_file;
+					}
 				}
 				$encounters_file = str_replace('?encounter_diagnosis?', $encounter_diagnosis, $encounters_file);
 				$encounters_file_final .= $encounters_file;
@@ -3638,6 +3681,8 @@ class BaseController extends Controller {
 				$immun_number = "#immun" . $j;
 				$imm_file = str_replace('?immun_number?', $immun_number, $imm_file);
 				$imm_file = str_replace('?imm_date?', date('Ymd', $this->human_to_unix($imm_row->imm_date)), $imm_file);
+				$imm_code = '';
+				$imm_description = '';
 				if ($imm_row->imm_route == "intramuscularly") {
 					$imm_code = "C28161";
 					$imm_code_description = "Intramuscular Route of Administration";
@@ -3662,7 +3707,12 @@ class BaseController extends Controller {
 				$imm_random_id1 = $this->gen_uuid();
 				$imm_file = str_replace('?imm_random_id1?', $imm_random_id1, $imm_file);
 				$cvx = DB::table('cvx')->where('cvx_code', '=', $imm_row->imm_cvxcode)->first();
-				$imm_file = str_replace('?vaccine_name?', $cvx->vaccine_name, $imm_file);
+				if ($cvx) {
+					$vaccine_name = $cvx->vaccine_name;
+				} else {
+					$vaccine_name = '';
+				}
+				$imm_file = str_replace('?vaccine_name?', $vaccine_name, $imm_file);
 				$imm_file = str_replace('?imm_manufacturer?', $imm_row->imm_manufacturer, $imm_file);
 				$imm_file_final .= $imm_file;
 				$j++;
@@ -3674,8 +3724,8 @@ class BaseController extends Controller {
 		$sup_query = DB::table('sup_list')->where('pid', '=', $pid)->where('sup_date_inactive', '=', '0000-00-00 00:00:00')->get();
 		$med_table = "";
 		$med_file_final = "";
+		$k = 1;
 		if ($med_query) {
-			$k = 1;
 			foreach ($med_query as $med_row) {
 				$med_table .= "<tr>";
 				$med_table .= "<td><content ID='med" . $k . "'>" . $med_row->rxl_medication . ' ' . $med_row->rxl_dosage . ' ' . $med_row->rxl_dosage_unit . "</content></td>";
@@ -3690,7 +3740,11 @@ class BaseController extends Controller {
 					$instructions = $med_row->rxl_sig . ' ' . $med_row->rxl_route . ' ' . $med_row->rxl_frequency;
 					$med_dosage_parts = explode(" ", $med_row->rxl_sig);
 					$med_dosage = $med_dosage_parts[0];
-					$med_dosage_unit = $med_dosage_parts[1];
+					if (count($med_dosage_parts) > 1) {
+						$med_dosage_unit = $med_dosage_parts[1];
+					} else {
+						$med_dosage_unit = '';
+					}
 					$med_code = '';
 					$med_code_description = '';
 					if ($med_row->rxl_route == "by mouth") {
@@ -4135,10 +4189,16 @@ class BaseController extends Controller {
 			$orders_file = str_replace('?orders_random_id1?', $orders_random_id1, $orders_file1);
 		} elseif ($pos1 !== FALSE) {
 			$items = explode(", CPT: ", $item);
+			$term_row = DB::table('cpt')->where('cpt', '=', $items[1])->first();
+			if ($term_row) {
+				$orders_code_description = $term_row->cpt_description;
+			} else {
+				$orders_code_description = '';
+			}
 			$orders_file2 = file_get_contents(__DIR__.'/../../public/orders_cpt.xml');
 			$orders_file2 = str_replace('?orders_date?', date('Ymd', $this->human_to_unix($date)), $orders_file2);
 			$orders_file2 = str_replace('?orders_code?', $items[1], $orders_file2);
-			$orders_file2 = str_replace('?orders_code_description?', $term_row->term, $orders_file2);
+			$orders_file2 = str_replace('?orders_code_description?', $orders_code_description, $orders_file2);
 			$orders_random_id2 = $this->gen_uuid();
 			$orders_file = str_replace('?orders_random_id1?', $orders_random_id2, $orders_file2);
 		} else {

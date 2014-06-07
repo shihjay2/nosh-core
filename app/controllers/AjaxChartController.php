@@ -2850,7 +2850,8 @@ class AjaxChartController extends BaseController {
 			'hippa_provider' => Input::get('hippa_provider'),
 			'hippa_role' => Input::get('hippa_role'),
 			'other_hippa_id' => 0,
-			'practice_id' => Session::get('practice_id')
+			'practice_id' => Session::get('practice_id'),
+			'address_id' => Input::get('address_id')
 		);
 		if (Input::get('hippa_id') != '') {
 			$id = Input::get('hippa_id');
@@ -4982,7 +4983,7 @@ class AjaxChartController extends BaseController {
 							'Medications' => array('rxl_date_active'=>'Date Active','rxl_date_prescribed'=>'Date Prescribed','rxl_medication'=>'Medication','rxl_dosage'=>'Dosage','rxl_dosage_unit'=>'Dosage Unit','rxl_sig'=>'SIG','rxl_route'=>'Route','rxl_frequency'=>'Frequency','rxl_instructions'=>'Instructions','rxl_quantity'=>'Quantity','rxl_refill'=>'Refills','rxl_reason'=>'Reason'),
 							'Supplements' => array('sup_date_active'=>'Date Active','sup_date_prescribed'=>'Date Prescribed','sup_supplement'=>'Supplement','sup_dosage'=>'Dosage','sup_dosage_unit'=>'Dosage Unit','sup_sig'=>'SIG','sup_route'=>'Route','sup_frequency'=>'Frequency','sup_instructions'=>'Instructions','sup_quantity'=>'Quantity','sup_reason'=>'Reason'),
 							'Tests' => array('test_name'=>'Test Name','test_datetime'=>'Date of Test','test_result'=>'Result','test_units'=>'Result Units','test_reference'=>'Reference Range','test_flags'=>'Flags','test_type'=>'Test Type (Laboratory or Imaging)')
-						), array('id'=>$id,'required','style'=>'width:300px','class'=>'text'));
+						), null, array('id'=>$id,'required','style'=>'width:300px','class'=>'text'));
 						$arr['html'] .= '</div>';
 						$arr['file'] = $file_path;
 					}

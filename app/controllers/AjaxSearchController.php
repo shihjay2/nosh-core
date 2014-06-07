@@ -1956,6 +1956,61 @@ class AjaxSearchController extends BaseController {
 		echo json_encode($data);
 	}
 	
+	public function postRefProvider1($specialty)
+	{
+		$arr['html'] = '<label for="hippa_address_id">Records Release To (Provider):</label>';
+		$data = array(''=>'Select Provider');
+		$data['Patient Favorites'] = array();
+		$data['Address Book'] = array();
+		$address = array();
+		$query1 = DB::table('hippa')
+			->where('pid', '=', Session::get('pid'))
+			->where(function($query_array1) {
+				$query_array1->whereNotNull('address_id')
+				->orWhere('address_id', '!=', '');
+			})
+			->select('address_id')
+			->distinct()
+			->get();
+		if ($query1) {
+			foreach ($query1 as $row1) {
+				$address[] = $row1->address_id;
+			}
+		}
+		$query2 = DB::table('orders')->where('pid', '=', Session::get('pid'))->where('orders_referrals', '!=', '')->select('address_id')->distinct()->get();
+		if ($query2) {
+			foreach ($query2 as $row2) {
+				$address[] = $row2->address_id;
+			}
+		}
+		if (!empty($address)) {
+			$address1 = array_unique($address);
+			foreach ($address1 as $row3) {
+				$add1 = DB::table('addressbook')->where('address_id', '=', $row3)->first();
+				$data['Patient Favorites'][$add1->address_id] = $add1->displayname . " - " . $add1->specialty;
+			}
+		}
+		$query = DB::table('addressbook');
+		if ($specialty != "all") {
+			$query->where('specialty', '=', $specialty);
+		} else {
+			$query->where('specialty', '!=', 'Pharmacy')
+				->where('specialty', '!=', 'Laboratory')
+				->where('specialty', '!=', 'Radiology')
+				->where('specialty', '!=', 'Cardiopulmonary')
+				->where('specialty', '!=', 'Insurance');
+		}
+		$result = $query->get();
+		if ($result) {
+			foreach ($result as $row) {
+				$data['Address Book'][$row->address_id] = $row->displayname . " - " . $row->specialty;
+			}
+		}
+		$arr['html'] .= Form::select('address_id', $data, null, array('id'=>'hippa_address_id','style'=>'width:300px','class'=>'text'));
+		$arr['html'] .= '<button type="button" id="hippa_address_id2" class="nosh_button_add">Add/Edit</button>';
+		return $arr;
+	}
+	
 	public function postRefProviderSpecialty()
 	{
 		$query = DB::table('addressbook')
@@ -2400,6 +2455,16 @@ class AjaxSearchController extends BaseController {
 			$arr[$file] = $name;
 		}
 		echo json_encode($arr);
+	}
+	
+	public function postImageSelectDimensions()
+	{
+		$result = getimagesize(Input::get('file'));
+		$data = array(
+			'width' => $result[0],
+			'height' => $result[1]
+		);
+		echo json_encode($data);
 	}
 	
 	public function postTextdumpGroup($target)

@@ -2362,6 +2362,34 @@ $(document).on('keydown', '#textdump_add', function(e){
 		}
 	}
 });
+$(document).on("change", "#hippa_address_id", function () {
+	var a = $(this).find("option:selected").first().text();
+	if (a != 'Select Provider') {
+		$("#hippa_provider1").val(a);
+	} else {
+		$("#hippa_provider1").val('');
+	}
+});
+$(document).on('click', "#hippa_address_id2", function (){
+	var id = $("#hippa_address_id").val();
+	if(id){
+		$("#print_to_dialog").dialog("option", "title", "Edit Provider");
+		$.ajax({
+			type: "POST",
+			url: "ajaxsearch/orders-provider1",
+			data: "address_id=" + id,
+			dataType: "json",
+			success: function(data){
+				$.each(data, function(key, value){
+					$("#print_to_form :input[name='" + key + "']").val(value);
+				});
+			}
+		});
+	} else {
+		$("#print_to_dialog").dialog("option", "title", "Add Provider");
+	}
+	$("#print_to_dialog").dialog('open');
+});
 function textdump(elem) {
 	var id = $(elem).attr('id');
 	$.ajax({

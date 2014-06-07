@@ -40,6 +40,15 @@ $(document).ready(function() {
 			 	height: "100%",
 			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#records_release_pager',{search:false,edit:false,add:false,del:false});
+			$.ajax({
+				url: "ajaxsearch/ref-provider1/all",
+				dataType: "json",
+				type: "POST",
+				success: function(data){
+					$("#print_chart_form_provider").html(data.html);
+					loadbuttons();
+				}
+			});
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
@@ -968,7 +977,7 @@ $(document).ready(function() {
 				});
 				var date = $('#hippa_date_release1').val();
 				var edit_date = editDate1(date);
-				$('#hippa_date_release').val(edit_date);
+				$('#hippa_date_release1').val(edit_date);
 				$("#print_chart_dialog").dialog('open');
 				$('#hippa_reason').focus();
 			}
@@ -1051,4 +1060,101 @@ $(document).ready(function() {
 		resizable: false,
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
+	$("#print_to_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 580, 
+		width: 800, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		open: function(event, ui) {
+			$("#print_to_specialty").autocomplete({
+				source: function (req, add){
+					$.ajax({
+						url: "ajaxsearch/specialty1",
+						dataType: "json",
+						type: "POST",
+						data: req,
+						success: function(data){
+							if(data.response =='true'){
+								add(data.message);
+							}
+						}
+					});
+				},
+				minLength: 3
+			});
+			$("#print_to_city").autocomplete({
+				source: function (req, add){
+					$.ajax({
+						url: "ajaxsearch/city",
+						dataType: "json",
+						type: "POST",
+						data: req,
+						success: function(data){
+							if(data.response =='true'){
+								add(data.message);
+							}
+						}
+					});
+				},
+				minLength: 3
+			});
+			$("#print_to_lastname").focus();
+		},
+		buttons: {
+			'Save': function() {
+				var bValid = true;
+				$("#print_to_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				if (bValid) {
+					var str = $("#print_to_form").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxchart/edit-orders-provider/Referral",
+							data: str,
+							dataType: "json",
+							success: function(data){
+								$.jGrowl(data.message);
+								$("#print_to_form").clearForm();
+								$("#print_to_dialog").dialog('close');
+								$("#hippa_address_id").removeOption(/./);
+								$.ajax({
+									url: "ajaxsearch/ref-provider/all",
+									dataType: "json",
+									type: "POST",
+									success: function(data1){
+										if(data1.response =='true'){
+											$("#hippa_address_id").addOption({"":"Add provider."});
+											$("#hippa_address_id").addOption(data1.message, false);
+											$("#hippa_address_id").val(data.id);
+										} else {
+											$("#hippa_address_id").addOption({"":"No provider.  Click Add."}, false);
+										}
+									}
+								});
+							}
+						});
+					} else {
+						$.jGrowl("Please complete the form");
+					}
+				}
+			},
+			Cancel: function() {
+				$("#print_to_form").clearForm();
+				$("#print_to_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#print_to_state").addOption(states, false);
+	$("#print_to_phone").mask("(999) 999-9999");
+	$("#print_to_fax").mask("(999) 999-9999");
 });

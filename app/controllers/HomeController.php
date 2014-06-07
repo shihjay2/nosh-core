@@ -251,6 +251,7 @@ class HomeController extends BaseController {
 			exit("You cannot do this.");
 		} else {
 			ini_set('memory_limit','196M');
+			ini_set('max_execution_time', 300);
 			$practice_id = Session::get('practice_id');
 			$query = Demographics_relate::where('practice_id', '=', $practice_id)->get();
 			$zip_file_name = 'ccda_' . $practice_id . '.zip';
@@ -263,14 +264,26 @@ class HomeController extends BaseController {
 				exit("Cannot open <$zip_file>\n");
 			}
 			$files_array = array();
+			$i = 0;
 			foreach ($query as $row) {
 				$filename = 'ccda_' . $row->pid . "_" . time() . ".xml";
 				$file = __DIR__.'/../../public/temp/' . $filename;
-				$ccda = $this->generate_ccda('',$row->pid);
-				File::put($file, $ccda);
-				$zip->addFile($file, $filename);
+				$query1 = DB::table('demographics')->where('pid', '=', $row->pid)->first();
+				if ($query1) {
+					$ccda = $this->generate_ccda('',$row->pid);
+					File::put($file, $ccda);
+					$files_array[$i]['file'] = $file;
+					$files_array[$i]['filename'] = $filename;
+					$i++;
+				}
+			}
+			foreach ($files_array as $ccda1) {
+				$zip->addFile($ccda1['file'], $ccda1['filename']);
 			}
 			$zip->close();
+			while(!file_exists($zip_file)) {
+				sleep(2);
+			}
 			$headers = array(
 				'Content-Description' => 'file Transfer',
 				'Content-Type' => 'application/octet-stream',

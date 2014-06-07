@@ -7,10 +7,11 @@
 <div id="print_chart_dialog" title="Print/Send Records">
 	<form id="print_chart_form" class="pure-form pure-form-aligned">
 		<input type="hidden" name="hippa_id" id="print_hippa_id1"/>
-		<div class="pure-control-group"><label for="hippa_date_release">Date of Records Release</label><input type="text" name="hippa_date_release" id="hippa_date_release1" style="width:200px" class="text" required/></div>
-		<div class="pure-control-group"><label for="hippa_reason">Reason</label><input type="text" name="hippa_reason" id="hippa_reason1" style="width:200px" class="text" required/></div>
-		<div class="pure-control-group"><label for="hippa_provider">Records Release To:</label><input type="text" name="hippa_provider" id="hippa_provider1" style="width:200px" class="text" required/></div>
-		<div class="pure-control-group"><label for="hippa_role">Provider Role</label><select name="hippa_role" id="hippa_role1" class="text"></select></div>
+		<div class="pure-control-group"><label for="hippa_reason1">Reason</label><input type="text" name="hippa_reason" id="hippa_reason1" style="width:200px" class="text" required/></div>
+		<div class="pure-control-group"><label for="hippa_provider1">Records Release To:</label><input type="text" name="hippa_provider" id="hippa_provider1" style="width:200px" class="text" required/></div>
+		<div id="print_chart_form_provider" class="pure-control-group"></div>
+		<div class="pure-control-group"><label for="hippa_role1">Provider Role</label><select name="hippa_role" id="hippa_role1" class="text"></select></div>
+		<div class="pure-control-group"><label for="hippa_date_release1">Date of Records Release</label><input type="text" name="hippa_date_release" id="hippa_date_release1" style="width:200px" class="text" required/></div>
 	</form>
 </div>
 <div id="print_chart2_dialog" title="Print/Send Records">
@@ -84,4 +85,26 @@
 <div id="print_message_view_dialog" title="Telephone Message"></div>
 <div id="print_encounter_view_dialog" title="Encounter">
 	<div id="print_encounter_view"></div>
+</div>
+<div id="print_to_dialog" title="">
+	<form id="print_to_form" class="pure-form pure-form-stacked">
+		<input type="hidden" name="address_id" id="print_address_id"/>
+		<div class="pure-g">
+			<div class="pure-u-1-3"><label for="print_to_lastname">Last Name:</label><input type="text" name="lastname" id="print_to_lastname" class="text pure-input-1" required/></div>
+			<div class="pure-u-1-3"><label for="print_to_firstname">First Name:</label><input type="text" name="firstname" id="print_to_firstname" class="text pure-input-1" required/></div>
+			<div class="pure-u-1-3"><label for="print_to_facility">Facility:</label><input type="text" name="facility" id="print_to_facility" class="text pure-input-1"/></div>
+			<div class="pure-u-1-3"><label for="print_to_prefix">Prefix:</label><input type="text" name="prefix" id="print_to_prefix" class="text pure-input-1"/></div>
+			<div class="pure-u-1-3"><label for="print_to_suffix">Suffix:</label><input type="text" name="suffix" id="print_to_suffix" class="text pure-input-1"/></div>
+			<div class="pure-u-1-3"><label for="print_to_specialty">Specialty:</label><input type="text" name="specialty" id="print_to_specialty" class="text pure-input-1"/></div>
+			<div class="pure-u-1"><label for="print_to_email">E-mail:</label><input type="text" name="email" id="print_to_email" class="text pure-input-1"/></div>
+			<div class="pure-u-1"><label for="print_to_address">Address:</label><input type="text" name="street_address1" id="print_to_address" class="text pure-input-1"/></div>
+			<div class="pure-u-1"><label for="print_to_address2">Address2:</label><input type="text" name="street_address2" id="print_to_address2" class="text pure-input-1"/></div>
+			<div class="pure-u-1-3"><label for="print_to_city">City:</label><input type="text" name="city" id="print_to_city" class="text pure-input-1"/></div>
+			<div class="pure-u-1-3"><label for="print_to_state">State:</label><select name="state" id="print_to_state" class="text pure-input-1"></select></div>
+			<div class="pure-u-1-3"><label for="print_to_zip">Zip:</label><input type="text" name="zip" id="print_to_zip" class="text pure-input-1"/></div>
+			<div class="pure-u-1-3"><label for="print_to_phone">Phone:</label><input type="text" name="phone" id="print_to_phone" class="text pure-input-1"/></div>
+			<div class="pure-u-1-3"><label for="print_to_fax">Fax:</label><input type="text" name="fax" id="print_to_fax" class="text pure-input-1"/></div>
+			<div class="pure-u-1"><label for="print_to_comments">Comments:</label><input type="text" name="comments" id="print_to_comments" class="text pure-input-1"/></div>
+		</div>
+	</form>
 </div>

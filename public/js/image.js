@@ -8,27 +8,36 @@ $(document).ready(function() {
 	$("#image_select").change(function() {
 		var a = $("#image_select").val();
 		if (a != '') {
-			$('#wPaint').css({
-				width: 140,
-				height: 140
-			}).wPaint('resize');
-			$('.wPaint-menu-name-main').css({width:579});
-			$('.wPaint-menu-name-text').css({width:182,left:0,top:42});
-			$('.wPaint-menu-select').css({"overflow-y":"scroll"});
-			//$('.wPaint-menu-name-main').parent().css({
-				//width: 579,
-				//left: 0,
-				//top: -68
-			//});
-			//$('.wPaint-menu-name-text').parent().css({
-				//width: 579,
-				//left: 0,
-				//top: -26
-			//});
-			$('#wPaint').wPaint('image', a);
-			$("#image_eid").val(noshdata.eid);
-			$("#image_pid").val(noshdata.pid);
-			$("#image_dialog").dialog('open');
+			$.ajax({
+				url: "ajaxsearch/image-select-dimensions",
+				data: "file=" + a,
+				dataType: "json",
+				type: "POST",
+				success: function(data){
+					$('#wPaint').css({
+						width: data.width,
+						height: data.height
+					}).wPaint('resize');
+					$('.wPaint-menu-name-main').css({width:579});
+					$('.wPaint-menu-name-text').css({width:182,left:0,top:42});
+					$('.wPaint-menu-select').css({"overflow-y":"scroll"});
+					//$('.wPaint-menu-name-main').parent().css({
+						//width: 579,
+						//left: 0,
+						//top: -68
+					//});
+					//$('.wPaint-menu-name-text').parent().css({
+						//width: 579,
+						//left: 0,
+						//top: -26
+					//});
+					$('#wPaint').wPaint('image', a);
+					$("#image_eid").val(noshdata.eid);
+					$("#image_pid").val(noshdata.pid);
+					$("#image_dialog").dialog('open');
+					
+				}
+			});
 		}
 	});
 	$("#image_dialog_preview").dialog({ 
