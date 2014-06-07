@@ -1125,19 +1125,16 @@ $(document).ready(function() {
 								$.jGrowl(data.message);
 								$("#print_to_form").clearForm();
 								$("#print_to_dialog").dialog('close');
-								$("#hippa_address_id").removeOption(/./);
 								$.ajax({
-									url: "ajaxsearch/ref-provider/all",
+									url: "ajaxsearch/ref-provider1/all",
 									dataType: "json",
 									type: "POST",
 									success: function(data1){
-										if(data1.response =='true'){
-											$("#hippa_address_id").addOption({"":"Add provider."});
-											$("#hippa_address_id").addOption(data1.message, false);
-											$("#hippa_address_id").val(data.id);
-										} else {
-											$("#hippa_address_id").addOption({"":"No provider.  Click Add."}, false);
-										}
+										$("#print_chart_form_provider").html(data1.html);
+										loadbuttons();
+										$("#hippa_address_id").val(data.id);
+										var a = $("#hippa_address_id").find("option:selected").first().text();
+										$("#hippa_provider1").val(a);
 									}
 								});
 							}

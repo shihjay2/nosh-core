@@ -8,8 +8,8 @@
 	<form id="print_chart_form" class="pure-form pure-form-aligned">
 		<input type="hidden" name="hippa_id" id="print_hippa_id1"/>
 		<div class="pure-control-group"><label for="hippa_reason1">Reason</label><input type="text" name="hippa_reason" id="hippa_reason1" style="width:200px" class="text" required/></div>
-		<div class="pure-control-group"><label for="hippa_provider1">Records Release To:</label><input type="text" name="hippa_provider" id="hippa_provider1" style="width:200px" class="text" required/></div>
 		<div id="print_chart_form_provider" class="pure-control-group"></div>
+		<div class="pure-control-group"><label for="hippa_provider1">Records Release To:</label><input type="text" name="hippa_provider" id="hippa_provider1" style="width:200px" class="text" required/></div>
 		<div class="pure-control-group"><label for="hippa_role1">Provider Role</label><select name="hippa_role" id="hippa_role1" class="text"></select></div>
 		<div class="pure-control-group"><label for="hippa_date_release1">Date of Records Release</label><input type="text" name="hippa_date_release" id="hippa_date_release1" style="width:200px" class="text" required/></div>
 	</form>
