@@ -37,7 +37,41 @@
 				<?php }?>
 			</div>
 		<?php } if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
-			<div class="pure-u-1-2">
+			<div class="pure-u-1-3">
+				<span id="button_ros_gen_status" class="ros_tooltip"></span>
+				<button type="button" id="button_ros_gen" class="nosh_button ros_menu_button">General</button><br><br>
+				<span id="button_ros_eye_status" class="ros_tooltip"></span>
+				<button type="button" id="button_ros_eye" class="nosh_button ros_menu_button">Eye</button><br><br>
+				<span id="button_ros_ent_status" class="ros_tooltip"></span>
+				<button type="button" id="button_ros_ent" class="nosh_button ros_menu_button">Ear, Nose, and Throat</button><br><br>
+				<span id="button_ros_resp_status" class="ros_tooltip"></span>
+				<button type="button" id="button_ros_resp" class="nosh_button ros_menu_button">Respiratory</button><br><br>
+				<span id="button_ros_cv_status" class="ros_tooltip"></span>
+				<button type="button" id="button_ros_cv" class="nosh_button ros_menu_button">Cardiovascular</button><br><br>
+				<span id="button_ros_gi_status" class="ros_tooltip"></span>
+				<button type="button" id="button_ros_gi" class="nosh_button ros_menu_button">Gastrointestinal</button><br><br>
+				<span id="button_ros_gu_status" class="ros_tooltip"></span>
+				<button type="button" id="button_ros_gu" class="nosh_button ros_menu_button">Genitourinary</button><br><br>
+			</div>
+			<div class="pure-u-1-3">
+				<span id="button_ros_mus_status" class="ros_tooltip"></span>
+				<button type="button" id="button_ros_mus" class="nosh_button ros_menu_button">Musculoskeletal</button><br><br>
+				<span id="button_ros_neuro_status" class="ros_tooltip"></span>
+				<button type="button" id="button_ros_neuro" class="nosh_button ros_menu_button">Neurological</button><br><br>
+				<span id="button_ros_psych_status" class="ros_tooltip"></span>
+				<button type="button" id="button_ros_psych" class="nosh_button ros_menu_button">Psychological</button><br><br>
+				<span id="button_ros_heme_status" class="ros_tooltip"></span>
+				<button type="button" id="button_ros_heme" class="nosh_button ros_menu_button">Hematological/Lymphatic</button><br><br>
+				<span id="button_ros_endocrine_status" class="ros_tooltip"></span>
+				<button type="button" id="button_ros_endocrine" class="nosh_button ros_menu_button">Endocrine</button><br><br>
+				<span id="button_ros_skin_status" class="ros_tooltip"></span>
+				<button type="button" id="button_ros_skin" class="nosh_button ros_menu_button">Skin</button><br><br>
+				<?php if (Session::get('agealldays') <= 6574.32) {?>
+					<span id="button_ros_wcc_status" class="ros_tooltip"></span>
+					<button type="button" id="button_ros_wcc" class="nosh_button ros_menu_button">Well Child Visit</button>
+				<?php }?>
+			</div>
+			<div class="pure-u-1-3">
 				<span id="button_ros_psych1_status" class="ros_tooltip"></span>
 				<button type="button" id="button_ros_psych1" class="nosh_button ros_menu_button">Depression</button><br><br>
 				<span id="button_ros_psych2_status" class="ros_tooltip"></span>
@@ -50,8 +84,6 @@
 				<button type="button" id="button_ros_psych5" class="nosh_button ros_menu_button">ADHD</button><br><br>
 				<span id="button_ros_psych6_status" class="ros_tooltip"></span>
 				<button type="button" id="button_ros_psych6" class="nosh_button ros_menu_button">PTSD</button><br><br>
-			</div>
-			<div class="pure-u-1-2">
 				<span id="button_ros_psych7_status" class="ros_tooltip"></span>
 				<button type="button" id="button_ros_psych7" class="nosh_button ros_menu_button">Substance Related Disorder</button><br><br>
 				<span id="button_ros_psych8_status" class="ros_tooltip"></span>
@@ -66,7 +98,7 @@
 		<?php }?>
 	</div>
 </form>
-<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
 	<div id="ros_gen_dialog" title="General" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">

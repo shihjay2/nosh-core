@@ -15,6 +15,207 @@ class BaseController extends Controller {
 		}
 	}
 	
+	protected function css_assets()
+	{
+		$current_version = File::get(__DIR__."/../../.version");
+		$basefiles = array(
+			'css/main.css',
+			'css/jquery.jgrowl.css',
+			'css/ui.jqgrid.css',
+			'css/fullcalendar.css',
+			'css/main.css',
+			'css/jquery.timepicker.css',
+			'css/jquery.signaturepad.css',
+			'css/searchFilter.css',
+			'css/ui.multiselect.css',
+			'css/chosen.css',
+			'css/jquery.Jcrop.css',
+			'css/jquery.realperson.css',
+			'css/tagit.css',
+			'css/wColorPicker.min.css',
+			'css/wPaint.min.css',
+			'css/jqueryui-editable.css'
+		);
+		$response = '';
+		if (App::isLocal()) {
+			foreach ($basefiles as $basefile) {
+				$response .= HTML::style($basefile);
+			}
+		} else {
+			$cssfilename =  '/css/' . $current_version . '.css';
+			$cssfile = __DIR__.'/../../public' . $cssfilename;
+			$str = '';
+			foreach ($basefiles as $basefile) {
+				$basefile1 = __DIR__.'/../../public/' . $basefile;
+				$str .= File::get($basefile1);
+			}
+			File::put($cssfile,$str);
+			$response .= HTML::style($cssfilename);
+		}
+		return $response;
+	}
+	
+	protected function js_assets($type)
+	{
+		$current_version = File::get(__DIR__."/../../.version");
+		$basejsfiles = array(
+			'/js/jquery.maskedinput.min.js',
+			'/js/jquery.jgrowl.js',
+			'/js/jquery.selectboxes.js',
+			'/js/jquery-migrate-1.2.1.js',
+			'/js/jquery.ajaxQueue.js',
+			'/js/i18n/grid.locale-en.js',
+			'/js/jquery.jqGrid.min.js',
+			'/js/jquery.timepicker.min.js',
+			'/js/fullcalendar.js',
+			'/js/jquery-idleTimeout.js',
+			'/js/jquery.iframer.js',
+			'/js/jquery.serializeObject.js',
+			'/js/jquery.signaturepad.min.js',
+			'/js/json2.min.js',
+			'/js/highcharts.js',
+			'/js/exporting.js',
+			'/js/jquery.dform-1.0.0.min.js',
+			'/js/grid.addons.js',
+			'/js/grid.postext.js',
+			'/js/grid.setcolumns.js',
+			'/js/jquery.contextmenu.js',
+			'/js/jquery.searchFilter.js',
+			'/js/jquery.tablednd.js',
+			'/js/jquery.chosen.min.js',
+			'/js/ui.multiselect.js',
+			'/js/jquery.themeswitcher.js',
+			'/js/jquery.color.js',
+			'/js/jquery.Jcrop.min.js',
+			'/js/jquery.realperson.js',
+			'/js/tagit-themeroller.js',
+			'/js/jquery.jstree.js',
+			'/js/jquery.populate.js',
+			'/js/jquery.ocupload.js',
+			'/js/main.js',
+			'/js/jstz-1.0.4.min.js',
+			'/js/jquery.cookie.js',
+			'/js/bluebutton.js',
+			'/js/wColorPicker.min.js',
+			'/js/wPaint.min.js',
+			'/js/plugins/main/wPaint.menu.main.min.js',
+			'/js/plugins/text/wPaint.menu.text.min.js',
+			'/js/plugins/shapes/wPaint.menu.main.shapes.min.js',
+			'/js/plugins/file/wPaint.menu.main.file.min.js',
+			'/js/jqueryui-editable.min.js',
+			'/js/jquery.touchswipe.min.js'
+		);
+		if(Session::get('group_id') == '1') {
+			$homejsfiles = array(
+				'/js/dashboard.js',
+				'/js/setup.js',
+				'/js/users.js',
+				'/js/extensions.js',
+				'/js/schedule_admin.js',
+				'/js/update.js',
+				'/js/logs.js',
+				'/js/schedule.js'
+			);
+		}
+		if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') {
+			$homejsfiles = array(
+				'/js/searchbar.js',
+				'/js/dashboard.js',
+				'/js/demographics.js',
+				'/js/options.js',
+				'/js/messaging.js',
+				'/js/schedule.js',
+				'/js/billing.js',
+				'/js/financial.js',
+				'/js/office.js'
+			);
+		}
+		if(Session::get('group_id') == '100') {
+			$homejsfiles = array(
+				'/js/dashboard.js',
+				'/js/demographics.js',
+				'/js/messaging.js',
+				'/js/schedule.js',
+				'/js/issues.js',
+				'/js/encounters.js',
+				'/js/medications.js',
+				'/js/supplements.js',
+				'/js/allergies.js',
+				'/js/immunizations.js',
+				'/js/documents.js',
+				'/js/forms.js',
+				'/js/graph.js'
+			);
+		}
+		$chartjsfiles = array(
+			'/js/chart.js',
+			'/js/demographics.js',
+			'/js/searchbar.js',
+			'/js/options.js',
+			'/js/menu.js',
+			'/js/issues.js',
+			'/js/encounters.js',
+			'/js/medications.js',
+			'/js/supplements.js',
+			'/js/allergies.js',
+			'/js/alerts.js',
+			'/js/immunizations.js',
+			'/js/print.js',
+			'/js/billing.js',
+			'/js/documents.js',
+			'/js/t_messages.js',
+			'/js/lab.js',
+			'/js/rad.js',
+			'/js/cp.js',
+			'/js/ref.js',
+			'/js/messaging.js',
+			'/js/schedule.js',
+			'/js/financial.js',
+			'/js/office.js',
+			'/js/graph.js',
+			'/js/image.js'
+		);
+		$response = '';
+		if (App::isLocal()) {
+			foreach ($basejsfiles as $basejsfile) {
+				$response .= HTML::script($basejsfile);
+			}
+			if ($type == 'home') {
+				foreach ($homejsfiles as $homejsfile) {
+					$response .= HTML::script($homejsfile);
+				}
+			}
+			if ($type == 'chart') {
+				foreach ($chartjsfiles as $chartjsfile) {
+					$response .= HTML::script($chartjsfile);
+				}
+			}
+		} else {
+			$jsfilename =  '/js/' . $current_version . '.js';
+			$jsfile = __DIR__.'/../../public' . $jsfilename;
+			$str = '';
+			foreach ($basejsfiles as $basejsfile) {
+				$basejsfile1 = __DIR__.'/../../public/' . $basejsfile;
+				$str .= File::get($basejsfile1);
+			}
+			if ($type == 'home') {
+				foreach ($homejsfiles as $homejsfile) {
+					$homejsfile1 = __DIR__.'/../../public/' . $homejsfile;
+					$str .= File::get($homejsfile1);
+				}
+			}
+			if ($type == 'chart') {
+				foreach ($chartjsfiles as $chartjsfile) {
+					$chartjsfile1 = __DIR__.'/../../public/' . $chartjsfile;
+					$str .= File::get($chartjsfile1);
+				}
+			}
+			File::put($jsfile,$str);
+			$response .= HTML::script($jsfilename);
+		}
+		return $response;
+	}
+	
 	protected function audit($action)
 	{
 		$queries = DB::getQueryLog();

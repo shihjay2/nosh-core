@@ -21,11 +21,14 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.3.0/pure-min.css">
 		<link type="text/css" href="https://code.jquery.com/ui/1.11.0-beta.2/themes/cupertino/jquery-ui.css" rel="Stylesheet" />
 		<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+<!--
 		<?php echo HTML::style('css/main.css'); ?>
 		<?php echo HTML::style('css/jquery.jgrowl.css'); ?>
 		<?php echo HTML::style('css/ui.jqgrid.css'); ?>
 		<?php echo HTML::style('css/fullcalendar.css'); ?>
+-->
 		<?php echo HTML::style('css/fullcalendar.print.css', array('media' => 'print'));?>
+<!--
 		<?php echo HTML::style('css/styledButton.css'); ?>
 		<?php echo HTML::style('css/main.css'); ?>
 		<?php echo HTML::style('css/jquery.timepicker.css'); ?>
@@ -39,6 +42,7 @@
 		<?php echo HTML::style('css/wColorPicker.min.css'); ?>
 		<?php echo HTML::style('css/wPaint.min.css'); ?>
 		<?php echo HTML::style('css/jqueryui-editable.css'); ?>
+-->
 		{{ $style }}
 		<script type="text/javascript">
 			var noshdata = {
@@ -74,6 +78,7 @@
 		</script>
 		<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script type="text/javascript" src="https://code.jquery.com/ui/1.11.0-beta.2/jquery-ui.min.js"></script>
+<!--
 		<?php echo HTML::script('js/jquery.maskedinput.min.js'); ?>
 		<?php echo HTML::script('js/jquery.jgrowl.js'); ?>
 		<?php echo HTML::script('js/jquery.selectboxes.js'); ?>
@@ -119,6 +124,7 @@
 		<?php echo HTML::script('js/plugins/file/wPaint.menu.main.file.min.js'); ?>
 		<?php echo HTML::script('js/jqueryui-editable.min.js'); ?>
 		<?php echo HTML::script('js/jquery.touchswipe.min.js'); ?>
+-->
 		{{ $script }}
 	</head>
 	<body>
