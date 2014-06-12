@@ -855,6 +855,8 @@ $(document).ready(function() {
 				$("#billing_dos_t1").val(a);
 			}
 		});
+		$("#billing_icd1").selectOptions('', true);
+		$("#billing_icd1").trigger("liszt:updated");
 		$("#cpt_billing_dialog1").dialog('open');
 		$("#billing_cpt1").focus();
 	});
@@ -866,7 +868,7 @@ $(document).ready(function() {
 			var icd_array = String(dx).split("");
 			var length = icd_array.length;
 			for (var i = 0; i < length; i++) {
-				$("#billing_icd1").selectOptions(icd_array[i]);
+				$("#billing_icd1").selectOptions(icd_array[i], true);
 			}
 			$("#billing_icd1").trigger("liszt:updated");
 			$("#cpt_billing_dialog1").dialog('open');

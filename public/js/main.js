@@ -2500,6 +2500,15 @@ $(document).on('click', "#hippa_address_id2", function (){
 	}
 	$("#print_to_dialog").dialog('open');
 });
+$(document).on('click', '.assessment_clear', function(){
+	var id = $(this).attr('id');
+	var parts = id.split('_');
+	console.log(parts[2]);
+	$("#assessment_" + parts[2]).val('');
+	$("#assessment_icd" + parts[2]).val('');
+	$("#assessment_icd" + parts[2] + "_div").html('');
+	$("#assessment_icd" + parts[2] + "_div_button").hide();
+});
 function textdump(elem) {
 	var id = $(elem).attr('id');
 	$.ajax({

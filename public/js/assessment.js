@@ -170,14 +170,6 @@ $(document).ready(function() {
 		$("#assessment_icd_search").val('');
 		$("#assessment_buttons").hide();
 	});
-	$('.assessment_clear').click(function(){
-		var id = $(this).attr('id');
-		var parts = id.split('_');
-		$("#assessment_" + parts[3]).val('');
-		$("#assessment_icd" + parts[3]).val('');
-		$("#assessment_icd" + parts[3] + "_div").html('');
-		$("#assessment_icd" + parts[3] + "_div_button").hide();
-	});
 	$("#assessment_other_reset").button();
 	$('#assessment_other_reset').click(function(){
 		$("#assessment_other").val('');
