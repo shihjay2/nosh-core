@@ -42,7 +42,7 @@ class BaseController extends Controller {
 				$response .= HTML::style($basefile);
 			}
 		} else {
-			$cssfilename =  '/css/' . $current_version . '.css';
+			$cssfilename =  '/temp/' . $current_version . '.css';
 			$cssfile = __DIR__.'/../../public' . $cssfilename;
 			$str = '';
 			foreach ($basefiles as $basefile) {
@@ -191,7 +191,7 @@ class BaseController extends Controller {
 				}
 			}
 		} else {
-			$jsfilename =  '/js/' . $current_version . '.js';
+			$jsfilename =  '/temp/' . $current_version . '.js';
 			$jsfile = __DIR__.'/../../public' . $jsfilename;
 			$str = '';
 			foreach ($basejsfiles as $basejsfile) {
