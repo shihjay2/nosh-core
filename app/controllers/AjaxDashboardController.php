@@ -1245,6 +1245,32 @@ class AjaxDashboardController extends BaseController {
 		}
 	}
 	
+	public function postDefaultTemplate()
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$row = DB::table('templates')->where('template_id', '=', Input::get('template_id'))->first();
+			if ($row->default == 'n') {
+				$data = array(
+					'default' => 'y'
+				);
+				$message = "Form template marked as default!";
+			} else {
+				$data = array(
+					'default' => 'n'
+				);
+				$message = "Form template unmarked as default!";
+			}
+			DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($data);
+			$this->audit('Update');
+			echo $message;
+		}
+	}
+	
 	public function templatedownload($id)
 	{
 		$result = DB::table('templates')->where('template_id', '=', $id)->first();
@@ -1396,7 +1422,8 @@ class AjaxDashboardController extends BaseController {
 				'sex' => 'm',
 				'group' => $group,
 				'array' => $array,
-				'practice_id' => Session::get('practice_id')
+				'practice_id' => Session::get('practice_id'),
+				'scoring' => Input::get('scoring')
 			);
 			$template_data2 = array(
 				'user_id' => $user_id,
@@ -1407,7 +1434,8 @@ class AjaxDashboardController extends BaseController {
 				'sex' => 'f',
 				'group' => $group,
 				'array' => $array,
-				'practice_id' => Session::get('practice_id')
+				'practice_id' => Session::get('practice_id'),
+				'scoring' => Input::get('scoring')
 			);
 			if (Input::get('template_id') == '') {
 				DB::table('templates')->insert($template_data1);
@@ -1456,7 +1484,8 @@ class AjaxDashboardController extends BaseController {
 				'sex' => Input::get('sex'),
 				'group' => $group,
 				'array' => $array,
-				'practice_id' => Session::get('practice_id')
+				'practice_id' => Session::get('practice_id'),
+				'scoring' => Input::get('scoring')
 			);
 			if (Input::get('template_id') == '') {
 				DB::table('templates')->insert($template_data3);
@@ -1673,6 +1702,7 @@ class AjaxDashboardController extends BaseController {
 					$records1[$i]['sex'] = $row->sex;
 					$records1[$i]['group'] = $row->group;
 					$records1[$i]['age'] = $row->age;
+					$records1[$i]['default'] = $row->default;
 					$i++;
 				}
 				$response['rows'] = $records1;
@@ -1694,7 +1724,6 @@ class AjaxDashboardController extends BaseController {
 		if (Input::get('sex') == 'b') {
 			$template_data1 = array(
 				'user_id' => $user_id,
-				'default' => 'n',
 				'template_name' => Input::get('template_name'),
 				'age' => Input::get('age'),
 				'category' => 'ros',
@@ -1705,7 +1734,6 @@ class AjaxDashboardController extends BaseController {
 			);
 			$template_data2 = array(
 				'user_id' => $user_id,
-				'default' => 'n',
 				'template_name' => Input::get('template_name'),
 				'age' => Input::get('age'),
 				'category' => 'ros',
@@ -1715,6 +1743,8 @@ class AjaxDashboardController extends BaseController {
 				'practice_id' => Session::get('practice_id')
 			);
 			if (Input::get('template_id') == '') {
+				$template_data1['default'] = 'n';
+				$template_data2['default'] = 'n';
 				DB::table('templates')->insert($template_data1);
 				$this->audit('Add');
 				DB::table('templates')->insert($template_data2);
@@ -1825,6 +1855,7 @@ class AjaxDashboardController extends BaseController {
 					$records1[$i]['sex'] = $row->sex;
 					$records1[$i]['group'] = $row->group;
 					$records1[$i]['age'] = $row->age;
+					$records1[$i]['default'] = $row->default;
 					$i++;
 				}
 				$response['rows'] = $records1;
@@ -1846,7 +1877,6 @@ class AjaxDashboardController extends BaseController {
 		if (Input::get('sex') == 'b') {
 			$template_data1 = array(
 				'user_id' => $user_id,
-				'default' => 'n',
 				'template_name' => Input::get('template_name'),
 				'age' => Input::get('age'),
 				'category' => 'pe',
@@ -1857,7 +1887,6 @@ class AjaxDashboardController extends BaseController {
 			);
 			$template_data2 = array(
 				'user_id' => $user_id,
-				'default' => 'n',
 				'template_name' => Input::get('template_name'),
 				'age' => Input::get('age'),
 				'category' => 'pe',
@@ -1867,6 +1896,8 @@ class AjaxDashboardController extends BaseController {
 				'practice_id' => Session::get('practice_id')
 			);
 			if (Input::get('template_id') == '') {
+				$template_data1['default'] = 'n';
+				$template_data2['default'] = 'n';
 				DB::table('templates')->insert($template_data1);
 				$this->audit('Add');
 				DB::table('templates')->insert($template_data2);

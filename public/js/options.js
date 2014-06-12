@@ -247,13 +247,14 @@ $(document).ready(function() {
 				url:"ajaxdashboard/patient-forms-list",
 				datatype: "json",
 				mtype: "POST",
-				colNames:['ID','Form','Gender','Group','Age'],
+				colNames:['ID','Form','Gender','Group','Age','Scoring'],
 				colModel:[
 					{name:'template_id',index:'template_id',width:1,hidden:true},
 					{name:'template_name',index:'template_name',width:300},
 					{name:'sex',index:'sex',width:100},
 					{name:'group',index:'group',width:100},
-					{name:'age',index:'age',width:1,hidden:true}
+					{name:'age',index:'age',width:1,hidden:true},
+					{name:'scoring',index:'scoring',width:1,hidden:true}
 				],
 				rowNum:10,
 				rowList:[10,20,30],
@@ -293,13 +294,14 @@ $(document).ready(function() {
 				url:"ajaxdashboard/ros-forms-list",
 				datatype: "json",
 				mtype: "POST",
-				colNames:['ID','Form','Gender','Group','Age'],
+				colNames:['ID','Form','Gender','Group','Age','Default'],
 				colModel:[
 					{name:'template_id',index:'template_id',width:1,hidden:true},
-					{name:'template_name',index:'template_name',width:300},
+					{name:'template_name',index:'template_name',width:250},
 					{name:'sex',index:'sex',width:100},
 					{name:'group',index:'group',width:100},
-					{name:'age',index:'age',width:1,hidden:true}
+					{name:'age',index:'age',width:1,hidden:true},
+					{name:'default',index:'default',width:50}
 				],
 				rowNum:10,
 				rowList:[10,20,30],
@@ -316,13 +318,14 @@ $(document).ready(function() {
 				url:"ajaxdashboard/pe-forms-list",
 				datatype: "json",
 				mtype: "POST",
-				colNames:['ID','Form','Gender','Group','Age'],
+				colNames:['ID','Form','Gender','Group','Age','Default'],
 				colModel:[
 					{name:'template_id',index:'template_id',width:1,hidden:true},
-					{name:'template_name',index:'template_name',width:300},
+					{name:'template_name',index:'template_name',width:250},
 					{name:'sex',index:'sex',width:100},
 					{name:'group',index:'group',width:100},
-					{name:'age',index:'age',width:1,hidden:true}
+					{name:'age',index:'age',width:1,hidden:true},
+					{name:'default',index:'default',width:50}
 				],
 				rowNum:10,
 				rowList:[10,20,30],
@@ -769,6 +772,14 @@ $(document).ready(function() {
 			$.jGrowl("Please select form to delete!");
 		}
 	});
+	$("#export_patient_forms").click(function(){
+		var item = jQuery("#patient_forms_list").getGridParam('selrow');
+		if(item){
+			window.open("templatedownload/"+item);
+		} else {
+			$.jGrowl("Please select form to export!");
+		}
+	});
 	$("#add_hpi_forms").click(function(){
 		$("#configuration_hpi_forms_form").clearForm();
 		$("#configuration_hpi_forms_gender").val('b');
@@ -859,6 +870,23 @@ $(document).ready(function() {
 			$.jGrowl("Please select form to delete!");
 		}
 	});
+	$("#default_ros_forms").click(function(){
+		var item = jQuery("#ros_forms_list").getGridParam('selrow');
+		if(item){
+			$.ajax({
+				type: "POST",
+				url: "ajaxdashboard/default-template",
+				data: "template_id=" + item,
+				success: function(data){
+					reload_grid("ros_forms_list");
+					$.jGrowl(data);
+					ros_template_renew();
+				}
+			});
+		} else {
+			$.jGrowl("Please select form to make default!");
+		}
+	});
 	$("#export_ros_forms").click(function(){
 		var item = jQuery("#ros_forms_list").getGridParam('selrow');
 		if(item){
@@ -908,6 +936,23 @@ $(document).ready(function() {
 			$.jGrowl("Please select form to delete!");
 		}
 	});
+	$("#default_pe_forms").click(function(){
+		var item = jQuery("#pe_forms_list").getGridParam('selrow');
+		if(item){
+			$.ajax({
+				type: "POST",
+				url: "ajaxdashboard/default-template",
+				data: "template_id=" + item,
+				success: function(data){
+					reload_grid("pe_forms_list");
+					$.jGrowl(data);
+					pe_template_renew();
+				}
+			});
+		} else {
+			$.jGrowl("Please select form to make default!");
+		}
+	});
 	$("#export_pe_forms").click(function(){
 		var item = jQuery("#pe_forms_list").getGridParam('selrow');
 		if(item){
@@ -951,6 +996,7 @@ $(document).ready(function() {
 		var json_flat = $("#configuration_" + id_main1 + "_json").val();
 		var json_object = JSON.parse(json_flat);
 		var json_array = [json_object];
+		console.log(json_array[0]['html'].length);
 		var div_id = $("#" + id_main1 + "_div_id").val();
 		if (div_id != '') {
 			for (var i = 0; i < json_array[0]['html'].length; i++) {
@@ -999,7 +1045,11 @@ $(document).ready(function() {
 			}
 		} else {
 			var j = json_array[0]['html'].length;
-			var l = j-3;
+			if (id_parts[0] == 'patient') {
+				var l = j-3;
+			} else {
+				var l = j+1;
+			}
 			if ($("#configuration_" + id_main1 + "_fieldtype").val() == 'text') {
 				var k = id_main2 + "_div " + id_main2 + "_text";
 				json_array[0]['html'][j] = {"type":"div","class":id_main2 + "_div " + id_main2 + "_text","id":id_main2 + "_div"+l,"html":[{"type":"span","id":id_main2 + "_div"+l+"_label","html":$("#configuration_" + id_main1 + "_label").val()},{"type":"br"},{"type":$("#configuration_" + id_main1 + "_fieldtype").val(),"id":id_main2 + "_div"+l+"_"+$("#configuration_" + id_main1 + "_fieldtype").val(),"name":id_main2 + "_div"+l,"value":""}]};
@@ -1064,6 +1114,7 @@ $(document).ready(function() {
 		$("#" + id_main1 + "_template_div_options").html('');
 		$("#" + id_main1 + "_template_surround_div").hide();
 	});
+	$("#configuration_patient_forms_scoring").tooltip({ content: "Fill this field if you wish to create a scoring algorithm for this form.  The score value for a radio button or checkbox is determined automatically based on the order of the list that you create.  The first selection always starts with a value of 0, the second selection is 1, and so on." });
 	$("#configuration_patient_forms_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
@@ -1232,6 +1283,7 @@ $(document).ready(function() {
 							reload_grid("ros_forms_list");
 							$("#configuration_ros_forms_form").clearForm();
 							$("#configuration_ros_forms_dialog").dialog('close');
+							ros_template_renew();
 						}
 					});
 				}
@@ -1297,6 +1349,7 @@ $(document).ready(function() {
 							reload_grid("pe_forms_list");
 							$("#configuration_pe_forms_form").clearForm();
 							$("#configuration_pe_forms_dialog").dialog('close');
+							pe_template_renew();
 						}
 					});
 				}

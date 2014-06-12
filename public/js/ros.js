@@ -52,6 +52,8 @@ $(document).ready(function() {
 					if (data.constructor === stringConstructor) {
 						var json_object = JSON.parse(data);
 						$('#'+id+'_form').dform(json_object);
+						$("." + id + "_div").css("padding","5px");
+						$('.ros_template_div select').addOption({'':'Select option'},true);
 					} else {
 						$('#'+id+'_form').dform(data);
 					}

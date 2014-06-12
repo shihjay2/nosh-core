@@ -594,6 +594,22 @@ class AjaxEncounterController extends BaseController {
 			$group = $row->group;
 			$data[$group] = unserialize($row->array);
 		}
+		$query1 = DB::table('templates')
+			->where('user_id', '=', '0')
+			->where('sex', '=', $sex)
+			->where('category', '=', 'ros')
+			->where('default', '=', "y")
+			->orderBy('group', 'asc')
+			->get();
+		if ($query1) {
+			foreach ($query1 as $row1) {
+				$group1 = $row1->group;
+				$data1 = unserialize($row1->array);
+				$data1 = str_replace('ros_form_buttonset', 'ros_buttonset', $data1);
+				$data1 = str_replace('ros_form', $group1 , $data1);
+				$data[$group1] = json_decode($data1);
+			}
+		}
 		echo json_encode($data);
 	}
 	
@@ -1138,6 +1154,22 @@ class AjaxEncounterController extends BaseController {
 		foreach ($query as $row) {
 			$group = $row->group;
 			$data[$group] = unserialize($row->array);
+		}
+		$query1 = DB::table('templates')
+			->where('user_id', '=', '0')
+			->where('sex', '=', $sex)
+			->where('category', '=', 'pe')
+			->where('default', '=', "y")
+			->orderBy('group', 'asc')
+			->get();
+		if ($query1) {
+			foreach ($query1 as $row1) {
+				$group1 = $row1->group;
+				$data1 = unserialize($row1->array);
+				$data1 = str_replace('pe_form_buttonset', 'pe_buttonset', $data1);
+				$data1 = str_replace('pe_form', $group1 , $data1);
+				$data[$group1] = json_decode($data1);
+			}
 		}
 		echo json_encode($data);
 	}

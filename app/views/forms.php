@@ -5,6 +5,7 @@
 <div id="form_dialog" title="">
 	<div class="form_template_div">
 		<input type="hidden" id="form_array"/>
+		<input type="hidden" id="form_scoring"/>
 		<br><form id="form_content" class="ui-widget pure-form"></form>
 	</div>
 </div>

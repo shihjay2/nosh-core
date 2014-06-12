@@ -603,6 +603,9 @@ class AjaxInstallController extends BaseController {
 		if ($practice->version < "1.8.1") {
 			$this->update181();
 		}
+		if ($practice->version < "1.8.2") {
+			$this->update182();
+		}
 		return Redirect::to('/');
 	}
 	
@@ -894,6 +897,55 @@ class AjaxInstallController extends BaseController {
 		$practiceinfo_data = array(
 			'icd' => '9',
 			'version' => '1.8.1'
+		);
+		// Update version
+		DB::table('practiceinfo')->update($practiceinfo_data);
+	}
+	
+	public function update182()
+	{
+		// Fix template numbering bug
+		$query = DB::table('templates')
+			->where('template_name', '!=', 'Global Default')
+			->where(function($query_array1) {
+				$query_array1->where('category', '=', 'pe')
+				->orWhere('category', '=', 'ros')
+				->orWhere('category', '=', 'hpi');
+			})
+			->where('category', '=', 'pe')
+			->get();
+		if ($query) {
+			foreach ($query as $row) {
+				$arr = json_decode(unserialize($row->array), true);
+				$category = $row->category . "_form_div";
+				$i = 0;
+				$j = $i + 1;
+				foreach ($arr['html'] as $row1) {
+					$cat = $category . $j;
+					if($row1['id'] != $cat) {
+						$arr['html'][$i]['id'] = $cat;
+						$k = 0;
+						foreach ($arr['html'][$i]['html'] as $row2) {
+							if ($k != 1) {
+								if ($k == 0) {
+									$arr['html'][$i]['html'][$k]['id'] = $cat . '_label';
+								} else {
+									$arr['html'][$i]['html'][$k]['id'] = str_replace($row1['id'], $cat, $arr['html'][$i]['html'][$k]['id']);
+									$arr['html'][$i]['html'][$k]['name'] = $cat;
+								}
+							}
+							$k++;
+						}
+					}
+					$i++;
+					$j++;
+				}
+				$data['array'] = serialize(json_encode($arr));
+				DB::table('templates')->where('template_id', '=', $row->template_id)->update($data);
+			}
+		}
+		$practiceinfo_data = array(
+			'version' => '1.8.2'
 		);
 		// Update version
 		DB::table('practiceinfo')->update($practiceinfo_data);

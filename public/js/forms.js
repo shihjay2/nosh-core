@@ -31,11 +31,13 @@ $(document).ready(function() {
 					$.ajax({
 						type: "POST",
 						url: "ajaxcommon/get-form/" + id,
+						dataType: 'json',
 						success: function(data){
-							$("#form_array").val(data);
+							$("#form_array").val(data.array);
 							$('#form_content').html('');
-							var json_object = JSON.parse(data);
+							var json_object = JSON.parse(data.array);
 							$('#form_content').dform(json_object);
+							$('#form_scoring').val(data.scoring);
 							$("#form_template_id").val(id);
 							$(".patient_form_div").css("padding","5px");
 							$('.patient_form_buttonset').buttonset();
@@ -54,12 +56,13 @@ $(document).ready(function() {
 										$("#form_content").populate(json_object);
 										$('#form_dialog').dialog('option', 'title', "Fill out the " + json_object.forms_title + " Form:");
 										$(".patient_form_buttonset input").button('refresh');
+										$("#form_dialog").dialog('open');
 									}
 								});
 							} else {
 								$('#form_dialog').dialog('option', 'title', "Fill out the " + json_object.html[2].value + " Form:");
+								$("#form_dialog").dialog('open');
 							}
-							$("#form_dialog").dialog('open');
 						}
 					});
 				},
@@ -89,12 +92,16 @@ $(document).ready(function() {
 				var date = d.toISOString();
 				text += "Form completed by patient on " + date + "\n";
 				text += "********************************************\n";
+				var score = 0;
 				$(".patient_form_div").each(function() {
 					var a = $(this).attr('class');
 					var b = $(this).attr('id');
 					if (a == "ui-dform-div patient_form_div patient_form_buttonset ui-buttonset") {
 						$("#" + b + " input:checked").each(function() {
 							text += $(this).val() + "\n";
+							var c = $(this).attr('id');
+							var d = c.split('_');
+							score += parseInt(d.slice(-1)[0]);
 						});
 					}
 					if (a == "ui-dform-div patient_form_div patient_form_text") {
@@ -104,6 +111,10 @@ $(document).ready(function() {
 						text += $("#" + b + "_select").val() + "\n";
 					}
 				});
+				if ($("#form_scoring").val() != '') {
+					text += "Score: " + score + "\n"
+					text += "Scoring Description: " + $("#form_scoring").val();
+				}
 				var array = $("#form_array").val();
 				$.ajax({
 					type: "POST",

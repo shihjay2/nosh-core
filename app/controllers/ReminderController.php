@@ -7,25 +7,6 @@ class ReminderController extends BaseController {
 	*/
 	public function test()
 	{
-		//$delimiter = $this->getCSVDelimiter("/noshdocuments/1/csvtest.txt");
-		//Config::set('formatter::formatter.csv.delimiter', $delimiter);
-		//Config::set('formatter::formatter.csv.enclosure', '');
-		//Config::set('formatter::formatter.csv.newline', "\n");
-		//Config::set('formatter::formatter.csv.regex_newline', '\n');
-		//Config::set('formatter::formatter.csv.escape', '\\');
-		//$csv = File::get("/noshdocuments/1/csvtest.txt");
-		//$result = Formatter::make($csv, 'csv')->to_array();
-		//$query = DB::table('tests')->first();
-		//$query1 = (array) $query;
-		//unset($query1['pid']);
-		//$keys = array_keys($query1);
-		//$text = implode("','", $keys);
-		//if ($result) {
-			//echo "Yes";
-		//} else {
-			//echo curl_error($ch);
-		//}
-		//curl_close($ch);
 	}
 	
 	public function reminder()

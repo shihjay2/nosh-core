@@ -152,7 +152,7 @@ $(document).ready(function() {
 		var a = $(this).val();
 		$.ajax({
 			type: "POST",
-			url: "ajaxencounters/get-pf-template/" + a,
+			url: "ajaxencounter/get-pf-template/" + a,
 			success: function(data){
 				var old = $("#hpi").val();
 				if (old != '') {
@@ -164,17 +164,7 @@ $(document).ready(function() {
 			}
 		});
 	});
-	$.ajax({
-		type: "POST",
-		url: "ajaxencounter/hpi-template-select-list",
-		dataType: "json",
-		success: function(data){
-			$('#hpi_template').addOption({"":"*Select a template"}, false);
-			$('#hpi_template').addOption(data.options, false);
-			$('#hpi_template').sortOptions();
-			$('#hpi_template').val("");
-		}
-	});
+	hpi_template_renew();
 	$('#hpi_template').change(function(){
 		var a = $(this).val();
 		$('#hpi_template_form').html('');
@@ -200,6 +190,8 @@ $(document).ready(function() {
 					if (data.constructor === stringConstructor) {
 						var json_object = JSON.parse(data);
 						$('#hpi_template_form').dform(json_object);
+						$(".hpi_form_div").css("padding","5px");
+						$('.hpi_template_div select').addOption({'':'Select option'},true);
 					} else {
 						$('#hpi_template_form').dform(data);
 					}
@@ -231,7 +223,17 @@ $(document).ready(function() {
 						var a = $(this).val();
 						if ($(this).is(':checked')) {
 							if (old != '') {
-								var b = old + '\n' + a;
+								$(this).siblings('input:radio').each(function() {
+									var d = $(this).val();
+									var d1 = '  ' + d;
+									old = old.replace(d1,'');
+									old = old.replace(d, '');
+								});
+								if (old != '') {
+									var b = old + '\n' + a;
+								} else {
+									var b = a;
+								}
 							} else {
 								var b = a;
 							}
@@ -352,7 +354,7 @@ $(document).ready(function() {
 					});
 					$('#hpi_template_form').find('.hpi_normal').click(function() {
 						if ($(this).is(':checked')) {
-							$("#hpi_template_form").find('.hpi_other:checkbox').each(function(){
+							$(this).siblings('input:checkbox').each(function(){
 								var parent_id = $(this).attr("id");
 								$(this).prop('checked',false);
 								var old = $("#hpi").val();

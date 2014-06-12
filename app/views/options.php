@@ -21,6 +21,7 @@
 				<button type="button" id="add_ros_forms" class="nosh_button_add">Add</button>
 				<button type="button" id="edit_ros_forms" class="nosh_button_edit">Edit</button>
 				<button type="button" id="delete_ros_forms" class="nosh_button_delete">Delete</button>
+				<button type="button" id="default_ros_forms" class="nosh_button_check">Default</button>
 				<button type="button" id="export_ros_forms" class="nosh_button_extlink">Export</button>
 			</div>
 		<?php }?>
@@ -32,6 +33,7 @@
 				<button type="button" id="add_pe_forms" class="nosh_button_add">Add</button>
 				<button type="button" id="edit_pe_forms" class="nosh_button_edit">Edit</button>
 				<button type="button" id="delete_pe_forms" class="nosh_button_delete">Delete</button>
+				<button type="button" id="default_pe_forms" class="nosh_button_check">Default</button>
 				<button type="button" id="export_pe_forms" class="nosh_button_extlink">Export</button>
 			</div>
 		<?php }?>
@@ -114,6 +116,7 @@
 			<button type="button" id="add_patient_forms" class="nosh_button_add">Add</button>
 			<button type="button" id="edit_patient_forms" class="nosh_button_edit">Edit</button>
 			<button type="button" id="delete_patient_forms" class="nosh_button_delete">Delete</button>
+			<button type="button" id="export_patient_forms" class="nosh_button_extlink export_template">Export</button>
 		</div>
 	</div>
 </div>
@@ -153,6 +156,7 @@
 			<div class="pure-u-1-2"><label for="configuration_patient_forms_destination">Form Destination to Encounter Element:</label><select name="forms_destination" id="configuration_patient_forms_destination" style="width:290px" class="text forms_main" required></select></div>
 			<div class="pure-u-1-2"><label for="configuration_patient_forms_gender">Gender</label><select name="sex" id="configuration_patient_forms_gender" style="width:290px" class="text forms_main configuration_gender"></select></div>
 			<div class="pure-u-1-2"><label for="configuration_patient_forms_age_group">Age Group</label><select name="age" id="configuration_patient_forms_age_group" style="width:290px" class="text forms_main configuration_age_group"></select></div>
+			<div class="pure-u-1"><label for="configuration_patient_forms_scoring">Scoring Description</label><textarea name="scoring" id="configuration_patient_forms_scoring" rows="3" style="width:95%" class="text forms_main" title=""></textarea></div>
 		</div>
 	</form>
 	<hr class="ui-state-default"/>

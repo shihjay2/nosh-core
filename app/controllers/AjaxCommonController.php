@@ -514,8 +514,9 @@ class AjaxCommonController extends BaseController {
 	public function postGetForm($id)
 	{
 		$row = DB::table('templates')->where('template_id', '=', $id)->first();
-		$data = unserialize($row->array);
-		echo $data;
+		$data['array'] = unserialize($row->array);
+		$data['scoring'] = $row->scoring;
+		echo json_encode($data);
 	}
 	
 	public function postGetFormData($id)
