@@ -152,7 +152,7 @@ $(document).ready(function() {
 				colNames:['ID','Visit Type','Provider','Duration','Color'],
 				colModel:[
 					{name:'calendar_id',index:'calendar_id',width:1,hidden:true},
-					{name:'visit_type',index:'visit_type',width:300,editable:true,editrules:{required:true},formoptions:{elmsuffix:"(*)"}},
+					{name:'visit_type',index:'visit_type',width:200,editable:true,editrules:{required:true},formoptions:{elmsuffix:"(*)"}},
 					{name:'provider_id',index:'provider_id',width:200,editable:true,editrules:{edithidden:true, required:true},formatter:providerlabel,edittype:'select',
 						editoptions:{value: function(){
 							var list = "0:All Providers";

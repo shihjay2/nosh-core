@@ -806,7 +806,7 @@ $(document).ready(function() {
 	});
 	$("#messages_lab_orderslist_link").button().click(function(){
 		$("#configuration_dialog").dialog('open');
-		$("#configuration_accordion").accordion("option", "active", 3);
+		$("#configuration_accordion").accordion("option", "active", 4);
 	});
 	$("#messages_lab_aoe_dialog").dialog({ 
 		bgiframe: true, 

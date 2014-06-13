@@ -1959,6 +1959,312 @@ class AjaxDashboardController extends BaseController {
 		echo $message;
 	}
 	
+	public function postSituationFormsList()
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$page = Input::get('page');
+			$limit = Input::get('rows');
+			$sidx = Input::get('sidx');
+			$sord = Input::get('sord');
+			$practice_id = Session::get('practice_id');
+			$pid = Session::get('pid');
+			$query = DB::table('templates')
+				->where('category', '=', 'situation')
+				->where('practice_id', '=', $practice_id)
+				->where('template_name', '!=', 'Global Default')
+				->get();
+			if($query) { 
+				$count = count($query);
+				$total_pages = ceil($count/$limit); 
+			} else { 
+				$count = 0;
+				$total_pages = 0;
+			}
+			if ($page > $total_pages) $page=$total_pages;
+			$start = $limit*$page - $limit;
+			if($start < 0) $start = 0;
+			$query1 = DB::table('templates')
+				->where('category', '=', 'situation')
+				->where('practice_id', '=', $practice_id)
+				->where('template_name', '!=', 'Global Default')
+				->orderBy($sidx, $sord)
+				->skip($start)
+				->take($limit)
+				->get();
+			$response['page'] = $page;
+			$response['total'] = $total_pages;
+			$response['records'] = $count;
+			if ($query1) {
+				$records1 = array();
+				$i = 0;
+				foreach ($query1 as $row) {
+					$records1[$i]['template_id'] = $row->template_id;
+					$records1[$i]['template_name'] = $row->template_name;
+					$records1[$i]['sex'] = $row->sex;
+					$records1[$i]['group'] = $row->group;
+					$records1[$i]['age'] = $row->age;
+					$i++;
+				}
+				$response['rows'] = $records1;
+			} else {
+				$response['rows'] = '';
+			}
+			echo json_encode($response);
+		}
+	}
+	
+	public function postSaveSituationForm($type)
+	{
+		if ($type == 'user') {
+			$user_id = Session::get('user_id');
+		} else {
+			$user_id = "0";
+		}
+		$group = str_replace(" ", "_", strtolower(Input::get('template_name')));
+		$array = serialize(Input::get('array'));
+		if (Input::get('sex') == 'b') {
+			$template_data1 = array(
+				'user_id' => $user_id,
+				'default' => 'default',
+				'template_name' => Input::get('template_name'),
+				'age' => Input::get('age'),
+				'category' => 'situation',
+				'sex' => 'm',
+				'group' => $group,
+				'array' => $array,
+				'practice_id' => Session::get('practice_id')
+			);
+			$template_data2 = array(
+				'user_id' => $user_id,
+				'default' => 'default',
+				'template_name' => Input::get('template_name'),
+				'age' => Input::get('age'),
+				'category' => 'situation',
+				'sex' => 'f',
+				'group' => $group,
+				'array' => $array,
+				'practice_id' => Session::get('practice_id')
+			);
+			if (Input::get('template_id') == '') {
+				DB::table('templates')->insert($template_data1);
+				$this->audit('Add');
+				DB::table('templates')->insert($template_data2);
+				$this->audit('Add');
+				$message = "Form added as a template!";
+			} else {
+				$template_row = Templates::find(Input::get('template_id'));
+				if ($template_row->sex == 'm') {
+					$template_id1 = Input::get('template_id');
+				} else {
+					$template_id2 = Input::get('template_id');
+				}
+				$template_row1 = Templates::where('group', '=', $template_row->group)
+					->where('template_id', '!=', Input::get('template_id'))
+					->first();
+				if ($template_row1) {
+					if ($template_row1->sex == 'm') {
+						$template_id1 = $template_row1->template_id;
+					} else {
+						$template_id2 = $template_row1->template_id;
+					}
+					DB::table('templates')->where('template_id', '=', $template_id1)->update($template_data1);
+					$this->audit('Update');
+					DB::table('templates')->where('template_id', '=', $template_id2)->update($template_data2);
+					$this->audit('Update');
+				} else {
+					if ($template_row->sex == 'm') {
+						DB::table('templates')->insert($template_data2);
+						$this->audit('Add');
+					} else {
+						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+					}
+				}
+				$message = "Form updated as a template!";
+			}
+		} else {
+			$template_data3 = array(
+				'user_id' => $user_id,
+				'default' => 'default',
+				'template_name' => Input::get('template_name'),
+				'age' => Input::get('age'),
+				'category' => 'situation',
+				'sex' => Input::get('sex'),
+				'group' => $group,
+				'array' => $array,
+				'practice_id' => Session::get('practice_id')
+			);
+			if (Input::get('template_id') == '') {
+				DB::table('templates')->insert($template_data3);
+				$this->audit('Add');
+				$message = "Form added as a template!";
+			} else {
+				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data3);
+				$this->audit('Update');
+				$message = "Form updated as a template!";
+			}
+		}
+		echo $message;
+	}
+	
+	public function postReferralFormsList()
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$page = Input::get('page');
+			$limit = Input::get('rows');
+			$sidx = Input::get('sidx');
+			$sord = Input::get('sord');
+			$practice_id = Session::get('practice_id');
+			$pid = Session::get('pid');
+			$query = DB::table('templates')
+				->where('category', '=', 'referral')
+				->where('practice_id', '=', $practice_id)
+				->where('template_name', '!=', 'Global Default')
+				->get();
+			if($query) { 
+				$count = count($query);
+				$total_pages = ceil($count/$limit); 
+			} else { 
+				$count = 0;
+				$total_pages = 0;
+			}
+			if ($page > $total_pages) $page=$total_pages;
+			$start = $limit*$page - $limit;
+			if($start < 0) $start = 0;
+			$query1 = DB::table('templates')
+				->where('category', '=', 'referral')
+				->where('practice_id', '=', $practice_id)
+				->where('template_name', '!=', 'Global Default')
+				->orderBy($sidx, $sord)
+				->skip($start)
+				->take($limit)
+				->get();
+			$response['page'] = $page;
+			$response['total'] = $total_pages;
+			$response['records'] = $count;
+			if ($query1) {
+				$records1 = array();
+				$i = 0;
+				foreach ($query1 as $row) {
+					$records1[$i]['template_id'] = $row->template_id;
+					$records1[$i]['template_name'] = $row->template_name;
+					$records1[$i]['sex'] = $row->sex;
+					$records1[$i]['group'] = $row->group;
+					$records1[$i]['age'] = $row->age;
+					$i++;
+				}
+				$response['rows'] = $records1;
+			} else {
+				$response['rows'] = '';
+			}
+			echo json_encode($response);
+		}
+	}
+	
+	public function postSaveReferralForm($type)
+	{
+		if ($type == 'user') {
+			$user_id = Session::get('user_id');
+		} else {
+			$user_id = "0";
+		}
+		$group = str_replace(" ", "_", strtolower(Input::get('template_name')));
+		$array = serialize(Input::get('array'));
+		if (Input::get('sex') == 'b') {
+			$template_data1 = array(
+				'user_id' => $user_id,
+				'default' => 'default',
+				'template_name' => Input::get('template_name'),
+				'age' => Input::get('age'),
+				'category' => 'referral',
+				'sex' => 'm',
+				'group' => $group,
+				'array' => $array,
+				'practice_id' => Session::get('practice_id')
+			);
+			$template_data2 = array(
+				'user_id' => $user_id,
+				'default' => 'default',
+				'template_name' => Input::get('template_name'),
+				'age' => Input::get('age'),
+				'category' => 'referral',
+				'sex' => 'f',
+				'group' => $group,
+				'array' => $array,
+				'practice_id' => Session::get('practice_id')
+			);
+			if (Input::get('template_id') == '') {
+				DB::table('templates')->insert($template_data1);
+				$this->audit('Add');
+				DB::table('templates')->insert($template_data2);
+				$this->audit('Add');
+				$message = "Form added as a template!";
+			} else {
+				$template_row = Templates::find(Input::get('template_id'));
+				if ($template_row->sex == 'm') {
+					$template_id1 = Input::get('template_id');
+				} else {
+					$template_id2 = Input::get('template_id');
+				}
+				$template_row1 = Templates::where('group', '=', $template_row->group)
+					->where('template_id', '!=', Input::get('template_id'))
+					->first();
+				if ($template_row1) {
+					if ($template_row1->sex == 'm') {
+						$template_id1 = $template_row1->template_id;
+					} else {
+						$template_id2 = $template_row1->template_id;
+					}
+					DB::table('templates')->where('template_id', '=', $template_id1)->update($template_data1);
+					$this->audit('Update');
+					DB::table('templates')->where('template_id', '=', $template_id2)->update($template_data2);
+					$this->audit('Update');
+				} else {
+					if ($template_row->sex == 'm') {
+						DB::table('templates')->insert($template_data2);
+						$this->audit('Add');
+					} else {
+						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+					}
+				}
+				$message = "Form updated as a template!";
+			}
+		} else {
+			$template_data3 = array(
+				'user_id' => $user_id,
+				'default' => 'default',
+				'template_name' => Input::get('template_name'),
+				'age' => Input::get('age'),
+				'category' => 'referral',
+				'sex' => Input::get('sex'),
+				'group' => $group,
+				'array' => $array,
+				'practice_id' => Session::get('practice_id')
+			);
+			if (Input::get('template_id') == '') {
+				DB::table('templates')->insert($template_data3);
+				$this->audit('Add');
+				$message = "Form added as a template!";
+			} else {
+				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data3);
+				$this->audit('Update');
+				$message = "Form updated as a template!";
+			}
+		}
+		echo $message;
+	}
+	
 	public function postTextdumpList()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {

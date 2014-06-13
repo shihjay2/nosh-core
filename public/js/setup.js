@@ -47,58 +47,68 @@ $(document).ready(function() {
 		open: function(event, ui) {
 			$("#setup_accordion").accordion({
 				heightStyle: "content",
+				active: false,
+				collapsible: true,
 				beforeActivate: function (event, ui) {
-					var id = ui.newPanel[0].id;
-					$("#" + id + " .text").first().focus();
-					var old_id = ui.oldPanel[0].id;
-					var form_id = $("#" + old_id + " form").attr('id');
-					var bValid = true;
-					$("#" + form_id).find("[required]").each(function() {
-						var input_id = $(this).attr('id');
-						var id1 = $("#" + input_id); 
-						var text = $("label[for='" + input_id + "']").html();
-						bValid = bValid && checkEmpty(id1, text);
-					});
-					var bValid1 = false;
-					$("#" + form_id).find(".text").each(function() {
-						if (bValid1 == false) {
-							var input_id = $(this).attr('id');
-							var a = $("#" + input_id).val();
-							var b = $("#" + input_id + "_old").val();
-							if (a != b) {
-								bValid1 = true;
-							}
-						}
-					});
-					if (bValid) {
-						if (bValid1) {
-							var str = $("#" + form_id).serialize();
-							if(str){
-								$.ajax({
-									type: "POST",
-									url: "ajaxsetup/" + form_id,
-									data: str,
-									success: function(data){
-										$.jGrowl(data);
-										$("#" + form_id).find(".text").each(function() {
-											if (bValid1 == false) {
-												var input_id = $(this).attr('id');
-												var a = $("#" + input_id).val();
-												$("#" + input_id + "_old").val(a);
+					if(ui.newPanel[0]) {
+						var id = ui.newPanel[0].id;
+						$("#" + id + " .text").first().focus();
+						if(ui.oldPanel[0]) {
+							var old_id = ui.oldPanel[0].id;
+							var form_id = $("#" + old_id + " form").attr('id');
+							var bValid = true;
+							$("#" + form_id).find("[required]").each(function() {
+								var input_id = $(this).attr('id');
+								var id1 = $("#" + input_id); 
+								var text = $("label[for='" + input_id + "']").html();
+								bValid = bValid && checkEmpty(id1, text);
+							});
+							var bValid1 = false;
+							$("#" + form_id).find(".text").each(function() {
+								if (bValid1 == false) {
+									var input_id = $(this).attr('id');
+									var a = $("#" + input_id).val();
+									var b = $("#" + input_id + "_old").val();
+									if (a != b) {
+										bValid1 = true;
+									}
+								}
+							});
+							if (bValid) {
+								if (bValid1) {
+									var str = $("#" + form_id).serialize();
+									if(str){
+										$.ajax({
+											type: "POST",
+											url: "ajaxsetup/" + form_id,
+											data: str,
+											success: function(data){
+												$.jGrowl(data);
+												$("#" + form_id).find(".text").each(function() {
+													if (bValid1 == false) {
+														var input_id = $(this).attr('id');
+														var a = $("#" + input_id).val();
+														$("#" + input_id + "_old").val(a);
+													}
+												});
+												return true;
 											}
 										});
-										return true;
+									} else {
+										$.jGrowl("Please complete the form");
+										return false;
 									}
-								});
+								} else {
+									return true;
+								}
 							} else {
-								$.jGrowl("Please complete the form");
 								return false;
 							}
 						} else {
 							return true;
 						}
 					} else {
-						return false;
+						return true;
 					}
 				}
 			});
@@ -133,7 +143,6 @@ $(document).ready(function() {
 		},
 		beforeClose: function(event, ui) {
 			var active = $("#setup_accordion").accordion("option", "active");
-			console.log(active);
 			if (active != 2) {
 				var num = active + 1;
 				var form_id = "setup" + num;

@@ -1040,7 +1040,7 @@ $(document).ready(function() {
 	});
 	$("#cpt_link1").click(function(){
 		$("#configuration_dialog").dialog('open');
-		$("#configuration_accordion").accordion("option", "active", 7);
+		$("#configuration_accordion").accordion("option", "active", 8);
 	});
 	if (noshdata.financial != '') {
 		$("#billing_list_dialog").dialog('open');

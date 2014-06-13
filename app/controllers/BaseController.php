@@ -36,6 +36,12 @@ class BaseController extends Controller {
 			'css/wPaint.min.css',
 			'css/jqueryui-editable.css'
 		);
+		$image_files = array(
+			'chosen-sprite.png',
+			'chosen-sprite@2x.png',
+			'Jcrop.gif',
+			'pen.png'
+		);
 		$response = '';
 		if (App::isLocal()) {
 			foreach ($basefiles as $basefile) {
@@ -48,6 +54,10 @@ class BaseController extends Controller {
 			foreach ($basefiles as $basefile) {
 				$basefile1 = __DIR__.'/../../public/' . $basefile;
 				$str .= File::get($basefile1);
+			}
+			foreach ($image_files as $image) {
+				$new_image = '../css/' . $image;
+				$str = str_replace($image, $new_image, $str);
 			}
 			File::put($cssfile,$str);
 			$response .= HTML::style($cssfilename);

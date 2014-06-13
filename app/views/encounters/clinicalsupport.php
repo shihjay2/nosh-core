@@ -18,10 +18,14 @@
 					<br><button type="button" id="situation_reset" class="reset nosh_button">Clear</button>
 				</div>
 				<div class="pure-u-11-24">
+					<button type="button" id="situation_orders_pending" class="nosh_button">Orders Pending</button><br><br>
 					<form class="pure-form pure-form-stacked">
 						<label for="hpi_pf_template">Patient Forms:</label><select id="hpi_pf_template" class="text"></select>
+						<label for="situation_template">Choose Template</label><select id="situation_template" class="situation_template_choose text"></select>
 					</form>
-					<br><button type="button" id="situation_orders_pending" class="nosh_button">Orders Pending</button>
+					<div class="situation_template_div">
+						<br><form id="situation_template_form" class="situation_template_form ui-widget pure-form"></form>
+					</div>
 				</div>
 			</div>
 		</div>

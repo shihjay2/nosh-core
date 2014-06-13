@@ -20,12 +20,16 @@ $(document).ready(function() {
 	$("#configuration_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
-		height: 500, 
+		height: 580, 
 		width: 800, 
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
-			$("#configuration_accordion").accordion({ heightStyle: "content" });
+			$("#configuration_accordion").accordion({
+				heightStyle: "content",
+				active: false,
+				collapsible: true
+			});
 			jQuery("#configuration_orders_labs").jqGrid('GridUnload');
 			jQuery("#configuration_orders_labs").jqGrid({
 				url:"ajaxdashboard/orders-list/Laboratory/Global",
@@ -338,6 +342,52 @@ $(document).ready(function() {
 				height: "100%",
 				jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#pe_forms_list_pager',{edit:false,add:false,del:false});
+			jQuery("#situation_forms_list").jqGrid({
+				url:"ajaxdashboard/situation-forms-list",
+				datatype: "json",
+				mtype: "POST",
+				colNames:['ID','Form','Gender','Group','Age'],
+				colModel:[
+					{name:'template_id',index:'template_id',width:1,hidden:true},
+					{name:'template_name',index:'template_name',width:300},
+					{name:'sex',index:'sex',width:100},
+					{name:'group',index:'group',width:100},
+					{name:'age',index:'age',width:1,hidden:true}
+				],
+				rowNum:10,
+				rowList:[10,20,30],
+				pager: jQuery('#situation_forms_list_pager'),
+				sortname: 'template_id',
+				viewrecords: true,
+				sortorder: "asc",
+				caption:"Situation Forms",
+				emptyrecords:"No forms",
+				height: "100%",
+				jsonReader: { repeatitems : false, id: "0" }
+			}).navGrid('#situation_forms_list_pager',{edit:false,add:false,del:false});
+			jQuery("#referral_forms_list").jqGrid({
+				url:"ajaxdashboard/referral-forms-list",
+				datatype: "json",
+				mtype: "POST",
+				colNames:['ID','Form','Gender','Group','Age'],
+				colModel:[
+					{name:'template_id',index:'template_id',width:1,hidden:true},
+					{name:'template_name',index:'template_name',width:300},
+					{name:'sex',index:'sex',width:100},
+					{name:'group',index:'group',width:100},
+					{name:'age',index:'age',width:1,hidden:true}
+				],
+				rowNum:10,
+				rowList:[10,20,30],
+				pager: jQuery('#referral_forms_list_pager'),
+				sortname: 'template_id',
+				viewrecords: true,
+				sortorder: "asc",
+				caption:"Referral Forms",
+				emptyrecords:"No forms",
+				height: "100%",
+				jsonReader: { repeatitems : false, id: "0" }
+			}).navGrid('#referral_forms_list_pager',{edit:false,add:false,del:false});
 			jQuery("#textdump_list").jqGrid({
 				url:"ajaxdashboard/textdump-list",
 				datatype: "json",
@@ -961,6 +1011,104 @@ $(document).ready(function() {
 			$.jGrowl("Please select form to export!");
 		}
 	});
+	$("#add_situation_forms").click(function(){
+		$("#configuration_situation_forms_form").clearForm();
+		$("#configuration_situation_forms_gender").val('b');
+		$("#configuration_situation_forms_age_group").val('');
+		$('#configuration_situation_forms_dialog').dialog('open');
+		$('#configuration_situation_forms_dialog').dialog('option', 'title', "Add Situation Form");
+	});
+	$("#edit_situation_forms").click(function(){
+		var item = jQuery("#situation_forms_list").getGridParam('selrow');
+		if(item){ 
+			jQuery("#situation_forms_list").GridToForm(item,"#configuration_situation_forms_form");
+			$.ajax({
+				type: "POST",
+				url: "ajaxdashboard/get-template",
+				data: "template_id=" + item,
+				success: function(data){
+					$("#configuration_situation_forms_json").val(data);
+					$('#configuration_situation_forms_dialog').dialog('open');
+					$('#configuration_situation_forms_dialog').dialog('option', 'title', "Edit Situation Form");
+				}
+			});
+		} else {
+			$.jGrowl("Please select form to edit!");
+		}
+	});
+	$("#delete_situation_forms").click(function(){
+		var item = jQuery("#situation_forms_list").getGridParam('selrow');
+		if(item){
+			$.ajax({
+				type: "POST",
+				url: "ajaxdashboard/delete-template",
+				data: "template_id=" + item,
+				success: function(data){
+					reload_grid("situation_forms_list");
+					$.jGrowl(data);
+				}
+			});
+		} else {
+			$.jGrowl("Please select form to delete!");
+		}
+	});
+	$("#export_situation_forms").click(function(){
+		var item = jQuery("#situation_forms_list").getGridParam('selrow');
+		if(item){
+			window.open("templatedownload/"+item);
+		} else {
+			$.jGrowl("Please select form to export!");
+		}
+	});
+	$("#add_referral_forms").click(function(){
+		$("#configuration_referral_forms_form").clearForm();
+		$("#configuration_referral_forms_gender").val('b');
+		$("#configuration_referral_forms_age_group").val('');
+		$('#configuration_referral_forms_dialog').dialog('open');
+		$('#configuration_referral_forms_dialog').dialog('option', 'title', "Add Referral Form");
+	});
+	$("#edit_referral_forms").click(function(){
+		var item = jQuery("#referral_forms_list").getGridParam('selrow');
+		if(item){ 
+			jQuery("#referral_forms_list").GridToForm(item,"#configuration_referral_forms_form");
+			$.ajax({
+				type: "POST",
+				url: "ajaxdashboard/get-template",
+				data: "template_id=" + item,
+				success: function(data){
+					$("#configuration_referral_forms_json").val(data);
+					$('#configuration_referral_forms_dialog').dialog('open');
+					$('#configuration_referral_forms_dialog').dialog('option', 'title', "Edit Referral Form");
+				}
+			});
+		} else {
+			$.jGrowl("Please select form to edit!");
+		}
+	});
+	$("#delete_referral_forms").click(function(){
+		var item = jQuery("#referral_forms_list").getGridParam('selrow');
+		if(item){
+			$.ajax({
+				type: "POST",
+				url: "ajaxdashboard/delete-template",
+				data: "template_id=" + item,
+				success: function(data){
+					reload_grid("referral_forms_list");
+					$.jGrowl(data);
+				}
+			});
+		} else {
+			$.jGrowl("Please select form to delete!");
+		}
+	});
+	$("#export_referral_forms").click(function(){
+		var item = jQuery("#referral_forms_list").getGridParam('selrow');
+		if(item){
+			window.open("templatedownload/"+item);
+		} else {
+			$.jGrowl("Please select form to export!");
+		}
+	});
 	$(".configuration_gender").addOption({"b":"Both","m":"Male","f":"Female"});
 	$(".configuration_age_group").addOption({"":"All","adult":"Adult","child":"Child"});
 	$("#configuration_patient_forms_destination").addOption({"":"Select Encounter/Chart Destination.","HPI":"History of Present Illness","PMH":"Past Medical History","PSH":"Past Surgical History","FH":"Family History","SH":"Social History"});
@@ -1118,7 +1266,7 @@ $(document).ready(function() {
 	$("#configuration_patient_forms_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
-		height: 500, 
+		height: 580, 
 		width: 800, 
 		draggable: false,
 		resizable: false,
@@ -1184,7 +1332,7 @@ $(document).ready(function() {
 	$("#configuration_hpi_forms_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
-		height: 500, 
+		height: 580, 
 		width: 800, 
 		draggable: false,
 		resizable: false,
@@ -1219,6 +1367,7 @@ $(document).ready(function() {
 							reload_grid("hpi_forms_list");
 							$("#configuration_hpi_forms_form").clearForm();
 							$("#configuration_hpi_forms_dialog").dialog('close');
+							hpi_template_renew();
 						}
 					});
 				}
@@ -1248,7 +1397,7 @@ $(document).ready(function() {
 	$("#configuration_ros_forms_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
-		height: 500, 
+		height: 580, 
 		width: 800, 
 		draggable: false,
 		resizable: false,
@@ -1314,7 +1463,7 @@ $(document).ready(function() {
 	$("#configuration_pe_forms_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
-		height: 500, 
+		height: 580, 
 		width: 800, 
 		draggable: false,
 		resizable: false,
@@ -1373,6 +1522,136 @@ $(document).ready(function() {
 			$("#configuration_pe_forms_fieldtype").val('');
 			$("#pe_forms_template_surround_div").show();
 			$("#configuration_pe_forms_label").focus();
+		} else {
+			$.jGrowl("Finish editing current form element!");
+		}
+	});
+	$("#configuration_situation_forms_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 580, 
+		width: 800, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		open: function() {
+			$("#configuration_situation_forms_title").focus();
+			$("#situation_forms_template_surround_div").hide();
+			preview_form('situation_forms');
+		},
+		buttons: {
+			'Save': function() {
+				var bValid = true;
+				$("#configuration_situation_forms_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				if (bValid) {
+					var json_flat = $("#configuration_situation_forms_json").val();
+					var json_object = JSON.parse(json_flat);
+					var json_flat1 = JSON.stringify(json_object);
+					$("#configuration_situation_forms_json").val(json_flat1);
+					var str = $("#configuration_situation_forms_form").serialize();
+					$.ajax({
+						type: "POST",
+						url: "ajaxdashboard/save-situation-form/global",
+						data: str,
+						success: function(data){
+							$.jGrowl(data);
+							reload_grid("situation_forms_list");
+							$("#configuration_situation_forms_form").clearForm();
+							$("#configuration_situation_forms_dialog").dialog('close');
+							situation_template_renew();
+						}
+					});
+				}
+			},
+			Cancel: function() {
+				$("#configuration_situation_forms_form").clearForm();
+				$("#configuration_situation_forms_dialog").dialog('close');
+			}
+		},
+		close: function (event, ui) {
+			$("#configuration_situation_forms_form").clearForm();
+			$('#configuration_situation_forms_dialog').dialog('option', 'title', "");
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#situation_forms_add_element").button({icons: {primary: "ui-icon-plus"}}).click(function() {
+		if($("#situation_forms_template_surround_div").is(":hidden")) {
+			$("#situation_forms_template_div").clearDiv();
+			$("#situation_forms_template_div_options").html('');
+			$("#configuration_situation_forms_fieldtype").val('');
+			$("#situation_forms_template_surround_div").show();
+			$("#configuration_situation_forms_label").focus();
+		} else {
+			$.jGrowl("Finish editing current form element!");
+		}
+	});
+	$("#configuration_referral_forms_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 580, 
+		width: 800, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		open: function() {
+			$("#configuration_referral_forms_title").focus();
+			$("#referral_forms_template_surround_div").hide();
+			preview_form('referral_forms');
+		},
+		buttons: {
+			'Save': function() {
+				var bValid = true;
+				$("#configuration_referral_forms_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				if (bValid) {
+					var json_flat = $("#configuration_referral_forms_json").val();
+					var json_object = JSON.parse(json_flat);
+					var json_flat1 = JSON.stringify(json_object);
+					$("#configuration_referral_forms_json").val(json_flat1);
+					var str = $("#configuration_referral_forms_form").serialize();
+					$.ajax({
+						type: "POST",
+						url: "ajaxdashboard/save-referral-form/global",
+						data: str,
+						success: function(data){
+							$.jGrowl(data);
+							reload_grid("referral_forms_list");
+							$("#configuration_referral_forms_form").clearForm();
+							$("#configuration_referral_forms_dialog").dialog('close');
+							referral_template_renew();
+						}
+					});
+				}
+			},
+			Cancel: function() {
+				$("#configuration_referral_forms_form").clearForm();
+				$("#configuration_referral_forms_dialog").dialog('close');
+			}
+		},
+		close: function (event, ui) {
+			$("#configuration_referral_forms_form").clearForm();
+			$('#configuration_referral_forms_dialog').dialog('option', 'title', "");
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#referral_forms_add_element").button({icons: {primary: "ui-icon-plus"}}).click(function() {
+		if($("#referral_forms_template_surround_div").is(":hidden")) {
+			$("#referral_forms_template_div").clearDiv();
+			$("#referral_forms_template_div_options").html('');
+			$("#configuration_referral_forms_fieldtype").val('');
+			$("#referral_forms_template_surround_div").show();
+			$("#configuration_referral_forms_label").focus();
 		} else {
 			$.jGrowl("Finish editing current form element!");
 		}

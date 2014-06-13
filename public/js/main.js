@@ -636,6 +636,7 @@ function load_outside_providers(type,action) {
 	});
 }
 function hpi_template_renew() {
+	$("#hpi_template").removeOption(/./);
 	$.ajax({
 		type: "POST",
 		url: "ajaxencounter/hpi-template-select-list",
@@ -645,6 +646,33 @@ function hpi_template_renew() {
 			$('#hpi_template').addOption(data.options, false);
 			$('#hpi_template').sortOptions();
 			$('#hpi_template').val("");
+		}
+	});
+}
+function situation_template_renew() {
+	$("#situation_template").removeOption(/./);
+	$.ajax({
+		type: "POST",
+		url: "ajaxencounter/situation-template-select-list",
+		dataType: "json",
+		success: function(data){
+			$('#situation_template').addOption({"":"*Select a template"}, false);
+			$('#situation_template').addOption(data.options, false);
+			$('#situation_template').sortOptions();
+			$('#situation_template').val("");
+		}
+	});
+}
+function referral_template_renew() {
+	$("#messages_ref_template").removeOption(/./);
+	$.ajax({
+		type: "POST",
+		url: "ajaxchart/get-ref-templates-list",
+		dataType: "json",
+		success: function(data){
+			$('#messages_ref_template').addOption({"":"*Select a template"}, false);
+			$('#messages_ref_template').addOption(data.options, false);
+			$('#messages_ref_template').sortOptions();
 		}
 	});
 }
@@ -673,6 +701,7 @@ function ros_template_renew() {
 		dataType: "json",
 		success: function(data){
 			$.each(data, function(key, value){
+				$('#'+key+'_template').removeOption(/./);
 				$('#'+key+'_template').addOption({"":"*Select a template"}, false);
 				$('#'+key+'_template').addOption(value, false);
 				$('#'+key+'_template').sortOptions();
@@ -751,6 +780,7 @@ function pe_template_renew() {
 		dataType: "json",
 		success: function(data){
 			$.each(data, function(key, value){
+				$('#'+key+'_template').removeOption(/./);
 				$('#'+key+'_template').addOption({"":"*Select a template"}, false);
 				$('#'+key+'_template').addOption(value, false);
 				$('#'+key+'_template').sortOptions();

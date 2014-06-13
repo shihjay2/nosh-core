@@ -705,6 +705,6 @@ $(document).ready(function() {
 	});
 	$("#messages_cp_orderslist_link").button().click(function(){
 		$("#configuration_dialog").dialog('open');
-		$("#configuration_accordion").accordion("option", "active", 5);
+		$("#configuration_accordion").accordion("option", "active", 6);
 	});
 });

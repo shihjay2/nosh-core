@@ -38,6 +38,15 @@
 			</div>
 		<?php }?>
 		<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
+			<h3 class="configuration_situation"><a href="#">Situation Forms</a></h3>
+			<div class="configuration_situation">
+				<table id="situation_forms_list" class="scroll" cellpadding="0" cellspacing="0"></table>
+				<div id="situation_forms_list_pager" class="scroll" style="text-align:center;"></div><br>
+				<button type="button" id="add_situation_forms" class="nosh_button_add">Add</button>
+				<button type="button" id="edit_situation_forms" class="nosh_button_edit">Edit</button>
+				<button type="button" id="delete_situation_forms" class="nosh_button_delete">Delete</button>
+				<button type="button" id="export_situation_forms" class="nosh_button_extlink export_template">Export</button>
+			</div>
 			<h3 class="configuration_orders"><a href="#">Orders - Labs</a></h3>
 			<div class="configuration_orders">
 				<table id="configuration_orders_labs" class="scroll" cellpadding="0" cellspacing="0"></table>
@@ -89,6 +98,15 @@
 				<button type="button" id="configuration_orders_ref1_add" class="configuration_orders_button nosh_button_add">Add Personal</button>
 				<button type="button" id="configuration_orders_ref1_edit" class="configuration_orders_button nosh_button_edit">Edit Personal</button>
 				<button type="button" id="configuration_orders_ref1_delete" class="configuration_orders_button nosh_button_delete">Delete Personal</button><br><br>
+			</div>
+			<h3 class="configuration_referral"><a href="#">Referral Forms</a></h3>
+			<div class="configuration_referral">
+				<table id="referral_forms_list" class="scroll" cellpadding="0" cellspacing="0"></table>
+				<div id="referral_forms_list_pager" class="scroll" style="text-align:center;"></div><br>
+				<button type="button" id="add_referral_forms" class="nosh_button_add">Add</button>
+				<button type="button" id="edit_referral_forms" class="nosh_button_edit">Edit</button>
+				<button type="button" id="delete_referral_forms" class="nosh_button_delete">Delete</button>
+				<button type="button" id="export_referral_forms" class="nosh_button_extlink export_template">Export</button>
 			</div>
 		<?php }?>
 		<h3><a href="#">Text Templates</a></h3>
@@ -273,6 +291,70 @@
 					<div class="pure-control-group"><label for="configuration_pe_forms_label">Label:</label><input type="text" id="configuration_pe_forms_label" style="width:290px" class="text"/></div>
 					<div class="pure-control-group"><label for="configuration_pe_forms_fieldtype">Field Type:</label><select id="configuration_pe_forms_fieldtype" style="width:290px" class="text configuration_fieldtype"></select></div>
 					<div id="pe_forms_template_div_options"></div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="configuration_situation_forms_dialog" title="">
+	<form id="configuration_situation_forms_form" class="pure-form pure-form-stacked">
+		<input type="hidden" name="template_id" id="configuration_situation_forms_template_id" value=''/>
+		<input type="hidden" name="array" id="configuration_situation_forms_json" value='' required/>
+		<div class="pure-g">
+			<div class="pure-u-1-2"><label for="configuration_situation_forms_title">Form Title:</label><input type="text" name="template_name" id="configuration_situation_forms_title" style="width:290px" class="text forms_main" required/></div>
+			<div class="pure-u-1-2"><label for="configuration_situation_forms_gender">Gender</label><select name="sex" id="configuration_situation_forms_gender" style="width:290px" class="text forms_main configuration_gender"></select></div>
+			<div class="pure-u-1-2"><label for="configuration_situation_forms_age_group">Age Group</label><select name="age" id="configuration_situation_forms_age_group" style="width:290px" class="text forms_main configuration_age_group"></select></div>
+		</div>
+	</form>
+	<hr class="ui-state-default"/>
+	<div style="display:block;float:left;width:310px">
+		<strong>Here is what the form will look like!</strong><br>
+		Click around the form element to edit.<br>
+		<div id="situation_forms_preview_surround" class="ui-corner-all ui-tabs ui-widget ui-widget-content" style="width:290px"><form id="situation_forms_preview" class="ui-widget pure-form"></form></div>
+		<br><button type="button" id="situation_forms_add_element" class="nosh_button_add">Add Element</button>
+	</div>
+	<div style="display:block;float:left">
+		<div id="situation_forms_template_surround_div">
+			<button type="button" id="situation_forms_element_save" class="nosh_button_save element_save">Save</button><button type="button" id="situation_forms_element_cancel" class="nosh_button_cancel element_cancel">Cancel</button><button type="button" id="situation_forms_element_delete" class="nosh_button_delete element_delete">Delete Form Element</button><br/>
+			<div id="situation_forms_template_div">
+				<form class="pure-form pure-form-stacked">
+					<input type="hidden" id="situation_forms_div_id"/>
+					The first option of any radio button or <br>checkbox group will be designated as "Normal"<br>
+					<div class="pure-control-group"><label for="configuration_situation_forms_label">Label:</label><input type="text" id="configuration_situation_forms_label" style="width:290px" class="text"/></div>
+					<div class="pure-control-group"><label for="configuration_situation_forms_fieldtype">Field Type:</label><select id="configuration_situation_forms_fieldtype" style="width:290px" class="text configuration_fieldtype"></select></div>
+					<div id="situation_forms_template_div_options"></div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="configuration_referral_forms_dialog" title="">
+	<form id="configuration_referral_forms_form" class="pure-form pure-form-stacked">
+		<input type="hidden" name="template_id" id="configuration_referral_forms_template_id" value=''/>
+		<input type="hidden" name="array" id="configuration_referral_forms_json" value='' required/>
+		<div class="pure-g">
+			<div class="pure-u-1-2"><label for="configuration_referral_forms_title">Form Title:</label><input type="text" name="template_name" id="configuration_referral_forms_title" style="width:290px" class="text forms_main" required/></div>
+			<div class="pure-u-1-2"><label for="configuration_referral_forms_gender">Gender</label><select name="sex" id="configuration_referral_forms_gender" style="width:290px" class="text forms_main configuration_gender"></select></div>
+			<div class="pure-u-1-2"><label for="configuration_referral_forms_age_group">Age Group</label><select name="age" id="configuration_referral_forms_age_group" style="width:290px" class="text forms_main configuration_age_group"></select></div>
+		</div>
+	</form>
+	<hr class="ui-state-default"/>
+	<div style="display:block;float:left;width:310px">
+		<strong>Here is what the form will look like!</strong><br>
+		Click around the form element to edit.<br>
+		<div id="referral_forms_preview_surround" class="ui-corner-all ui-tabs ui-widget ui-widget-content" style="width:290px"><form id="referral_forms_preview" class="ui-widget pure-form"></form></div>
+		<br><button type="button" id="referral_forms_add_element" class="nosh_button_add">Add Element</button>
+	</div>
+	<div style="display:block;float:left">
+		<div id="referral_forms_template_surround_div">
+			<button type="button" id="referral_forms_element_save" class="nosh_button_save element_save">Save</button><button type="button" id="referral_forms_element_cancel" class="nosh_button_cancel element_cancel">Cancel</button><button type="button" id="referral_forms_element_delete" class="nosh_button_delete element_delete">Delete Form Element</button><br/>
+			<div id="referral_forms_template_div">
+				<form class="pure-form pure-form-stacked">
+					<input type="hidden" id="referral_forms_div_id"/>
+					The first option of any radio button or <br>checkbox group will be designated as "Normal"<br>
+					<div class="pure-control-group"><label for="configuration_referral_forms_label">Label:</label><input type="text" id="configuration_referral_forms_label" style="width:290px" class="text"/></div>
+					<div class="pure-control-group"><label for="configuration_referral_forms_fieldtype">Field Type:</label><select id="configuration_referral_forms_fieldtype" style="width:290px" class="text configuration_fieldtype"></select></div>
+					<div id="referral_forms_template_div_options"></div>
 				</form>
 			</div>
 		</div>

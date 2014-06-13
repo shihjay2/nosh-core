@@ -320,17 +320,7 @@ $(document).ready(function() {
 				},
 			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#messages_ref_insurance_pager',{search:false,edit:false,add:false,del:false});
-			$("#messages_ref_template").removeOption(/./);
-			$.ajax({
-				type: "POST",
-				url: "ajaxchart/get-ref-templates-list",
-				dataType: "json",
-				success: function(data){
-					$('#messages_ref_template').addOption({"":"*Select a template"}, false);
-					$('#messages_ref_template').addOption(data.options, false);
-					$('#messages_ref_template').sortOptions();
-				}
-			});
+			referral_template_renew();
 			if (noshdata.group_id == '2') {
 				$(".nosh_provider_exclude").hide();
 			} else {
@@ -751,7 +741,7 @@ $(document).ready(function() {
 	});
 	$("#messages_ref_orderslist_link").button().click(function(){
 		$("#configuration_dialog").dialog('open');
-		$("#configuration_accordion").accordion("option", "active", 6);
+		$("#configuration_accordion").accordion("option", "active", 7);
 	});
 	$('#messages_ref_template').change(function (){
 		var a = $(this).val();
@@ -762,8 +752,20 @@ $(document).ready(function() {
 				dataType: "json",
 				success: function(data){
 					$('#messages_ref_form').html('');
-					$('#messages_ref_form').dform(data);
+					var stringConstructor = "test".constructor;
+					var objectConstructor = {}.constructor;
+					if (data.constructor === stringConstructor) {
+						var json_object = JSON.parse(data);
+						$('#messages_ref_form').dform(json_object);
+						$(".referral_form_div").css("padding","5px");
+						$('.ref_template_div select').addOption({'':'Select option'},true);
+					} else {
+						$('#messages_ref_form').dform(data);
+					}
 					$('.ref_buttonset').buttonset();
+					$('#messages_ref_form').find('input').first().focus();
+					$('#messages_ref_form').find('.referral_buttonset').buttonset();
+					$('#messages_ref_form').find('.referral_form_buttonset').buttonset();
 					$('input.ref_other[type="checkbox"]').button();
 					$(".ref_select").chosen();
 				}
@@ -778,7 +780,12 @@ $(document).ready(function() {
 			success: function(data){
 				var preview = "Requested action:\n";
 				var b = $(".ref_hidden").val();
-				preview += b + '\n';
+				if (b !== '' && b !== undefined) {
+					preview += b + '\n';
+				} else {
+					var c = $('#messages_ref_template option:selected').text();
+					preview += c + '\n';
+				}
 				$('input.ref_intro[type="checkbox"]').each(function (){
 					if ($(this).is(':checked')) {
 						preview += $(this).val() + '\n';
@@ -794,6 +801,36 @@ $(document).ready(function() {
 					if ($(this).val() != "") {
 						var label = $(this).attr("placeholder");
 						preview += label + ": " + $(this).val() + '\n';
+					}
+				});
+				$('.referral_form_div').find('input[type="checkbox"]').each(function (){
+					if ($(this).is(':checked')) {
+						preview += $(this).val() + '\n';
+					}
+				});
+				$('.referral_form_div').find('input[type="radio"]').each(function (){
+					if ($(this).is(':checked')) {
+						preview += $(this).val() + '\n';
+					}
+				});
+				$('.referral_form_div').find('select').each(function (){
+					if ($(this).val() != "") {
+						preview += $(this).val() + '\n';
+					}
+				});
+				$('.referral_form_div').find('input[type="text"]').each(function (){
+					if ($(this).val() != "") {
+						var parent_id = $(this).attr("id");
+						var x = parent_id.length - 1;
+						var parent_div = parent_id.slice(0,x);
+						if ($("#" + parent_div + "_div").length) {
+							var start1 = $("#" + parent_div + "_div").find('span:first').text();
+						} else {
+							var parent_div_parts = parent_id.split("_");
+							var parent_div = parent_div_parts[0] + "_" + parent_div_parts[1] + "_" + parent_div_parts[2];
+							var start1 = $("#" + parent_div).find('span:first').text();
+						}
+						preview += start1 + ": " + $(this).val() + '\n';
 					}
 				});
 				preview += '\n';

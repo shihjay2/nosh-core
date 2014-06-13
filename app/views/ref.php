@@ -19,7 +19,7 @@
 			<h3><a href="#">Referral Reason</a></h3>
 			<div class="pure-g">
 				<div class="pure-u-13-24">
-					<div class="pure-form pure-form-stacked"><label for="messages_ref_orders">Preview: <span class="textdump_text"></span> for templates.</label><textarea name="orders_referrals" id="messages_ref_orders" rows="10" style="width:95%" class="text textdump" placeholder="Type a few letters of order to search." required></textarea></div>
+					<div class="pure-form pure-form-stacked"><label for="messages_ref_orders">Preview: <span class="textdump_text"></span> for templates.</label><textarea name="orders_referrals" id="messages_ref_orders" rows="20" style="width:95%" class="text textdump" placeholder="Type a few letters of order to search." required></textarea></div>
 				</div>
 				<div class="pure-u-11-24">
 					<div class="pure-form pure-form-stacked"><label for="messages_ref_template">Choose Template:</label><select id="messages_ref_template" class="text"></select></div>

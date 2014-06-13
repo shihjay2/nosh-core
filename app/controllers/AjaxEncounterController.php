@@ -320,7 +320,10 @@ class AjaxEncounterController extends BaseController {
 			->where('sex', '=', $sex)
 			->where('category', '=', 'hpi');
 		if (Session::get('agealldays') > 6574.5) {
-			$query->where('age', 'adult');
+			$query->where(function($query_array1) {
+				$query_array1->where('age', 'adult')
+				->orWhere('age', '');
+			});
 		}
 		$result = $query->get();
 		$data['options'] = array();
@@ -354,6 +357,34 @@ class AjaxEncounterController extends BaseController {
 			} else {
 				$name = $row->template_name;
 			}
+			$data['options'][$id] = $name;
+		}
+		echo json_encode($data);
+	}
+	
+	public function postSituationTemplateSelectList()
+	{
+		if (Session::get('gender') == 'male') {
+			$sex = 'm';
+		} else {
+			$sex = 'f';
+		}
+		$query = DB::table('templates')
+			->where('user_id', '=', Session::get('user_id'))
+			->orWhere('user_id', '=', '0')
+			->where('sex', '=', $sex)
+			->where('category', '=', 'situation');
+		if (Session::get('agealldays') > 6574.5) {
+			$query->where(function($query_array1) {
+				$query_array1->where('age', 'adult')
+				->orWhere('age', '');
+			});
+		}
+		$result = $query->get();
+		$data['options'] = array();
+		foreach ($result as $row) {
+			$id = $row->template_id;
+			$name = $row->template_name;
 			$data['options'][$id] = $name;
 		}
 		echo json_encode($data);

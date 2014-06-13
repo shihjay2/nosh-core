@@ -708,6 +708,6 @@ $(document).ready(function() {
 	});
 	$("#messages_rad_orderslist_link").button().click(function(){
 		$("#configuration_dialog").dialog('open');
-		$("#configuration_accordion").accordion("option", "active", 4);
+		$("#configuration_accordion").accordion("option", "active", 5);
 	});
 });

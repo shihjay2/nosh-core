@@ -104,6 +104,225 @@ $(document).ready(function() {
 		}
 	});
 	$("#situation").focus();
+	situation_template_renew();
+	$('#situation_template').change(function(){
+		var a = $(this).val();
+		$('#situation_template_form').html('');
+		if (a != '') {
+			var text = $('#situation_template option:selected').text();
+			var old = $("#situation").val();
+			if (text != 'Generic') {
+				if (old != '') {
+					var b = old + '\n\n' + text;
+				} else {
+					var b = text;
+				}
+				$("#situation").val(b);
+			}
+			$.ajax({
+				type: "POST",
+				url: "ajaxencounter/get-hpi-template/" + a,
+				dataType: "json",
+				success: function(data){
+					var old_text = "";
+					var stringConstructor = "test".constructor;
+					var objectConstructor = {}.constructor;
+					if (data.constructor === stringConstructor) {
+						var json_object = JSON.parse(data);
+						$('#situation_template_form').dform(json_object);
+						$(".situation_form_div").css("padding","5px");
+						$('.situation_template_div select').addOption({'':'Select option'},true);
+					} else {
+						$('#situation_template_form').dform(data);
+					}
+					$('#situation_template_form').find('input').first().focus();
+					$('#situation_template_form').find('.situation_buttonset').buttonset();
+					$('#situation_template_form').find('.situation_form_buttonset').buttonset();
+					$('#situation_template_form').find('.situation_detail_text').hide();
+					$('#situation_template_form').find('input[type="checkbox"]').change(function() {
+						var parent_id = $(this).attr("id");
+						var old = $("#situation").val();
+						var a = $(this).val();
+						if ($(this).is(':checked')) {
+							if (old != '') {
+								var b = old + '\n' + a;
+							} else {
+								var b = a;
+							}
+							$("#situation").val(b); 
+						} else {
+							var a1 = '\n' + a;
+							var c = old.replace(a1,'');
+							c = c.replace(a, '');
+							$("#situation").val(c); 
+						}
+					});
+					$('#situation_template_form').find('input[type="radio"]').change(function() {
+						var parent_id = $(this).attr("id");
+						var old = $("#situation").val();
+						var a = $(this).val();
+						if ($(this).is(':checked')) {
+							if (old != '') {
+								$(this).siblings('input:radio').each(function() {
+									var d = $(this).val();
+									var d1 = '  ' + d;
+									old = old.replace(d1,'');
+									old = old.replace(d, '');
+								});
+								if (old != '') {
+									var b = old + '\n' + a;
+								} else {
+									var b = a;
+								}
+							} else {
+								var b = a;
+							}
+							$("#situation").val(b); 
+						} else {
+							var a1 = '\n' + a;
+							var c = old.replace(a1,'');
+							c = c.replace(a, '');
+							$("#situation").val(c); 
+						}
+					});
+					$('#situation_template_form').find('select').change(function() {
+						var parent_id = $(this).attr("id");
+						var old = $("#situation").val();
+						var a = $(this).val();
+						if (old != '') {
+							var b = old + '\n' + a;
+						} else {
+							var b = a;
+						}
+						$("#situation").val(b); 
+					});
+					$('#situation_template_form').find('input[type="text"]').focusin(function() {
+						old_text = $(this).val();
+					});
+					$('#situation_template_form').find('input[type="text"]').focusout(function() {
+						var a = $(this).val();
+						if (a != '') {
+							var parent_id = $(this).attr("id");
+							var x = parent_id.length - 1;
+							var parent_div = parent_id.slice(0,x);
+							if ($("#" + parent_div + "_div").length) {
+								var start1 = $("#" + parent_div + "_div").find('span:first').text();
+							} else {
+								var parent_div_parts = parent_id.split("_");
+								var parent_div = parent_div_parts[0] + "_" + parent_div_parts[1] + "_" + parent_div_parts[2];
+								var start1 = $("#" + parent_div).find('span:first').text() + ":";
+							}
+							var start2 = $("label[for='" + parent_id + "']").text();
+							var start3_n = start1.lastIndexOf('degrees');
+							if (start3_n != -1) {
+								var end_text = ' degrees.';
+							} else {
+								var end_text = '';
+							}
+							if (!!start2) {
+								var start_text = start2 + ' ' + start1;
+							} else {
+								var start_text = start1;
+							}
+							var old = $("#situation").val();
+							var a_pointer = a.length - 1;
+							var a_pointer2 = a.lastIndexOf('.');
+							if (!!old) {
+								if (!!start_text) {
+									var c = start_text + ' ' + a + end_text;
+									if (old_text != '') {
+										var c_old = start_text + ' ' + old_text + end_text;
+									}
+								} else {
+									if (a_pointer != a_pointer2) {
+										var c = a + '.';
+									} else {
+										var c = a;
+									}
+								}
+								if (old_text != '') {
+									var old_text_pointer = old_text.length - 1;
+									var old_text_pointer2 = old_text.lastIndexOf('.');
+									if (old_text_pointer != old_text_pointer2) {
+										var old_text1 = old_text + '.';
+									} else {
+										var old_text1 = old_text;
+									}
+									if (!!start_text) {
+										var b = old.replace(c_old, c);
+									} else {
+										var b = old.replace(old_text1, c);
+									}
+									old_text = '';
+								} else {
+									var item_class = $(this).attr("class");
+									if (item_class == "situation_other situation_detail_text ui-dform-text ui-widget-content ui-corner-all") {
+										var b = old + " " +c;
+									} else {
+										var b = old + "\n" + c;
+									}
+								}
+							} else {
+								if (!!start_text) {
+									var b = start_text + ' ' + a + end_text;
+								} else {
+									if (a_pointer != a_pointer2) {
+										var b = a + '.';
+									} else {
+										var b = a;
+									}
+								}
+							}
+							$("#situation").val(b);
+						}
+					});
+					$('#situation_template_form').find('.situation_detail').click(function() {
+						var detail_id = $(this).attr("id") + '_detail';
+						if ($(this).is(':checked')) {
+							$('#' + detail_id).show('fast');
+							$('#' + detail_id).focus();
+						} else {
+							var parent_id = $(this).attr("id");
+							var old = $("#situation").val();
+							var a = ' ' + $('#' + detail_id).val();
+							var a1 = a + '  ';
+							var c = old.replace(a1,'');
+							c = c.replace(a, '');
+							$("#situation").val(c);
+							$('#' + detail_id).hide('fast');
+						}
+					});
+					$('#situation_template_form').find('.situation_normal').click(function() {
+						if ($(this).is(':checked')) {
+							$(this).siblings('input:checkbox').each(function(){
+								var parent_id = $(this).attr("id");
+								$(this).prop('checked',false);
+								var old = $("#situation").val();
+								var a = $(this).val();
+								var a1 = '\n' + a;
+								var c = old.replace(a1,'');
+								c = c.replace(a, '');
+								$("#situation").val(c);
+								$("#situation_template_form input").button('refresh');
+							});
+							$("#situation_template_form").find('.situation_detail_text').each(function(){
+								if ($(this).val() != '') {
+									var parent_id = $(this).attr("id");
+									var old = $("#situation").val();
+									var a = ' ' + $(this).val();
+									var a1 = '\n' + a;
+									var c = old.replace(a1,'');
+									c = c.replace(a, '');
+									$("#situation").val(c);
+								}
+								$(this).hide();
+							});
+						}
+					});
+				}
+			});
+		}
+	});
 	$.ajax({
 		type: "POST",
 		url: "ajaxencounter/get-hpi",
