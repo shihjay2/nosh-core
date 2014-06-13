@@ -493,7 +493,10 @@ class AjaxEncounterController extends BaseController {
 			->where('category', '=', 'ros')
 			->orderBy('group', 'asc');
 		if (Session::get('agealldays') > 6574.5) {
-			$query->where('age', 'adult');
+			$query->where(function($query_array1) {
+				$query_array1->where('age', 'adult')
+				->orWhere('age', '');
+			});
 		}
 		$result = $query->get();
 		$data = array();
