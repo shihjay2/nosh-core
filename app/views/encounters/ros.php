@@ -58,8 +58,6 @@
 				<button type="button" id="button_ros_mus" class="nosh_button ros_menu_button">Musculoskeletal</button><br><br>
 				<span id="button_ros_neuro_status" class="ros_tooltip"></span>
 				<button type="button" id="button_ros_neuro" class="nosh_button ros_menu_button">Neurological</button><br><br>
-				<span id="button_ros_psych_status" class="ros_tooltip"></span>
-				<button type="button" id="button_ros_psych" class="nosh_button ros_menu_button">Psychological</button><br><br>
 				<span id="button_ros_heme_status" class="ros_tooltip"></span>
 				<button type="button" id="button_ros_heme" class="nosh_button ros_menu_button">Hematological/Lymphatic</button><br><br>
 				<span id="button_ros_endocrine_status" class="ros_tooltip"></span>
