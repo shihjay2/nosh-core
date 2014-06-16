@@ -25,6 +25,7 @@ $(document).ready(function() {
 					dataType: "json",
 					data: "pid=" + ui.item.id,
 					success: function(data){
+						closeencounter();
 						window.location = data.url;
 					}
 				});

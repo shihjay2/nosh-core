@@ -708,6 +708,9 @@ class AjaxSearchController extends BaseController {
 				);
 			}
 		}
+		if ($type == 'eid') {
+			Session::put('encounter_active', 'n');
+		}
 		echo json_encode($data);
 	}
 	
