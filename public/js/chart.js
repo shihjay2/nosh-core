@@ -41,6 +41,7 @@ $(document).ready(function() {
 		$("#nosh_chart_div").hide('blind');
 		$("#nosh_encounter_div").show('blind');
 		openencounter();
+		noshdata.encounter_active = 'n';
 	} else {
 		$("#nosh_encounter_div").hide('blind');
 		$("#nosh_chart_div").show('blind');
