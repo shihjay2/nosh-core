@@ -58,6 +58,18 @@ $(document).ready(function() {
 						$('#'+id+'_form').dform(data);
 					}
 					ros_form_load();
+					if (id == 'ros_wcc') {
+						$.ajax({
+							type: "POST",
+							url: "ajaxencounter/get-ros-wcc-template",
+							dataType: "json",
+							success: function(data){
+								$('#ros_wcc_age_form').html('');
+								$('#ros_wcc_age_form').dform(data);
+								ros_form_load();
+							}
+						});
+					}
 				}
 			});
 		}
@@ -658,6 +670,17 @@ $(document).ready(function() {
 				//$(".ros_wcc_5").hide('fast');
 			//}
 		}
+	});
+	$("#ros_entire_normal").click(function() {
+		$.ajax({
+			type: "POST",
+			url: "ajaxencounter/all-normal/ros/all/0",
+			success: function(data){
+				$.jGrowl('All normal values set!');
+				check_ros_status();
+				ros_dialog_open();
+			}
+		});
 	});
 	swipe();
 });

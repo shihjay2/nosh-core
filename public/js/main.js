@@ -28,8 +28,12 @@ function extractLast( term ) {
 }
 function search_array(a, query_value){
 	var query_value1 = query_value.replace('?','\\?');
+	var query_value2 = query_value1.replace('(','\\(');
+	var query_value3 = query_value2.replace(')','\\)');
+	var query_value4 = query_value3.replace('+','\\+');
+	var query_value5 = query_value4.replace('/','\\/');
 	var found = $.map(a, function (value) {
-		var re = RegExp(query_value1, "g");
+		var re = RegExp(query_value5, "g");
 		if(value.match(re)) {
 			return value;
 		} else {
@@ -693,6 +697,7 @@ function get_ros_templates(group, id, type) {
 			ros_form_load();
 		}
 	});
+	
 }
 function ros_template_renew() {
 	$.ajax({
@@ -720,13 +725,25 @@ function ros_template_renew() {
 				$("." + key + "_div").css("padding","5px");
 				$('.ros_template_div select').addOption({'':'Select option'},true);
 				ros_form_load();
+				if (key == 'ros_wcc') {
+					$.ajax({
+						type: "POST",
+						url: "ajaxencounter/get-ros-wcc-template",
+						dataType: "json",
+						success: function(data){
+							$('#ros_wcc_age_form').html('');
+							$('#ros_wcc_age_form').dform(data);
+							ros_form_load();
+						}
+					});
+				}
 			});
 			$('#dialog_load').dialog('close');
 		}
 	});
 }
 function ros_dialog_open() {
-	if ($('#ros_skin_form').html() == '' || $('#ros_psych11_form').html() == '') {
+	//if ($('#ros_skin_form').html() == '' || $('#ros_psych11_form').html() == '') {
 		$('#dialog_load').dialog('option', 'title', "Loading templates...").dialog('open');
 		ros_template_renew();
 		$.ajax({
@@ -744,7 +761,7 @@ function ros_dialog_open() {
 				}
 			}
 		});
-	}
+	//}
 }
 function pe_form_load() {
 	$('.pe_buttonset').buttonset();
@@ -1387,7 +1404,11 @@ function ros_normal(parent_id) {
 		}
 		var a = $(this).val();
 		remove_text(parent_id_entry,a,'',false);
-		$("#" + parent_id_entry + "_form input:checkbox").button('refresh');
+		if (parts[1] == 'wccage') {
+			$("#ros_wcc_age_form input:checkbox").button('refresh');
+		} else {
+			$("#" + parent_id_entry + "_form input:checkbox").button('refresh');
+		}
 	});
 	$("#" + parent_id + "_div").find('.ros_detail_text').each(function(){
 		var parent_id = $(this).attr("id");
@@ -1418,7 +1439,11 @@ function ros_other(parent_id) {
 		var old = $("#" + parent_id_entry).val();
 		var a = $(this).val();
 		remove_text(parent_id_entry,a,'',false);
-		$("#" + parent_id_entry + "_form input:checkbox").button('refresh');
+		if (parts[1] == 'wccage') {
+			$("#ros_wcc_age_form input:checkbox").button('refresh');
+		} else {
+			$("#" + parent_id_entry + "_form input:checkbox").button('refresh');
+		}
 	});
 }
 $(document).on("click", '.ros_template_div input[type="checkbox"]', function() {
@@ -1439,7 +1464,7 @@ $(document).on("click", '.ros_template_div input[type="checkbox"]', function() {
 			var comma = a.charAt(0);
 			var old_arr = old.split('  ');
 			var new_arr = search_array(old_arr, label_text);
-			if (new_arr.length > 0) {
+			if (new_arr.length > 0 && label_text != ': ') {
 				var arr_index = old_arr.indexOf(new_arr[0]);
 				a = a.replace(label_text, '; ');
 				old_arr[arr_index] += a;
@@ -1457,6 +1482,9 @@ $(document).on("click", '.ros_template_div input[type="checkbox"]', function() {
 			ros_other(parent_id);
 		}
 	} else {
+		if (label_text == ': ') {
+			label_text = '';
+		}
 		remove_text(parent_id_entry,a,label_text,false);
 	}
 });
@@ -1684,6 +1712,30 @@ $(document).on("click", '.all_normal', function(){
 		}
 		$("#" + parent_id_entry + '_form input[type="checkbox"]').button('refresh');
 	}
+});
+$(document).on("click", '.all_normal1_ros', function(){
+	var a = $(this).prop('checked');
+	var parent_id = $(this).attr("id");
+	var parts = parent_id.split('_');
+	var parent_id_entry = parts[0] + '_' + parts[1];
+	$.ajax({
+		type: "POST",
+		url: "ajaxencounter/all-normal/ros/" + parent_id_entry,
+		dataType: 'json',
+		success: function(data){
+			var message = '';
+			$.each(data, function(key, value){
+				if(a){
+					$("#" + key).val(value);
+					message = "All normal values set!";
+				} else {
+					$("#" + key).val('');
+					message = "All normal values cleared!";
+				}
+			});
+			$.jGrowl(message);
+		}
+	});
 });
 
 function updateTextArea_pe(parent_id_entry) {
@@ -2049,6 +2101,37 @@ $(document).on("click", ".all_normal2_pe", function(){
 		c = c.replace(a, '');
 		$("#" + parent_id_entry).val(c); 
 	}
+});
+$(document).on("click", ".all_normal3_pe", function(){
+	var a = $(this).is(':checked');
+	var parent_id = $(this).attr("id");
+	var parent_id_entry = parent_id.replace('_normal1','');
+	$.ajax({
+		type: "POST",
+		url: "ajaxencounter/all-normal/pe/" + parent_id_entry,
+		dataType: 'json',
+		success: function(data){
+			var message = '';
+			$.each(data, function(key, value){
+				if(a){
+					$("#" + key).val(value);
+					message = "All normal values set!";
+				} else {
+					$("#" + key).val('');
+					message = "All normal values cleared!";
+				}
+			});
+			$.jGrowl(message);
+			$("#"+parent_id_entry+"_dialog").find('.pe_entry').each(function(){
+				var parent_id1 = $(this).attr("id");
+				if (!!$(this).val()) {
+					$('#' + parent_id1 + '_h').html(noshdata.item_present);
+				} else {
+					$('#' + parent_id1 + '_h').html(noshdata.item_empty);
+				}
+			});
+		}
+	});
 });
 function loadimagepreview(){
 	$('#image_placeholder').html('');

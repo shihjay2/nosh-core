@@ -1,5 +1,6 @@
 <?php echo HTML::script('/js/pe.js');?>
 <form id="encounters_pe">
+	<button type="button" id="pe_entire_normal" class="nosh_button">All Normal</button><br><br>
 	<div class="pure-g">
 		<?php if (Session::get('encounter_template') == 'standardmedical') {?>
 			<div class="pure-u-1-2">
@@ -52,7 +53,8 @@
 </form>
 <?php if (Session::get('encounter_template') == 'standardmedical') {?>
 	<div id="pe_gen_dialog" class="pe_dialog" title="General">
-		<input type="checkbox" id="pe_gen_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_gen_normal">All Normal</label>
+		<input type="checkbox" id="pe_gen_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_gen_normal">All Normal</label> 
+		<input type="checkbox" id="pe_gen_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_gen_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_gen_accordion">
 			<h3><a href="#"><span id="pe_gen1_h"></span>General</a></h3>
@@ -75,7 +77,8 @@
 		</div>
 	</div>
 	<div id="pe_eye_dialog" class="pe_dialog" title="Eye" >
-		<input type="checkbox" id="pe_eye_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_eye_normal">All Normal</label>
+		<input type="checkbox" id="pe_eye_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_eye_normal">All Normal</label> 
+		<input type="checkbox" id="pe_eye_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_eye_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_eye_accordion">
 			<h3><a href="#"><span id="pe_eye1_h"></span>Conjunctiva and Lids</a></h3>
@@ -132,7 +135,8 @@
 		</div>
 	</div>
 	<div id="pe_ent_dialog" class="pe_dialog" title="Ears, Nose, Throat">
-		<input type="checkbox" id="pe_ent_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_ent_normal">All Normal</label>
+		<input type="checkbox" id="pe_ent_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_ent_normal">All Normal</label> 
+		<input type="checkbox" id="pe_ent_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_ent_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_ent_accordion">
 			<h3><a href="#"><span id="pe_ent1_h"></span>External Ear and Nose</a></h3>
@@ -240,7 +244,8 @@
 		</div>
 	</div>
 	<div id="pe_neck_dialog" class="pe_dialog" title="Neck">
-		<input type="checkbox" id="pe_neck_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_neck_normal">All Normal</label>
+		<input type="checkbox" id="pe_neck_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_neck_normal">All Normal</label> 
+		<input type="checkbox" id="pe_neck_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_neck_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_neck_accordion">
 			<h3><a href="#"><span id="pe_neck1_h"></span>General</a></h3>
@@ -280,7 +285,8 @@
 		</div>
 	</div>
 	<div id="pe_resp_dialog" class="pe_dialog" title="Respiratory">
-		<input type="checkbox" id="pe_resp_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_resp_normal">All Normal</label>
+		<input type="checkbox" id="pe_resp_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_resp_normal">All Normal</label> 
+		<input type="checkbox" id="pe_resp_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_resp_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_resp_accordion">
 			<h3><a href="#"><span id="pe_resp1_h"></span>Effort</a></h3>
@@ -354,7 +360,8 @@
 		</div>
 	</div>
 	<div id="pe_cv_dialog" class="pe_dialog" title="Cardiovascular">
-		<input type="checkbox" id="pe_cv_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_cv_normal">All Normal</label>
+		<input type="checkbox" id="pe_cv_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_cv_normal">All Normal</label> 
+		<input type="checkbox" id="pe_cv_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_cv_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_cv_accordion">
 			<h3><a href="#"><span id="pe_cv1_h"></span>Palpation</a></h3>
@@ -462,7 +469,8 @@
 		</div>
 	</div>
 	<div id="pe_ch_dialog" class="pe_dialog" title="Chest">
-		<input type="checkbox" id="pe_ch_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_ch_normal">All Normal</label>
+		<input type="checkbox" id="pe_ch_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_ch_normal">All Normal</label> 
+		<input type="checkbox" id="pe_ch_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_ch_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_ch_accordion">
 			<h3><a href="#"><span id="pe_ch1_h"></span>Inspection</a></h3>
@@ -502,7 +510,8 @@
 		</div>
 	</div>
 	<div id="pe_gi_dialog" class="pe_dialog" title="Gastrointestinal">
-		<input type="checkbox" id="pe_gi_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_gi_normal">All Normal</label>
+		<input type="checkbox" id="pe_gi_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_gi_normal">All Normal</label> 
+		<input type="checkbox" id="pe_gi_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_gi_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_gi_accordion">
 			<h3><a href="#"><span id="pe_gi1_h"></span>Masses and Tenderness</a></h3>
@@ -577,6 +586,7 @@
 	</div>
 	<div id="pe_gu_dialog" class="pe_dialog" title="Genitourinary">
 		<input type="checkbox" id="pe_gu_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_gu_normal">All Normal</label>
+		<input type="checkbox" id="pe_gu_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_gu_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_gu_accordion">
 			<?php if (Session::get('gender') == 'female') {?>
@@ -738,7 +748,8 @@
 		</div>
 	</div>
 	<div id="pe_lymph_dialog" class="pe_dialog" title="Lymphatic">
-		<input type="checkbox" id="pe_lymph_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_lymph_normal">All Normal</label>
+		<input type="checkbox" id="pe_lymph_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_lymph_normal">All Normal</label> 
+		<input type="checkbox" id="pe_lymph_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_lymph_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_lymph_accordion">
 			<h3><a href="#"><span id="pe_lymph1_h"></span>Neck</a></h3>
@@ -796,7 +807,8 @@
 	</div>
 <?php }?>
 <div id="pe_ms_dialog" class="pe_dialog" title="Musculoskeletal">
-	<input type="checkbox" id="pe_ms_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_ms_normal">All Normal</label>
+	<input type="checkbox" id="pe_ms_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_ms_normal">All Normal</label> 
+	<input type="checkbox" id="pe_ms_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_ms_normal1">All Normal for All Templates</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_ms_accordion">
 		<h3><a href="#"><span id="pe_ms1_h"></span>Gait and Station</a></h3>
@@ -1006,7 +1018,8 @@
 	</div>
 </div>
 <div id="pe_neuro_dialog" class="pe_dialog" title="Neurological">
-	<input type="checkbox" id="pe_neuro_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_neuro_normal">All Normal</label>
+	<input type="checkbox" id="pe_neuro_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_neuro_normal">All Normal</label> 
+	<input type="checkbox" id="pe_neuro_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_neuro_normal1">All Normal for All Templates</label>
 	<br><hr class="ui-state-default" style="width:99%"/>
 	<div id="pe_neuro_accordion">
 		<h3><a href="#"><span id="pe_neuro1_h"></span>Cranial Nerves</a></h3>
@@ -1064,7 +1077,8 @@
 </div>
 <?php if (Session::get('encounter_template') == 'standardmedical') {?>
 	<div id="pe_psych_dialog" class="pe_dialog" title="Psychological">
-		<input type="checkbox" id="pe_psych_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_psych_normal">All Normal</label>
+		<input type="checkbox" id="pe_psych_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_psych_normal">All Normal</label> 
+		<input type="checkbox" id="pe_psych_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_psych_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_psych_accordion">
 			<h3><a href="#"><span id="pe_psych1_h"></span>Judgement and Insight</a></h3>
@@ -1139,6 +1153,7 @@
 	</div>
 	<div id="pe_skin_dialog" class="pe_dialog" title="Skin">
 		<input type="checkbox" id="pe_skin_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_skin_normal">All Normal</label>
+		<input type="checkbox" id="pe_skin_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_skin_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_skin_accordion">
 			<h3><a href="#"><span id="pe_skin1_h"></span>Inspection</a></h3>
@@ -1180,6 +1195,7 @@
 <?php } if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
 	<div id="pe_constitutional_dialog" class="pe_dialog" title="Constitutional">
 		<input type="checkbox" id="pe_constitutional_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_constitutional_normal">All Normal</label>
+		<input type="checkbox" id="pe_constitutional_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_constitutional_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_constitutional_accordion">
 			<h3><a href="#"><span id="pe_constitutional1_h"></span>Constitutional</a></h3>
@@ -1203,6 +1219,7 @@
 	</div>
 	<div id="pe_mental_dialog" class="pe_dialog" title="Mental Status Examination">
 		<input type="checkbox" id="pe_mental_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_mental_normal">All Normal</label>
+		<input type="checkbox" id="pe_mental_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_mental_normal1">All Normal for All Templates</label>
 		<br><hr class="ui-state-default" style="width:99%"/>
 		<div id="pe_mental_accordion">
 			<h3><a href="#"><span id="pe_mental1_h"></span>Mental Status Examination</a></h3>

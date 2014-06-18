@@ -321,8 +321,8 @@ class AjaxEncounterController extends BaseController {
 			->where('category', '=', 'hpi');
 		if (Session::get('agealldays') > 6574.5) {
 			$query->where(function($query_array1) {
-				$query_array1->where('age', 'adult')
-				->orWhere('age', '');
+				$query_array1->where('age', '=', 'adult')
+				->orWhere('age', '=', '');
 			});
 		}
 		$result = $query->get();
@@ -525,8 +525,8 @@ class AjaxEncounterController extends BaseController {
 			->orderBy('group', 'asc');
 		if (Session::get('agealldays') > 6574.5) {
 			$query->where(function($query_array1) {
-				$query_array1->where('age', 'adult')
-				->orWhere('age', '');
+				$query_array1->where('age', '=', 'adult')
+				->orWhere('age', '=', '');
 			});
 		}
 		$result = $query->get();
@@ -543,50 +543,10 @@ class AjaxEncounterController extends BaseController {
 	public function postGetRosTemplates($group, $id, $default)
 	{
 		if ($default == 'y' && $id == '0') {
-			$gender = Session::get('gender');
-			$age = Session::get('agealldays');
-			if ($gender == 'male') {
+			if (Session::get('gender') == 'male') {
 				$sex = 'm';
 			} else {
 				$sex = 'f';
-			}
-			if ($id == 'ros_wccage') {
-				if ($age <= 60.88) {
-					$id = 'ros_wccage0m';
-				}
-				if ($age > 60.88 && $age <= 121.76) {
-					$id = 'ros_wccage2m';
-				}
-				if ($age > 121.76 && $age <= 182.64) {
-					$id = 'ros_wccage4m';
-				}
-				if ($age > 182.64 && $age <= 273.96) {
-					$id = 'ros_wccage6m';
-				}
-				if ($age > 273.96 && $age <= 365.24) {
-					$id = 'ros_wccage9m';
-				}
-				if ($age > 365.24 && $age <= 456.6) {
-					$id = 'ros_wccage12m';
-				}
-				if ($age > 456.6 && $age <= 547.92) {
-					$id = 'ros_wccage15m';
-				}
-				if ($age > 547.92 && $age <= 730.48) {
-					$id = 'ros_wccage18m';
-				}
-				if ($age > 730.48 && $age <= 1095.75) {
-					$id = 'ros_wccage2';
-				}
-				if ($age > 1095.75 && $age <= 1461) {
-					$id = 'ros_wccage3';
-				}
-				if ($age > 1461 && $age <= 1826.25) {
-					$id = 'ros_wccage4';
-				}
-				if ($age > 1826.25 && $age <= 2191.44) {
-					$id = 'ros_wccage5';
-				}
 			}
 			$row = DB::table('templates')
 				->where('user_id', '=', '0')
@@ -605,6 +565,61 @@ class AjaxEncounterController extends BaseController {
 			$data1 = str_replace('ros_form', $group , $data1);
 		}
 		echo $data1;
+	}
+	
+	public function postGetRosWccTemplate()
+	{
+		if (Session::get('gender') == 'male') {
+			$sex = 'm';
+		} else {
+			$sex = 'f';
+		}
+		$age = Session::get('agealldays');
+		if ($age <= 60.88) {
+			$id = 'ros_wccage0m';
+		}
+		if ($age > 60.88 && $age <= 121.76) {
+			$id = 'ros_wccage2m';
+		}
+		if ($age > 121.76 && $age <= 182.64) {
+			$id = 'ros_wccage4m';
+		}
+		if ($age > 182.64 && $age <= 273.96) {
+			$id = 'ros_wccage6m';
+		}
+		if ($age > 273.96 && $age <= 365.24) {
+			$id = 'ros_wccage9m';
+		}
+		if ($age > 365.24 && $age <= 456.6) {
+			$id = 'ros_wccage12m';
+		}
+		if ($age > 456.6 && $age <= 547.92) {
+			$id = 'ros_wccage15m';
+		}
+		if ($age > 547.92 && $age <= 730.48) {
+			$id = 'ros_wccage18m';
+		}
+		if ($age > 730.48 && $age <= 1095.75) {
+			$id = 'ros_wccage2';
+		}
+		if ($age > 1095.75 && $age <= 1461) {
+			$id = 'ros_wccage3';
+		}
+		if ($age > 1461 && $age <= 1826.25) {
+			$id = 'ros_wccage4';
+		}
+		if ($age > 1826.25 && $age <= 2191.44) {
+			$id = 'ros_wccage5';
+		}
+		$row = DB::table('templates')
+			->where('user_id', '=', '0')
+			->where('sex', '=', $sex)
+			->where('category', '=', 'ros')
+			->where('group', '=', $id)
+			->where('default', '=', "default")
+			->first();
+		$data = unserialize($row->array);
+		echo json_encode($data);
 	}
 	
 	public function postGetDefaultRosTemplates()
@@ -2425,5 +2440,193 @@ class AjaxEncounterController extends BaseController {
 			}
 		}
 		echo "Copied previous encounter elements to new encounter.";
+	}
+	
+	public function postAllNormal($type, $group)
+	{
+		if (Session::get('gender') == 'male') {
+			$sex = 'm';
+		} else {
+			$sex = 'f';
+		}
+		$age = Session::get('agealldays');
+		$query = DB::table('templates')
+			->where('user_id', '=', Session::get('user_id'))
+			->orWhere('user_id', '=', '0')
+			->where('sex', '=', $sex)
+			->where('category', '=', $type);
+		if ($group != 'all') {
+			$query->where('group', 'LIKE', "%$group%");
+		} else {
+			$query->orderBy('group', 'asc');
+		}
+		$group1 = $group;
+		if ($type == 'ros' && Session::get('agealldays') > 6574.5) {
+			$query->where(function($query_array1) {
+				$query_array1->where('age', '=', 'adult')
+				->orWhere('age', '=', '');
+			});
+		}
+		$query->where(function($query_array2) {
+			$query_array2->where('practice_id', '=', Session::get('practice_id'))
+			->orWhereNull('practice_id');
+		});
+		$result = $query->get();
+		foreach ($result as $row) {
+			$group = $row->group;
+			$data[$group] = '';
+			if ($group == 'pe_ms3') {
+				$data[$group] = 'Full range of motion of the shoulders bilaterally.';
+			}
+			if ($group == 'pe_ms4') {
+				$data[$group] = 'Full range of motion of the elbows bilaterally.';
+			}
+			if ($group == 'pe_ms5') {
+				$data[$group] = 'Full range of motion of the wrists bilaterally.';
+			}
+			if ($group == 'pe_ms6') {
+				$data[$group] = 'Full range of motion of the fingers and hands bilaterally.';
+			}
+			if ($group == 'pe_ms7') {
+				$data[$group] = 'Full range of motion of the hips bilaterally.';
+			}
+			if ($group == 'pe_ms8') {
+				$data[$group] = 'Full range of motion of the knees bilaterally.';
+			}
+			if ($group == 'pe_ms9') {
+				$data[$group] = 'Full range of motion of the ankles bilaterally.';
+			}
+			if ($group == 'pe_ms10') {
+				$data[$group] = 'Full range of motion of the toes and feet bilaterally.';
+			}
+			if ($group == 'pe_ms11') {
+				$data[$group] = 'Full range of motion of the cervical spine.';
+			}
+			if ($group == 'pe_ms12') {
+				$data[$group] = 'Full range of motion of the thoracic and lumbar spine.';
+			}
+			if ($group == 'pe_neuro2') {
+				$data[$group] = 'Biceps, Patellar, and Achillies deep tendon reflexes are equal bilaterally.';
+			}
+			if ($row->default == 'default') {
+				$row_array = unserialize($row->array);
+			} else {
+				$row_array = json_decode(unserialize($row->array));
+			}
+			if (isset($row_array->html)) {
+				foreach ($row_array->html as $row_elem) {
+					if (isset($row_elem->html)) {
+						foreach ($row_elem->html as $row_elem1) {
+							if (isset($row_elem1->class)) {
+								if ($row_elem1->class == $type . '_normal') {
+									if (isset($row_elem1->value)) {
+										if ($data[$group] != '') {
+											$data[$group] .= '  ';
+										}
+										$data[$group] .= $row_elem1->value;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		if ($type == 'pe') {
+			if ($sex == 'f') {
+				$gender_array = array('pe_gu1','pe_gu2','pe_gu3','pe_gu4','pe_gu5','pe_gu6');
+			} else {
+				$gender_array = array('pe_gu7','pe_gu8','pe_gu9');
+			}
+			foreach ($gender_array as $gender_row) {
+				unset($data[$gender_row]);
+			}
+		}
+		if ($type == 'ros') {
+			$wcc_array = array('ros_wccage0m','ros_wccage2m','ros_wccage4m','ros_wccage6m','ros_wccage9m','ros_wccage12m','ros_wccage15m','ros_wccage18m','ros_wccage2','ros_wccage3','ros_wccage4','ros_wccage5');
+			if ($age <= 2191.44) {
+				if ($age <= 60.88) {
+					$wcc_id = 'ros_wccage0m';
+				}
+				if ($age > 60.88 && $age <= 121.76) {
+					$wcc_id = 'ros_wccage2m';
+				}
+				if ($age > 121.76 && $age <= 182.64) {
+					$wcc_id = 'ros_wccage4m';
+				}
+				if ($age > 182.64 && $age <= 273.96) {
+					$wcc_id = 'ros_wccage6m';
+				}
+				if ($age > 273.96 && $age <= 365.24) {
+					$wcc_id = 'ros_wccage9m';
+				}
+				if ($age > 365.24 && $age <= 456.6) {
+					$wcc_id = 'ros_wccage12m';
+				}
+				if ($age > 456.6 && $age <= 547.92) {
+					$wcc_id = 'ros_wccage15m';
+				}
+				if ($age > 547.92 && $age <= 730.48) {
+					$wcc_id = 'ros_wccage18m';
+				}
+				if ($age > 730.48 && $age <= 1095.75) {
+					$wcc_id = 'ros_wccage2';
+				}
+				if ($age > 1095.75 && $age <= 1461) {
+					$wcc_id = 'ros_wccage3';
+				}
+				if ($age > 1461 && $age <= 1826.25) {
+					$wcc_id = 'ros_wccage4';
+				}
+				if ($age > 1826.25 && $age <= 2191.44) {
+					$wcc_id = 'ros_wccage5';
+				}
+				if (isset($data[$wcc_id])) {
+					$data['ros_wcc'] = $data[$wcc_id];
+					foreach ($wcc_array as $wcc_row) {
+						unset($data[$wcc_row]);
+					}
+				}
+			}
+		}
+		if ($group1 == 'all') {
+			if ($type == 'pe') {
+				if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych') {
+					if ($sex == 'f') {
+						$psych_array('pe_ch1','pe_ch2','pe_cv1','pe_cv2','pe_cv3','pe_cv4','pe_cv5','pe_cv6','pe_ent1','pe_ent2','pe_ent3','pe_ent4','pe_ent5','pe_ent6','pe_eye1','pe_eye2','pe_eye3','pe_gen1','pe_gi1','pe_gi2','pe_gi3','pe_gi4','pe_gu1','pe_gu2','pe_gu3','pe_gu4','pe_gu5','pe_gu6','pe_lymph1','pe_lymph2','pe_lymph3','pe_neck1','pe_neck2','pe_resp1','pe_resp2','pe_resp3','pe_resp4','pe_skin1','pe_skin2');
+					} else {
+						$psych_array('pe_ch1','pe_ch2','pe_cv1','pe_cv2','pe_cv3','pe_cv4','pe_cv5','pe_cv6','pe_ent1','pe_ent2','pe_ent3','pe_ent4','pe_ent5','pe_ent6','pe_eye1','pe_eye2','pe_eye3','pe_gen1','pe_gi1','pe_gi2','pe_gi3','pe_gi4','pe_gu7','pe_gu8','pe_gu9','pe_lymph1','pe_lymph2','pe_lymph3','pe_neck1','pe_neck2','pe_resp1','pe_resp2','pe_resp3','pe_resp4','pe_skin1','pe_skin2');
+					}
+					foreach ($psych_array as $psych_row) {
+						unset($data[$psych_row]);
+					}
+				}
+				$pe_query = DB::table('pe')->where('eid', '=', Session::get('eid'))->first();
+				if ($pe_query) {
+					DB::table('pe')->where('eid', '=', Session::get('eid'))->update($data);
+					$this->audit('Update');
+				} else {
+					$data['eid'] = Session::get('eid');
+					$data['pid'] = Session::get('pid');
+					$data['encounter_provider'] = Session::get('displayname');
+					DB::table('pe')->insert($data);
+					$this->audit('Add');
+				}
+			}
+			if ($type == 'ros') {
+				$ros_query = DB::table('ros')->where('eid', '=', Session::get('eid'))->first();
+				if ($ros_query) {
+					DB::table('ros')->where('eid', '=', Session::get('eid'))->update($data);
+					$this->audit('Update');
+				} else {
+					$data['eid'] = Session::get('eid');
+					$data['pid'] = Session::get('pid');
+					$data['encounter_provider'] = Session::get('displayname');
+					DB::table('ros')->insert($data);
+					$this->audit('Add');
+				}
+			}
+		}
+		echo json_encode($data);
 	}
 }

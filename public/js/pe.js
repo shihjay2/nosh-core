@@ -477,5 +477,16 @@ $(document).ready(function() {
 		$("#pe_mental_dialog").dialog('open');
 		$("#pe_mental1").focus();
 	});
+	$("#pe_entire_normal").click(function() {
+		$.ajax({
+			type: "POST",
+			url: "ajaxencounter/all-normal/pe/all/0",
+			success: function(data){
+				$.jGrowl('All normal values set!');
+				check_pe_status();
+				pe_dialog_open();
+			}
+		});
+	});
 	swipe();
 });
