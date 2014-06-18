@@ -795,4 +795,54 @@ $(document).ready(function() {
 			}
 		});
 	}
+	function updateCoords1(c) {
+		$('#x').val(c.x);
+		$('#y').val(c.y);
+		$('#w').val(c.w);
+		$('#h').val(c.h);
+	};
+	function signature() {
+		$.ajax({
+			type: "POST",
+			url: "ajaxdashboard/get-signature",
+			dataType: 'json',
+			success: function(data){
+				$("#preview_signature").html(data.link);
+				$("#signature_message").html(data.message);
+				if (data.button != "") {
+					$('#image_target').Jcrop({
+						maxSize: [198, 55],
+						onSelect: updateCoords1
+					});
+					$("#signature_message").append(data.button);
+					$('#image_crop').button().click(function(){
+						var a = $('#x').val();
+						if (a != '') {
+							var str = "x=" + $('#x').val() + "&y=" + $('#y').val() + "&w=" + $('#w').val() + "&h=" + $('#h').val();
+							$.ajax({
+								type: "POST",
+								url: "ajaxdashboard/crop-signature",
+								data: str,
+								dataType: 'json',
+								success: function(data){
+									$.jGrowl(data.growl);
+									$("#preview_signature").html(data.link);
+									$("#signature_message").html(data.message);
+								}
+							});
+						} else {
+							$.jGrowl('Select cropping area!  Hint: Move your mouse over the preview signature image.');
+						}
+					});
+				}
+			}
+		});
+	}
+	var mySigUpload1 = $("#signature_upload_submit").upload({
+		action: 'signatureupload',
+		onComplete: function(data){
+			$.jGrowl(data);
+			signature();
+		}
+	});
 });

@@ -111,6 +111,9 @@ Route::group(array('before' => 'force.ssl|acl2'), function() {
 	Route::get('texttemplatedownload/{template_id}', array('as' => 'texttemplatedownload', 'uses' => 'AjaxDashboardController@texttemplatedownload'));
 	Route::post('templateupload', array('as' => 'templateupload', 'uses' => 'AjaxDashboardController@templateupload'));
 });
+Route::group(array('before' => 'force.ssl|acl3'), function() {
+	Route::post('signatureupload', array('as' => 'signatureupload', 'uses' => 'AjaxDashboardController@signatureupload'));
+});
 Route::group(array('before' => 'force.ssl|acl4'), function() {
 });
 Route::group(array('before' => 'force.ssl|acl5'), function() {

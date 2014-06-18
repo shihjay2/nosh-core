@@ -199,10 +199,10 @@ class AjaxSetupController extends BaseController {
 		$targ_h = 100;
 		$img_r = $this->getImageFile($row->practice_logo);
 		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
-		$x = $this->input->post('x');
-		$y = $this->input->post('y');
-		$w = $this->input->post('w');
-		$h = $this->input->post('h');
+		$x = Input::get('x');
+		$y = Input::get('y');
+		$w = Input::get('w');
+		$h = Input::get('h');
 		imagecopyresampled($dst_r,$img_r,0,0,$x,$y,$targ_w,$targ_h,$w,$h);
 		$this->saveImage($dst_r, $row->practice_logo);
 		$result['link'] = HTML::image($row->practice_logo, 'Practice Logo', array('border' => '0', 'id' => 'image_target'));

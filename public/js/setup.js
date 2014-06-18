@@ -20,18 +20,23 @@ $(document).ready(function() {
 					});
 					$("#practice_logo_message").append(data.button);
 					$('#image_crop').button().click(function(){
-						var str = "x=" + $('#x').val() + "&y=" + $('#y').val() + "&w=" + $('#w').val() + "&h=" + $('#h').val();
-						$.ajax({
-							type: "POST",
-							url: "ajaxsetup/cropimage",
-							data: str,
-							dataType: 'json',
-							success: function(data){
-								$.jGrowl(data.growl);
-								$("#practice_logo_upload_preview").html(data.link);
-								$("#practice_logo_message").html(data.message);
-							}
-						});
+						var a = $('#x').val();
+						if (a != '') {
+							var str = "x=" + $('#x').val() + "&y=" + $('#y').val() + "&w=" + $('#w').val() + "&h=" + $('#h').val();
+							$.ajax({
+								type: "POST",
+								url: "ajaxsetup/cropimage",
+								data: str,
+								dataType: 'json',
+								success: function(data){
+									$.jGrowl(data.growl);
+									$("#practice_logo_upload_preview").html(data.link);
+									$("#practice_logo_message").html(data.message);
+								}
+							});
+						} else {
+							$.jGrowl('Select cropping area!  Hint: Move your mouse over the preview image.');
+						}
 					});
 				}
 			}

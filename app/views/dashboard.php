@@ -203,23 +203,37 @@
 		</div>
 		<h3 class="provider_info_class2"><a href="#">Signature</a></h3>
 		<div class="provider_info_class2">
-			<form id="signature_form" class="pure-form pure-form-aligned sigPad">
-				Preview Signature:<br>
-				<div id="preview_signature"></div>
-				<label for="name">Print your name for verification.</label>
-				<input type="text" name="name" id="name" class="name" placeholder="{First name} {Last name}">
-				<p class="drawItDesc">Draw your signature</p>
-				<ul class="sigNav">
-					<li class="drawIt"><a href="#draw-it">Draw It</a></li>
-					<li class="clearButton"><a href="#clear">Clear</a></li>
-				</ul>
-				<div class="sig sigWrapper">
-					<div class="typed"></div>
-					<canvas class="pad" width="198" height="55"></canvas>
-					<input type="hidden" name="output" class="output">
+			Preview Signature:<br>
+			<div id="preview_signature"></div><br>
+			<div class="pure-g">
+				<div class="pure-u-1-2">
+					<strong>Draw It</strong>
+					<form id="signature_form" class="pure-form pure-form-aligned sigPad">
+						<label for="name">Print your name for verification.</label>
+						<input type="text" name="name" id="name" class="name" placeholder="{First name} {Last name}">
+						<p class="drawItDesc">Draw your signature</p>
+						<ul class="sigNav">
+							<li class="drawIt"><a href="#draw-it">Draw It</a></li>
+							<li class="clearButton"><a href="#clear">Clear</a></li>
+						</ul>
+						<div class="sig sigWrapper">
+							<div class="typed"></div>
+							<canvas class="pad" width="198" height="55"></canvas>
+							<input type="hidden" name="output" class="output">
+						</div>
+					</form>
+					<br><button type="button" id="change_signature">Save signature</button>
 				</div>
-			</form>
-			<br><button type="button" id="change_signature">Save signature</button>
+				<div class="pure-u-1-2">
+					<strong>Upload It</strong>
+					<div id="signature_message"></div>
+					<input type="hidden" id="x" name="x" />
+					<input type="hidden" id="y" name="y" />
+					<input type="hidden" id="w" name="w" />
+					<input type="hidden" id="h" name="h" />
+					<button type="button" id="signature_upload_submit" class="nosh_button_add">Upload Signature</button><br><br>
+				</div>
+			</div>
 		</div>
 		<h3 class="provider_info_class3"><a href="#">Visit Types</a></h3>
 		<div class="provider_info_class3">

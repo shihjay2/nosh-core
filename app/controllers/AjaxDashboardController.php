@@ -303,6 +303,105 @@ class AjaxDashboardController extends BaseController {
 		}
 	}
 	
+	public function signatureupload()
+	{
+		$id = Session::get('user_id');
+		$directory = __DIR__.'/../../public/images';
+		foreach (Input::file('file') as $file) {
+			if ($file) {
+				if ($file->getMimeType() != 'image/jpeg' && $file->getMimeType() != 'image/gif' && $file->getMimeType() != 'image/png') {
+					echo "This is not an image file.  Try again.";
+					exit (0);
+				}
+				$new_name = str_replace('.' . $file->getClientOriginalExtension(), '', $file->getClientOriginalName()) . '_' . time() . '.' . $file->getClientOriginalExtension();
+				$file->move($directory, $new_name);
+				$signature = $directory . "/" . $new_name;
+				$data = array(
+					'signature' => 'images/' . $new_name
+				);
+				DB::table('providers')->where('id', '=', $id)->update($data);
+				$this->audit('Update');
+				$img = $this->getImageFile($signature);
+				if (imagesx($img) > 198 || imagesy($img) > 55) {
+					$width = imagesx($img);
+					$height = imagesy($img);
+					$scaledDimensions = $this->getDimensions($width,$height,198,55);
+					$scaledWidth = $scaledDimensions['scaledWidth'];
+					$scaledHeight = $scaledDimensions['scaledHeight'];
+					$scaledImage = imagecreatetruecolor($scaledWidth, $scaledHeight);
+					imagecopyresampled($scaledImage, $img, 0, 0, 0, 0, $scaledWidth, $scaledHeight, $width, $height);
+					$this->saveImage($scaledImage, $signature);
+				}
+			}
+		}
+		echo 'Signature uploaded!';
+	}
+	
+	public function postGetSignature()
+	{
+		if (Session::get('group_id') != '2') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$signature = Providers::find(Session::get('user_id'));
+			if ($signature->signature != '') {
+				$result['link'] = HTML::image($signature->signature, 'Provider Signature', array('border' => '0', 'id' => 'image_target'));
+				$img = $this->getImageFile($signature->signature);
+				$result['button'] = "";
+				if (imagesx($img) > 198) {
+					$result['message'] = "Image width is too large (less than 198px is recommended).  Use the cropping tool to get to the correct width.";
+					$result['button'] = "<br><button id='image_crop'>Crop Image</button>";
+				} else {
+					$result['message'] = "Image width is correct.";
+				}
+				if (imagesy($img) > 55) {
+					$result['message'] .= "  Image height is too large (less than 55px is recommended).  Use the cropping tool to get to the correct height.";
+					$result['button'] = "<br><button id='image_crop'>Crop Image</button>";
+				} else {
+					$result['message'] .= "  Image height is correct.";
+				}
+			} else {
+				$result['link'] = '';
+				$result['message'] = '';
+			}
+			echo json_encode($result);
+		}
+	}
+	
+	public function postCropSignature()
+	{
+		$signature = Providers::find(Session::get('user_id'));
+		$targ_w = 198;
+		$targ_h = 55;
+		$img_r = $this->getImageFile($signature->signature);
+		$dst_r = ImageCreateTrueColor( $targ_w, $targ_h );
+		$x = Input::get('x');
+		$y = Input::get('y');
+		$w = Input::get('w');
+		$h = Input::get('h');
+		imagecopyresampled($dst_r,$img_r,0,0,$x,$y,$targ_w,$targ_h,$w,$h);
+		$this->saveImage($dst_r, $signature->signature);
+		$result['link'] = HTML::image($signature->signature, 'Provider Signature', array('border' => '0', 'id' => 'image_target'));
+		$result['growl'] = "Signature cropped and saved!";
+		$img = $this->getImageFile($signature->signature);
+		$result['button'] = "";
+		if (imagesx($img) > 198) {
+			$result['message'] = "Image width is too large (less than 198px is recommended).  Use the cropping tool to get to the correct width.";
+			$result['button'] = "<br><button id='image_crop'>Crop Image</button>";
+		} else {
+			$result['message'] = "Image width is correct.";
+		}
+		if (imagesy($img) > 55) {
+			$result['message'] .= "  Image height is too large (less than 55px is recommended).  Use the cropping tool to get to the correct height.";
+			$result['button'] = "<br><button id='image_crop'>Crop Image</button>";
+		} else {
+			$result['message'] .= "  Image height is correct.";
+		}
+		echo json_encode($result);
+	}
+	
 	public function postChangeSignature()
 	{
 		if (Session::get('group_id') != '2') {
