@@ -1,9 +1,12 @@
 $(document).ready(function() {
 	function pe_clear_dialog_form(dialog_id) {
 		$("#"+dialog_id).find('.pe_entry').each(function(){
-			$(this).val('');
+			var a = $(this).val();
 			var id = $(this).attr('id');
-			$("#"+id+"_old").val('');
+			var b = $("#"+id+"_old").val();
+			if (a != b) {
+				$(this).val(b);
+			}
 		});
 	}
 	function pe_dialog_save(dialog_id) {
@@ -484,7 +487,7 @@ $(document).ready(function() {
 			success: function(data){
 				$.jGrowl('All normal values set!');
 				check_pe_status();
-				pe_dialog_open();
+				pe_get_data();
 			}
 		});
 	});

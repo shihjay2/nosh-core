@@ -26,6 +26,7 @@ $(document).ready(function() {
 			if (id == "encounter_tabs_ros") {
 				check_ros_status();
 				ros_dialog_open();
+				ros_get_data();
 			}
 			if (old_id == "encounter_tabs_oh") {
 				oh_autosave();

@@ -1,4 +1,14 @@
 $(document).ready(function() {
+	function ros_clear_dialog_form(dialog_id) {
+		$("#"+dialog_id).find('.ros_entry').each(function(){
+			var a = $(this).val();
+			var id = $(this).attr('id');
+			var b = $("#"+id+"_old").val();
+			if (a != b) {
+				$(this).val(b);
+			}
+		});
+	}
 	function ros_dialog_save(type) {
 		var str = $("#ros_"+type+"_dialog_form").serialize();
 		$.ajax({
@@ -88,7 +98,7 @@ $(document).ready(function() {
 				ros_dialog_save('gen');
 			},
 			Cancel: function() {
-				$("#ros_gen_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_gen_dialog');
 				$("#ros_gen_dialog").dialog('close');
 			}
 		},
@@ -108,7 +118,7 @@ $(document).ready(function() {
 				ros_dialog_save('eye');
 			},
 			Cancel: function() {
-				$("#ros_eye_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_eye_dialog');
 				$("#ros_eye_dialog").dialog('close');
 			}
 		},
@@ -128,7 +138,7 @@ $(document).ready(function() {
 				ros_dialog_save('ent');
 			},
 			Cancel: function() {
-				$("#ros_ent_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_ent_dialog');
 				$("#ros_ent_dialog").dialog('close');
 			}
 		},
@@ -148,7 +158,7 @@ $(document).ready(function() {
 				ros_dialog_save('resp');
 			},
 			Cancel: function() {
-				$("#ros_resp_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_resp_dialog');
 				$("#ros_resp_dialog").dialog('close');
 			}
 		},
@@ -168,7 +178,7 @@ $(document).ready(function() {
 				ros_dialog_save('cv');
 			},
 			Cancel: function() {
-				$("#ros_cv_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_cv_dialog');
 				$("#ros_cv_dialog").dialog('close');
 			}
 		},
@@ -188,7 +198,7 @@ $(document).ready(function() {
 				ros_dialog_save('gi');
 			},
 			Cancel: function() {
-				$("#ros_gi_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_gi_dialog');
 				$("#ros_gi_dialog").dialog('close');
 			}
 		},
@@ -208,7 +218,7 @@ $(document).ready(function() {
 				ros_dialog_save('gu');
 			},
 			Cancel: function() {
-				$("#ros_gu_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_gu_dialog');
 				$("#ros_gu_dialog").dialog('close');
 			}
 		},
@@ -228,7 +238,7 @@ $(document).ready(function() {
 				ros_dialog_save('mus');
 			},
 			Cancel: function() {
-				$("#ros_mus_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_mus_dialog');
 				$("#ros_mus_dialog").dialog('close');
 			}
 		},
@@ -248,7 +258,7 @@ $(document).ready(function() {
 				ros_dialog_save('neuro');
 			},
 			Cancel: function() {
-				$("#ros_neuro_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_neuro_dialog');
 				$("#ros_neuro_dialog").dialog('close');
 			}
 		},
@@ -268,7 +278,7 @@ $(document).ready(function() {
 				ros_dialog_save('psych');
 			},
 			Cancel: function() {
-				$("#ros_psych_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_psych_dialog');
 				$("#ros_psych_dialog").dialog('close');
 			}
 		},
@@ -288,7 +298,7 @@ $(document).ready(function() {
 				ros_dialog_save('heme');
 			},
 			Cancel: function() {
-				$("#ros_heme_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_heme_dialog');
 				$("#ros_heme_dialog").dialog('close');
 			}
 		},
@@ -308,7 +318,7 @@ $(document).ready(function() {
 				ros_dialog_save('endocrine');
 			},
 			Cancel: function() {
-				$("#ros_endocrine_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_endocrine_dialog');
 				$("#ros_endocrine_dialog").dialog('close');
 			}
 		},
@@ -328,7 +338,7 @@ $(document).ready(function() {
 				ros_dialog_save('skin');
 			},
 			Cancel: function() {
-				$("#ros_skin_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_skin_dialog');
 				$("#ros_skin_dialog").dialog('close');
 			}
 		},
@@ -348,7 +358,7 @@ $(document).ready(function() {
 				ros_dialog_save('wcc');
 			},
 			Cancel: function() {
-				$("#ros_wcc_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_wcc_dialog');
 				$("#ros_wcc_dialog").dialog('close');
 			}
 		},
@@ -368,7 +378,7 @@ $(document).ready(function() {
 				ros_dialog_save('psych1');
 			},
 			Cancel: function() {
-				$("#ros_psych1_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_psych1_dialog');
 				$("#ros_psych1_dialog").dialog('close');
 			}
 		},
@@ -388,7 +398,7 @@ $(document).ready(function() {
 				ros_dialog_save('psych2');
 			},
 			Cancel: function() {
-				$("#ros_psych2_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_psych2_dialog');
 				$("#ros_psych2_dialog").dialog('close');
 			}
 		},
@@ -408,7 +418,7 @@ $(document).ready(function() {
 				ros_dialog_save('psych3');
 			},
 			Cancel: function() {
-				$("#ros_psych3_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_psych3_dialog');
 				$("#ros_psych3_dialog").dialog('close');
 			}
 		},
@@ -428,7 +438,7 @@ $(document).ready(function() {
 				ros_dialog_save('psych4');
 			},
 			Cancel: function() {
-				$("#ros_psych4_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_psych4_dialog');
 				$("#ros_psych4_dialog").dialog('close');
 			}
 		},
@@ -448,7 +458,7 @@ $(document).ready(function() {
 				ros_dialog_save('psych5');
 			},
 			Cancel: function() {
-				$("#ros_psych5_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_psych5_dialog');
 				$("#ros_psych5_dialog").dialog('close');
 			}
 		},
@@ -468,7 +478,7 @@ $(document).ready(function() {
 				ros_dialog_save('psych6');
 			},
 			Cancel: function() {
-				$("#ros_psych6_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_psych6_dialog');
 				$("#ros_psych6_dialog").dialog('close');
 			}
 		},
@@ -488,7 +498,7 @@ $(document).ready(function() {
 				ros_dialog_save('psych7');
 			},
 			Cancel: function() {
-				$("#ros_psych7_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_psych7_dialog');
 				$("#ros_psych7_dialog").dialog('close');
 			}
 		},
@@ -508,7 +518,7 @@ $(document).ready(function() {
 				ros_dialog_save('psych8');
 			},
 			Cancel: function() {
-				$("#ros_psych8_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_psych8_dialog');
 				$("#ros_psych8_dialog").dialog('close');
 			}
 		},
@@ -528,7 +538,7 @@ $(document).ready(function() {
 				ros_dialog_save('psych9');
 			},
 			Cancel: function() {
-				$("#ros_psych9_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_psych9_dialog');
 				$("#ros_psych9_dialog").dialog('close');
 			}
 		},
@@ -548,7 +558,7 @@ $(document).ready(function() {
 				ros_dialog_save('psych10');
 			},
 			Cancel: function() {
-				$("#ros_psych10_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_psych10_dialog');
 				$("#ros_psych10_dialog").dialog('close');
 			}
 		},
@@ -568,7 +578,7 @@ $(document).ready(function() {
 				ros_dialog_save('psych11');
 			},
 			Cancel: function() {
-				$("#ros_psych11_dialog_form").clearForm();
+				ros_clear_dialog_form('ros_psych11_dialog');
 				$("#ros_psych11_dialog").dialog('close');
 			}
 		},
@@ -678,7 +688,7 @@ $(document).ready(function() {
 			success: function(data){
 				$.jGrowl('All normal values set!');
 				check_ros_status();
-				ros_dialog_open();
+				ros_get_data();
 			}
 		});
 	});

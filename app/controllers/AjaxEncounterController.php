@@ -2472,9 +2472,14 @@ class AjaxEncounterController extends BaseController {
 			->orWhereNull('practice_id');
 		});
 		$result = $query->get();
+		$data = array();
 		foreach ($result as $row) {
 			$group = $row->group;
-			$data[$group] = '';
+			if (isset($data[$group]) && $data[$group] != '') {
+				$data[$group] .= '  ';
+			} else {
+				$data[$group] = '';
+			}
 			if ($group == 'pe_ms3') {
 				$data[$group] = 'Full range of motion of the shoulders bilaterally.';
 			}
