@@ -264,10 +264,14 @@ $(document).ready(function() {
 		var c = b.substring(0, b.indexOf("."));
 		if (c == "yahoo") {
 			var imap = "imap.mail." + b + ":993";
+			var smtp = "smtp.mail.yahoo.com"
 		} else {
 			var imap = "imap." + b + ":993";
+			var smtp = "smtp." + b;
 		}
 		$("#fax_email_hostname").val(imap);
+		$("#fax_email_smtp").val(smtp);
 	});
 	$("#billing_state").addOption(states, false);
+	$("#encounter_template").addOption({'standardmedical':'Standard Medical Visit','standardpsych':'Annual Psychiatric Evaluation','standardpsych1':'Psychiatric Encounter','clinicalsupport':'Clinical Support Visit','standardmtm':'MTM Encounter'}, false);
 });

@@ -119,6 +119,7 @@ $(document).ready(function() {
 					$("#encounter_copay").html(data);
 				}
 			});
+			$("#encounter_template").val(noshdata.default_template);
 			$("#encounter_provider").removeOption(/./);
 			$("#encounter_provider").addOption({'':'Choose Provider'}, false);
 			$.ajax({

@@ -95,7 +95,9 @@ $(document).ready(function() {
 		},
 		close: function(event, ui) {
 			$('#oh_meds_header').hide();
-			menu_update('medications');
+			if (noshdata.group_id != '100') {
+				menu_update('medications');
+			}
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
@@ -477,7 +479,9 @@ $(document).ready(function() {
 			}).navGrid('#messages_medications_inactive_pager',{search:false,edit:false,add:false,del:false});
 		},
 		close: function (event,ui) {
-			menu_update('medications');
+			if (noshdata.group_id != '100') {
+				menu_update('medications');
+			}
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});

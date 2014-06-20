@@ -14,6 +14,7 @@
 	noshdata.schedule_increment = '<?php echo $schedule_increment;?>';
 	noshdata.financial = '<?php if(Session::get('financial')) { echo Session::get('financial');} ?>';
 	noshdata.mtm = '<?php if(Session::get('mtm')) { echo Session::get('mtm');} ?>';
+	noshdata.default_template = '<?php echo $encounter_template;?>';
 </script>
 <div id="nosh_chart_common_div" style="width:100%">
 	<fieldset class="ui-corner-all">

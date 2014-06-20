@@ -12,6 +12,7 @@ class ChartController extends BaseController {
 		} else {
 			$data['default_pos'] = '';
 		}
+		$data['encounter_template'] = $row->encounter_template;
 		if ($row->weekends == '1') {
 			$data['weekends'] = 'true';
 		} else {

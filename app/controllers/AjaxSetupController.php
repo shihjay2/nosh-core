@@ -90,7 +90,8 @@ class AjaxSetupController extends BaseController {
 			'documents_dir' => Input::get('documents_dir'),
 			'icd' => Input::get('icd'),
 			'supplements_menu_item' => Input::get('supplements_menu_item'),
-			'immunizations_menu_item' => Input::get('immunizations_menu_item')
+			'immunizations_menu_item' => Input::get('immunizations_menu_item'),
+			'encounter_template' => Input::get('encounter_template')
 		);
 		DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->update($data);
 		$this->audit('Update');
@@ -103,7 +104,8 @@ class AjaxSetupController extends BaseController {
 			'fax_type' => Input::get('fax_type'),
 			'fax_email' => Input::get('fax_email'),
 			'fax_email_password' => Input::get('fax_email_password'),
-			'fax_email_hostname' => Input::get('fax_email_hostname')
+			'fax_email_hostname' => Input::get('fax_email_hostname'),
+			'fax_email_smtp' => Input::get('fax_email_smtp')
 		);
 		DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->update($data);
 		$this->audit('Update');

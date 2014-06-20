@@ -82,7 +82,9 @@ $(document).ready(function() {
 			$("#oh_supplements_header").hide();
 			$("#supplement_origin_orders").val("N");
 			$("#supplement_origin_orders1").val("N");
-			menu_update('supplements');
+			if (noshdata.group_id != '100') {
+				menu_update('supplements');
+			}
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});

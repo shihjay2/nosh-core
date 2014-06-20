@@ -3464,7 +3464,7 @@ class BaseController extends Controller {
 		}
 		$config = array(
 			'driver' => 'smtp',
-			'host' => 'smtp.gmail.com',
+			'host' => $practice_row->fax_email_smtp,
 			'port' => 465,
 			'from' => array('address' => null, 'name' => null),
 			'encryption' => 'ssl',

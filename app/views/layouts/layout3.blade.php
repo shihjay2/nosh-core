@@ -60,7 +60,8 @@
 				'mtm': '',
 				'old_text': '',
 				'label_text': '',
-				'progress': 0
+				'progress': 0,
+				'default_template' : ''
 			};
 			var medcache = {};
 			var medcache1 = {};

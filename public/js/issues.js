@@ -55,7 +55,9 @@ $(document).ready(function() {
 			$('#edit_issue_form').clearForm();
 			$('#issues_pmh_header').hide();
 			$('#issues_psh_header').hide();
-			menu_update('issues');
+			if (noshdata.group_id != '100') {
+				menu_update('issues');
+			}
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});

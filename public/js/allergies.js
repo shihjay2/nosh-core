@@ -55,7 +55,9 @@ $(document).ready(function() {
 		},
 		close: function(event, ui) {
 			$('#edit_allergy_form').clearForm();
-			menu_update('allergies');
+			if (noshdata.group_id != '100') {
+				menu_update('allergies');
+			}
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});

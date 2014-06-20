@@ -68,11 +68,13 @@
 							<option value="in">Inches</option>
 							<option value="cm">Centimeters</option>
 						</select><input type="hidden" id="hc_unit_old"/>
-						<label for="hc_unit">ICD database:</label>
+						<label for="icd">ICD database:</label>
 						<select name="icd" id="icd" class="text" required>
 							<option value="9">ICD-9</option>
 							<option value="0">ICD-10</option>
 						</select><input type="hidden" id="icd_old"/>
+						<label for="encounter_template">Default Encounter Template:</label>
+						<select name="encounter_template" id="encounter_template" class="text" required></select><input type="hidden" id="encounter_template_old"/>
 						<label for="supplements_menu_item">Include Supplements in Chart Menu</label>
 						<select name="supplements_menu_item" id="supplements_menu_item" class="text" required>
 							<option value="n">No</option>
@@ -109,6 +111,8 @@
 				<input type="password" name="fax_email_password" id="fax_email_password" class="text" style="width:250px"/><input type="hidden" id="fax_email_password_old"/>
 				<label for="fax_email_hostname">IMAP Hostname (hostname:port):</label>
 				<input type="text" name="fax_email_hostname" id="fax_email_hostname" class="text" style="width:250px" placeholder="hostname:port"/><input type="hidden" id="fax_email_hostname_old"/>
+				<label for="fax_email_smtp">IMAP SMTP Hostname:</label>
+				<input type="text" name="fax_email_smtp" id="fax_email_smtp" class="text" style="width:250px"/><input type="hidden" id="fax_email_smtp_old"/>
 			</form>
 		</div>
 		<h3>Practice Billing Setup</h3>
