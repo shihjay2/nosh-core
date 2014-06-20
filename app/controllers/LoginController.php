@@ -67,21 +67,17 @@ class LoginController extends BaseController {
 			}
 			if((array_key_exists('login_attempts', $_COOKIE)) && ($_COOKIE['login_attempts'] >= 5)){
 				$data['attempts'] = "You have reached the number of limits to login.  Wait 15 minutes then try again.";
-				//$this->layout->style = '';
 				$this->layout->style = $this->css_assets();
 				$this->layout->script = $this->js_assets('base');
 				$this->layout->script .= HTML::script('/js/login.js');
-				//$this->layout->script = HTML::script('/js/login.js');
 				$this->layout->content = View::make('login', $data);
 			} else {
 				if(!array_key_exists('login_attempts', $_COOKIE)) {
 					setcookie("login_attempts", 0, time()+900, '/');
 				}
-				//$this->layout->style = '';
 				$this->layout->style = $this->css_assets();
 				$this->layout->script = $this->js_assets('base');
 				$this->layout->script .= HTML::script('/js/login.js');
-				//$this->layout->script = HTML::script('/js/login.js');
 				$this->layout->content = View::make('login', $data);
 			}
 		}
@@ -93,8 +89,6 @@ class LoginController extends BaseController {
 		Session::flush();
 		$practice1 = Practiceinfo::find(1);
 		Session::put('version', $practice1->version);
-		//$this->layout->style = '';
-		//$this->layout->script = '';
 		$this->layout->style = $this->css_assets();
 		$this->layout->script = $this->js_assets('base');
 		$this->layout->content = View::make('logout');

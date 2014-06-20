@@ -959,7 +959,10 @@ class AjaxDashboardController extends BaseController {
 			header("HTTP/1.1 404 Page Not Found", true, 404);
 			exit("You cannot do this.");
 		} else {
+			$track = __DIR__.'/../../public/temp/track';
+			File::put($track,'0');
 			ini_set('memory_limit','196M');
+			ini_set('max_execution_time', 300);
 			$practice_id = Session::get('practice_id');
 			$query = Demographics_relate::where('practice_id', '=', $practice_id)->get();
 			$total = count($query);
@@ -978,24 +981,10 @@ class AjaxDashboardController extends BaseController {
 				$zip->addFile($file);
 				$i++;
 				$percent = round($i/$total*100);
-				Session::put('print_chart_percent', $percent);
+				File::put($track,$percent);
 			}
 			$zip->close();
-			$data['response'] = true;
-			$data['html'] = HTML::secureLink('temp/charts_' . $practice_id . '.zip', 'Download ZIP File');
-			echo json_encode($data);
-		}
-	}
-	
-	public function postPrintEntireChartProgress()
-	{
-		if (Session::get('group_id') != '1') {
-			Auth::logout();
-			Session::flush();
-			header("HTTP/1.1 404 Page Not Found", true, 404);
-			exit("You cannot do this.");
-		} else {
-			echo Session::get('print_chart_percent');
+			echo link_to_asset('temp/charts_' . $practice_id . '.zip', 'Download File', $attributes = array(), $secure = null);
 		}
 	}
 	
@@ -1027,7 +1016,10 @@ class AjaxDashboardController extends BaseController {
 			header("HTTP/1.1 404 Page Not Found", true, 404);
 			exit("You cannot do this.");
 		} else {
+			$track = __DIR__.'/../../public/temp/track';
+			File::put($track,'0');
 			ini_set('memory_limit','196M');
+			ini_set('max_execution_time', 300);
 			$practice_id = Session::get('practice_id');
 			$query = Demographics_relate::where('practice_id', '=', $practice_id)->get();
 			$total = count($query);
@@ -1043,28 +1035,14 @@ class AjaxDashboardController extends BaseController {
 				$csv .= implode(";", $array);
 				$i++;
 				$percent = round($i/$total*100);
-				Session::put('csv_percent', $percent);
+				File::put($track,$percent);
 			}
 			$csv_file_name = __DIR__.'/../../public/temp/csv_' . $practice_id . '.csv';
 			if (file_exists($csv_file_name)) {
 				unlink($csv_file_name);
 			}
 			File::put($csv_file_name, $csv);
-			$data['message'] = "OK";
-			$data['html'] = HTML::secureLink('temp/csv_' . $practice_id . '.csv', 'Download CSV File');
-			echo json_encode($data);
-		}
-	}
-	
-	public function postCsvProgress()
-	{
-		if (Session::get('group_id') != '1') {
-			Auth::logout();
-			Session::flush();
-			header("HTTP/1.1 404 Page Not Found", true, 404);
-			exit("You cannot do this.");
-		} else {
-			echo Session::get('csv_percent');
+			echo link_to_asset('temp/csv_' . $practice_id . '.csv', 'Download File', $attributes = array(), $secure = null);
 		}
 	}
 	
@@ -2630,5 +2608,582 @@ class AjaxDashboardController extends BaseController {
 				$this->audit('Update');
 			}
 		}
+	}
+	
+	public function postPrintEntireCcda()
+	{
+		if (Session::get('group_id') != '1') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$track = __DIR__.'/../../public/temp/track';
+			File::put($track,'0');
+			ini_set('memory_limit','196M');
+			ini_set('max_execution_time', 300);
+			$practice_id = Session::get('practice_id');
+			$query = Demographics_relate::where('practice_id', '=', $practice_id)->get();
+			$zip_file_name = 'ccda_' . $practice_id . '.zip';
+			$zip_file = __DIR__.'/../../public/temp/' . $zip_file_name;
+			if (file_exists($zip_file)) {
+				unlink($zip_file);
+			}
+			$zip = new ZipArchive();
+			if ($zip->open($zip_file, ZipArchive::CREATE) !== TRUE) {
+				exit("Cannot open <$zip_file>\n");
+			}
+			$files_array = array();
+			$i = 0;
+			$count = count($query);
+			foreach ($query as $row) {
+				$filename = 'ccda_' . $row->pid . "_" . time() . ".xml";
+				$file = __DIR__.'/../../public/temp/' . $filename;
+				$query1 = DB::table('demographics')->where('pid', '=', $row->pid)->first();
+				if ($query1) {
+					$ccda = $this->generate_ccda('',$row->pid);
+					File::put($file, $ccda);
+					$files_array[$i]['file'] = $file;
+					$files_array[$i]['filename'] = $filename;
+					$i++;
+					$percent = round($i/$count*100);
+					File::put($track,$percent);
+				}
+			}
+			foreach ($files_array as $ccda1) {
+				$zip->addFile($ccda1['file'], $ccda1['filename']);
+			}
+			$zip->close();
+			while(!file_exists($zip_file)) {
+				sleep(2);
+			}
+			echo link_to_asset('temp/' . $zip_file_name, 'Download File', $attributes = array(), $secure = null);
+		}
+	}
+	
+	public function postNoshexport()
+	{
+		if (Session::get('group_id') != '1') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			ini_set('memory_limit','196M');
+			ini_set('max_execution_time', 300);
+			$zip_file_name = 'noshexport_' . Session::get('practice_id') . '.zip';
+			$zip_file = __DIR__.'/../../public/temp/' . $zip_file_name;
+			if (file_exists($zip_file)) {
+				unlink($zip_file);
+			}
+			$track = __DIR__.'/../../public/temp/track';
+			File::put($track,'0');
+			$zip = new ZipArchive;
+			$zip->open($zip_file, ZipArchive::CREATE);
+			$documents_dir = Session::get('documents_dir');
+			$config_file = __DIR__."/../../.env.php";
+			$config = require($config_file);
+			$database = $config['mysql_database'] . "_copy";
+			$connect = mysqli_connect('localhost', $config['mysql_username'], $config['mysql_password']);
+			if ($connect) {
+				if (mysqli_select_db($connect, $database)) {
+					$sql = "DROP DATABASE " . $database;
+					mysqli_query($connect,$sql);
+				}
+				$sql = "CREATE DATABASE " . $database;
+				if (mysqli_query($connect,$sql)) {
+					$command = "mysqldump --no-data -u " . $config['mysql_username'] . " -p". $config['mysql_password'] . " " . $config['mysql_database'] . " | mysql -u " . $config['mysql_username'] . " -p". $config['mysql_password'] . " " . $database;
+					system($command);
+					Schema::connection('mysql2')->drop('audit');
+					Schema::connection('mysql2')->drop('ci_sessions');
+					Schema::connection('mysql2')->drop('cpt');
+					Schema::connection('mysql2')->drop('curr_associationrefset_d');
+					Schema::connection('mysql2')->drop('curr_attributevaluerefset_f');
+					Schema::connection('mysql2')->drop('curr_complexmaprefset_f');
+					Schema::connection('mysql2')->drop('curr_concept_f');
+					Schema::connection('mysql2')->drop('curr_description_f');
+					Schema::connection('mysql2')->drop('curr_langrefset_f');
+					Schema::connection('mysql2')->drop('curr_relationship_f');
+					Schema::connection('mysql2')->drop('curr_simplemaprefset_f');
+					Schema::connection('mysql2')->drop('curr_simplerefset_f');
+					Schema::connection('mysql2')->drop('curr_stated_relationship_f');
+					Schema::connection('mysql2')->drop('curr_textdefinition_f');
+					Schema::connection('mysql2')->drop('cvx');
+					Schema::connection('mysql2')->drop('extensions_log');
+					Schema::connection('mysql2')->drop('gc');
+					Schema::connection('mysql2')->drop('groups');
+					Schema::connection('mysql2')->drop('guardian_roles');
+					Schema::connection('mysql2')->drop('icd9');
+					Schema::connection('mysql2')->drop('icd10');
+					Schema::connection('mysql2')->drop('lang');
+					Schema::connection('mysql2')->drop('meds_full');
+					Schema::connection('mysql2')->drop('meds_full_package');
+					Schema::connection('mysql2')->drop('migrations');
+					Schema::connection('mysql2')->drop('npi');
+					Schema::connection('mysql2')->drop('orderslist1');
+					Schema::connection('mysql2')->drop('pos');
+					Schema::connection('mysql2')->drop('sessions');
+					Schema::connection('mysql2')->drop('snomed_procedure_imaging');
+					Schema::connection('mysql2')->drop('snomed_procedure_path');
+					Schema::connection('mysql2')->drop('supplements_list');
+					File::put($track,'10');
+					$practiceinfo = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
+					$practiceinfo_data = (array) $practiceinfo;
+					$practiceinfo_data['practice_id'] = '1';
+					DB::connection('mysql2')->table('practiceinfo')->insert($practiceinfo_data);
+					if ($practiceinfo->practice_logo != '') {
+						$practice_logo_file = __DIR__.'/../../public/' . $practiceinfo->practice_logo;
+						$localPath4 = str_replace($documents_dir,'/',$practice_logo_file);
+						if (file_exists($practice_logo_file)) {
+							$zip->addFile($practice_logo_file,$localPath4);
+						}
+					}
+					$addressbook = DB::table('addressbook')->get();
+					if ($addressbook) {
+						foreach ($addressbook as $addressbook_row) {
+							DB::connection('mysql2')->table('addressbook')->insert((array) $addressbook_row);
+						}
+					}
+					$calendar = DB::table('calendar')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($calendar) {
+						foreach ($calendar as $calendar_row) {
+							DB::connection('mysql2')->table('calendar')->insert((array) $calendar_row);
+						}
+					}
+					DB::connection('mysql2')->table('calendar')->update(array('practice_id' => '1'));
+					$cpt_relate = DB::table('cpt_relate')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($cpt_relate) {
+						foreach ($cpt_relate as $cpt_relate_row) {
+							DB::connection('mysql2')->table('cpt_relate')->insert((array) $cpt_relate_row);
+						}
+					}
+					DB::connection('mysql2')->table('cpt_relate')->update(array('practice_id' => '1'));
+					$pid_arr = array();
+					$demographics_relate = DB::table('demographics_relate')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($demographics_relate) {
+						foreach ($demographics_relate as $demographics_relate_row) {
+							DB::connection('mysql2')->table('demographics_relate')->insert((array) $demographics_relate_row);
+							$pid_arr[] = $demographics_relate_row->pid;
+						}
+					}
+					DB::connection('mysql2')->table('demographics_relate')->update(array('practice_id' => '1'));
+					$messaging = DB::table('messaging')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($messaging) {
+						foreach ($messaging as $messaging_row) {
+							DB::connection('mysql2')->table('messaging')->insert((array) $messaging_row);
+						}
+					}
+					DB::connection('mysql2')->table('messaging')->update(array('practice_id' => '1'));
+					$orderslist = DB::table('orderslist')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($orderslist) {
+						foreach ($orderslist as $orderslist_row) {
+							DB::connection('mysql2')->table('orderslist')->insert((array) $orderslist_row);
+						}
+					}
+					DB::connection('mysql2')->table('orderslist')->update(array('practice_id' => '1'));
+					$provider_id_arr = array();
+					$providers = DB::table('providers')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($providers) {
+						foreach ($providers as $providers_row) {
+							DB::connection('mysql2')->table('providers')->insert((array) $providers_row);
+							$provider_id_arr[] = $providers_row->id;
+							if ($providers_row->signature != '') {
+								$signature_file = __DIR__.'/../../public/' . $providers_row->signature;
+								$localPath5 = str_replace($documents_dir,'/',$signature_file);
+								if (file_exists($signature_file)) {
+									$zip->addFile($signature_file,$localPath5);
+								}
+							}
+						}
+					}
+					DB::connection('mysql2')->table('providers')->update(array('practice_id' => '1'));
+					$procedurelist = DB::table('procedurelist')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($procedurelist) {
+						foreach ($procedurelist as $procedurelist_row) {
+							DB::connection('mysql2')->table('procedurelist')->insert((array) $procedurelist_row);
+						}
+					}
+					DB::connection('mysql2')->table('procedurelist')->update(array('practice_id' => '1'));
+					$received = DB::table('received')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($received) {
+						foreach ($received as $received_row) {
+							DB::connection('mysql2')->table('received')->insert((array) $received_row);
+							if ($received_row->filePath != '') {
+								$localPath3 = str_replace($documents_dir,'/',$scans_row->filePath);
+								if (file_exists($received_row->filePath)) {
+									$zip->addFile($received_row->filePath,$localPath3);
+								}
+							}
+						}
+					}
+					DB::connection('mysql2')->table('received')->update(array('practice_id' => '1'));
+					$scans = DB::table('scans')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($scans) {
+						foreach ($scans as $scans_row) {
+							DB::connection('mysql2')->table('scans')->insert((array) $scans_row);
+							if ($scans_row->filePath != '') {
+								$localPath2 = str_replace($documents_dir,'/',$scans_row->filePath);
+								if (file_exists($scans_row->filePath)) {
+									$zip->addFile($scans_row->filePath,$localPath2);
+								}
+							}
+						}
+					}
+					DB::connection('mysql2')->table('scans')->update(array('practice_id' => '1'));
+					$job_id_arr = array();
+					$sendfax = DB::table('sendfax')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($sendfax) {
+						foreach ($sendfax as $sendfax_row) {
+							DB::connection('mysql2')->table('sendfax')->insert((array) $sendfax_row);
+							$job_id_arr[] = $sendfax_row->job_id;
+						}
+					}
+					DB::connection('mysql2')->table('sendfax')->update(array('practice_id' => '1'));
+					$supplement_inventory = DB::table('supplement_inventory')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($supplement_inventory) {
+						foreach ($supplement_inventory as $supplement_inventory_row) {
+							DB::connection('mysql2')->table('supplement_inventory')->insert((array) $supplement_inventory_row);
+						}
+					}
+					DB::connection('mysql2')->table('supplement_inventory')->update(array('practice_id' => '1'));
+					$tags_id_arr = array();
+					$tags_relate = DB::table('tags_relate')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($tags_relate) {
+						foreach ($tags_relate as $tags_relate_row) {
+							DB::connection('mysql2')->table('tags_relate')->insert((array) $tags_relate_row);
+							$tags_id_arr[] = $tags_relate_row->tags_id;
+						}
+					}
+					DB::connection('mysql2')->table('tags_relate')->update(array('practice_id' => '1'));
+					$templates = DB::table('templates')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($templates) {
+						foreach ($templates as $templates_row) {
+							DB::connection('mysql2')->table('templates')->insert((array) $templates_row);
+						}
+					}
+					DB::connection('mysql2')->table('templates')->update(array('practice_id' => '1'));
+					$users = DB::table('users')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($users) {
+						foreach ($users as $users_row) {
+							DB::connection('mysql2')->table('users')->insert((array) $users_row);
+						}
+					}
+					DB::connection('mysql2')->table('users')->update(array('practice_id' => '1'));
+					$vaccine_inventory = DB::table('vaccine_inventory')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($vaccine_inventory) {
+						foreach ($vaccine_inventory as $vaccine_inventory_row) {
+							DB::connection('mysql2')->table('vaccine_inventory')->insert((array) $vaccine_inventory_row);
+						}
+					}
+					DB::connection('mysql2')->table('vaccine_inventory')->update(array('practice_id' => '1'));
+					$vaccine_temp = DB::table('vaccine_temp')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($vaccine_temp) {
+						foreach ($vaccine_temp as $vaccine_temp_row) {
+							DB::connection('mysql2')->table('vaccine_temp')->insert((array) $vaccine_temp_row);
+						}
+					}
+					DB::connection('mysql2')->table('vaccine_temp')->update(array('practice_id' => '1'));
+					File::put($track,'20');
+					if (!empty($pid_arr)) {
+						$i = 0;
+						$pid_count = count($pid_arr);
+						foreach ($pid_arr as $pid) {
+							$demographics = DB::table('demographics')->where('pid', '=', $pid)->first();
+							DB::connection('mysql2')->table('demographics')->insert((array) $demographics);
+							$alerts = DB::table('alerts')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->get();
+							foreach ($alerts as $alerts_row) {
+								DB::connection('mysql2')->table('alerts')->insert((array) $alerts_row);
+							}
+							DB::connection('mysql2')->table('alerts')->update(array('practice_id' => '1'));
+							$allergies = DB::table('allergies')->where('pid', '=', $pid)->get();
+							foreach ($allergies as $allergies_row) {
+								DB::connection('mysql2')->table('allergies')->insert((array) $allergies_row);
+							}
+							$billing_core1 = DB::table('billing_core')->where('pid', '=', $pid)->where('eid', '=', '0')->where('practice_id', '=', Session::get('practice_id'))->get();
+							foreach ($billing_core1 as $billing_core1_row) {
+								DB::connection('mysql2')->table('billing_core')->insert((array) $billing_core1_row);
+							}
+							DB::connection('mysql2')->table('billing_core')->update(array('practice_id' => '1'));
+							$demographics_notes = DB::table('demographics_notes')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->get();
+							foreach ($demographics_notes as $demographics_notes_row) {
+								DB::connection('mysql2')->table('demographics_notes')->insert((array) $demographics_notes_row);
+							}
+							DB::connection('mysql2')->table('demographics_notes')->update(array('practice_id' => '1'));
+							$documents = DB::table('documents')->where('pid', '=', $pid)->get();
+							foreach ($documents as $documents_row) {
+								DB::connection('mysql2')->table('documents')->insert((array) $documents_row);
+							}
+							$eid_arr = array();
+							$encounters = DB::table('encounters')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->get();
+							foreach ($encounters as $encounters_row) {
+								DB::connection('mysql2')->table('encounters')->insert((array) $encounters_row);
+								$eid_arr[] = $encounters_row->eid;
+							}
+							DB::connection('mysql2')->table('encounters')->update(array('practice_id' => '1'));
+							$forms = DB::table('forms')->where('pid', '=', $pid)->get();
+							foreach ($forms as $forms_row) {
+								DB::connection('mysql2')->table('forms')->insert((array) $forms_row);
+							}
+							$hippa = DB::table('hippa')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->get();
+							foreach ($hippa as $hippa_row) {
+								DB::connection('mysql2')->table('hippa')->insert((array) $hippa_row);
+							}
+							DB::connection('mysql2')->table('hippa')->update(array('practice_id' => '1'));
+							$immunizations = DB::table('immunizations')->where('pid', '=', $pid)->get();
+							foreach ($immunizations as $immunizations_row) {
+								DB::connection('mysql2')->table('immunizations')->insert((array) $immunizations_row);
+							}
+							$insurance = DB::table('insurance')->where('pid', '=', $pid)->get();
+							foreach ($insurance as $insurance_row) {
+								DB::connection('mysql2')->table('insurance')->insert((array) $insurance_row);
+							}
+							$issues = DB::table('issues')->where('pid', '=', $pid)->get();
+							foreach ($issues as $issues_row) {
+								DB::connection('mysql2')->table('issues')->insert((array) $issues_row);
+							}
+							$mtm = DB::table('mtm')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->get();
+							foreach ($mtm as $mtm_row) {
+								DB::connection('mysql2')->table('mtm')->insert((array) $mtm_row);
+							}
+							DB::connection('mysql2')->table('mtm')->update(array('practice_id' => '1'));
+							$orders = DB::table('orders')->where('pid', '=', $pid)->get();
+							foreach ($orders as $orders_row) {
+								DB::connection('mysql2')->table('orders')->insert((array) $orders_row);
+							}
+							$rx_list = DB::table('rx_list')->where('pid', '=', $pid)->get();
+							foreach ($rx_list as $rx_list_row) {
+								DB::connection('mysql2')->table('rx_list')->insert((array) $rx_list_row);
+							}
+							$sup_list = DB::table('sup_list')->where('pid', '=', $pid)->get();
+							foreach ($sup_list as $sup_list_row) {
+								DB::connection('mysql2')->table('sup_list')->insert((array) $sup_list_row);
+							}
+							$tests = DB::table('tests')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->get();
+							foreach ($tests as $tests_row) {
+								DB::connection('mysql2')->table('tests')->insert((array) $tests_row);
+							}
+							DB::connection('mysql2')->table('tests')->update(array('practice_id' => '1'));
+							$t_messages = DB::table('t_messages')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->get();
+							foreach ($t_messages as $t_messages_row) {
+								DB::connection('mysql2')->table('t_messages')->insert((array) $t_messages_row);
+							}
+							DB::connection('mysql2')->table('t_messages')->update(array('practice_id' => '1'));
+							$rootPath = realpath($documents_dir . $pid);
+							if (file_exists($rootPath)) {
+								$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($rootPath), RecursiveIteratorIterator::SELF_FIRST);
+								foreach ($files as $name => $file) {
+									if(in_array(substr($file, strrpos($file, '/')+1), array('.', '..'))) {
+										continue;
+									} else {
+										if (is_dir($file) === true) {
+											continue; 
+										} else {
+											$filePath = $file->getRealPath();
+											$localPath = str_replace($documents_dir,'/',$filePath);
+											if ($filePath != '' && file_exists($filePath)) {
+												$zip->addFile($filePath,$localPath);
+											}
+										}
+									}
+								}
+							}
+							$i++;
+							$percent = round($i/$pid_count*50) + 20;
+							File::put($track,$percent);
+						}
+					}
+					if (!empty($provider_id_arr)) {
+						foreach ($provider_id_arr as $provider_id) {
+							$repeat_schedule = DB::table('repeat_schedule')->where('provider_id', '=', $provider_id)->get();
+							foreach ($repeat_schedule as $repeat_schedule_row) {
+								DB::connection('mysql2')->table('repeat_schedule')->insert((array) $repeat_schedule_row);
+							}
+						}
+					}
+					if (!empty($job_id_arr)) {
+						foreach ($job_id_arr as $job_id) {
+							$pages = DB::table('pages')->where('job_id', '=', $job_id)->get();
+							foreach ($pages as $pages_row) {
+								DB::connection('mysql2')->table('pages')->insert((array) $pages_row);
+							}
+							$recipients = DB::table('recipients')->where('job_id', '=', $job_id)->get();
+							foreach ($recipients as $recipients_row) {
+								DB::connection('mysql2')->table('recipients')->insert((array) $recipients_row);
+							}
+							$rootPath1 = realpath($documents_dir . 'sentfax/' . $job_id);
+							if (file_exists($rootPath1)) {
+								$files1 = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($rootPath1), RecursiveIteratorIterator::SELF_FIRST);
+								foreach ($files1 as $name1 => $file1) {
+									if(in_array(substr($file1, strrpos($file1, '/')+1), array('.', '..'))) {
+										continue;
+									} else {
+										if (is_dir($file1) === true) {
+											continue; 
+										} else {
+											$filePath1 = $file1->getRealPath();
+											$localPath1 = str_replace($documents_dir,'/',$filePath1);
+											if ($filePath1 != '' && file_exists($filePath1)) {
+												$zip->addFile($filePath1,$localPath1);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					if (!empty($tags_id_arr)) {
+						foreach ($tags_id_arr as $tags_id) {
+							$tags = DB::table('tags')->where('tags_id', '=', $tags_id)->get();
+							foreach ($tags as $tags_row) {
+								$tagstest = DB::connection('mysql2')->table('tags')->where('tags_id', '=', $tags_id)->first();
+								if (!$tagstest) {
+									DB::connection('mysql2')->table('tags')->insert((array) $tags_row);
+								}
+							}
+						}
+					}
+					if (!empty($eid_arr)) {
+						$j = 0;
+						$eid_count = count($eid_arr);
+						foreach ($eid_arr as $eid) {
+							$assessment = DB::table('assessment')->where('eid', '=', $eid)->first();
+							if ($assessment) {
+								DB::connection('mysql2')->table('assessment')->insert((array) $assessment);
+							}
+							$billing = DB::table('billing')->where('eid', '=', $eid)->get();
+							foreach ($billing as $billing_row) {
+								DB::connection('mysql2')->table('billing')->insert((array) $billing_row);
+							}
+							$billing_core2 = DB::table('billing_core')->where('pid', '=', $pid)->where('eid', '=',  $eid)->where('practice_id', '=', Session::get('practice_id'))->get();
+							foreach ($billing_core2 as $billing_core2_row) {
+								DB::connection('mysql2')->table('billing_core')->insert((array) $billing_core2_row);
+							}
+							DB::connection('mysql2')->table('billing_core')->update(array('practice_id' => '1'));
+							$hpi = DB::table('hpi')->where('eid', '=', $eid)->first();
+							if ($hpi) {
+								DB::connection('mysql2')->table('hpi')->insert((array) $hpi);
+							}
+							$image = DB::table('image')->where('eid', '=', $eid)->get();
+							foreach ($image as $image_row) {
+								DB::connection('mysql2')->table('image')->insert((array) $image_row);
+							}
+							$labs = DB::table('labs')->where('eid', '=', $eid)->first();
+							if ($labs) {
+								DB::connection('mysql2')->table('labs')->insert((array) $labs);
+							}
+							$other_history = DB::table('other_history')->where('eid', '=', $eid)->get();
+							foreach ($other_history as $other_history_row) {
+								DB::connection('mysql2')->table('other_history')->insert((array) $other_history_row);
+							}
+							$pe = DB::table('pe')->where('eid', '=', $eid)->first();
+							if ($pe) {
+								DB::connection('mysql2')->table('pe')->insert((array) $pe);
+							}
+							$plan = DB::table('plan')->where('eid', '=', $eid)->first();
+							if ($plan) {
+								DB::connection('mysql2')->table('plan')->insert((array) $plan);
+							}
+							$procedure = DB::table('procedure')->where('eid', '=', $eid)->first();
+							if ($procedure) {
+								DB::connection('mysql2')->table('procedure')->insert((array) $procedure);
+							}
+							$ros = DB::table('ros')->where('eid', '=', $eid)->first();
+							if ($ros) {
+								DB::connection('mysql2')->table('ros')->insert((array) $ros);
+							}
+							$rx = DB::table('rx')->where('eid', '=', $eid)->first();
+							if ($rx) {
+								DB::connection('mysql2')->table('rx')->insert((array) $rx);
+							}
+							$vitals = DB::table('vitals')->where('eid', '=', $eid)->first();
+							if ($vitals) {
+								DB::connection('mysql2')->table('vitals')->insert((array) $vitals);
+							}
+							$i++;
+							$percent1 = round($j/$eid_count*25) + 70;
+							File::put($track,$percent1);
+						}
+					}
+					$sqlfilename = 'noshexport_' . time() . '.sql';
+					$sqlfile = __DIR__.'/../../public/temp/' . $sqlfilename;
+					$command = "mysqldump -u " . $config['mysql_username'] . " -p". $config['mysql_password'] . " " . $database . " > " . $sqlfile;
+					system($command);
+					if (!file_exists($sqlfile)) {
+						sleep(2);
+					}
+					$zip->addFile($sqlfile, $sqlfilename);
+					$mess = "Export file created successfully!";
+				} else {
+					$mess = "Error creating database: " . mysqli_error($connect);
+				}
+			}
+			mysqli_close($connect);
+			$zip->close();
+			File::put($track,'100');
+			echo link_to_asset('temp/' . $zip_file_name, 'Download File', $attributes = array(), $secure = null);
+		}
+	}
+	
+	public function importupload()
+	{
+		if (Session::get('group_id') != '1') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			ini_set('memory_limit','196M');
+			ini_set('max_execution_time', 300);
+			$directory = __DIR__.'/../../public/temp';
+			foreach (Input::file('file') as $file) {
+				if ($file) {
+					$new_name = str_replace('.' . $file->getClientOriginalExtension(), '', $file->getClientOriginalName()) . '_' . time() . '.' . $file->getClientOriginalExtension();
+					$file->move($directory,$file->getClientOriginalName());
+					$zip = new ZipArchive;
+					$open = $zip->open($directory . '/' . $file->getClientOriginalName());
+					if ($open === TRUE) {
+						$sqlsearch = glob(Session::get('documents_dir') . 'noshexport_*.sql');
+						if (count($sqlsearch) > 0) {
+							foreach ($sqlsearch as $sqlfile) {
+								$config_file = __DIR__."/../.env.php";
+								$config = require($config_file);
+								$command = "mysql -u " . $config['mysql_username'] . " -p". $config['mysql_password'] . " " . $config['mysql_database'] . " < " . $sqlfile;
+								system($command);
+								unlink($sqlfile);
+							}
+							$zip->extractTo(Session::get('documents_dir'));
+							$zip->close();
+							unlink($directory . '/' . $file->getClientOriginalName());
+							echo "Upload and importing NOSH export file successful!";
+						} else {
+							unlink($directory . '/' . $file->getClientOriginalName());
+							echo "This is not a proper zip file.  Missing SQL file.  Try again.";
+						}
+					} else {
+						unlink($directory . '/' . $file->getClientOriginalName());
+						echo "This is not a proper zip file.  Try again.";
+					}
+				}
+			}
+		}
+	}
+	
+	public function postProgressbarTrack()
+	{
+		$track = __DIR__.'/../../public/temp/track';
+		if (file_exists($track)) {
+			echo File::get($track);
+		} else {
+			echo '0';
+		}
+	}
+	
+	public function postDeleteProgress()
+	{
+		$track = __DIR__.'/../../public/temp/track';
+		if (file_exists($track)) {
+			unlink($track);
+		}
+		echo "OK";
 	}
 }

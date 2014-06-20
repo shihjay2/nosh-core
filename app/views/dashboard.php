@@ -19,10 +19,12 @@
 						<br><?php echo HTML::image('images/usersadmin.png', 'Administer users', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_users">Administer users</a>
 						<br><?php echo HTML::image('images/schedule.png', 'Setup schedule', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_admin_schedule">Administer schedule</a>
 						<br><?php echo HTML::image('images/newencounter.png', 'View system logs', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_logs">View system logs</a>
-						<br><?php echo HTML::image('images/printmgr.png', 'Export all charts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="print_entire_charts" title="">Export all charts</a>
-						<br><?php echo HTML::image('images/printmgr.png', 'Export all charts in C-CDA format', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="print_entire_ccda" title="">Export all charts in C-CDA format</a>
-						<br><?php echo HTML::image('images/download.png', 'Export all patient Demographics', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="generate_csv_patient_demographics" title="">Export all patient demographics</a>
+						<br><?php echo HTML::image('images/download.png', 'Export all charts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="print_entire_charts" title="">Export all charts</a> <span id="print_entire_charts_return"></span>
+						<br><?php echo HTML::image('images/download.png', 'Export all charts in C-CDA format', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="print_entire_ccda" title="">Export all charts in C-CDA format</a> <span id="print_entire_ccda_return"></span>
+						<br><?php echo HTML::image('images/download.png', 'Export all patient Demographics', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="generate_csv_patient_demographics" title="">Export all patient demographics</a> <span id="generate_csv_patient_demographics_return"></span>
+						<br><?php echo HTML::image('images/download.png', 'Export entire NOSH database and files', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="export_entire" title="">Export entire database and files</a> <span id="export_entire_return"></span>
 						<?php if($saas_admin == "y") { ?>
+							<br><?php echo HTML::image('images/kdisknav.png', 'Import from NOSH in the Cloud', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="import_entire">Import from NOSH in the Cloud</a>
 							<br><?php echo HTML::image('images/kdisknav.png', 'Restore the database', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="restore_database_link">Restore the database</a>
 						<?php }?>
 						<?php if(Session::get('practice_active') == 'Y' && route('home') == 'https://noshchartingsystem.com/nosh') { ?>
@@ -64,7 +66,7 @@
 						<br><?php echo HTML::image('images/schedule.png', 'Schedule an appointment', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_schedule">Schedule an appointment</a>
 						<br><?php echo HTML::image('images/email.png', 'Messages', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Send a message to your provider here too!"> <a href="#" id="dashboard_messaging">View your messages.</a></span>
 						<br><?php echo HTML::image('images/sign.png', 'Forms', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your provider may want you to fill out forms for the practice.  Do this here!"> <a href="#" id="dashboard_forms">Fill out forms.</a></span>
-						<br><?php echo HTML::image('images/references.png', 'Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your patient instructions for your previous encounters with your provider."> <a href="#" id="dashboard_encounters">Your patient instructions.</a></span>
+						<br><?php echo HTML::image('images/reminder.png', 'Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your patient instructions for your previous encounters with your provider."> <a href="#" id="dashboard_encounters">Your patient instructions.</a></span>
 					<?php }?>
 				</div>
 				<div class="pure-u-1-2">
@@ -92,12 +94,6 @@
 					<div id="mtm_alert_div" style="display:none;">
 						<table id="dashboard_mtm_alert" class="scroll" cellpadding="0" cellspacing="0"></table>
 						<div id="dashboard_mtm_alert_pager" class="scroll" style="text-align:center;"></div><br>
-					</div>
-					<div id="print_entire_charts_progress_div" style="display:none;">
-						<div id="print_entire_charts_progressbar" style="width:600px";>
-							<div class="print_entire_charts_progressbar_label">Loading...</div>
-						</div>
-						<div id="print_download"></div>
 					</div>
 				</div>
 			</div>

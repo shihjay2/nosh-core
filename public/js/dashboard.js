@@ -706,16 +706,6 @@ $(document).ready(function() {
 			$.jGrowl("Please select test to delete!");
 		}
 	});
-	$("#print_entire_charts_progressbar").progressbar({
-		value: false,
-		change: function() {
-			var value = $("#print_entire_charts_progressbar").progressbar("option", "value");
-			$(".print_entire_charts_progressbar_label").text(value + "%" );
-		},
-		complete: function() {
-			$(".print_entire_charts_progressbar_label").text( "Complete!" );
-		}
-	});
 	$("#print_entire_charts").click(function(){
 		$.ajax({
 			type: "POST",
@@ -723,40 +713,43 @@ $(document).ready(function() {
 			dataType: "json",
 			success: function(data){
 				if (data.response == true) {
-					$("#print_entire_charts_progress_div").show();
+					$('#dialog_load').dialog('option', 'title', "Creating file...").dialog('open');
 					$.ajax({
 						type: "POST",
 						url: "ajaxdashboard/print-entire-chart",
-						dataType: 'json',
 						success: function(data1){
-							if (data1.response == true) {
-								$("#print_download").html(data1.html);
-							}
+							$("#print_entire_charts_return").html(data1).find('a').css({"font-weight":"bold","color":"red"});
 						}
 					});
-					setTimeout(print_chart_progress, 1000);
+					progressbartrack();
 				} else {
 					$.jGrowl(data.message);
 				}
 			}
 		});
 	}).tooltip({ content: "Clicking on this will create a ZIP file with individual PDF files of complete medical records for every patient in your practice." });
-	function print_chart_progress() {
-		var val = $("#print_entire_charts_progressbar").progressbar("option", "value" ) || 0;
+	$("#print_entire_ccda").click(function(){
+		$('#dialog_load').dialog('option', 'title', "Creating file...").dialog('open');
 		$.ajax({
 			type: "POST",
-			url: "ajaxdashboard/print-entire-chart-progress",
+			url: "ajaxdashboard/print-entire-ccda",
 			success: function(data){
-				$("#print_entire_charts_progressbar").progressbar("option","value", parseInt(data));
-				if (data < 99) {
-					setTimeout(print_chart_progress, 1000);
-				}
+				$("#print_entire_ccda_return").html(data).find('a').css({"font-weight":"bold","color":"red"});
 			}
 		});
-	}
-	$("#print_entire_ccda").click(function(){
-		window.open("print_entire_ccda");
+		progressbartrack();
 	}).tooltip({ content: "Clicking on this will create a ZIP file with individual C-CDA files for every patient in your practice." });
+	$("#export_entire").click(function(){
+		$('#dialog_load').dialog('option', 'title', "Creating file...").dialog('open');
+		$.ajax({
+			type: "POST",
+			url: "ajaxdashboard/noshexport",
+			success: function(data){
+				$("#export_entire_return").html(data).find('a').css({"font-weight":"bold","color":"red"});
+			}
+		});
+		progressbartrack();
+	}).tooltip({ content: "Clicking on this will create a ZIP file that you can use to transport your entire NOSH to another NOSH installation." });
 	$("#generate_csv_patient_demographics").click(function(){
 		$.ajax({
 			type: "POST",
@@ -764,37 +757,21 @@ $(document).ready(function() {
 			dataType: "json",
 			success: function(data){
 				if (data.response == true) {
-					$("#print_entire_charts_progress_div").show();
+					$('#dialog_load').dialog('option', 'title', "Creating file...").dialog('open');
 					$.ajax({
 						type: "POST",
 						url: "ajaxdashboard/generate-csv-patient-demographics",
-						dataType: 'json',
 						success: function(data1){
-							if (data1.message="OK") {
-								$("#print_download").html(data1.html);
-							}
+							$("#generate_csv_patient_demographics_return").html(data1).find('a').css({"font-weight":"bold","color":"red"});
 						}
 					});
-					setTimeout(csv_progress, 1000);
+					progressbartrack();
 				} else {
 					$.jGrowl(data);
 				}
 			}
 		});
 	}).tooltip({ content: "Clicking on this will create a CSV file of demographic information for every patient in your practice." });
-	function csv_progress() {
-		var val = $("#print_entire_charts_progressbar").progressbar("option", "value" ) || 0;
-		$.ajax({
-			type: "POST",
-			url: "ajaxdashboard/csv-progress",
-			success: function(data){
-				$("#print_entire_charts_progressbar").progressbar("option","value", parseInt(data));
-				if (data < 99) {
-					setTimeout(csv_progress, 1000);
-				}
-			}
-		});
-	}
 	function updateCoords1(c) {
 		$('#x').val(c.x);
 		$('#y').val(c.y);
@@ -843,6 +820,12 @@ $(document).ready(function() {
 		onComplete: function(data){
 			$.jGrowl(data);
 			signature();
+		}
+	});
+	var myImportUpload1 = $("#import_entire").upload({
+		action: 'importupload',
+		onComplete: function(data){
+			$.jGrowl(data);
 		}
 	});
 });

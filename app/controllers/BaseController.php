@@ -1658,22 +1658,23 @@ class BaseController extends Controller {
 		if ($query2) {
 			$body .= '<ul>';
 			foreach ($query2 as $row2) {
+				$sequence = '';
 				if ($row2->imm_sequence == '1') {
-					$sequence = 'first';
+					$sequence = ', first,';
 				}
 				if ($row2->imm_sequence == '2') {
-					$sequence = 'second';
+					$sequence = ', second,';
 				}
 				if ($row2->imm_sequence == '3') {
-					$sequence = 'third';
+					$sequence = ', third,';
 				}
 				if ($row2->imm_sequence == '4') {
-					$sequence = 'fourth';
+					$sequence = ', fourth,';
 				}
 				if ($row2->imm_sequence == '5') {
-					$sequence = 'fifth';
+					$sequence = ', fifth,';
 				}
-				$body .= '<li>' . $row2->imm_immunization . ', ' . $sequence . ', given on ' . date('F jS, Y', $this->human_to_unix($row2->imm_date)) . '</li>';
+				$body .= '<li>' . $row2->imm_immunization . $sequence . ' given on ' . date('F jS, Y', $this->human_to_unix($row2->imm_date)) . '</li>';
 			}
 			$body .= '</ul>';
 		} else {
@@ -3895,7 +3896,7 @@ class BaseController extends Controller {
 				$imm_file = str_replace('?immun_number?', $immun_number, $imm_file);
 				$imm_file = str_replace('?imm_date?', date('Ymd', $this->human_to_unix($imm_row->imm_date)), $imm_file);
 				$imm_code = '';
-				$imm_description = '';
+				$imm_code_description = '';
 				if ($imm_row->imm_route == "intramuscularly") {
 					$imm_code = "C28161";
 					$imm_code_description = "Intramuscular Route of Administration";

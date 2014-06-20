@@ -23,7 +23,7 @@ $(document).ready(function() {
 						editable:true,
 						edittype:'text',
 						editoptions:{
-							size:"41",
+							size:"125",
 							dataInit:function(elem){ 
 								var mtm_description_select = [
 									"Accountable Care Organization (ACO) coordination of care",
@@ -55,8 +55,8 @@ $(document).ready(function() {
 						editrules:{required:true},
 						formoptions:{elmsuffix:"(*)"}
 					},
-					{name:'mtm_recommendations',index:'mtm_recommendations',width:400,editable:true,edittype:'textarea',editoptions:{rows:"4", cols:"30"},editrules:{required:true},formoptions:{elmsuffix:"(*)"}},
-					{name:'mtm_beneficiary_notes',index:'mtm_beneficiary_notes',width:1,hidden:true,editable:true,edittype:'textarea',editoptions:{rows:"4", cols:"30"},editrules:{edithidden:true}},
+					{name:'mtm_recommendations',index:'mtm_recommendations',width:400,editable:true,edittype:'textarea',editoptions:{rows:"4", cols:"90"},editrules:{required:true},formoptions:{elmsuffix:"(*)"}},
+					{name:'mtm_beneficiary_notes',index:'mtm_beneficiary_notes',width:1,hidden:true,editable:true,edittype:'textarea',editoptions:{rows:"4", cols:"90"},editrules:{edithidden:true}},
 					{	name:'mtm_action',
 						index:'mtm_action',
 						width:1,
@@ -64,7 +64,7 @@ $(document).ready(function() {
 						editable:true,
 						edittype:'text',
 						editoptions:{
-							size:"41",
+							size:"125",
 							dataInit:function(elem){ 
 								var mtm_action_select = [
 									"Chronic disease management", 
@@ -90,7 +90,7 @@ $(document).ready(function() {
 						},
 						editrules:{edithidden:true}
 					},
-					{name:'mtm_outcome',index:'mtm_outcome',width:1,hidden:true,editable:true,edittype:'textarea',editoptions:{rows:"4", cols:"30"},editrules:{edithidden:true}},
+					{name:'mtm_outcome',index:'mtm_outcome',width:1,hidden:true,editable:true,edittype:'textarea',editoptions:{rows:"4", cols:"90"},editrules:{edithidden:true}},
 					{	name:'mtm_related_conditions',
 						index:'mtm_related_conditions',
 						width:1,
@@ -99,7 +99,7 @@ $(document).ready(function() {
 						edittype:'textarea',
 						editoptions:{
 							rows:"4",
-							cols:"30",
+							cols:"90",
 							dataInit:function(elem){ 
 								function split1( val ) {
 									return val.split( /;\s*/ );
@@ -154,7 +154,7 @@ $(document).ready(function() {
 						editable:true,
 						edittype:'text',
 						editoptions:{
-							size:"41",
+							size:"125",
 							dataInit:function(elem){ 
 								var mtm_duration_select = [
 									"10 minutes", 
@@ -182,7 +182,7 @@ $(document).ready(function() {
 						editable:true,
 						edittype:'text',
 						editoptions:{
-							size:"41",
+							size:"125",
 							dataInit:function(elem){
 								$(elem).datepicker();
 								$(elem).mask("99/99/9999");
@@ -208,7 +208,7 @@ $(document).ready(function() {
 			 		}
 			 	},
 			 	jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#mtm_pager',{search:false},{width:400, closeAfterEdit:true},{width:400, closeAfterAdd:true});
+			}).navGrid('#mtm_pager',{search:false},{width:800, closeAfterEdit:true},{width:800, closeAfterAdd:true});
 		},
 		buttons: [{
 			text: 'Print',

@@ -20,32 +20,8 @@
 		<meta http-equiv="pragma" content="no-cache" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.3.0/pure-min.css">
 		<link type="text/css" href="https://code.jquery.com/ui/1.11.0-beta.2/themes/cupertino/jquery-ui.css" rel="Stylesheet" />
-<!--
-		<link type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/cupertino/jquery-ui.css" rel="Stylesheet" />
--->
 		<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
-<!--
-		<?php echo HTML::style('css/main.css'); ?>
-		<?php echo HTML::style('css/jquery.jgrowl.css'); ?>
-		<?php echo HTML::style('css/ui.jqgrid.css'); ?>
-		<?php echo HTML::style('css/fullcalendar.css'); ?>
--->
 		<?php echo HTML::style('css/fullcalendar.print.css', array('media' => 'print'));?>
-<!--
-		<?php echo HTML::style('css/styledButton.css'); ?>
-		<?php echo HTML::style('css/main.css'); ?>
-		<?php echo HTML::style('css/jquery.timepicker.css'); ?>
-		<?php echo HTML::style('css/jquery.signaturepad.css'); ?>
-		<?php echo HTML::style('css/searchFilter.css'); ?>
-		<?php echo HTML::style('css/ui.multiselect.css'); ?>
-		<?php echo HTML::style('css/chosen.css'); ?>
-		<?php echo HTML::style('css/jquery.Jcrop.css'); ?>
-		<?php echo HTML::style('css/jquery.realperson.css'); ?>
-		<?php echo HTML::style('css/tagit.css'); ?>
-		<?php echo HTML::style('css/wColorPicker.min.css'); ?>
-		<?php echo HTML::style('css/wPaint.min.css'); ?>
-		<?php echo HTML::style('css/jqueryui-editable.css'); ?>
--->
 		{{ $style }}
 		<script type="text/javascript">
 			var noshdata = {
@@ -83,7 +59,8 @@
 				'item_empty': '<?php echo HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '15', 'width' => '15', 'style' => 'vertical-align:middle;'));?>',
 				'mtm': '',
 				'old_text': '',
-				'label_text': ''
+				'label_text': '',
+				'progress': 0
 			};
 			var medcache = {};
 			var medcache1 = {};
@@ -97,63 +74,12 @@
 		</script>
 		<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script type="text/javascript" src="https://code.jquery.com/ui/1.11.0-beta.2/jquery-ui.min.js"></script>
-<!--
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
--->
-<!--
-		<?php echo HTML::script('js/jquery.maskedinput.min.js'); ?>
-		<?php echo HTML::script('js/jquery.jgrowl.js'); ?>
-		<?php echo HTML::script('js/jquery.selectboxes.js'); ?>
-		<?php echo HTML::script('js/jquery-migrate-1.2.1.js'); ?>
-		<?php echo HTML::script('js/jquery.ajaxQueue.js'); ?>
-		<?php echo HTML::script('js/i18n/grid.locale-en.js'); ?>
-		<?php echo HTML::script('js/jquery.jqGrid.min.js'); ?>
-		<?php echo HTML::script('js/jquery.timepicker.min.js'); ?>
-		<?php echo HTML::script('js/fullcalendar.js'); ?>
-		<?php echo HTML::script('js/jquery-idleTimeout.js'); ?>
-		<?php echo HTML::script('js/jquery.styledButton.js'); ?>
-		<?php echo HTML::script('js/jquery.iframer.js'); ?>
-		<?php echo HTML::script('js/jquery.serializeObject.js'); ?>
-		<?php echo HTML::script('js/jquery.signaturepad.min.js'); ?>
-		<?php echo HTML::script('js/json2.min.js'); ?>
-		<?php echo HTML::script('js/highcharts.js'); ?>
-		<?php echo HTML::script('js/exporting.js'); ?>
-		<?php echo HTML::script('js/jquery.dform-1.0.0.min.js'); ?>
-		<?php echo HTML::script('js/grid.addons.js'); ?>
-		<?php echo HTML::script('js/grid.postext.js'); ?>
-		<?php echo HTML::script('js/grid.setcolumns.js'); ?>
-		<?php echo HTML::script('js/jquery.contextmenu.js'); ?>
-		<?php echo HTML::script('js/jquery.searchFilter.js'); ?>
-		<?php echo HTML::script('js/jquery.tablednd.js'); ?>
-		<?php echo HTML::script('js/jquery.chosen.min.js'); ?>
-		<?php echo HTML::script('js/ui.multiselect.js'); ?>
-		<?php echo HTML::script('js/jquery.themeswitcher.js'); ?>
-		<?php echo HTML::script('js/jquery.color.js'); ?>
-		<?php echo HTML::script('js/jquery.Jcrop.min.js'); ?>
-		<?php echo HTML::script('js/jquery.realperson.js'); ?>
-		<?php echo HTML::script('js/tagit-themeroller.js'); ?>
-		<?php echo HTML::script('js/jquery.jstree.js'); ?>
-		<?php echo HTML::script('js/jquery.populate.js'); ?>
-		<?php echo HTML::script('js/jquery.ocupload.js'); ?>
-		<?php echo HTML::script('js/main.js'); ?>
-		<?php echo HTML::script('js/jstz-1.0.4.min.js'); ?>
-		<?php echo HTML::script('js/jquery.cookie.js'); ?>
-		<?php echo HTML::script('js/bluebutton.js'); ?>
-		<?php echo HTML::script('js/wColorPicker.min.js'); ?>
-		<?php echo HTML::script('js/wPaint.min.js'); ?>
-		<?php echo HTML::script('js/plugins/main/wPaint.menu.main.min.js'); ?>
-		<?php echo HTML::script('js/plugins/text/wPaint.menu.text.min.js'); ?>
-		<?php echo HTML::script('js/plugins/shapes/wPaint.menu.main.shapes.min.js'); ?>
-		<?php echo HTML::script('js/plugins/file/wPaint.menu.main.file.min.js'); ?>
-		<?php echo HTML::script('js/jqueryui-editable.min.js'); ?>
-		<?php echo HTML::script('js/jquery.touchswipe.min.js'); ?>
--->
 		{{ $script }}
 	</head>
 	<body>
 		<div id="dialog_load" title="">
 			<?php echo HTML::image('images/indicator.gif', 'Loading image', array('border' => '0')); ?>
+			<div id="dialog_progressbar"></div>
 		</div>
 		<div id="options_load"></div>
 		<div id="allpage" class="allpage">

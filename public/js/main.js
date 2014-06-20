@@ -42,6 +42,34 @@ function search_array(a, query_value){
 	});
 	return found;
 }
+function progressbartrack() {
+	if (parseInt(noshdata.progress) < 100) {
+		if (noshdata.progress == 0) {
+			$("#dialog_progressbar").progressbar({value:0});
+		}
+		$.ajax({
+			type: "POST",
+			url: "ajaxdashboard/progressbar-track",
+			success: function(data){
+				$("#dialog_progressbar").progressbar("value", parseInt(data));
+				if (parseInt(data) < 100) {
+					setTimeout(progressbartrack(),1000);
+					noshdata.progress = data;
+				} else {
+					$.ajax({
+						type: "POST",
+						url: "ajaxdashboard/delete-progress",
+						success: function(data){
+							$("#dialog_progressbar").progressbar('destroy');
+							$("#dialog_load").dialog('close');
+							noshdata.progress = 0;
+						}
+					});
+				}
+			}
+		});
+	}
+}
 function reload_grid(id) {
 	if ($("#"+id)[0].grid) {
 		jQuery("#"+id).trigger("reloadGrid");
@@ -1114,7 +1142,7 @@ $(document).ready(function() {
 		loadtheme: "redmond"
 	});
 	$("#dialog_load").dialog({
-		height: 75,
+		height: 100,
 		autoOpen: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",

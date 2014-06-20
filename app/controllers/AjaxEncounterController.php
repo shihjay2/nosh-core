@@ -262,6 +262,11 @@ class AjaxEncounterController extends BaseController {
 			$data2['mtm'] = $result->mtm_extension;
 			$data['orders'] = View::make('encounters.orders', $data2)->render();
 		}
+		if ($row->encounter_template == 'standardmtm') {
+			$data2['mtm'] = $result->mtm_extension;
+			$data['assessment'] = View::make('encounters.assessment')->render();
+			$data['orders'] = View::make('encounters.orders', $data2)->render();
+		}
 		return View::make('encounters.' . $row->encounter_template, $data);
 	}
 	
@@ -2323,6 +2328,14 @@ class AjaxEncounterController extends BaseController {
 		if ($encounter->encounter_template == 'clinicalsupport') {
 			$table_array1 = array("hpi", "labs", "procedure", "rx", "assessment", "plan");
 			$table_array2 = array("other_history", "orders", "billing", "billing_core", "image");
+		}
+		if ($encounter->encounter_template == 'standardpsych' || $encounter->encounter_template == 'standardpsych1') {
+			$table_array1 = array("hpi", "ros", "vitals", "pe", "rx", "assessment", "plan");
+			$table_array2 = array("other_history", "orders", "billing", "billing_core", "image");
+		}
+		if ($encounter->encounter_template == 'standardmtm') {
+			$table_array1 = array("hpi", "assessment", "plan");
+			$table_array2 = array("orders", "billing", "billing_core", "image");
 		}
 		foreach($table_array1 as $table1) {
 			$table_query1 = DB::table($table1)->where('eid', '=', $eid)->first();

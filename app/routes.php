@@ -119,7 +119,7 @@ Route::group(array('before' => 'force.ssl|acl4'), function() {
 Route::group(array('before' => 'force.ssl|acl5'), function() {
 	Route::post('practicelogoupload', array('as' => 'practicelogoupload', 'uses' => 'AjaxSetupController@practicelogoupload'));
 	Route::post('cpt_update', array('as' => 'cpt_update', 'uses' => 'AjaxSetupController@cpt_update'));
-	Route::get('print_entire_ccda', array('as' => 'print_entire_ccda', 'uses' => 'HomeController@print_entire_ccda'));
+	Route::post('importupload', array('as' => 'importupload', 'uses' => 'AjaxDashboardController@importupload'));
 });
 Route::get('logout', array('as' => 'logout', 'before' => 'force.ssl', 'uses' => 'LoginController@logout'));
 Route::get('reminder', array('as' => 'reminder', 'uses' => 'ReminderController@reminder'));
@@ -286,10 +286,5 @@ Route::filter('force.ssl', function()
 		return Redirect::secure(Request::path());
 	}
 });
-
-//Route::get('test', array('as' => 'test', function()
-//{
-	//echo route('home');
-//}));
 
 //Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));

@@ -20,6 +20,9 @@ $(document).ready(function() {
 		if (cellvalue == 'standardpsych1') {
 			return 'Psychiatric Encounter';
 		}
+		if (cellvalue == 'standardmtm') {
+			return 'MTM Encounter';
+		}
 	}
 	$("#encounter_view_dialog").dialog({ 
 		bgiframe: true, 
