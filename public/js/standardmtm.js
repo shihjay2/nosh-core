@@ -19,6 +19,72 @@ $(document).ready(function() {
 			if (old_id == "encounter_tabs_hpi") {
 				hpi_autosave('hpi');
 			}
+			if (old_id == "encounter_tabs_oh") {
+				oh_autosave();
+			}
+			if (id == "encounter_tabs_oh") {
+				check_oh_status();
+				$.ajax({
+					type: "POST",
+					url: "ajaxencounter/get-oh",
+					dataType: "json",
+					success: function(data){
+						if (data.message != 'n') {
+							$.each(data.response, function(key, value){
+								$("#oh_form :input[name='" + key + "']").val(value);
+								$("#" + key + "_old").val(value);
+							});
+						}
+					}
+				});
+				$.ajax({
+					type: "POST",
+					url: "ajaxencounter/pf-template-select-list/PMH",
+					dataType: "json",
+					success: function(data){
+						$("#oh_pmh_pf_template").removeOption(/./);
+						$('#oh_pmh_pf_template').addOption(data.options, false);
+						$('#oh_pmh_pf_template').sortOptions();
+						$('#oh_pmh_pf_template').val("");
+					}
+				});
+				$.ajax({
+					type: "POST",
+					url: "ajaxencounter/pf-template-select-list/PSH",
+					dataType: "json",
+					success: function(data){
+						$("#oh_psh_pf_template").removeOption(/./);
+						$('#oh_psh_pf_template').addOption(data.options, false);
+						$('#oh_psh_pf_template').sortOptions();
+						$('#oh_psh_pf_template').val("");
+					}
+				});
+				$.ajax({
+					type: "POST",
+					url: "ajaxencounter/pf-template-select-list/FH",
+					dataType: "json",
+					success: function(data){
+						$("#oh_fh_pf_template").removeOption(/./);
+						$('#oh_fh_pf_template').addOption(data.options, false);
+						$('#oh_fh_pf_template').sortOptions();
+						$('#oh_fh_pf_template').val("");
+					}
+				});
+				$.ajax({
+					type: "POST",
+					url: "ajaxencounter/pf-template-select-list/SH",
+					dataType: "json",
+					success: function(data){
+						$("#oh_sh_pf_template").removeOption(/./);
+						$('#oh_sh_pf_template').addOption(data.options, false);
+						$('#oh_sh_pf_template').sortOptions();
+						$('#oh_sh_pf_template').val("");
+					}
+				});
+			}
+			if (old_id == "encounter_tabs_vitals") {
+				vitals_autosave();
+			}
 			if (old_id == "encounter_tabs_assessment") {
 				assessment_autosave();
 			}

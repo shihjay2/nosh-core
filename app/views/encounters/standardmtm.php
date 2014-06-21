@@ -3,8 +3,10 @@
 	<div id="encounter_tabs">
 		<ul>
 			<li id="encounter_tabs_hpi"><a href="#encounter_tabs_1">HPI</a></li>
-			<li id="encounter_tabs_assessment"><a href="#encounter_tabs_2">DX</a></li>
-			<li id="encounter_tabs_orders"><a href="#encounter_tabs_3">Orders</a></li>
+			<li id="encounter_tabs_oh"><a href="#encounter_tabs_2">History</a></li>
+			<li id="encounter_tabs_vitals"><a href="#encounter_tabs_3">VS</a></li>
+			<li id="encounter_tabs_assessment"><a href="#encounter_tabs_4">DX</a></li>
+			<li id="encounter_tabs_orders"><a href="#encounter_tabs_5">Orders</a></li>
 		</ul>
 		<div id="encounter_tabs_1" style="overflow:auto">
 			<div id="hpi_form" class="pure-g">
@@ -26,9 +28,15 @@
 			</div>
 		</div>
 		<div id="encounter_tabs_2" style="overflow:auto">
-			<?php echo $assessment;?>
+			<?php echo $oh;?>
 		</div>
 		<div id="encounter_tabs_3" style="overflow:auto">
+			<?php echo $vitals;?>
+		</div>
+		<div id="encounter_tabs_4" style="overflow:auto">
+			<?php echo $assessment;?>
+		</div>
+		<div id="encounter_tabs_5" style="overflow:auto">
 			<?php echo $orders;?>
 		</div>
 	</div>
