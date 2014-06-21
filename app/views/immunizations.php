@@ -4,7 +4,7 @@
 		<button type="button" id="cancel_orders_imm_helper" class="nosh_button_cancel">Cancel</button> 
 		<br><br>
 	</div>
-	<fieldset class="ui-corner-all">
+	<fieldset class="ui-corner-all" id="imm_notes_fieldset">
 		<div id="imm_notes_div"></div>
 		<button type="button" id="imm_notes_button" class="nosh_button_edit">Edit Immunization Notes</button>
 	</fieldset>

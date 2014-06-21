@@ -2527,43 +2527,6 @@ class AjaxChartController extends BaseController {
 	}
 	
 	// Immunizations functions
-	public function postImmunizations()
-	{
-		$pid = Session::get('pid');
-		$page = Input::get('page');
-		$limit = Input::get('rows');
-		$sidx = Input::get('sidx');
-		$sord = Input::get('sord');
-		$query = DB::table('immunizations')
-			->where('pid', '=', $pid)
-			->get();
-		if($query) { 
-			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
-			$count = 0;
-			$total_pages = 0;
-		}
-		if ($page > $total_pages) $page=$total_pages;
-		$start = $limit*$page - $limit;
-		if($start < 0) $start = 0;
-		$query1 = DB::table('immunizations')
-			->where('pid', '=', $pid)
-			->orderBy($sidx, $sord)
-			->skip($start)
-			->take($limit)
-			->get();
-		$response['page'] = $page;
-		$response['total'] = $total_pages;
-		$response['records'] = $count;
-		if ($query1) {
-			$response['rows'] = $query1;
-		} else {
-			$response['rows'] = '';
-		}
-		echo json_encode($response);
-	}
-	
 	public function postEditImmunization()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {

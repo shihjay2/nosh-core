@@ -160,6 +160,9 @@ $(document).ready(function() {
 	$(".allergies_list").click(function() {
 		$("#allergies_list_dialog").dialog('open');
 	});
+	$("#dashboard_allergies").click(function() {
+		$("#allergies_list_dialog").dialog('open');
+	});
 	$("#allergies_date_active").mask("99/99/9999");
 	$("#allergies_date_active").datepicker();
 	$("#add_allergy").click(function(){

@@ -9,7 +9,7 @@ $(document).ready(function() {
 		open: function(event, ui) {
 			jQuery("#immunizations").jqGrid('GridUnload');
 			jQuery("#immunizations").jqGrid({
-				url:"ajaxchart/immunizations",
+				url:"ajaxcommon/immunizations",
 				datatype: "json",
 				mtype: "POST",
 				colNames:['ID','Date Given','Immunization','Sequence','Given Elsewhere','Body Site','Dosage','Unit','Route','Lot Number','Manufacturer','Expiration Date','VIS'],
@@ -38,13 +38,15 @@ $(document).ready(function() {
 			 	height: "100%",
 			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#immunizations_pager',{search:false,edit:false,add:false,del:false});
-			$.ajax({
-				type: "POST",
-				url: "ajaxchart/get-imm-notes",
-				success: function(data){
-					$('#imm_notes_div').html(data);
-				}
-			});
+			if (noshdata.group_id != '100') {
+				$.ajax({
+					type: "POST",
+					url: "ajaxchart/get-imm-notes",
+					success: function(data){
+						$('#imm_notes_div').html(data);
+					}
+				});
+			}
 		},
 		close: function(event, ui) {
 			$('#edit_immunization_form').clearForm();
@@ -67,6 +69,13 @@ $(document).ready(function() {
 		$("#immunizations_list_dialog").dialog('open');
 		$('#orders_imm_header').hide();
 		$('#imm_order').hide();
+		$('#imm_menu').show();
+	});
+	$("#dashboard_immunizations").click(function() {
+		$("#immunizations_list_dialog").dialog('open');
+		$('#orders_imm_header').hide();
+		$('#imm_order').hide();
+		$('#imm_notes_fieldset').hide();
 		$('#imm_menu').show();
 	});
 	$(".class_imm_date").mask("99/99/9999").datepicker();
