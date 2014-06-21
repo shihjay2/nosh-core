@@ -119,7 +119,6 @@ $(document).ready(function() {
 					$("#encounter_copay").html(data);
 				}
 			});
-			$("#encounter_template").val(noshdata.default_template);
 			$("#encounter_provider").removeOption(/./);
 			$("#encounter_provider").addOption({'':'Choose Provider'}, false);
 			$.ajax({
@@ -239,7 +238,7 @@ $(document).ready(function() {
 	});
 	$("#new_encounter").click(function() {
 		$("#detail_encounter_number").html("");
-		$("#encounter_template").val('standardmedical');
+		$("#encounter_template").val(noshdata.default_template);
 		$("#encounter_location").val(noshdata.default_pos);
 		var currentDate = getCurrentDate();
 		var currentTime = getCurrentTime();

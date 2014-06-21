@@ -5228,4 +5228,10 @@ class AjaxChartController extends BaseController {
 		$this->audit('Update');
 		echo "Credit Card Information Updated!";
 	}
+	
+	public function postCloseencounter()
+	{
+		Session::forget('eid');
+		echo 'OK';
+	}
 }

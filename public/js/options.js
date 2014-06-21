@@ -1144,7 +1144,6 @@ $(document).ready(function() {
 		var json_flat = $("#configuration_" + id_main1 + "_json").val();
 		var json_object = JSON.parse(json_flat);
 		var json_array = [json_object];
-		console.log(json_array[0]['html'].length);
 		var div_id = $("#" + id_main1 + "_div_id").val();
 		if (div_id != '') {
 			for (var i = 0; i < json_array[0]['html'].length; i++) {

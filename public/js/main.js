@@ -97,10 +97,45 @@ function openencounter() {
 	});
 }
 function closeencounter() {
-	noshdata.encounter_active = 'n';
-	$("#nosh_encounter_div").hide();
-	$("#nosh_chart_div").show();
-	$("#encounter_link_span").html('');
+	var $hpi = $('#hpi_form');
+	console.log($hpi.length);
+	if($hpi.length) {
+		hpi_autosave('hpi');
+	}
+	var $situation = $('#situation_form');
+	if($situation.length) {
+		hpi_autosave('situation');
+	}
+	var $oh = $('#oh_form');
+	if($oh.length) {
+		oh_autosave();
+	}
+	var $vitals = $('#vitals_form');
+	if($vitals.length) {
+		vitals_autosave();
+	}
+	var $proc = $('#procedure_form');
+	if($proc.length) {
+		proc_autosave();
+	}
+	var $assessment = $('#assessment_form');
+	if($assessment.length) {
+		assessment_autosave();
+	}
+	var $orders = $('#orders_form');
+	if($orders.length) {
+		orders_autosave();
+	}
+	$.ajax({
+		type: "POST",
+		url: "ajaxchart/closeencounter",
+		success: function(data){
+			noshdata.encounter_active = 'n';
+			$("#nosh_encounter_div").hide();
+			$("#nosh_chart_div").show();
+			$("#encounter_link_span").html('');
+		}
+	});
 }
 function loadbuttons() {
 	$(".nosh_button").button();

@@ -1834,7 +1834,8 @@ class AjaxDashboardController extends BaseController {
 				} else {
 					$template_id2 = Input::get('template_id');
 				}
-				$template_row1 = Templates::where('group', '=', $template_row->group)
+				$template_row1 = Templates::where('template_name', '=', $template_row->template_name)
+					->where('group', '=', $template_row->group)
 					->where('template_id', '!=', Input::get('template_id'))
 					->first();
 				if ($template_row1) {
@@ -1987,7 +1988,8 @@ class AjaxDashboardController extends BaseController {
 				} else {
 					$template_id2 = Input::get('template_id');
 				}
-				$template_row1 = Templates::where('group', '=', $template_row->group)
+				$template_row1 = Templates::where('template_name', '=', $template_row->template_name)
+					->where('group', '=', $template_row->group)
 					->where('template_id', '!=', Input::get('template_id'))
 					->first();
 				if ($template_row1) {
