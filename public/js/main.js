@@ -788,7 +788,7 @@ function ros_template_renew() {
 				$("." + key + "_div").css("padding","5px");
 				$('.ros_template_div select').addOption({'':'Select option'},true);
 				ros_form_load();
-				if (key == 'ros_wcc') {
+				if (key == 'ros_wcc' && noshdata.agealldays <= 2191.44) {
 					$.ajax({
 						type: "POST",
 						url: "ajaxencounter/get-ros-wcc-template",

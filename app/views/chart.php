@@ -72,7 +72,7 @@
 			<h3>Define Encounter <span id="detail_encounter_number"></span></h3>
 			<div>
 				<div class="pure-control-group new_encounter_dialog_encounter_provider_div"><label for="encounter_provider">Encounter Provider:</label><select name="encounter_provider" id="encounter_provider" class="text" required/></select></div>
-				<div class="pure-control-group"><label for="encounter_template">Encounter Template:</label><select name="encounter_template" id="encounter_template" class="text" required title="Select an encounter template.  This cannot be changed once chosen and saved.  If you need to change your template, delete the encounter and create a new one with a different template."/></select></div>
+				<div class="pure-control-group detail_encounter_noshow"><label for="encounter_template">Encounter Template:</label><select name="encounter_template" id="encounter_template" class="text" required title="Select an encounter template.  This cannot be changed once chosen and saved.  If you need to change your template, delete the encounter and create a new one with a different template."/></select></div>
 				<div class="pure-control-group"><label for="encounter_cc">Chief Complaint:</label><input type="text" name="encounter_cc" id="encounter_cc" class="text" style="width:350px" required/></div>
 				<div class="pure-control-group"><label for="encounter_date">Date of Service:</label><input type="text" name="encounter_date" id="encounter_date" class="text" required/></div>
 				<div class="pure-control-group"><label for="encounter_time">Time of Service:</label><input type="text" name="encounter_time" id="encounter_time" class="text" required/></div>
