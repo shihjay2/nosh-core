@@ -351,10 +351,12 @@ $(document).ready(function() {
 									if (data.message == 'Allergies') {
 										$("#rx_dialog_confirm_text1").html(data.info);
 										$("#rx_dialog_confirm1").dialog("open");
+										$("#interactions_load").dialog('close');
 									}
 									if (data.message == 'Multiple') {
 										$("#rx_dialog_confirm_text1").html(data.info);
 										$("#rx_dialog_confirm1").dialog("open");
+										$("#interactions_load").dialog('close');
 									}
 									if (data.message == 'None') {
 										$.ajax({
@@ -370,15 +372,13 @@ $(document).ready(function() {
 													reload_grid("mtm_medications");
 													medications_autosave();
 												}
+												$("#interactions_load").dialog('close');
 												$('#edit_rx_form').clearForm();
 												$('#edit_medications_dialog').dialog('close');
 											}
 										});
 									}
 								}
-							});
-							$("#interactions_load").ajaxStop(function(){
-								$(this).dialog("close");
 							});
 						} else {
 							$.ajax({
@@ -727,18 +727,18 @@ $(document).ready(function() {
 								if (data.message == 'Allergies') {
 									$("#rx_dialog_confirm_text").html(data.info);
 									$("#rx_dialog_confirm").dialog("open");
+									$("#interactions_load").dialog('close');
 								}
 								if (data.message == 'Multiple') {
 									$("#rx_dialog_confirm_text").html(data.info);
 									$("#rx_dialog_confirm").dialog("open");
+									$("#interactions_load").dialog('close');
 								}
 								if (data.message == 'None') {
 									prescribe_medication();
+									$("#interactions_load").dialog('close');
 								}
 							}
-						});
-						$("#interactions_load").ajaxStop(function(){
-							$(this).dialog("close");
 						});
 					} else {
 						$.jGrowl("Please complete the form");
