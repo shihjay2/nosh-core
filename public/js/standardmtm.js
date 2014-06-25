@@ -94,6 +94,10 @@ $(document).ready(function() {
 			if (id == "encounter_tabs_orders") {
 				checkorders();
 			}
+			if (id == "encounter_tabs_medication") {
+				reload_grid('mtm_encounters');
+				reload_grid('mtm_medications');
+			}
 			return isValid;
 		}
 	});

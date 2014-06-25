@@ -340,18 +340,60 @@ $(document).ready(function() {
 				if (bValid) {
 					var str = $("#edit_rx_form").serialize();
 					if(str){
-						$.ajax({
-							type: "POST",
-							url: "ajaxchart/edit-medication",
-							data: str,
-							success: function(data){
-								$.jGrowl(data);
-								reload_grid("medications");
-								reload_grid("nosh_medications");
-								$('#edit_rx_form').clearForm();
-								$('#edit_medications_dialog').dialog('close');
-							}
-						});
+						if (noshdata.mtm_extension == 'y') {
+							$("#interactions_load").dialog('open');
+							$.ajax({
+								type: "POST",
+								url: "ajaxchart/interactions-medication",
+								data: str,
+								dataType: "json",
+								success: function(data){
+									if (data.message == 'Allergies') {
+										$("#rx_dialog_confirm_text1").html(data.info);
+										$("#rx_dialog_confirm1").dialog("open");
+									}
+									if (data.message == 'Multiple') {
+										$("#rx_dialog_confirm_text1").html(data.info);
+										$("#rx_dialog_confirm1").dialog("open");
+									}
+									if (data.message == 'None') {
+										$.ajax({
+											type: "POST",
+											url: "ajaxchart/edit-medication",
+											data: str,
+											success: function(data){
+												$.jGrowl(data);
+												reload_grid("medications");
+												reload_grid("nosh_medications");
+												var $medications = $('#mtm_medications_form');
+												if($medications.length) {
+													reload_grid("mtm_medications");
+													medications_autosave();
+												}
+												$('#edit_rx_form').clearForm();
+												$('#edit_medications_dialog').dialog('close');
+											}
+										});
+									}
+								}
+							});
+							$("#interactions_load").ajaxStop(function(){
+								$(this).dialog("close");
+							});
+						} else {
+							$.ajax({
+								type: "POST",
+								url: "ajaxchart/edit-medication",
+								data: str,
+								success: function(data){
+									$.jGrowl(data);
+									reload_grid("medications");
+									reload_grid("nosh_medications");
+									$('#edit_rx_form').clearForm();
+									$('#edit_medications_dialog').dialog('close');
+								}
+							});
+						}
 					} else {
 						$.jGrowl("Please complete the form");
 					}
@@ -723,6 +765,44 @@ $(document).ready(function() {
 		buttons: {
 			"Prescribe": function() {
 				prescribe_medication();
+			},
+			Cancel: function() {
+				$(this).dialog("close");
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#rx_dialog_confirm1").dialog({
+		resizable: false,
+		height:400,
+		width: 400,
+		modal: true,
+		bgiframe: true, 
+		autoOpen: false, 
+		draggable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			"Save": function() {
+				var str = $("#edit_rx_form").serialize();
+				$.ajax({
+					type: "POST",
+					url: "ajaxchart/edit-medication",
+					data: str,
+					success: function(data){
+						$.jGrowl(data);
+						reload_grid("medications");
+						reload_grid("nosh_medications");
+						var $medications = $('#mtm_medications_form');
+						if($medications.length) {
+							reload_grid("mtm_medications");
+							medications_autosave();
+						}
+						$('#edit_rx_form').clearForm();
+						$('#edit_medications_dialog').dialog('close');
+						$("#rx_dialog_confirm1").dialog("close");
+					}
+				});
 			},
 			Cancel: function() {
 				$(this).dialog("close");

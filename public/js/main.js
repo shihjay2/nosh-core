@@ -126,6 +126,10 @@ function closeencounter() {
 	if($orders.length) {
 		orders_autosave();
 	}
+	var $medications = $('#mtm_medications_form');
+	if($medications.length) {
+		medications_autosave();
+	}
 	$.ajax({
 		type: "POST",
 		url: "ajaxchart/closeencounter",
@@ -136,6 +140,14 @@ function closeencounter() {
 			$("#encounter_link_span").html('');
 		}
 	});
+}
+function signedlabel (cellvalue, options, rowObject){
+	if (cellvalue == 'No') {
+		return 'Draft';
+	}
+	if (cellvalue == 'Yes') {
+		return 'Signed';
+	}
 }
 function loadbuttons() {
 	$(".nosh_button").button();
@@ -580,6 +592,15 @@ function orders_autosave() {
 			$.jGrowl("Please complete the form");
 		}
 	}
+}
+function medications_autosave() {
+	$.ajax({
+		type: "POST",
+		url: "ajaxencounter/oh-save1/meds",
+		success: function(data){
+			$.jGrowl(data);
+		}
+	});
 }
 function billing_autosave() {
 	var bValid = false;

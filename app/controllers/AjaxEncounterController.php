@@ -269,6 +269,7 @@ class AjaxEncounterController extends BaseController {
 			$data['vitals'] = View::make('encounters.vitals', $data1)->render();
 			$data['assessment'] = View::make('encounters.assessment')->render();
 			$data['orders'] = View::make('encounters.orders', $data2)->render();
+			$data['medications'] = View::make('encounters.mtm_medications')->render();
 		}
 		return View::make('encounters.' . $row->encounter_template, $data);
 	}
@@ -2649,5 +2650,141 @@ class AjaxEncounterController extends BaseController {
 			}
 		}
 		echo json_encode($data);
+	}
+	
+	public function postMtmMedicationList() {
+		$query1 = DB::table('rx_list')
+			->where('pid', '=', $pid)
+			->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')
+			->where('rxl_date_old', '=', '0000-00-00 00:00:00')
+			->get();
+		$result1 = '';
+		if ($query1) {
+			foreach ($query1 as $row1) {
+				if ($row1->rxl_sig != '') {
+					$result1 .= $row1->rxl_medication . ' ' . $row1->rxl_dosage . ' ' . $row1->rxl_dosage_unit . ', ' . $row1->rxl_sig . ' ' . $row1->rxl_route . ' ' . $row1->rxl_frequency . ' for ' . $row1->rxl_reason . "\n";
+				} else {
+					$result1 .= $row1->rxl_medication . ' ' . $row1->rxl_dosage . ' ' . $row1->rxl_dosage_unit . ', ' . $row1->rxl_instructions . ' for ' . $row1->rxl_reason . "\n";
+				}
+			}
+		} else {
+			$result1 .= 'None.';
+		}
+		$result1 = trim($result1);
+		echo $result1;
+	}
+	
+	public function postMtmGetMedicationList() {
+		$query = DB::table('other_history')->where('eid', '=', Session::get('eid'))->first();
+		if ($query) {
+			$data['oh_meds'] = $query->oh_meds;
+		} else {
+			$data['oh_meds'] = '';
+		}
+		echo json_encode($data);
+	}
+	
+	public function postMtmSaveMedicationList() {
+		$eid = Session::get('eid');
+		$pid = Session::get('pid');
+		$encounter_provider = Session::get('displayname');
+		$data = array(
+			'eid' => $eid,
+			'pid' => $pid,
+			'encounter_provider' => $encounter_provider,
+			'oh_meds' => Input::get('oh_meds')
+		);
+		$count = DB::table('other_history')->where('eid', '=', $eid)->first();
+		if ($count) {
+			DB::table('other_history')->where('eid', '=', $eid)->update($data);
+			$this->audit('Update');
+			$result = 'Medication List Updated.';
+		} else {
+			DB::table('other_history')->insert($data);
+			$this->audit('Add');
+			$result = 'Medication List Added.';
+		}
+		echo $result;
+	}
+	
+	public function postMtmEncounters()
+	{
+		$practice_id = Session::get('practice_id');
+		$pid = Session::get('pid');
+		$page = Input::get('page');
+		$limit = Input::get('rows');
+		$sidx = Input::get('sidx');
+		$sord = Input::get('sord');
+		$query = DB::table('encounters')->where('pid', '=', $pid)
+			->where('addendum', '=', 'n')
+			->where('encounter_template', '=', 'standardmtm')
+			->where('practice_id', '=', $practice_id);
+		$result = $query->get();
+		if($result) { 
+			$count = count($result);
+			$total_pages = ceil($count/$limit); 
+		} else { 
+			$count = 0;
+			$total_pages = 0;
+		}
+		if ($page > $total_pages) $page=$total_pages;
+		$start = $limit*$page - $limit;
+		if($start < 0) $start = 0;
+		$query->orderBy($sidx, $sord)
+			->skip($start)
+			->take($limit);
+		$query1 = $query->get();
+		$response['page'] = $page;
+		$response['total'] = $total_pages;
+		$response['records'] = $count;
+		if ($query1) {
+			$response['rows'] = $query1;
+		} else {
+			$response['rows'] = '';
+		}
+		echo json_encode($response);
+	}
+	
+	public function postMtmMedicationHistory($eid)
+	{
+		$practice_id = Session::get('practice_id');
+		$pid = Session::get('pid');
+		$page = Input::get('page');
+		$limit = Input::get('rows');
+		$sidx = Input::get('sidx');
+		$sord = Input::get('sord');
+		$query = DB::table('other_history')->where('eid', '=', $eid)->first();
+		if($query) {
+			$meds = $query->oh_meds;
+			if ($meds != '') {
+				$meds_array = explode("\n", $meds);
+				$count = count($meds_array);
+				$total_pages = ceil($count/$limit);
+				if ($page > $total_pages) $page=$total_pages;
+				$start = $limit*$page - $limit;
+				if($start < 0) $start = 0;
+				if ($sord == 'asc') {
+					sort($meds_array);
+				} else {
+					rsort($meds_array);
+				}
+				$meds_array1 = array_slice($meds_array, $start, $limit);
+				foreach($meds_array1 as $row) {
+					$response['rows'][]['mtm_medication'] = $row;
+				}
+			} else {
+				$count = 0;
+				$total_pages = 0;
+				$response['rows'] = '';
+			}
+		} else {
+			$count = 0;
+			$total_pages = 0;
+			$response['rows'] = '';
+		}
+		$response['page'] = $page;
+		$response['total'] = $total_pages;
+		$response['records'] = $count;
+		echo json_encode($response);
 	}
 }

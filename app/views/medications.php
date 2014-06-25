@@ -103,6 +103,9 @@
 	<div id="rx_dialog_confirm" title="Confirmation">
 		<div id="rx_dialog_confirm_text"></div>
 	</div>
+	<div id="rx_dialog_confirm1" title="Confirmation">
+		<div id="rx_dialog_confirm_text1"></div>
+	</div>
 	<div id="interactions_load" title="Checking...">
 		<?php echo HTML::image('images/indicator.gif', 'Loading');?> Checking for drug interactions.
 	</div>

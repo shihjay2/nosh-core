@@ -37,8 +37,10 @@
 		<div class="pure-u-7-24">
 			<span id="button_oh_sh_status" class="oh_tooltip"></span>
 			<button type="button" id="button_oh_sh" class="nosh_button" style="width:125px">Social History</button><br><br>
-			<span id="button_oh_meds_status" class="oh_tooltip"></span>
-			<button type="button" id="button_oh_meds" class="nosh_button" style="width:125px">Medications</button><br><br>
+			<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'clinicalsupport'|| Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+				<span id="button_oh_meds_status" class="oh_tooltip"></span>
+				<button type="button" id="button_oh_meds" class="nosh_button" style="width:125px">Medications</button><br><br>
+			<?php }?>
 			<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'clinicalsupport'|| Session::get('encounter_template') == 'standardmtm') {?>
 				<span id="button_oh_supplements_status" class="oh_tooltip"></span>
 				<button type="button" id="button_oh_supplements" class="nosh_button" style="width:125px">Supplements</button><br><br>

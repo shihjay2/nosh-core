@@ -1,12 +1,4 @@
 $(document).ready(function() {
-	function signedlabel (cellvalue, options, rowObject){
-		if (cellvalue == 'No') {
-			return 'Draft';
-		}
-		if (cellvalue == 'Yes') {
-			return 'Signed';
-		}
-	}
 	function typelabel (cellvalue, options, rowObject){
 		if (cellvalue == 'standardmedical') {
 			return 'Standard Medical Visit';
