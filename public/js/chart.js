@@ -966,6 +966,33 @@ $(document).ready(function() {
 		autoOpen: false, 
 		height: 500, 
 		width: 800,
+		buttons: [
+		{
+			text: "Toggle Fullscreen",
+			click: function() {
+				var w = $(this).dialog('option', 'width');
+				if (w == 800) {
+					$(this).dialog('option', {
+						height: $(window).height(),
+						width: $(window).width(),
+						position: { my: 'center', at: 'center', of: window }
+					});
+				} else {
+					$(this).dialog('option', {
+						height: 500,
+						width: 800,
+						position: { my: 'center', at: 'center', of: '#maincontent' }
+					});
+				}
+			}
+		}],
+		close: function(event, ui) {
+			$(this).dialog('option', {
+				height: 500,
+				width: 800,
+				position: { my: 'center', at: 'center', of: '#maincontent' }
+			});
+		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#preview_encounter").click(function() {

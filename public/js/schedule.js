@@ -295,6 +295,26 @@ $(document).ready(function() {
 				$("#schedule_patient_step").hide();
 			}
 		},
+		buttons: [
+		{
+			text: "Toggle Fullscreen",
+			click: function() {
+				var w = $(this).dialog('option', 'width');
+				if (w == 925) {
+					$(this).dialog('option', {
+						height: $(window).height(),
+						width: $(window).width(),
+						position: { my: 'center', at: 'center', of: window }
+					});
+				} else {
+					$(this).dialog('option', {
+						height: 640,
+						width: 925,
+						position: { my: 'center', at: 'center', of: '#maincontent' }
+					});
+				}
+			}
+		}],
 		position: { my: 'center', at: 'top', of: '#maincontent' }
 	});
 	$("#nosh_schedule").click(function() {
