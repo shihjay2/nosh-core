@@ -74,11 +74,30 @@
 </div>
 <div id="tests_dialog" title="Test Results">
 	<form class="pure-form pure-form-aligned">
-		<div class="pure-control-group"><label for="search_all_tests">Search:</label><input type="text" size="50" id="search_all_tests" class="text" onkeydown="doSearch1(arguments[0]||event)"/></div><br><br> 
+		<div class="pure-control-group"><label for="search_all_tests">Search:</label><input type="text" size="50" id="search_all_tests" class="text" onkeydown="doSearch2(arguments[0]||event)"/></div><br><br> 
 	</form>
 	<table id="tests_list" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="tests_list_pager" class="scroll" style="text-align:center;"></div><br>
+	<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
+		<button type="button" id="add_result" class="nosh_button_add add_result_class">Add</button>
+		<button type="button" id="edit_result" class="nosh_button_edit">Edit</button>
+		<button type="button" id="delete_result" class="nosh_button_delete">Delete</button>
+	<?php }?>
 	<button type="button" id="chart_results">Chart Selected Results</button>
 	<div id="chart_loading" style="display: block;float: right;"><?php echo HTML::image('images/indicator.gif', 'Loading');?> Loading graph...</div><br><br>
 	<div id="tests_container" style="width: 750px; height: 550px; margin: 0 auto"></div>
+</div>
+<div id="edit_test_dialog" title="">
+	<form id="edit_test_form" class="pure-form pure-form-aligned">
+		<input type="hidden" name="tests_id" id="results_tests_id"/>
+		<div class="pure-control-group"><label for="results_test_type">Test Type</label><select name="test_type" id="results_test_type" style="width:250px" class="text" required></select></div>
+		<div class="pure-control-group"><label for="results_test_name">Test Name</label><input type="text" name="test_name" id="results_test_name" style="width:250px" class="text" required/></div>
+		<div class="pure-control-group"><label for="results_test_result">Result</label><input type="text" name="test_result" id="results_test_result" style="width:250px" class="text" required/></div>
+		<div class="pure-control-group"><label for="results_test_units">Result Units</label><input type="text" name="test_units" id="results_test_units" style="width:250px" class="text" required/></div>
+		<div class="pure-control-group"><label for="results_test_reference">Normal Reference Range</label><input type="text" name="test_reference" id="results_test_reference" style="width:250px" class="text"/></div>
+		<div class="pure-control-group"><label for="results_test_flags">Flag</label><select name="test_flags" id="results_test_flags" style="width:250px" class="text"></select></div>
+		<div class="pure-control-group"><label for="results_test_datetime">Date of Test</label><input type="text" name="test_datetime" id="results_test_datetime" style="width:250px" class="text" required/></div>
+		<div class="pure-control-group"><label for="results_test_from">Test Location</label><input type="text" name="test_from" id="results_test_from" style="width:250px" class="text"/></div>
+		<div class="pure-control-group nosh_provider_exclude"><label for="results_test_provider_id">Provider</label><select id ="results_test_provider_id" name="test_provider_id" class="text" required></select></div>
+	</form>
 </div>

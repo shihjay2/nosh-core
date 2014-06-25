@@ -2672,4 +2672,73 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
+	
+	public function postTestName()
+	{
+		$q = strtolower(Input::get('term'));
+		if (!$q) return;
+		$data['response'] = 'false';
+		$query = DB::table('tests')
+			->where('test_name', 'LIKE', "%$q%")
+			->select('test_name')
+			->distinct()
+			->get();
+		if ($query) {
+			$data['message'] = array();
+			$data['response'] = 'true';
+			foreach ($query as $row) {
+				$data['message'][] = array(
+					'label' => $row->test_name,
+					'value' => $row->test_name
+				);
+			}
+		}
+		echo json_encode($data);
+	}
+	
+	public function postTestUnits()
+	{
+		$q = strtolower(Input::get('term'));
+		if (!$q) return;
+		$data['response'] = 'false';
+		$query = DB::table('tests')
+			->where('test_units', 'LIKE', "%$q%")
+			->select('test_units')
+			->distinct()
+			->get();
+		if ($query) {
+			$data['message'] = array();
+			$data['response'] = 'true';
+			foreach ($query as $row) {
+				$data['message'][] = array(
+					'label' => $row->test_units,
+					'value' => $row->test_units
+				);
+			}
+		}
+		echo json_encode($data);
+	}
+	
+	public function postTestFrom()
+	{
+		$q = strtolower(Input::get('term'));
+		if (!$q) return;
+		$data['response'] = 'false';
+		$query = DB::table('tests')
+			->where('test_from', 'LIKE', "%$q%")
+			->select('test_from')
+			->distinct()
+			->get();
+		if ($query) {
+			$data['message'] = array();
+			$data['response'] = 'true';
+			foreach ($query as $row) {
+				$data['message'][] = array(
+					'label' => $row->test_from,
+					'value' => $row->test_from
+				);
+			}
+		}
+		echo json_encode($data);
+	}
 }

@@ -5234,4 +5234,44 @@ class AjaxChartController extends BaseController {
 		Session::forget('eid');
 		echo 'OK';
 	}
+	
+	public function postGetTestForm($tests_id) {
+		$result = DB::table('tests')->where('tests_id', '=', $tests_id)->first();
+		$result_arr = (array) $result;
+		echo json_encode($result_arr);
+	}
+	
+	public function postSaveTestForm()
+	{
+		$test_data = array(
+			'pid' => Session::get('pid'),
+			'test_name' => Input::get('test_name'),
+			'test_result' => Input::get('test_result'),
+			'test_units' => Input::get('test_units'),
+			'test_reference' => Input::get('test_reference'),
+			'test_flags' => Input::get('test_flags'),
+			'test_from' => Input::get('test_from'),
+			'test_datetime' => Input::get('test_datetime'),
+			'test_type' => Input::get('test_type'),
+			'test_provider_id' => Input::get('test_provider_id'),
+			'practice_id' => Session::get('practice_id')
+		);
+		if (Input::get('tests_id') != '') {
+			DB::table('tests')->where('tests_id', '=', Input::get('tests_id'))->update($test_data);
+			$this->audit('Update');
+			$result = 'Result updated!';
+		} else {
+			DB::table('tests')->insert($test_data);
+			$this->audit('Add');
+			$result = 'Result added!';
+		}
+		echo $result;
+	}
+	
+	public function postDeleteTest($tests_id)
+	{
+		DB::table('tests')->where('tests_id', '=', $tests_id)->delete();
+		$this->audit('Delete');
+		echo 'Result deleted!';
+	}
 }

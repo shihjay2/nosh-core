@@ -1225,7 +1225,162 @@ $(document).ready(function() {
 		},
 		close: function (event, ui) {
 			$("#tests_container").html('');
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$(".add_result_class").click(function(){
+		$('#edit_test_form').clearForm();
+		var currentDate = getCurrentDate();
+		$('#results_test_datetime').val(currentDate);
+		if ($("#results_test_provider_id").val() == '' && noshdata.group_id == '2') {
+			$("#results_test_provider_id").val(noshdata.user_id);
 		}
+		$('#edit_test_dialog').dialog('option', 'title', "Add Result");
+		$('#edit_test_dialog').dialog('open');
+		$("#results_test_type").focus();
+	});
+	$("#edit_result").click(function(){
+		var item = jQuery("#tests_list").getGridParam('selrow');
+		if(item){
+			$.ajax({
+				type: "POST",
+				url: "ajaxchart/get-test-form/" + item,
+				dataType: "json",
+				success: function(data){
+					$.each(data, function(key, value){
+						$("#edit_test_form :input[name='" + key + "']").val(value);
+					});
+					var date = $('#results_test_datetime').val();
+					var edit_date = editDate1(date);
+					$('#results_test_datetime').val(edit_date);
+					$('#edit_test_dialog').dialog('option', 'title', "Edit Result");
+					$('#edit_test_dialog').dialog('open');
+					$("#results_test_type").focus();
+				}
+			});
+			
+		} else {
+			$.jGrowl("Please select medication to edit!")
+		}
+	});
+	$("#delete_result").click(function(){
+		var item = jQuery("#tests_list").getGridParam('selrow');
+		if(item){
+			if(confirm('Are you sure you want to delete this result?  This is not recommended unless entering the result was a mistake!')){ 
+				$.ajax({
+					type: "POST",
+					url: "ajaxchart/delete-test/" + item,
+					success: function(data){
+						$.jGrowl(data);
+						reload_grid("tests_list");
+					}
+				});
+			}
+		} else {
+			$.jGrowl("Please select result to inactivate!")
+		}
+	});
+	$('#results_test_type').addOption({"Laboratory":"Laboratory","Imaging":"Imaging"},false);
+	$('#results_test_datetime').datepicker();
+	$('#results_test_flags').addOption(flags,false);
+	$("#edit_test_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 450, 
+		width: 800, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		open: function (event, ui) {
+			if (noshdata.group_id == '2') {
+				$(".nosh_provider_exclude").hide();
+			} else {
+				$(".nosh_provider_exclude").show();
+			}
+			$("#results_test_name").autocomplete({
+				source: function (req, add){
+					$.ajax({
+						url: "ajaxsearch/test-name",
+						dataType: "json",
+						type: "POST",
+						data: req,
+						success: function(data){
+							if(data.response =='true'){
+								add(data.message);
+							}
+						}
+					});
+				},
+				minLength: 2
+			});
+			$("#results_test_units").autocomplete({
+				source: function (req, add){
+					$.ajax({
+						url: "ajaxsearch/test-units",
+						dataType: "json",
+						type: "POST",
+						data: req,
+						success: function(data){
+							if(data.response =='true'){
+								add(data.message);
+							}
+						}
+					});
+				},
+				minLength: 2
+			});
+			$("#results_test_from").autocomplete({
+				source: function (req, add){
+					$.ajax({
+						url: "ajaxsearch/test-from",
+						dataType: "json",
+						type: "POST",
+						data: req,
+						success: function(data){
+							if(data.response =='true'){
+								add(data.message);
+							}
+						}
+					});
+				},
+				minLength: 2
+			});
+		},
+		buttons: {
+			'Save': function() {
+				var bValid = true;
+				$("#edit_test_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				if (bValid) {
+					var str = $("#edit_test_form").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxchart/save-test-form",
+							data: str,
+							success: function(data){
+								$.jGrowl(data);
+								reload_grid("tests_list");
+								$('#edit_test_form').clearForm();
+								$('#edit_test_dialog').dialog('close');
+							}
+						});
+					} else {
+						$.jGrowl("Please complete the form");
+					}
+				}
+			},
+			Cancel: function() {
+				$('#edit_test_form').clearForm();
+				$('#edit_test_dialog').dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#documents_view_tags").tagit({
 		tagSource: function (req, add){
@@ -1312,13 +1467,17 @@ $(document).ready(function() {
 		});
 	}
 });
-var timeoutHnd1;
-function doSearch1(ev){ 
-	if(timeoutHnd1) 
-		clearTimeout(timeoutHnd1);
-		timeoutHnd1 = setTimeout(gridReload1,500);
+var timeoutHnd2;
+function doSearch2(ev){ 
+	if(timeoutHnd2) 
+		clearTimeout(timeoutHnd2);
+		timeoutHnd2 = setTimeout(gridReload2,500);
 }
-function gridReload1(){ 
+function gridReload2(){ 
 	var mask = jQuery("#search_all_tests").val();
-	jQuery("#tests_list").setGridParam({url:"ajaxchart/tests/"+mask,page:1}).trigger("reloadGrid");
+	if (mask != '') {
+		jQuery("#tests_list").setGridParam({url:"ajaxchart/tests/"+mask,page:1}).trigger("reloadGrid");
+	} else {
+		jQuery("#tests_list").trigger("reloadGrid");
+	}
 }

@@ -35,6 +35,8 @@ $(document).ready(function() {
 			$("#messages_cp_provider_list").addOption(data, false);
 			$("#messages_ref_provider_list").addOption({"":"Select a provider for the order."}, false);
 			$("#messages_ref_provider_list").addOption(data, false);
+			$("#results_test_provider_id").addOption({"":"Select a provider for the order."}, false);
+			$("#results_test_provider_id").addOption(data, false);
 		}
 	});
 	if (noshdata.encounter_active == 'y') {
