@@ -13,7 +13,7 @@ class CreateOtherhistoryTable extends Migration {
     {
         if(!Schema::hasTable('other_history')) {
 			Schema::create('other_history', function($table) {
-				$table->bigInteger('oh_id')->primary();
+				$table->bigIncrements('oh_id')->primary();
 				$table->bigInteger('eid')->nullable();
 				$table->bigInteger('pid')->nullable();
 				$table->string('encounter_provider', 255)->nullable();
