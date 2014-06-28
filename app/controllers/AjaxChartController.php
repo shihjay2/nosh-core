@@ -5251,7 +5251,7 @@ class AjaxChartController extends BaseController {
 			'test_reference' => Input::get('test_reference'),
 			'test_flags' => Input::get('test_flags'),
 			'test_from' => Input::get('test_from'),
-			'test_datetime' => Input::get('test_datetime'),
+			'test_datetime' => date('Y-m-d H:i:s', strtotime(Input::get('test_datetime'))),
 			'test_type' => Input::get('test_type'),
 			'test_provider_id' => Input::get('test_provider_id'),
 			'practice_id' => Session::get('practice_id')

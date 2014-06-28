@@ -1043,19 +1043,15 @@ $(document).ready(function() {
 		$("#letter_body").val('');
 		$('#letter_template_form').clearForm();
 	});
-	
-	$("#menu_tests").button({
-		icons: {
-			primary: "ui-icon-image"
-		}
-	});
-	$("#menu_tests").click(function() {
+	$("#menu_tests").button({icons: {primary: "ui-icon-image"}}).click(function() {
+		$("#encounter_copy_result").hide();
+		$("#t_message_copy_result").hide();
 		$("#tests_dialog").dialog('open');
 	});
 	$("#tests_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
-		height: 500, 
+		height: 580, 
 		width: 800,
 		open: function(event, ui) {
 			$("#chart_loading").hide();
@@ -1069,7 +1065,7 @@ $(document).ready(function() {
 					{name:'tests_id',index:'tests_id',width:1,hidden:true},
 					{name:'test_datetime',index:'test_datetime',width:100,formatter:'date',formatoptions:{srcformat:"ISO8601Long", newformat: "ISO8601Short"}},
 					{name:'test_name',index:'test_name',width:120},
-					{name:'test_result',index:'test_result',width:310},
+					{name:'test_result',index:'test_result',width:290},
 					{name:'test_units',index:'test_units',width:50},
 					{name:'test_reference',index:'test_reference',width:100},
 					{name:'test_flags',index:'test_flags',width:50,
@@ -1145,6 +1141,8 @@ $(document).ready(function() {
 			 	caption:"Test Results",
 			 	height: "100%",
 			 	gridview: true,
+			 	multiselect: true,
+				multiboxonly: true,
 			 	rowattr: function (rd) {
 					if (rd.test_flags == "HH" || rd.test_flags == "LL" || rd.test_flags == "H" || rd.test_flags == "L") {
 						return {"class": "myAltRowClass"};
@@ -1225,6 +1223,8 @@ $(document).ready(function() {
 		},
 		close: function (event, ui) {
 			$("#tests_container").html('');
+			$("#encounter_copy_result").hide();
+			$("#t_message_copy_result").hide();
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
@@ -1240,44 +1240,104 @@ $(document).ready(function() {
 		$("#results_test_type").focus();
 	});
 	$("#edit_result").click(function(){
-		var item = jQuery("#tests_list").getGridParam('selrow');
-		if(item){
-			$.ajax({
-				type: "POST",
-				url: "ajaxchart/get-test-form/" + item,
-				dataType: "json",
-				success: function(data){
-					$.each(data, function(key, value){
-						$("#edit_test_form :input[name='" + key + "']").val(value);
+		var id = jQuery("#tests_list").getGridParam('selarrrow');
+		if(id){
+			var count = id.length;
+			if (count <= 1) {
+				for (var i = 0; i < count; i++) {
+					$.ajax({
+						type: "POST",
+						url: "ajaxchart/get-test-form/" + id[i],
+						dataType: "json",
+						success: function(data){
+							$.each(data, function(key, value){
+								$("#edit_test_form :input[name='" + key + "']").val(value);
+							});
+							var date = $('#results_test_datetime').val();
+							var edit_date = editDate1(date);
+							$('#results_test_datetime').val(edit_date);
+							$('#edit_test_dialog').dialog('option', 'title', "Edit Result");
+							$('#edit_test_dialog').dialog('open');
+							$("#results_test_type").focus();
+						}
 					});
-					var date = $('#results_test_datetime').val();
-					var edit_date = editDate1(date);
-					$('#results_test_datetime').val(edit_date);
-					$('#edit_test_dialog').dialog('option', 'title', "Edit Result");
-					$('#edit_test_dialog').dialog('open');
-					$("#results_test_type").focus();
 				}
-			});
-			
+			} else {
+				$.jGrowl('Please select only one result to edit!');
+			}
 		} else {
-			$.jGrowl("Please select medication to edit!")
+			$.jGrowl('Please select result to edit!');
 		}
 	});
 	$("#delete_result").click(function(){
-		var item = jQuery("#tests_list").getGridParam('selrow');
-		if(item){
-			if(confirm('Are you sure you want to delete this result?  This is not recommended unless entering the result was a mistake!')){ 
-				$.ajax({
-					type: "POST",
-					url: "ajaxchart/delete-test/" + item,
-					success: function(data){
-						$.jGrowl(data);
-						reload_grid("tests_list");
+		var id = jQuery("#tests_list").getGridParam('selarrrow');
+		if(id){
+			var count = id.length;
+			if (count <= 1) {
+				for (var i = 0; i < count; i++) {
+					if(confirm('Are you sure you want to delete this result?  This is not recommended unless entering the result was a mistake!')){ 
+						$.ajax({
+							type: "POST",
+							url: "ajaxchart/delete-test/" + id[i],
+							success: function(data){
+								$.jGrowl(data);
+								reload_grid("tests_list");
+							}
+						});
 					}
-				});
+				}
+			} else {
+				$.jGrowl('Please select only one result to delete!');
 			}
 		} else {
-			$.jGrowl("Please select result to inactivate!")
+			$.jGrowl('Please select result to delete!');
+		}
+	});
+	$(".copy_result").click(function(){
+		var id = jQuery("#tests_list").getGridParam('selarrrow');
+		if(id){
+			var a = '';
+			var count = id.length;
+			for (var i = 0; i < count; i++) {
+				var test_datetime = jQuery("#tests_list").getCell(id[i],'test_datetime');
+				var test_name = jQuery("#tests_list").getCell(id[i],'test_name');
+				var test_result = jQuery("#tests_list").getCell(id[i],'test_result');
+				var test_units = jQuery("#tests_list").getCell(id[i],'test_units');
+				var test_reference = jQuery("#tests_list").getCell(id[i],'test_reference');
+				var test_flags = jQuery("#tests_list").getCell(id[i],'test_flags');
+				a += test_name + ': ' + test_result + ' ' + test_units;
+				if (test_reference != '') {
+					a += ', Reference Range: ' + test_reference;
+				}
+				if (test_flags != '') {
+					a += ', Flags: ' + test_flags;
+				}
+				a += ', Date Performed: ' + test_datetime + '\n';
+			}
+			if ($(this).attr('id') == 't_message_copy_result') {
+				var old = $("#t_messages_message").val();
+				var old1 = old.trim();
+				if (old1 != '') {
+					var b = old1+'\n\n'+a;
+				} else {
+					var b = a;
+				}
+				$("#t_messages_message").val(b);
+				$.jGrowl('Results copied to message!');
+			}
+			if ($(this).attr('id') == 'encounter_copy_result') {
+				var old = $("#oh_results").val();
+				var old1 = old.trim();
+				if (old1 != '') {
+					var b = old1+'\n'+a;
+				} else {
+					var b = a;
+				}
+				$("#oh_results").val(b);
+				$.jGrowl('Results copied to encounter!');
+			}
+		} else {
+			$.jGrowl('Please select result to copy!');
 		}
 	});
 	$('#results_test_type').addOption({"Laboratory":"Laboratory","Imaging":"Imaging"},false);

@@ -75,6 +75,328 @@ function reload_grid(id) {
 		jQuery("#"+id).trigger("reloadGrid");
 	}
 }
+function open_demographics() {
+	$.ajax({
+		type: "POST",
+		url: "ajaxdashboard/demographics",
+		dataType: "json",
+		success: function(data){
+			$.each(data, function(key, value){
+				if (key == 'DOB') {
+					var value = editDate1(data.DOB);
+				}
+				$("#edit_demographics_form :input[name='" + key + "']").val(value);
+			});
+			if (noshdata.group_id != '100') {
+				$.ajax({
+					type: "POST",
+					url: "ajaxdashboard/check-registration-code",
+					success: function(data){
+						if (data == 'n') {
+							$("#register_menu_demographics").show();
+						} else {
+							$("#register_menu_demographics").hide();
+							$("#menu_registration_code").html(data);
+						}
+					}
+				});
+			}
+			$("#menu_lastname").focus();
+			$("#demographics_list_dialog").dialog('open');
+		}
+	});
+}
+function schedule_autosave() {
+	var d = $('#providers_calendar').fullCalendar('getDate');
+	var n = d.getFullYear();
+	n = n + "," + d.getMonth();
+	n = n + "," + d.getDate();
+	var view = $('#providers_calendar').fullCalendar('getView');
+	n = n + "," + view.name;
+	$.cookie('nosh-schedule', n, { path: '/' });
+}
+function addMinutes(date, minutes) {
+	return new Date(date.getTime() + minutes*60000);
+}
+function isOverlapping(start){
+	var array = $('#providers_calendar').fullCalendar('clientEvents');
+	var end = addMinutes(start, 15);
+	for(i in array){
+		if(!(array[i].start >= end || array[i].end <= start)){
+			return true;
+		}
+	}
+	return false;
+}
+function loadappt() {
+	$("#patient_appt").show();
+	$("#start_form").show();
+	$("#reason_form").show();
+	$("#other_event").hide();
+	$("#event_choose").hide();
+	$("#patient_search").focus();
+}
+function loadevent() {
+	$("#patient_appt").hide();
+	$("#other_event").show();
+	$("#start_form").show();
+	$("#reason_form").show();
+	$("#event_choose").hide();
+	$("#reason").focus();
+}
+function loadcalendar (y,m,d,view) {
+	$('#providers_calendar').fullCalendar('destroy');
+	$('#providers_calendar').fullCalendar({
+		year: y,
+		month: m,
+		date: d,
+		weekends: noshdata.weekends,
+		minTime: noshdata.minTime,
+		maxTime: noshdata.maxTime,
+		theme: true,
+		allDayDefault: false,
+		slotMinutes: 15,
+		defaultView: view,
+		aspectRatio: 0.8,
+		header: {
+			left: 'prev,next today',
+			center: 'title',
+			right: 'agendaWeek,agendaDay'
+		},
+		editable: true,
+		events: function(start, end, callback) {
+			var starttime = Math.round(start.getTime() / 1000);
+			var endtime = Math.round(end.getTime() / 1000);
+			$.ajax({
+				type: "POST",
+				url: "ajaxschedule/provider-schedule",
+				dataType: 'json',
+				data: "start=" + starttime + "&end=" + endtime,
+				success: function(events) {
+					callback(events);
+				}
+			});
+		},
+		dayClick: function(date, allDay, jsEvent, view) {
+			if (allDay) {
+				$.jGrowl('Clicked on the entire day: ' + date);
+			} else {
+				if (noshdata.group_id != '1') {
+					if (noshdata.group_id != '100') {
+						$("#event_dialog").dialog('open');
+						$("#title").focus();
+						$("#start_date").val($.fullCalendar.formatDate(date, 'MM/dd/yyyy'));
+						$("#start_time").val($.fullCalendar.formatDate(date, 'hh:mmTT'));
+						$("#end").val('');
+						$("#schedule_visit_type").val('');
+						$("#end_row").show();
+						$("#title").val('');
+						$("#reason").val('');
+						$("#until").val('');
+						$("#until_row").hide();
+						$('#repeat').val('');
+						$('#status').val('');
+						$("#delete_form").hide();
+						$(".nosh_schedule_exist_event").hide();
+						$("#patient_appt").hide();
+						$("#other_event").hide();
+						$("#until_row").hide();
+						$("#start_form").hide();
+						$("#reason_form").hide();
+						$("#event_choose").show();
+					} else {
+						if (isOverlapping(date)) {
+							$.jGrowl('You cannot schedule an appointment in this time slot!');
+						} else {
+							$("#schedule_visit_type").focus();
+							$("#start").text($.fullCalendar.formatDate(date, 'dddd, MM/dd/yyyy, hh:mmTT'));
+							$("#start_date").val($.fullCalendar.formatDate(date, 'MM/dd/yyyy'));
+							$("#start_time").val($.fullCalendar.formatDate(date, 'hh:mmTT'));
+							$("#end").val('');
+							$("#schedule_visit_type").val('');
+							$("#reason").val('');
+							$("#until").val('');
+							$("#until_row").hide();
+							$('#repeat').val('');
+							$("#delete_form").hide("fast");
+							$("#patient_appt").show();
+							$("#start_form").show();
+							$("#reason_form").show();
+							$("#other_event").hide();
+							$("#event_choose").hide();
+							$("#event_dialog").dialog('open');
+						}
+					}
+				}
+			}
+		},
+		eventClick: function(calEvent, jsEvent, view) {
+			if (noshdata.group_id != '1') {
+				if (calEvent.editable != false) {
+					$("#event_dialog").dialog('open');
+					$("#title").focus();
+				}
+				$("#event_id").val(calEvent.id);
+				$("#event_id_span").text(calEvent.id);
+				$("#schedule_pid").val(calEvent.pid);
+				$("#pid_span").text(calEvent.pid);
+				$("#timestamp_span").text(calEvent.timestamp);
+				$("#start_date").val($.fullCalendar.formatDate(calEvent.start, 'MM/dd/yyyy'));
+				$("#start_time").val($.fullCalendar.formatDate(calEvent.start, 'hh:mmTT'));
+				$("#end").val($.fullCalendar.formatDate(calEvent.end, 'hh:mmTT'));
+				$("#schedule_title").val(calEvent.title);
+				$("#schedule_visit_type").val(calEvent.visit_type);
+				if (calEvent.visit_type){
+					loadappt();
+					$("#patient_search").val(calEvent.title);
+					$("#end").val('');
+				} else {
+					loadevent();
+				}
+				$("#reason").val(calEvent.reason);
+				$("#repeat").val(calEvent.repeat);
+				$("#until").val(calEvent.until);
+				var repeat_select = $("#repeat").val();
+				if (repeat_select != ''){
+					$("#until_row").show();
+				} else {
+					$("#until_row").hide();
+					$("#until").val('');
+				}
+				$("#status").val(calEvent.status);
+				$("#delete_form").show();
+				$(".nosh_schedule_exist_event").show();
+				$("#event_choose").hide();
+			}
+		},
+		eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+			if (noshdata.group_id != '1') {
+				var start = Math.round(event.start.getTime() / 1000);
+				var end = Math.round(event.end.getTime() / 1000);
+				if(start){
+					$.ajax({
+						type: "POST",
+						url: "ajaxschedule/drag-event",
+						data: "start=" + start + "&end=" + end + "&id=" + event.id,
+						success: function(data){
+							$.jGrowl("Event updated!");
+						}
+					});
+				} else {
+					revertFunc();
+				}
+				$('.fc-event').each(function(){
+					$(this).tooltip('disable');
+				});
+			} else {
+				revertFunc();
+				$.jGrowl("You don't have permission to do this!");
+			}
+		},
+		eventResize: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
+			if (noshdata.group_id != '1') {
+				var start = Math.round(event.start.getTime() / 1000);
+				var end = Math.round(event.end.getTime() / 1000);
+				if(start){
+					$.ajax({
+						type: "POST",
+						url: "ajaxschedule/drag-event",
+						data: "start=" + start + "&end=" + end + "&id=" + event.id,
+						success: function(data){
+							$.jGrowl("Event updated!");
+						}
+					});
+				} else {
+					revertFunc();
+				}
+				$('.fc-event').each(function(){
+					$(this).tooltip('disable');
+				});
+			} else {
+				revertFunc();
+				$.jGrowl("You don't have permission to do this!");
+			}
+		},
+		eventRender: function(event, element) {
+			var display = 'Reason: ' + event.reason + '<br>Status: ' + event.status;
+			element.tooltip({
+				items: element,
+				hide: false,
+				show: false,
+				content: display
+			});
+			element.tooltip('enable');
+		}
+	});
+	$('#providers_datepicker').datepicker('destroy');
+	$('#providers_datepicker').datepicker({
+		inline: true,
+		onSelect: function(dateText, inst) {
+			var d = new Date(dateText);
+			$('#providers_calendar').fullCalendar('gotoDate', d);
+			var n = d.getFullYear();
+			n = n + "," + d.getMonth();
+			n = n + "," + d.getDate();
+			var view = $('#providers_calendar').fullCalendar('getView');
+			n = n + "," + view.name;
+			$.cookie('nosh-schedule', n, { path: '/' });
+		}
+	});
+}
+function open_schedule() {
+	$('#dialog_load').dialog('option', 'title', "Loading schedule...").dialog('open');
+	$("#provider_list2").removeOption(/./);
+	$.ajax({
+		url: "ajaxsearch/provider-select",
+		dataType: "json",
+		type: "POST",
+		success: function(data){
+			$("#provider_list2").addOption({"":"Select a provider."});
+			$("#provider_list2").addOption(data, false);
+			if (noshdata.group_id == '2') {
+				$.ajax({
+					type: "POST",
+					url: "ajaxschedule/set-default-provider",
+					success: function(data){
+						$("#schedule_dialog").dialog('open');
+						$('#provider_list2').val(noshdata.user_id);
+						if( $.cookie('nosh-schedule') === undefined){
+							var d = new Date();
+							var y = d.getFullYear();
+							var m = d.getMonth();
+							var d = d.getDate();
+							loadcalendar(y,m,d,'agendaWeek');
+							$('#dialog_load').dialog('close');
+						} else {
+							var n =  $.cookie('nosh-schedule').split(",");
+							loadcalendar(n[0],n[1],n[2],n[3]);
+							$('#dialog_load').dialog('close');
+						}
+						$("#schedule_visit_type").removeOption(/./);
+						$.ajax({
+							url: "ajaxsearch/visit-types/" + noshdata.user_id,
+							dataType: "json",
+							type: "POST",
+							async: false,
+							success: function(data){
+								if (data.response == 'true') {
+									$("#schedule_visit_type").addOption(data.message, false);
+								} else {
+									$("#schedule_visit_type").addOption({"":"No visit types available."},false);
+								}
+							}
+						});
+						setInterval(schedule_autosave, 10000);
+					}
+				});
+			} else {
+				$('#dialog_load').dialog('close');
+				$("#schedule_dialog").dialog('open');
+			}
+		}
+	});
+	$("#provider_list2").focus();
+}
 function openencounter() {
 	$('#dialog_load').dialog('option', 'title', "Loading encounter...").dialog('open');
 	$("#encounter_body").html('');
@@ -601,6 +923,39 @@ function medications_autosave() {
 			$.jGrowl(data);
 		}
 	});
+}
+function results_autosave() {
+	var bValid = false;
+	$("#oh_results_form").find(".text").each(function() {
+		if (bValid == false) {
+			var input_id = $(this).attr('id');
+			var a = $("#" + input_id).val();
+			var b = $("#" + input_id + "_old").val();
+			if (a != b) {
+				bValid = true;
+			}
+		}
+	});
+	if (bValid) {
+		var oh_str = $("#oh_results_form").serialize();
+		if(oh_str){
+			$.ajax({
+				type: "POST",
+				url: "ajaxencounter/oh-save1/results",
+				data: oh_str,
+				success: function(data){
+					$.jGrowl(data);
+					$("#oh_results_form").find(".text").each(function() {
+						var input_id = $(this).attr('id');
+						var a = $("#" + input_id).val();
+						$("#" + input_id + "_old").val(a);
+					});
+				}
+			});
+		} else {
+			$.jGrowl("Please complete the form");
+		}
+	}
 }
 function billing_autosave() {
 	var bValid = false;

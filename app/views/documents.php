@@ -74,7 +74,7 @@
 </div>
 <div id="tests_dialog" title="Test Results">
 	<form class="pure-form pure-form-aligned">
-		<div class="pure-control-group"><label for="search_all_tests">Search:</label><input type="text" size="50" id="search_all_tests" class="text" onkeydown="doSearch2(arguments[0]||event)"/></div><br><br> 
+		<div class="pure-control-group"><label for="search_all_tests">Search:</label><input type="text" style="width:250px" id="search_all_tests" class="text" onkeydown="doSearch2(arguments[0]||event)"/></div> 
 	</form>
 	<table id="tests_list" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="tests_list_pager" class="scroll" style="text-align:center;"></div><br>
@@ -82,6 +82,8 @@
 		<button type="button" id="add_result" class="nosh_button_add add_result_class">Add</button>
 		<button type="button" id="edit_result" class="nosh_button_edit">Edit</button>
 		<button type="button" id="delete_result" class="nosh_button_delete">Delete</button>
+		<button type="button" id="encounter_copy_result" class="nosh_button_copy copy_result">Copy to Encounter</button>
+		<button type="button" id="t_message_copy_result" class="nosh_button_copy copy_result">Copy to Message</button>
 	<?php }?>
 	<button type="button" id="chart_results">Chart Selected Results</button>
 	<div id="chart_loading" style="display: block;float: right;"><?php echo HTML::image('images/indicator.gif', 'Loading');?> Loading graph...</div><br><br>

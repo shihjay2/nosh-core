@@ -11,12 +11,13 @@
 			<?php if(Session::get('group_id') == '2') {?>
 				<li id="encounter_tabs_pe"><a href="#encounter_tabs_5">PE</a></li>
 			<?php }?>
-			<li id="encounter_tabs_labs"><a href="#encounter_tabs_6">Labs</a></a></li>
-			<li id="encounter_tabs_proc"><a href="#encounter_tabs_7">Procedure</a></li>
+			<li id="encounter_tabs_results"><a href="#encounter_tabs_6">Results</a></li>
+			<li id="encounter_tabs_labs"><a href="#encounter_tabs_7">Labs</a></li>
+			<li id="encounter_tabs_proc"><a href="#encounter_tabs_8">Procedure</a></li>
 			<?php if(Session::get('group_id') == '2') {?>
-				<li id="encounter_tabs_assessment"><a href="#encounter_tabs_8">DX</a></li>
+				<li id="encounter_tabs_assessment"><a href="#encounter_tabs_9">DX</a></li>
 			<?php }?>
-			<li id="encounter_tabs_orders"><a href="#encounter_tabs_9">Orders</a></li>
+			<li id="encounter_tabs_orders"><a href="#encounter_tabs_10">Orders</a></li>
 		</ul>
 		<?php if(Session::get('group_id') == '2') {?>
 			<div id="encounter_tabs_1" style="overflow:auto">
@@ -54,18 +55,22 @@
 			</div>
 		<?php }?>
 		<div id="encounter_tabs_6" style="overflow:auto">
-			<?php echo $labs;?>
+			<?php echo $results;?>
 		</div>
 		<div id="encounter_tabs_7" style="overflow:auto">
+			<?php echo $labs;?>
+		</div>
+		<div id="encounter_tabs_8" style="overflow:auto">
 			<?php echo $proc;?>
 		</div>
 		<?php if(Session::get('group_id') == '2') {?>
-			<div id="encounter_tabs_8" style="overflow:auto">
+			<div id="encounter_tabs_9" style="overflow:auto">
 				<?php echo $assessment;?>
 			</div>
 		<?php }?>
-		<div id="encounter_tabs_9" style="overflow:auto">
+		<div id="encounter_tabs_10" style="overflow:auto">
 			<?php echo $orders;?>
 		</div>
+		
 	</div>
 </div>

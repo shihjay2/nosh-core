@@ -29,19 +29,6 @@ $(document).ready(function() {
 				check_oh_status();
 				$.ajax({
 					type: "POST",
-					url: "ajaxencounter/get-oh",
-					dataType: "json",
-					success: function(data){
-						if (data.message != 'n') {
-							$.each(data.response, function(key, value){
-								$("#oh_form :input[name='" + key + "']").val(value);
-								$("#" + key + "_old").val(value);
-							});
-						}
-					}
-				});
-				$.ajax({
-					type: "POST",
 					url: "ajaxencounter/pf-template-select-list/PMH",
 					dataType: "json",
 					success: function(data){
@@ -342,6 +329,24 @@ $(document).ready(function() {
 				var gender = noshdata.gender;
 				var intro = age + gender + " here for the following concerns:";
 				$("#situation").val(intro);
+			}
+		}
+	});
+	$.ajax({
+		type: "POST",
+		url: "ajaxencounter/get-oh",
+		dataType: "json",
+		success: function(data){
+			if (data.message != 'n') {
+				$.each(data.response, function(key, value){
+					if (key == 'oh_results') {
+						$("#oh_results_form :input[name='" + key + "']").val(value);
+						$("#"+key+"_old").val(value);
+					} else {
+						$("#oh_form :input[name='" + key + "']").val(value);
+						$("#" + key + "_old").val(value);
+					}
+				});
 			}
 		}
 	});

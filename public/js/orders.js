@@ -280,7 +280,7 @@ $(document).ready(function() {
 		$("#mtm_origin").val('encounter');
 	});
 	$("#orders_schedule").click(function() {
-		$("#schedule_dialog").dialog('open');
+		open_schedule();
 	});
 	setInterval(orders_autosave, 10000);
 	swipe();

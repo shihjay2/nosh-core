@@ -891,6 +891,11 @@ class BaseController extends Controller {
 				$data['oh'] .= nl2br($ohInfo->oh_allergies);
 				$data['oh'] .= '<br /><br />';
 			}
+			if ($ohInfo->oh_results != '') {
+				$data['oh'] .= '<strong>Reviewed Results: </strong>';
+				$data['oh'] .= nl2br($ohInfo->oh_results);
+				$data['oh'] .= '<br /><br />';
+			}
 			$data['oh'] .= '</p>';
 		} else {
 			$data['oh'] = '';

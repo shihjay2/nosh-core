@@ -182,34 +182,6 @@ $(document).ready(function() {
 					$("#menu_lang_code").val(ui.item.code);
 				}
 			});
-			$.ajax({
-				type: "POST",
-				url: "ajaxdashboard/demographics",
-				dataType: "json",
-				success: function(data){
-					$.each(data, function(key, value){
-						if (key == 'DOB') {
-							var value = editDate1(data.DOB);
-						}
-						$("#edit_demographics_form :input[name='" + key + "']").val(value);
-					});
-					$("#menu_lastname").focus();
-				}
-			});
-			if (noshdata.group_id != '100') {
-				$.ajax({
-					type: "POST",
-					url: "ajaxdashboard/check-registration-code",
-					success: function(data){
-						if (data == 'n') {
-							$("#register_menu_demographics").show();
-						} else {
-							$("#register_menu_demographics").hide();
-							$("#menu_registration_code").html(data);
-						}
-					}
-				});
-			}
 		},
 		close: function(event, ui) {
 			$('#edit_demographics_form').clearForm();
@@ -404,10 +376,10 @@ $(document).ready(function() {
 	$("#menu_cell_carrier").addOption({"":"","txt.att.net":"AT&T","sms.mycricket.com":"Cricket","messaging.nextel.com":"Nextel","qwestmp.com":"Qwest","messaging.sprintpcs.com":"Sprint(PCS)","number@page.nextel.com":"Sprint(Nextel)","tmomail.net":"T-Mobile","email.uscc.net":"US Cellular","vtext.com":"Verizon","vmobl.com":"Virgin Mobile"}, false);
 	$("#menu_active").addOption({"1":"Active","0":"Inactive"}, false);
 	$(".demographics_list").click(function() {
-		$("#demographics_list_dialog").dialog('open');
+		open_demographics();
 	});
 	$("#patient_demographics").click(function() {
-		$("#demographics_list_dialog").dialog('open');
+		open_demographics();
 	});
 	function save_demographics(type) {
 		var a = $("#menu_reminder_method").val();

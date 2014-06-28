@@ -42,7 +42,8 @@
 <div id="messages_reply_dialog" title="Results Correspondence">
 	<table id="messages_reply_alerts" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="messages_reply_alerts_pager1" class="scroll" style="text-align:center;"></div><br>
-	<button type="button" id="complete_message_reply_alert" class="nosh_button_check">Mark as Completed</button><br><br>
+	<button type="button" id="complete_message_reply_alert" class="nosh_button_check">Mark as Completed</button>
+	<button type="button" id="t_message_test_results" class="nosh_button_copy">Test Results</button><br><br>
 	<form name="edit_message_reply_form" id="edit_message_reply_form" class="pure-form pure-form-aligned">
 		<fieldset class="ui-corner-all">
 			<legend>Results Message</legend>

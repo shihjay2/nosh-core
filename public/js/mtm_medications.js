@@ -151,4 +151,7 @@ $(document).ready(function() {
 			$.jGrowl("Please select medication to inactivate!")
 		}
 	});
+	$("#mtm_medications_reviewed").click(function(){
+		medications_autosave();
+	});
 });

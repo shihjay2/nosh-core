@@ -88,21 +88,21 @@
 			<br><button type="button" id="assessment_other_reset"  class="nosh_button_cancel">Clear</button>
 		</div>
 		<div class="pure-u-5-6">
-			<label for="assessment_other">Additional diagnoses:</label>
+			<label for="assessment_other"><?php if (Session::get('encounter_template') == 'standardmtm') {?>SOAP note:<?php } else { ?>Additional diagnoses:<?php }?></label>
 			<textarea rows="4" style="width:500px" name="assessment_other" id="assessment_other" class="text"></textarea>
 		</div>
 		<div class="pure-u-1-6">
 			<br><button type="button" id="assessment_ddx_reset"  class="nosh_button_cancel">Clear</button>
 		</div>
 		<div class="pure-u-5-6">
-			<label for="assessment_ddx">Differential diagnoses:</label>
+			<label for="assessment_ddx"><?php if (Session::get('encounter_template') == 'standardmtm') {?>MAP2:<?php } else { ?>Differential diagnoses:<?php }?></label>
 			<textarea rows="4" style="width:500px" name="assessment_ddx" id="assessment_ddx" class="text"></textarea>
 		</div>
 		<div class="pure-u-1-6">
 			<br><button type="button" id="assessment_notes_reset"  class="nosh_button_cancel">Clear</button>
 		</div>
 		<div class="pure-u-5-6">
-			<label for="assessment_notes">Assessment discussion: <span class="textdump_text"></span> for templates.</label>
+			<label for="assessment_notes"><?php if (Session::get('encounter_template') == 'standardmtm') {?>Pharmacist note:<?php } else { ?>Assessment discussion:<?php }?> <span class="textdump_text"></span> for templates.</label>
 			<textarea rows="4" style="width:500px" name="assessment_notes" id="assessment_notes" class="text textdump"></textarea>
 		</div>
 	</div>

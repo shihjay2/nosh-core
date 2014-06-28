@@ -239,6 +239,7 @@ class AjaxEncounterController extends BaseController {
 			$data['vitals'] = View::make('encounters.vitals', $data1)->render();
 			$data['pe'] = View::make('encounters.pe')->render();
 			$data['labs'] = View::make('encounters.labs')->render();
+			$data['results'] = View::make('encounters.results')->render();
 			$data['proc'] = View::make('encounters.proc')->render();
 			$data['assessment'] = View::make('encounters.assessment')->render();
 			$data2['mtm'] = $result->mtm_extension;
@@ -267,6 +268,7 @@ class AjaxEncounterController extends BaseController {
 			$data['oh'] = View::make('encounters.oh')->render();
 			$data1['practiceInfo'] = $result;
 			$data['vitals'] = View::make('encounters.vitals', $data1)->render();
+			$data['results'] = View::make('encounters.results')->render();
 			$data['assessment'] = View::make('encounters.assessment')->render();
 			$data['orders'] = View::make('encounters.orders', $data2)->render();
 			$data['medications'] = View::make('encounters.mtm_medications')->render();
@@ -985,6 +987,14 @@ class AjaxEncounterController extends BaseController {
 				'pid' => $pid,
 				'encounter_provider' => $encounter_provider,
 				'oh_allergies' => $result3
+			);
+		}
+		if ($item == 'results') {
+			$data = array(
+				'eid' => $eid,
+				'pid' => $pid,
+				'encounter_provider' => $encounter_provider,
+				'oh_results' => Input::get('oh_results')
 			);
 		}
 		$count = DB::table('other_history')->where('eid', '=', $eid)->first();
@@ -2757,7 +2767,7 @@ class AjaxEncounterController extends BaseController {
 		if($query) {
 			$meds = $query->oh_meds;
 			if ($meds != '') {
-				$meds_array = explode("\n", $meds);
+				$meds_array = explode("\n", trim($meds));
 				$count = count($meds_array);
 				$total_pages = ceil($count/$limit);
 				if ($page > $total_pages) $page=$total_pages;
@@ -2771,6 +2781,86 @@ class AjaxEncounterController extends BaseController {
 				$meds_array1 = array_slice($meds_array, $start, $limit);
 				foreach($meds_array1 as $row) {
 					$response['rows'][]['mtm_medication'] = $row;
+				}
+			} else {
+				$count = 0;
+				$total_pages = 0;
+				$response['rows'] = '';
+			}
+		} else {
+			$count = 0;
+			$total_pages = 0;
+			$response['rows'] = '';
+		}
+		$response['page'] = $page;
+		$response['total'] = $total_pages;
+		$response['records'] = $count;
+		echo json_encode($response);
+	}
+	
+	public function postResultsEncounters()
+	{
+		$practice_id = Session::get('practice_id');
+		$pid = Session::get('pid');
+		$page = Input::get('page');
+		$limit = Input::get('rows');
+		$sidx = Input::get('sidx');
+		$sord = Input::get('sord');
+		$query = DB::table('encounters')->where('pid', '=', $pid)
+			->where('addendum', '=', 'n')
+			->where('practice_id', '=', $practice_id);
+		$result = $query->get();
+		if($result) { 
+			$count = count($result);
+			$total_pages = ceil($count/$limit); 
+		} else { 
+			$count = 0;
+			$total_pages = 0;
+		}
+		if ($page > $total_pages) $page=$total_pages;
+		$start = $limit*$page - $limit;
+		if($start < 0) $start = 0;
+		$query->orderBy($sidx, $sord)
+			->skip($start)
+			->take($limit);
+		$query1 = $query->get();
+		$response['page'] = $page;
+		$response['total'] = $total_pages;
+		$response['records'] = $count;
+		if ($query1) {
+			$response['rows'] = $query1;
+		} else {
+			$response['rows'] = '';
+		}
+		echo json_encode($response);
+	}
+	
+	public function postResultsEncountersHistory($eid)
+	{
+		$practice_id = Session::get('practice_id');
+		$pid = Session::get('pid');
+		$page = Input::get('page');
+		$limit = Input::get('rows');
+		$sidx = Input::get('sidx');
+		$sord = Input::get('sord');
+		$query = DB::table('other_history')->where('eid', '=', $eid)->first();
+		if($query) {
+			$oh_results = $query->oh_results;
+			if ($oh_results != '') {
+				$oh_results_array = explode("\n", trim($oh_results));
+				$count = count($oh_results_array);
+				$total_pages = ceil($count/$limit);
+				if ($page > $total_pages) $page=$total_pages;
+				$start = $limit*$page - $limit;
+				if($start < 0) $start = 0;
+				if ($sord == 'asc') {
+					sort($oh_results_array);
+				} else {
+					rsort($oh_results_array);
+				}
+				$oh_results_array1 = array_slice($oh_results_array, $start, $limit);
+				foreach($oh_results_array1 as $row) {
+					$response['rows'][]['oh_results'] = $row;
 				}
 			} else {
 				$count = 0;

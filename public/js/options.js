@@ -17,6 +17,11 @@ $(document).ready(function() {
 		});
 		return ret;
 	}
+	$("#configuration_accordion").accordion({
+		heightStyle: "content",
+		active: false,
+		collapsible: true
+	});
 	$("#configuration_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
@@ -25,476 +30,471 @@ $(document).ready(function() {
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
-			$("#configuration_accordion").accordion({
-				heightStyle: "content",
-				active: false,
-				collapsible: true
-			});
-			jQuery("#configuration_orders_labs").jqGrid('GridUnload');
-			jQuery("#configuration_orders_labs").jqGrid({
-				url:"ajaxdashboard/orders-list/Laboratory/Global",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Group','Category','Description','CPT','SNOMED'],
-				colModel:[
-					{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
-					{name:'user_id',index:'user_id',width:1,hidden:true},
-					{name:'orders_category',index:'orders_category',width:1,hidden:true},
-					{name:'orders_description',index:'orders_description',width:355},
-					{name:"cpt",index:"cpt",width:100},
-					{name:"snomed",index:"snomed",width:100}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#configuration_orders_labs_pager'),
-				sortname: 'orders_description',
-			 	viewrecords: true,
-			 	sortorder: "asc",
-			 	caption:"Global Laboratory Orders List",
-			 	height: "100%",
-			 	jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#configuration_orders_labs_pager',{search:false,edit:false,add:false,del:false});
-			jQuery("#configuration_orders_labs1").jqGrid('GridUnload');
-			jQuery("#configuration_orders_labs1").jqGrid({
-				url:"ajaxdashboard/orders-list/Laboratory/User",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Group','Category','Description','CPT','SNOMED'],
-				colModel:[
-					{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
-					{name:'user_id',index:'user_id',width:1,hidden:true},
-					{name:'orders_category',index:'orders_category',width:1,hidden:true},
-					{name:'orders_description',index:'orders_description',width:355},
-					{name:"cpt",index:"cpt",width:100},
-					{name:"snomed",index:"snomed",width:100}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#configuration_orders_labs1_pager'),
-				sortname: 'orders_description',
-			 	viewrecords: true,
-			 	sortorder: "asc",
-			 	caption:"Personal Laboratory Orders List",
-			 	height: "100%",
-			 	jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#configuration_orders_labs1_pager',{search:false,edit:false,add:false,del:false});
-			jQuery("#configuration_orders_rad").jqGrid('GridUnload');
-			jQuery("#configuration_orders_rad").jqGrid({
-				url:"ajaxdashboard/orders-list/Radiology/Global",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Group','Category','Description','CPT','SNOMED'],
-				colModel:[
-					{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
-					{name:'user_id',index:'user_id',width:1,hidden:true},
-					{name:'orders_category',index:'orders_category',width:1,hidden:true},
-					{name:'orders_description',index:'orders_description',width:355},
-					{name:"cpt",index:"cpt",width:100},
-					{name:"snomed",index:"snomed",width:100}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#configuration_orders_rad_pager'),
-				sortname: 'orders_description',
-			 	viewrecords: true,
-			 	sortorder: "asc",
-			 	caption:"Global Imaging Orders List",
-			 	height: "100%",
-			 	jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#configuration_orders_rad_pager',{search:false,edit:false,add:false,del:false});
-			jQuery("#configuration_orders_rad1").jqGrid('GridUnload');
-			jQuery("#configuration_orders_rad1").jqGrid({
-				url:"ajaxdashboard/orders-list/Radiology/User",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Group','Category','Description','CPT','SNOMED'],
-				colModel:[
-					{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
-					{name:'user_id',index:'user_id',width:1,hidden:true},
-					{name:'orders_category',index:'orders_category',width:1,hidden:true},
-					{name:'orders_description',index:'orders_description',width:355},
-					{name:"cpt",index:"cpt",width:100},
-					{name:"snomed",index:"snomed",width:100}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#configuration_orders_rad1_pager'),
-				sortname: 'orders_description',
-			 	viewrecords: true,
-			 	sortorder: "asc",
-			 	caption:"Personal Imaging Orders List",
-			 	height: "100%",
-			 	jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#configuration_orders_rad1_pager',{search:false,edit:false,add:false,del:false});
-			jQuery("#configuration_orders_cp").jqGrid('GridUnload');
-			jQuery("#configuration_orders_cp").jqGrid({
-				url:"ajaxdashboard/orders-list/Cardiopulmonary/Global",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Group','Category','Description','CPT','SNOMED'],
-				colModel:[
-					{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
-					{name:'user_id',index:'user_id',width:1,hidden:true},
-					{name:'orders_category',index:'orders_category',width:1,hidden:true},
-					{name:'orders_description',index:'orders_description',width:355},
-					{name:"cpt",index:"cpt",width:100},
-					{name:"snomed",index:"snomed",width:100}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#configuration_orders_cp_pager'),
-				sortname: 'orders_description',
-			 	viewrecords: true,
-			 	sortorder: "asc",
-			 	caption:"Global Cardiopulmonary Orders List",
-			 	height: "100%",
-			 	jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#configuration_orders_cp_pager',{search:false,edit:false,add:false,del:false});
-			jQuery("#configuration_orders_cp1").jqGrid('GridUnload');
-			jQuery("#configuration_orders_cp1").jqGrid({
-				url:"ajaxdashboard/orders-list/Cardiopulmonary/User",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Group','Category','Description','CPT','SNOMED'],
-				colModel:[
-					{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
-					{name:'user_id',index:'user_id',width:1,hidden:true},
-					{name:'orders_category',index:'orders_category',width:1,hidden:true},
-					{name:'orders_description',index:'orders_description',width:355},
-					{name:"cpt",index:"cpt",width:100},
-					{name:"snomed",index:"snomed",width:100}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#configuration_orders_cp1_pager'),
-				sortname: 'orders_description',
-			 	viewrecords: true,
-			 	sortorder: "asc",
-			 	caption:"Personal Cardiopulmonary Orders List",
-			 	height: "100%",
-			 	jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#configuration_orders_cp1_pager',{search:false,edit:false,add:false,del:false});
-			jQuery("#configuration_orders_ref").jqGrid('GridUnload');
-			jQuery("#configuration_orders_ref").jqGrid({
-				url:"ajaxdashboard/orders-list/Referral/Global",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Group','Category','Description','CPT','SNOMED'],
-				colModel:[
-					{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
-					{name:'user_id',index:'user_id',width:1,hidden:true},
-					{name:'orders_category',index:'orders_category',width:1,hidden:true},
-					{name:'orders_description',index:'orders_description',width:355},
-					{name:"cpt",index:"cpt",width:100},
-					{name:"snomed",index:"snomed",width:100}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#configuration_orders_ref_pager'),
-				sortname: 'orders_description',
-			 	viewrecords: true,
-			 	sortorder: "asc",
-			 	caption:"Global Referral Orders List",
-			 	height: "100%",
-			 	jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#configuration_orders_ref_pager',{search:false,edit:false,add:false,del:false});
-			jQuery("#configuration_orders_ref1").jqGrid('GridUnload');
-			jQuery("#configuration_orders_ref1").jqGrid({
-				url:"ajaxdashboard/orders-list/Referral/User",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Group','Category','Description','CPT','SNOMED'],
-				colModel:[
-					{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
-					{name:'user_id',index:'user_id',width:1,hidden:true},
-					{name:'orders_category',index:'orders_category',width:1,hidden:true},
-					{name:'orders_description',index:'orders_description',width:355},
-					{name:"cpt",index:"cpt",width:100},
-					{name:"snomed",index:"snomed",width:100}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#configuration_orders_ref1_pager'),
-				sortname: 'orders_description',
-			 	viewrecords: true,
-			 	sortorder: "asc",
-			 	caption:"Personal Referral Orders List",
-			 	height: "100%",
-			 	jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#configuration_orders_ref1_pager',{search:false,edit:false,add:false,del:false});
-			jQuery("#cpt_list_config").jqGrid({
-				url:"ajaxdashboard/cpt-list",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Relate ID','CPT Code','Description','Charge','Favorite','Unit'],
-				colModel:[
-					{name:'cpt_id',index:'cpt_id',width:1,hidden:true},
-					{name:'cpt_relate_id',index:'cpt_relate_id',width:1,hidden:true, editrules : {edithidden:true}},
-					{name:'cpt',index:'cpt',width:100,editable:true,editrules:{required:true},formoptions:{elmsuffix:"(*)"}},
-					{name:'cpt_description',index:'cpt_description',width:350,editable:true,editrules:{required:true},edittype:"textarea",editoptions:{rows:"4",cols:"50"},formoptions:{elmsuffix:"(*)"}},
-					{name:'cpt_charge',index:'cpt_charge',width:100,editable:true,editrules:{required:true},formoptions:{elmsuffix:"(*)"}},
-					{name:'favorite',index:'favorite',width:1,hidden:true},
-					{name:'unit',index:'unit',width:1,hidden:true}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#cpt_list_config_pager'),
-				sortname: 'cpt',
-				viewrecords: true,
-				sortorder: "asc",
-				caption:"CPT Codes",
-				emptyrecords:"No CPT codes",
-				height: "100%",
-				jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#cpt_list_config_pager',{edit:false,add:false,del:false});
-			jQuery("#patient_forms_list").jqGrid({
-				url:"ajaxdashboard/patient-forms-list",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Form','Gender','Group','Age','Scoring'],
-				colModel:[
-					{name:'template_id',index:'template_id',width:1,hidden:true},
-					{name:'template_name',index:'template_name',width:300},
-					{name:'sex',index:'sex',width:100},
-					{name:'group',index:'group',width:100},
-					{name:'age',index:'age',width:1,hidden:true},
-					{name:'scoring',index:'scoring',width:1,hidden:true}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#patient_forms_list_pager'),
-				sortname: 'template_id',
-				viewrecords: true,
-				sortorder: "asc",
-				caption:"Patient Forms",
-				emptyrecords:"No forms",
-				height: "100%",
-				jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#patient_forms_list_pager',{edit:false,add:false,del:false});
-			jQuery("#hpi_forms_list").jqGrid({
-				url:"ajaxdashboard/hpi-forms-list",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Form','Gender','Group','Age'],
-				colModel:[
-					{name:'template_id',index:'template_id',width:1,hidden:true},
-					{name:'template_name',index:'template_name',width:300},
-					{name:'sex',index:'sex',width:100},
-					{name:'group',index:'group',width:100},
-					{name:'age',index:'age',width:1,hidden:true}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#hpi_forms_list_pager'),
-				sortname: 'template_id',
-				viewrecords: true,
-				sortorder: "asc",
-				caption:"HPI Forms",
-				emptyrecords:"No forms",
-				height: "100%",
-				jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#hpi_forms_list_pager',{edit:false,add:false,del:false});
-			jQuery("#ros_forms_list").jqGrid({
-				url:"ajaxdashboard/ros-forms-list",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Form','Gender','Group','Age','Default'],
-				colModel:[
-					{name:'template_id',index:'template_id',width:1,hidden:true},
-					{name:'template_name',index:'template_name',width:250},
-					{name:'sex',index:'sex',width:100},
-					{name:'group',index:'group',width:100},
-					{name:'age',index:'age',width:1,hidden:true},
-					{name:'default',index:'default',width:50}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#ros_forms_list_pager'),
-				sortname: 'template_id',
-				viewrecords: true,
-				sortorder: "asc",
-				caption:"ROS Forms",
-				emptyrecords:"No forms",
-				height: "100%",
-				jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#ros_forms_list_pager',{edit:false,add:false,del:false});
-			jQuery("#pe_forms_list").jqGrid({
-				url:"ajaxdashboard/pe-forms-list",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Form','Gender','Group','Age','Default'],
-				colModel:[
-					{name:'template_id',index:'template_id',width:1,hidden:true},
-					{name:'template_name',index:'template_name',width:250},
-					{name:'sex',index:'sex',width:100},
-					{name:'group',index:'group',width:100},
-					{name:'age',index:'age',width:1,hidden:true},
-					{name:'default',index:'default',width:50}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#pe_forms_list_pager'),
-				sortname: 'template_id',
-				viewrecords: true,
-				sortorder: "asc",
-				caption:"PE Forms",
-				emptyrecords:"No forms",
-				height: "100%",
-				jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#pe_forms_list_pager',{edit:false,add:false,del:false});
-			jQuery("#situation_forms_list").jqGrid({
-				url:"ajaxdashboard/situation-forms-list",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Form','Gender','Group','Age'],
-				colModel:[
-					{name:'template_id',index:'template_id',width:1,hidden:true},
-					{name:'template_name',index:'template_name',width:300},
-					{name:'sex',index:'sex',width:100},
-					{name:'group',index:'group',width:100},
-					{name:'age',index:'age',width:1,hidden:true}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#situation_forms_list_pager'),
-				sortname: 'template_id',
-				viewrecords: true,
-				sortorder: "asc",
-				caption:"Situation Forms",
-				emptyrecords:"No forms",
-				height: "100%",
-				jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#situation_forms_list_pager',{edit:false,add:false,del:false});
-			jQuery("#referral_forms_list").jqGrid({
-				url:"ajaxdashboard/referral-forms-list",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Form','Gender','Group','Age'],
-				colModel:[
-					{name:'template_id',index:'template_id',width:1,hidden:true},
-					{name:'template_name',index:'template_name',width:300},
-					{name:'sex',index:'sex',width:100},
-					{name:'group',index:'group',width:100},
-					{name:'age',index:'age',width:1,hidden:true}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#referral_forms_list_pager'),
-				sortname: 'template_id',
-				viewrecords: true,
-				sortorder: "asc",
-				caption:"Referral Forms",
-				emptyrecords:"No forms",
-				height: "100%",
-				jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#referral_forms_list_pager',{edit:false,add:false,del:false});
-			jQuery("#textdump_list").jqGrid({
-				url:"ajaxdashboard/textdump-list",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Target Field','Group'],
-				colModel:[
-					{name:'template_id',index:'template_id',width:1,hidden:true},
-					{name:'template_name',index:'template_name',width:200,formatter:targetname,unformat:untargetname},
-					{name:'group',index:'group',width:400}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#textdump_list_pager'),
-				sortname: 'template_id',
-				viewrecords: true,
-				sortorder: "asc",
-				caption:"Text Template Groups",
-				emptyrecords:"No text templates",
-				height: "100%",
-				jsonReader: { repeatitems : false, id: "0" },
-				subGrid: true,
-				subGridRowExpanded: function(subgrid_id, row_id) {
-					var group_id = row_id;
-					var subgrid_table_id, pager_id;
-					subgrid_table_id = subgrid_id+"_t";
-					pager_id = "p_"+subgrid_table_id;
-					$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table><div id='"+pager_id+"' class='scroll'></div>");
-					jQuery("#"+subgrid_table_id).jqGrid({
-						url: "ajaxdashboard/textdump-list1/"+row_id,
-						datatype: "json",
-						mtype: "POST",
-						colNames:['ID','Target Field','Template Text','Group','Default'],
-						colModel:[
-							{name:'template_id',index:'template_id',width:1,hidden:true},
-							{name:'template_name',index:'template_name',width:200,formatter:targetname,unformat:untargetname},
-							{name:'array',index:'array',width:400},
-							{name:'group',index:'group',width:1,hidden:true},
-							{name:'default',index:'default',width:1,hidden:true}
-						],
-						rowNum:10,
-						pager: pager_id,
-						sortname: 'template_id', 
-						sortorder: "asc", 
-						height: '100%',
-						jsonReader: { repeatitems : false, id: "0" }
-					});
-					jQuery("#"+subgrid_table_id).jqGrid('navGrid',"#"+pager_id,{
-						search:false,
-						edit:false,
-						add:false,
-						del:false
-					}).jqGrid('navButtonAdd',"#"+pager_id,{
-						caption:"Add", 
-						buttonicon:"ui-icon-plus", 
-						onClickButton: function(){ 
-							jQuery("#textdump_list").GridToForm(group_id,"#configuration_textdump_form");
-							$("#configuration_textdump_template_id").val('');
-							$("#configuration_textdump_subgrid_table_id").val(subgrid_table_id);
-							$('#configuration_textdump_dialog').dialog('open');
-							$('#configuration_textdump_dialog').dialog('option', 'title', "Add Template Text");
-						}, 
-						position:"last"
-					}).jqGrid('navButtonAdd',"#"+pager_id,{
-						caption:"Edit", 
-						buttonicon:"ui-icon-pencil", 
-						onClickButton: function(){ 
-							var id = jQuery(this).getGridParam('selrow');
-							if(id){
-				 				jQuery(this).GridToForm(id,"#configuration_textdump_form");
-				 				$("#configuration_textdump_subgrid_table_id").val(subgrid_table_id);
-								$('#configuration_textdump_dialog').dialog('open');
-								$('#configuration_textdump_dialog').dialog('option', 'title', "Edit Template Text");
-							} else {
-								$.jGrowl('Choose item to edit!');
-							}
-						}, 
-						position:"last"
-					}).jqGrid('navButtonAdd',"#"+pager_id,{
-						caption:"Delete", 
-						buttonicon:"ui-icon-trash", 
-						onClickButton: function(){ 
-							var id = jQuery(this).getGridParam('selrow');
-							if(id){
-				 				if(confirm('Are you sure you want to delete this text?')){
-									$.ajax({
-										type: "POST",
-										url: "ajaxsearch/deletetextdump/" + id,
-										success: function(data){
-											$.jGrowl(data);
-											jQuery(this).trigger("reloadGrid");
-										}
-									});
-								}
-							} else {
-								$.jGrowl('Choose item to delete!');
-							}
-						}, 
-						position:"last"
-					});
-				}
-			}).navGrid('#textdump_list_pager',{edit:false,add:false,del:false});
-			$("#configuration_textdump_group_template_name").addOption(fields,false);
-			$("#configuration_textdump_default").addOption({"":"No","normal":"Yes"},false);
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#nosh_configuration").click(function() {
+		$('#dialog_load').dialog('option', 'title', "Loading configuration...").dialog('open');
+		jQuery("#configuration_orders_labs").jqGrid('GridUnload');
+		jQuery("#configuration_orders_labs").jqGrid({
+			url:"ajaxdashboard/orders-list/Laboratory/Global",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Group','Category','Description','CPT','SNOMED'],
+			colModel:[
+				{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
+				{name:'user_id',index:'user_id',width:1,hidden:true},
+				{name:'orders_category',index:'orders_category',width:1,hidden:true},
+				{name:'orders_description',index:'orders_description',width:355},
+				{name:"cpt",index:"cpt",width:100},
+				{name:"snomed",index:"snomed",width:100}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#configuration_orders_labs_pager'),
+			sortname: 'orders_description',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Global Laboratory Orders List",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#configuration_orders_labs_pager',{search:false,edit:false,add:false,del:false});
+		jQuery("#configuration_orders_labs1").jqGrid('GridUnload');
+		jQuery("#configuration_orders_labs1").jqGrid({
+			url:"ajaxdashboard/orders-list/Laboratory/User",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Group','Category','Description','CPT','SNOMED'],
+			colModel:[
+				{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
+				{name:'user_id',index:'user_id',width:1,hidden:true},
+				{name:'orders_category',index:'orders_category',width:1,hidden:true},
+				{name:'orders_description',index:'orders_description',width:355},
+				{name:"cpt",index:"cpt",width:100},
+				{name:"snomed",index:"snomed",width:100}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#configuration_orders_labs1_pager'),
+			sortname: 'orders_description',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Personal Laboratory Orders List",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#configuration_orders_labs1_pager',{search:false,edit:false,add:false,del:false});
+		jQuery("#configuration_orders_rad").jqGrid('GridUnload');
+		jQuery("#configuration_orders_rad").jqGrid({
+			url:"ajaxdashboard/orders-list/Radiology/Global",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Group','Category','Description','CPT','SNOMED'],
+			colModel:[
+				{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
+				{name:'user_id',index:'user_id',width:1,hidden:true},
+				{name:'orders_category',index:'orders_category',width:1,hidden:true},
+				{name:'orders_description',index:'orders_description',width:355},
+				{name:"cpt",index:"cpt",width:100},
+				{name:"snomed",index:"snomed",width:100}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#configuration_orders_rad_pager'),
+			sortname: 'orders_description',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Global Imaging Orders List",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#configuration_orders_rad_pager',{search:false,edit:false,add:false,del:false});
+		jQuery("#configuration_orders_rad1").jqGrid('GridUnload');
+		jQuery("#configuration_orders_rad1").jqGrid({
+			url:"ajaxdashboard/orders-list/Radiology/User",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Group','Category','Description','CPT','SNOMED'],
+			colModel:[
+				{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
+				{name:'user_id',index:'user_id',width:1,hidden:true},
+				{name:'orders_category',index:'orders_category',width:1,hidden:true},
+				{name:'orders_description',index:'orders_description',width:355},
+				{name:"cpt",index:"cpt",width:100},
+				{name:"snomed",index:"snomed",width:100}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#configuration_orders_rad1_pager'),
+			sortname: 'orders_description',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Personal Imaging Orders List",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#configuration_orders_rad1_pager',{search:false,edit:false,add:false,del:false});
+		jQuery("#configuration_orders_cp").jqGrid('GridUnload');
+		jQuery("#configuration_orders_cp").jqGrid({
+			url:"ajaxdashboard/orders-list/Cardiopulmonary/Global",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Group','Category','Description','CPT','SNOMED'],
+			colModel:[
+				{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
+				{name:'user_id',index:'user_id',width:1,hidden:true},
+				{name:'orders_category',index:'orders_category',width:1,hidden:true},
+				{name:'orders_description',index:'orders_description',width:355},
+				{name:"cpt",index:"cpt",width:100},
+				{name:"snomed",index:"snomed",width:100}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#configuration_orders_cp_pager'),
+			sortname: 'orders_description',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Global Cardiopulmonary Orders List",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#configuration_orders_cp_pager',{search:false,edit:false,add:false,del:false});
+		jQuery("#configuration_orders_cp1").jqGrid('GridUnload');
+		jQuery("#configuration_orders_cp1").jqGrid({
+			url:"ajaxdashboard/orders-list/Cardiopulmonary/User",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Group','Category','Description','CPT','SNOMED'],
+			colModel:[
+				{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
+				{name:'user_id',index:'user_id',width:1,hidden:true},
+				{name:'orders_category',index:'orders_category',width:1,hidden:true},
+				{name:'orders_description',index:'orders_description',width:355},
+				{name:"cpt",index:"cpt",width:100},
+				{name:"snomed",index:"snomed",width:100}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#configuration_orders_cp1_pager'),
+			sortname: 'orders_description',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Personal Cardiopulmonary Orders List",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#configuration_orders_cp1_pager',{search:false,edit:false,add:false,del:false});
+		jQuery("#configuration_orders_ref").jqGrid('GridUnload');
+		jQuery("#configuration_orders_ref").jqGrid({
+			url:"ajaxdashboard/orders-list/Referral/Global",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Group','Category','Description','CPT','SNOMED'],
+			colModel:[
+				{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
+				{name:'user_id',index:'user_id',width:1,hidden:true},
+				{name:'orders_category',index:'orders_category',width:1,hidden:true},
+				{name:'orders_description',index:'orders_description',width:355},
+				{name:"cpt",index:"cpt",width:100},
+				{name:"snomed",index:"snomed",width:100}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#configuration_orders_ref_pager'),
+			sortname: 'orders_description',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Global Referral Orders List",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#configuration_orders_ref_pager',{search:false,edit:false,add:false,del:false});
+		jQuery("#configuration_orders_ref1").jqGrid('GridUnload');
+		jQuery("#configuration_orders_ref1").jqGrid({
+			url:"ajaxdashboard/orders-list/Referral/User",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Group','Category','Description','CPT','SNOMED'],
+			colModel:[
+				{name:'orderslist_id',index:'orderslist_id',width:1,hidden:true},
+				{name:'user_id',index:'user_id',width:1,hidden:true},
+				{name:'orders_category',index:'orders_category',width:1,hidden:true},
+				{name:'orders_description',index:'orders_description',width:355},
+				{name:"cpt",index:"cpt",width:100},
+				{name:"snomed",index:"snomed",width:100}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#configuration_orders_ref1_pager'),
+			sortname: 'orders_description',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Personal Referral Orders List",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#configuration_orders_ref1_pager',{search:false,edit:false,add:false,del:false});
+		jQuery("#cpt_list_config").jqGrid({
+			url:"ajaxdashboard/cpt-list",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Relate ID','CPT Code','Description','Charge','Favorite','Unit'],
+			colModel:[
+				{name:'cpt_id',index:'cpt_id',width:1,hidden:true},
+				{name:'cpt_relate_id',index:'cpt_relate_id',width:1,hidden:true, editrules : {edithidden:true}},
+				{name:'cpt',index:'cpt',width:100,editable:true,editrules:{required:true},formoptions:{elmsuffix:"(*)"}},
+				{name:'cpt_description',index:'cpt_description',width:350,editable:true,editrules:{required:true},edittype:"textarea",editoptions:{rows:"4",cols:"50"},formoptions:{elmsuffix:"(*)"}},
+				{name:'cpt_charge',index:'cpt_charge',width:100,editable:true,editrules:{required:true},formoptions:{elmsuffix:"(*)"}},
+				{name:'favorite',index:'favorite',width:1,hidden:true},
+				{name:'unit',index:'unit',width:1,hidden:true}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#cpt_list_config_pager'),
+			sortname: 'cpt',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"CPT Codes",
+			emptyrecords:"No CPT codes",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#cpt_list_config_pager',{edit:false,add:false,del:false});
+		jQuery("#patient_forms_list").jqGrid({
+			url:"ajaxdashboard/patient-forms-list",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Form','Gender','Group','Age','Scoring'],
+			colModel:[
+				{name:'template_id',index:'template_id',width:1,hidden:true},
+				{name:'template_name',index:'template_name',width:300},
+				{name:'sex',index:'sex',width:100},
+				{name:'group',index:'group',width:100},
+				{name:'age',index:'age',width:1,hidden:true},
+				{name:'scoring',index:'scoring',width:1,hidden:true}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#patient_forms_list_pager'),
+			sortname: 'template_id',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Patient Forms",
+			emptyrecords:"No forms",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#patient_forms_list_pager',{edit:false,add:false,del:false});
+		jQuery("#hpi_forms_list").jqGrid({
+			url:"ajaxdashboard/hpi-forms-list",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Form','Gender','Group','Age'],
+			colModel:[
+				{name:'template_id',index:'template_id',width:1,hidden:true},
+				{name:'template_name',index:'template_name',width:300},
+				{name:'sex',index:'sex',width:100},
+				{name:'group',index:'group',width:100},
+				{name:'age',index:'age',width:1,hidden:true}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#hpi_forms_list_pager'),
+			sortname: 'template_id',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"HPI Forms",
+			emptyrecords:"No forms",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#hpi_forms_list_pager',{edit:false,add:false,del:false});
+		jQuery("#ros_forms_list").jqGrid({
+			url:"ajaxdashboard/ros-forms-list",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Form','Gender','Group','Age','Default'],
+			colModel:[
+				{name:'template_id',index:'template_id',width:1,hidden:true},
+				{name:'template_name',index:'template_name',width:250},
+				{name:'sex',index:'sex',width:100},
+				{name:'group',index:'group',width:100},
+				{name:'age',index:'age',width:1,hidden:true},
+				{name:'default',index:'default',width:50}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#ros_forms_list_pager'),
+			sortname: 'template_id',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"ROS Forms",
+			emptyrecords:"No forms",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#ros_forms_list_pager',{edit:false,add:false,del:false});
+		jQuery("#pe_forms_list").jqGrid({
+			url:"ajaxdashboard/pe-forms-list",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Form','Gender','Group','Age','Default'],
+			colModel:[
+				{name:'template_id',index:'template_id',width:1,hidden:true},
+				{name:'template_name',index:'template_name',width:250},
+				{name:'sex',index:'sex',width:100},
+				{name:'group',index:'group',width:100},
+				{name:'age',index:'age',width:1,hidden:true},
+				{name:'default',index:'default',width:50}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#pe_forms_list_pager'),
+			sortname: 'template_id',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"PE Forms",
+			emptyrecords:"No forms",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#pe_forms_list_pager',{edit:false,add:false,del:false});
+		jQuery("#situation_forms_list").jqGrid({
+			url:"ajaxdashboard/situation-forms-list",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Form','Gender','Group','Age'],
+			colModel:[
+				{name:'template_id',index:'template_id',width:1,hidden:true},
+				{name:'template_name',index:'template_name',width:300},
+				{name:'sex',index:'sex',width:100},
+				{name:'group',index:'group',width:100},
+				{name:'age',index:'age',width:1,hidden:true}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#situation_forms_list_pager'),
+			sortname: 'template_id',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Situation Forms",
+			emptyrecords:"No forms",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#situation_forms_list_pager',{edit:false,add:false,del:false});
+		jQuery("#referral_forms_list").jqGrid({
+			url:"ajaxdashboard/referral-forms-list",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Form','Gender','Group','Age'],
+			colModel:[
+				{name:'template_id',index:'template_id',width:1,hidden:true},
+				{name:'template_name',index:'template_name',width:300},
+				{name:'sex',index:'sex',width:100},
+				{name:'group',index:'group',width:100},
+				{name:'age',index:'age',width:1,hidden:true}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#referral_forms_list_pager'),
+			sortname: 'template_id',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Referral Forms",
+			emptyrecords:"No forms",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#referral_forms_list_pager',{edit:false,add:false,del:false});
+		jQuery("#textdump_list").jqGrid({
+			url:"ajaxdashboard/textdump-list",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Target Field','Group'],
+			colModel:[
+				{name:'template_id',index:'template_id',width:1,hidden:true},
+				{name:'template_name',index:'template_name',width:200,formatter:targetname,unformat:untargetname},
+				{name:'group',index:'group',width:400}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#textdump_list_pager'),
+			sortname: 'template_id',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Text Template Groups",
+			emptyrecords:"No text templates",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" },
+			subGrid: true,
+			subGridRowExpanded: function(subgrid_id, row_id) {
+				var group_id = row_id;
+				var subgrid_table_id, pager_id;
+				subgrid_table_id = subgrid_id+"_t";
+				pager_id = "p_"+subgrid_table_id;
+				$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table><div id='"+pager_id+"' class='scroll'></div>");
+				jQuery("#"+subgrid_table_id).jqGrid({
+					url: "ajaxdashboard/textdump-list1/"+row_id,
+					datatype: "json",
+					mtype: "POST",
+					colNames:['ID','Target Field','Template Text','Group','Default'],
+					colModel:[
+						{name:'template_id',index:'template_id',width:1,hidden:true},
+						{name:'template_name',index:'template_name',width:200,formatter:targetname,unformat:untargetname},
+						{name:'array',index:'array',width:400},
+						{name:'group',index:'group',width:1,hidden:true},
+						{name:'default',index:'default',width:1,hidden:true}
+					],
+					rowNum:10,
+					pager: pager_id,
+					sortname: 'template_id', 
+					sortorder: "asc", 
+					height: '100%',
+					jsonReader: { repeatitems : false, id: "0" }
+				});
+				jQuery("#"+subgrid_table_id).jqGrid('navGrid',"#"+pager_id,{
+					search:false,
+					edit:false,
+					add:false,
+					del:false
+				}).jqGrid('navButtonAdd',"#"+pager_id,{
+					caption:"Add", 
+					buttonicon:"ui-icon-plus", 
+					onClickButton: function(){ 
+						jQuery("#textdump_list").GridToForm(group_id,"#configuration_textdump_form");
+						$("#configuration_textdump_template_id").val('');
+						$("#configuration_textdump_subgrid_table_id").val(subgrid_table_id);
+						$('#configuration_textdump_dialog').dialog('open');
+						$('#configuration_textdump_dialog').dialog('option', 'title', "Add Template Text");
+					}, 
+					position:"last"
+				}).jqGrid('navButtonAdd',"#"+pager_id,{
+					caption:"Edit", 
+					buttonicon:"ui-icon-pencil", 
+					onClickButton: function(){ 
+						var id = jQuery(this).getGridParam('selrow');
+						if(id){
+							jQuery(this).GridToForm(id,"#configuration_textdump_form");
+							$("#configuration_textdump_subgrid_table_id").val(subgrid_table_id);
+							$('#configuration_textdump_dialog').dialog('open');
+							$('#configuration_textdump_dialog').dialog('option', 'title', "Edit Template Text");
+						} else {
+							$.jGrowl('Choose item to edit!');
+						}
+					}, 
+					position:"last"
+				}).jqGrid('navButtonAdd',"#"+pager_id,{
+					caption:"Delete", 
+					buttonicon:"ui-icon-trash", 
+					onClickButton: function(){ 
+						var id = jQuery(this).getGridParam('selrow');
+						if(id){
+							if(confirm('Are you sure you want to delete this text?')){
+								$.ajax({
+									type: "POST",
+									url: "ajaxsearch/deletetextdump/" + id,
+									success: function(data){
+										$.jGrowl(data);
+										jQuery(this).trigger("reloadGrid");
+									}
+								});
+							}
+						} else {
+							$.jGrowl('Choose item to delete!');
+						}
+					}, 
+					position:"last"
+				});
+			}
+		}).navGrid('#textdump_list_pager',{edit:false,add:false,del:false});
+		$('#dialog_load').dialog('close');
 		$("#configuration_dialog").dialog('open');
 	});
 	$("#configuration_order").dialog({ 
@@ -1802,6 +1802,8 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
+	$("#configuration_textdump_group_template_name").addOption(fields,false);
+	$("#configuration_textdump_default").addOption({"":"No","normal":"Yes"},false);
 	$("#configuration_textdump_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 

@@ -12,7 +12,7 @@ $(document).ready(function() {
 			$('#menu_age').html(data.age);
 			$('#menu_gender1').html(data.gender);
 			if (data.new == 'Y') {
-				$("#demographics_list_dialog").dialog('open');
+				open_demographics();
 			}
 		}
 	});

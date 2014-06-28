@@ -588,4 +588,9 @@ $(document).ready(function() {
 			}
 		});
 	}
+	$("#t_message_test_results").click(function() {
+		$("#encounter_copy_result").hide();
+		$("#t_message_copy_result").show();
+		$("#tests_dialog").dialog('open');
+	});
 });

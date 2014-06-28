@@ -3,11 +3,12 @@
 	<div id="encounter_tabs">
 		<ul>
 			<li id="encounter_tabs_hpi"><a href="#encounter_tabs_1">MTM Tools</a></li>
-			<li id="encounter_tabs_orders"><a href="#encounter_tabs_2">MTM Claims/Referral</a></li>
+			<li id="encounter_tabs_orders"><a href="#encounter_tabs_2">MTM Claims</a></li>
 			<li id="encounter_tabs_oh"><a href="#encounter_tabs_3">History</a></li>
 			<li id="encounter_tabs_vitals"><a href="#encounter_tabs_4">Vitals</a></li>
-			<li id="encounter_tabs_assessment"><a href="#encounter_tabs_5">Conditions</a></li>
-			<li id="encounter_tabs_medications"><a href="#encounter_tabs_6">Medications</a></li>
+			<li id="encounter_tabs_results"><a href="#encounter_tabs_5">Results/Outcomes</a></li>
+			<li id="encounter_tabs_assessment"><a href="#encounter_tabs_6">Assessment</a></li>
+			<li id="encounter_tabs_medications"><a href="#encounter_tabs_7">Medications</a></li>
 		</ul>
 		<div id="encounter_tabs_1" style="overflow:auto">
 			<div id="hpi_form" class="pure-g">
@@ -38,9 +39,12 @@
 			<?php echo $vitals;?>
 		</div>
 		<div id="encounter_tabs_5" style="overflow:auto">
-			<?php echo $assessment;?>
+			<?php echo $results;?>
 		</div>
 		<div id="encounter_tabs_6" style="overflow:auto">
+			<?php echo $assessment;?>
+		</div>
+		<div id="encounter_tabs_7" style="overflow:auto">
 			<?php echo $medications;?>
 		</div>
 	</div>
