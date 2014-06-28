@@ -1405,17 +1405,29 @@ class BaseController extends Controller {
 				$data['assessment'] .= '<strong>' . $assessmentInfo->assessment_8 . '</strong><br /><br />';
 			}
 			if ($assessmentInfo->assessment_other != '') {
-				$data['assessment'] .= '<strong>Additional Diagnoses: </strong>';
+				if ($encounterInfo->encounter_template == 'standardmtm') {
+					$data['assessment'] .= '<strong>SOAP Note: </strong>';
+				} else {
+					$data['assessment'] .= '<strong>Additional Diagnoses: </strong>';
+				}
 				$data['assessment'] .= nl2br($assessmentInfo->assessment_other);
 				$data['assessment'] .= '<br /><br />';
 			}
 			if ($assessmentInfo->assessment_ddx != '') {
-				$data['assessment'] .= '<strong>Differential Diagnoses Considered: </strong>';
+				if ($encounterInfo->encounter_template == 'standardmtm') {
+					$data['assessment'] .= '<strong>MAP2: </strong>';
+				} else {
+					$data['assessment'] .= '<strong>Differential Diagnoses Considered: </strong>';
+				}
 				$data['assessment'] .= nl2br($assessmentInfo->assessment_ddx);
 				$data['assessment'] .= '<br /><br />';
 			}
 			if ($assessmentInfo->assessment_notes != '') {
-				$data['assessment'] .= '<strong>Assessment Discussion: </strong>';
+				if ($encounterInfo->encounter_template == 'standardmtm') {
+					$data['assessment'] .= '<strong>Pharmacist Note: </strong>';
+				} else {
+					$data['assessment'] .= '<strong>Assessment Discussion: </strong>';
+				}
 				$data['assessment'] .= nl2br($assessmentInfo->assessment_notes);
 				$data['assessment'] .= '<br /><br />';
 			}
@@ -3345,13 +3357,12 @@ class BaseController extends Controller {
 		$practice = Practiceinfo::find(Session::get('practice_id'));
 		$data['practiceName'] = $practice->practice_name;
 		$data['website'] = $practice->website;
-		$data['practiceInfo'] = $practice->street_address1;
+		$data['practiceInfo1'] = $practice->street_address1;
 		if ($practice->street_address2 != '') {
-			$data['practiceInfo'] .= ', ' . $practice->street_address2;
+			$data['practiceInfo1'] .= ', ' . $practice->street_address2;
 		}
-		$data['practiceInfo'] .= '<br />';
-		$data['practiceInfo'] .= $practice->city . ', ' . $practice->state . ' ' . $practice->zip;
-		$data['practiceInfo'] .= 'Phone: ' . $practice->phone . ', Fax: ' . $practice->fax;
+		$data['practiceInfo2'] = $practice->city . ', ' . $practice->state . ' ' . $practice->zip;
+		$data['practiceInfo3'] = 'Phone: ' . $practice->phone . ', Fax: ' . $practice->fax;
 		$patient = Demographics::find($pid);
 		$data['patientInfo1'] = $patient->firstname . ' ' . $patient->lastname;
 		$data['patientInfo2'] = $patient->address;

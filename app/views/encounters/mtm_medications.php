@@ -1,5 +1,6 @@
 <?php echo HTML::script('/js/mtm_medications.js');?>
 <button type="button" id="mtm_medications_reviewed" class="nosh_button_save">Reviewed Medications</button>
+<button type="button" id="mtm_print_medication_list" class="nosh_button_print">Print Medication List</button>
 <hr class="ui-state-default" style="width:99%"/>
 <div id="mtm_medications_form">
 	<table id="mtm_medications" class="scroll" cellpadding="0" cellspacing="0"></table>

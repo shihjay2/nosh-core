@@ -154,4 +154,7 @@ $(document).ready(function() {
 	$("#mtm_medications_reviewed").click(function(){
 		medications_autosave();
 	});
+	$("#mtm_print_medication_list").click(function() {
+		window.open("print_medication_list");
+	});
 });
