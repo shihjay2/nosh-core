@@ -5300,48 +5300,68 @@ class AjaxChartController extends BaseController {
 		$demographics = DB::table('demographics')->where('pid', '=', $pid)->first();
 		$dob = $this->human_to_unix($demographics->DOB);
 		// ABA
-		if ($dob >= $a && $dob <= $b) {
+		if ($dob <= $a && $dob >= $b) {
 			$return['aba'] = $this->hedis_aba($pid);
 		}
 		// WCC
-		if ($dob >= $e && $dob <= $a) {
+		if ($dob <= $e && $dob >= $a) {
 			$return['wcc'] = $this->hedis_wcc($pid);
 		}
 		// CIS
-		if ($dob <= $e) {
+		if ($dob >= $e) {
 			$return['cis'] = $this->hedis_cis($pid);
 		}
 		// IMA
-		if ($dob >= $c && $dob <= $a) {
+		if ($dob <= $c && $dob >= $a) {
 			$return['ima'] = $this->hedis_ima($pid);
 		}
 		// HPV
-		if ($dob >= $g && $dob <= $c && $demographics->sex == 'f') {
+		if ($dob <= $g && $dob >= $c && $demographics->sex == 'f') {
 			$return['hpv'] = $this->hedis_hpv($pid);
 		}
 		// LSC
-		if ($dob <= $f) {
+		if ($dob >= $f) {
 			$return['lsc'] = $this->hedis_lsc($pid);
 		}
 		// BCS
-		if ($dob >= $i && $dob <= $j && $demographics->sex == 'f') {
+		if ($dob <= $i && $dob >= $j && $demographics->sex == 'f') {
 			$return['bcs'] = $this->hedis_bcs($pid);
 		}
 		// CCS
-		if ($dob >= $n && $dob <= $k && $demographics->sex == 'f') {
+		if ($dob <= $n && $dob >= $k && $demographics->sex == 'f') {
 			$return['ccs'] = $this->hedis_ccs($pid);
 		}
 		// COL
-		if ($dob >= $l && $dob <= $m) {
+		if ($dob <= $l && $dob >= $m) {
 			$return['col'] = $this->hedis_col($pid);
 		}
 		// CHL
-		if ($dob >= $o && $dob <= $p && $demographics->sex == 'f') {
+		if ($dob <= $o && $dob >= $p && $demographics->sex == 'f') {
 			$return['chl'] = $this->hedis_chl($pid);
 		}
 		// GSO
-		if ($dob >= $q) {
+		if ($dob <= $q) {
 			$return['gso'] = $this->hedis_gso($pid);
+		}
+		// SPR
+		$spr_query = DB::table('issues')
+			->where('pid','=', $pid)
+			->where('issue_date_inactive', '=', '0000-00-00 00:00:00')
+			->where(function($query_array1) {
+				$issues_item_array = array('496','J44.9');
+				$i = 0;
+				foreach ($issues_item_array as $issues_item) {
+					if ($i == 0) {
+						$query_array1->where('issue', 'LIKE', "%$issues_item%");
+					} else {
+						$query_array1->orWhere('issue', 'LIKE', "%$issues_item%");
+					}
+					$i++;
+				}
+			})
+			->first();
+		if ($spr_query && $dob <= $i) {
+			$return['spr'] = $this->hedis_spr($pid);
 		}
 	}
 }

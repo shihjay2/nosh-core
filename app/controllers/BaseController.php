@@ -3985,6 +3985,10 @@ class BaseController extends Controller {
 						$med_code = "C38295";
 						$med_code_description = "Rectal Route of Administration";
 					}
+					if ($med_row->rxl_route == "transdermal") {
+						$med_code = "C38305";
+						$med_code_description = "Transdermal Route of Administration";
+					}
 					if ($med_row->rxl_route == "subcutaneously") {
 						$med_code = "C38299";
 						$med_code_description = "Subcutaneous Route of Administration";
@@ -4094,6 +4098,10 @@ class BaseController extends Controller {
 					if ($sup_row->sup_route == "per rectum") {
 						$med_code = "C38295";
 						$med_code_description = "Rectal Route of Administration";
+					}
+					if ($sup_row->sup_route == "transdermal") {
+						$med_code = "C38305";
+						$med_code_description = "Transdermal Route of Administration";
 					}
 					if ($sup_row->sup_route == "subcutaneously") {
 						$med_code = "C38299";
@@ -6544,19 +6552,31 @@ class BaseController extends Controller {
 		return $data;
 	}
 	
-	protected function hedis_cwp()
+	protected function hedis_cwp($type)
 	{
 		$data = array();
 		$data['count'] = 0;
 		$data['test'] = 0;
 		$data['abx'] = 0;
 		$data['abx_no_test'] = 0;
-		$query = DB::table('assessment')
+		$data['percent_test'] = 0;
+		$data['percent_abx'] = 0;
+		$data['percent_abx_no_test'] = 0;
+		$query0 = DB::table('assessment')
 			->join('encounters', 'encounters.eid', '=', 'assessment.eid')
 			->where('encounters.addendum', '=', 'n')
 			->where('encounters.practice_id', '=', Session::get('practice_id'))
-			->where('encounters.encounter_signed', '=', 'Yes')
-			->where(function($query_array1) {
+			->where('encounters.encounter_signed', '=', 'Yes');
+		if ($type != 'all') {
+			if ($type == 'year') {
+				$date_param = date('Y-m-d H:i:s', time() - 31556926);
+				$query0->where('encounters.encounter_DOS', '>=', $date_param);
+			} else {
+				$date_param = date('Y-m-d H:i:s', strtotime($type));
+				$query0->where('encounters.encounter_DOS', '>=', $date_param);
+			}
+		}
+		$query0->where(function($query_array1) {
 				$assessment_item_array = array('462','J02.9','034.0','J02.0','J03.00','074.0','B08.5','474.00','J35.01','099.51','A56.4','032.0','A36.0','472.1','J31.2','098.6','A54.5');
 				$i = 0;
 				foreach ($assessment_item_array as $assessment_item) {
@@ -6568,34 +6588,120 @@ class BaseController extends Controller {
 					$i++;
 				}
 			})
-			->select('encounters.eid','encounters.pid')
-			->get();
-		if ($query) {
+			->select('encounters.eid','encounters.pid');
+		$result0 = $query0->get();
+		if ($result0) {
+			$query = array();
+			foreach ($result0 as $row0) {
+				$demographics = DB::table('demographics')->where('pid', '=', $row0->pid)->first();
+				$dob = $this->human_to_unix($demographics->DOB);
+				$a = time() - 63113852; //2 years
+				$b = time() - 568024668; //18 years
+				if ($dob <= $a && $dob >= $b) {
+					$query[] = $row0->eid;
+				}
+			}
+			$data['count'] = count($query);
+			if ($data['count'] > 0) {
+				foreach ($query as $row) {
+					$test = 0;
+					$query1 = DB::table('billing_core')
+						->where('eid', '=', $row)
+						->where(function($query_array2) {
+							$item2_array = array('87880','87070','87071','87081','87430','87650','87651','87652');
+							$j = 0;
+							foreach ($item2_array as $item2) {
+								if ($j == 0) {
+									$query_array2->where('cpt', '=', $item2);
+								} else {
+									$query_array2->orWhere('cpt', '=', $item2);
+								}
+								$j++;
+							}
+						})
+						->first();
+					if ($query1) {
+						$data['test']++;
+						$test++;
+					}
+					$query2 = DB::table('rx')->where('eid', '=', $row)->first();
+					if ($query2) {
+						if ($query2->rx_rx != '') {
+							$abx_count = 0;
+							$search = array('cillin','amox','zith','cef','kef','mycin','eryth','pen','bac','sulf');
+							foreach ($search as $needle) {
+								$pos = stripos($query2->rx_rx, $needle);
+								if ($pos !== false) {
+									$abx_count++;
+								}
+							}
+							if ($abx_count > 0) {
+								$data['abx']++;
+								if ($test == 0) {
+									$data['abx_no_test']++;
+								}
+							}
+						}
+					}
+				}
+			}
+			$data['percent_test'] = round($data['test']/$data['count']*100);
+			$data['percent_abx'] = round($data['abx']/$data['count']*100);
+			$data['percent_abx_no_test'] = round($data['abx_no_test']/$data['count']*100);
+		}
+		return $data;
+	}
+	
+	protected function hedis_uri($type)
+	{
+		$data = array();
+		$data['count'] = 0;
+		$data['abx'] = 0;
+		$data['percent_abx'] = 0;
+		$query0 = DB::table('assessment')
+			->join('encounters', 'encounters.eid', '=', 'assessment.eid')
+			->where('encounters.addendum', '=', 'n')
+			->where('encounters.practice_id', '=', Session::get('practice_id'))
+			->where('encounters.encounter_signed', '=', 'Yes');
+		if ($type != 'all') {
+			if ($type == 'year') {
+				$date_param = date('Y-m-d H:i:s', time() - 31556926);
+				$query0->where('encounters.encounter_DOS', '>=', $date_param);
+			} else {
+				$date_param = date('Y-m-d H:i:s', strtotime($type));
+				$query0->where('encounters.encounter_DOS', '>=', $date_param);
+			}
+		}
+		$query0->where(function($query_array1) {
+				$assessment_item_array = array('465.9','J06.9','487.1','J10.1','J11.1');
+				$i = 0;
+				foreach ($assessment_item_array as $assessment_item) {
+					if ($i == 0) {
+						$query_array1->where('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
+					} else {
+						$query_array1->orWhere('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
+					}
+					$i++;
+				}
+			})
+			->select('encounters.eid','encounters.pid');
+		$result0 = $query0->get();
+		if ($result0) {
+			$query = array();
+			foreach ($result0 as $row0) {
+				$demographics = DB::table('demographics')->where('pid', '=', $row0->pid)->first();
+				$dob = $this->human_to_unix($demographics->DOB);
+				$a = time() - 7889229; //3 months
+				$b = time() - 568024668; //18 years
+				if ($dob <= $a && $dob >= $b) {
+					$query[] = $row0->eid;
+				}
+			}
 			$data['count'] = count($query);
 			foreach ($query as $row) {
-				$test = 0;
-				$query1 = DB::table('billing_core')
-					->where('eid', '=', $row->eid)
-					->where(function($query_array2) {
-						$item2_array = array('87880','87070','87071','87081','87430','87650','87651','87652');
-						$j = 0;
-						foreach ($item2_array as $item2) {
-							if ($j == 0) {
-								$query_array2->where('cpt', '=', $item2);
-							} else {
-								$query_array2->orWhere('cpt', '=', $item2);
-							}
-							$j++;
-						}
-					})
-					->first();
+				$query1 = DB::table('rx')->where('eid', '=', $row)->first();
 				if ($query1) {
-					$data['test']++;
-					$test++;
-				}
-				$query2 = DB::table('rx')->where('eid', '=', $row->eid)->first();
-				if ($query2) {
-					if ($query2->rx_rx != '') {
+					if ($query1->rx_rx != '') {
 						$abx_count = 0;
 						$search = array('cillin','amox','zith','cef','kef','mycin','eryth','pen','bac','sulf');
 						foreach ($search as $needle) {
@@ -6606,13 +6712,194 @@ class BaseController extends Controller {
 						}
 						if ($abx_count > 0) {
 							$data['abx']++;
-							if ($test == 0) {
-								$data['abx_no_test']++;
-							}
 						}
 					}
 				}
 			}
+			$data['percent_abx'] = round($data['abx']/$data['count']*100);
+		}
+		return $data;
+	}
+	
+	protected function hedis_aab($type)
+	{
+		$data = array();
+		$data['count'] = 0;
+		$data['abx'] = 0;
+		$data['percent_abx'] = 0;
+		$query0 = DB::table('assessment')
+			->join('encounters', 'encounters.eid', '=', 'assessment.eid')
+			->where('encounters.addendum', '=', 'n')
+			->where('encounters.practice_id', '=', Session::get('practice_id'))
+			->where('encounters.encounter_signed', '=', 'Yes');
+		if ($type != 'all') {
+			if ($type == 'year') {
+				$date_param = date('Y-m-d H:i:s', time() - 31556926);
+				$query0->where('encounters.encounter_DOS', '>=', $date_param);
+			} else {
+				$date_param = date('Y-m-d H:i:s', strtotime($type));
+				$query0->where('encounters.encounter_DOS', '>=', $date_param);
+			}
+		}
+		$query0->where(function($query_array1) {
+				$assessment_item_array = array('466.0','J20.9');
+				$i = 0;
+				foreach ($assessment_item_array as $assessment_item) {
+					if ($i == 0) {
+						$query_array1->where('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
+					} else {
+						$query_array1->orWhere('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
+					}
+					$i++;
+				}
+			})
+			->select('encounters.eid','encounters.pid');
+		$result0 = $query0->get();
+		if ($result0) {
+			$query = array();
+			foreach ($result0 as $row0) {
+				$demographics = DB::table('demographics')->where('pid', '=', $row0->pid)->first();
+				$dob = $this->human_to_unix($demographics->DOB);
+				$a = time() - 7889229; //3 months
+				$b = time() - 568024668; //18 years
+				if ($dob <= $a && $dob >= $b) {
+					$query[] = $row0->eid;
+				}
+			}
+			$data['count'] = count($query);
+			foreach ($query as $row) {
+				$query1 = DB::table('rx')->where('eid', '=', $row)->first();
+				if ($query1) {
+					if ($query1->rx_rx != '') {
+						$abx_count = 0;
+						$search = array('cillin','amox','zith','cef','kef','mycin','eryth','pen','bac','sulf','cycl','lox');
+						foreach ($search as $needle) {
+							$pos = stripos($query1->rx_rx, $needle);
+							if ($pos !== false) {
+								$abx_count++;
+							}
+						}
+						if ($abx_count > 0) {
+							$data['abx']++;
+						}
+					}
+				}
+			}
+			$data['percent_abx'] = round($data['abx']/$data['count']*100);
+		}
+		return $data;
+	}
+	
+	protected function hedis_spr($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Use of Spirometry Testing in the Assessment and Diagnosis of COPD not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('tests')->where('pid', '=', $pid)->where('test_name', 'LIKE', "%spirometry%")->orderBy('test_datetime', 'desc')->first();
+		if ($query) {
+			$score++;
+		} else {
+			$query1 = DB::table('documents')
+				->where('pid', '=', $pid)
+				->where('documents_desc', 'LIKE', "%spirometry%")
+				->where('documents_type', '=', 'Cardiopulmonary')
+				->first();
+			if ($query1) {
+				$score++;
+			} else {
+				$query2 = DB::table('tags_relate')
+					->join('tags', 'tags.tags_id', '=', 'tags_relate.tags_id')
+					->where('tags_relate.pid', '=', $pid)
+					->where('tags.tag', 'LIKE', "%spirometry%")
+					->first();
+				if ($query2) {
+					$score++;
+				} else {
+					$data['fix'][] = 'Glaucoma screening needs to be performed';
+				}
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Use of Spirometry Testing in the Assessment and Diagnosis of COPD performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_pce($type)
+	{
+		$data = array();
+		$data['count'] = 0;
+		$data['tx'] = 0;
+		$data['percent_tx'] = 0;
+		$query0 = DB::table('assessment')
+			->join('encounters', 'encounters.eid', '=', 'assessment.eid')
+			->where('encounters.addendum', '=', 'n')
+			->where('encounters.practice_id', '=', Session::get('practice_id'))
+			->where('encounters.encounter_signed', '=', 'Yes');
+		if ($type != 'all') {
+			if ($type == 'year') {
+				$date_param = date('Y-m-d H:i:s', time() - 31556926);
+				$query0->where('encounters.encounter_DOS', '>=', $date_param);
+			} else {
+				$date_param = date('Y-m-d H:i:s', strtotime($type));
+				$query0->where('encounters.encounter_DOS', '>=', $date_param);
+			}
+		}
+		$query0->where(function($query_array1) {
+				$assessment_item_array = array('491.21','J44.1');
+				$i = 0;
+				foreach ($assessment_item_array as $assessment_item) {
+					if ($i == 0) {
+						$query_array1->where('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
+					} else {
+						$query_array1->orWhere('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
+					}
+					$i++;
+				}
+			})
+			->select('encounters.eid','encounters.pid');
+		$result0 = $query0->get();
+		if ($result0) {
+			$query = array();
+			foreach ($result0 as $row0) {
+				$demographics = DB::table('demographics')->where('pid', '=', $row0->pid)->first();
+				$dob = $this->human_to_unix($demographics->DOB);
+				$a = time() - 1262277040; //40 years
+				if ($dob <= $a) {
+					$query[] = $row0->eid;
+				}
+			}
+			$data['count'] = count($query);
+			foreach ($query as $row) {
+				$query1 = DB::table('rx')->where('eid', '=', $row)->first();
+				if ($query1) {
+					if ($query1->rx_rx != '') {
+						$steroid_count = 0;
+						$inhaler_count = 0;
+						$search = array('sone','medrol','pred','celestone','cortef','decadron','rayos');
+						foreach ($search as $needle) {
+							$pos = stripos($query1->rx_rx, $needle);
+							if ($pos !== false) {
+								$steroid_count++;
+							}
+						}
+						$search1 = array('terol','hfa','xopenex','maxair','combivent','ipratro','duoneb');
+						foreach ($search1 as $needle1) {
+							$pos1 = stripos($query1->rx_rx, $needle1);
+							if ($pos1 !== false) {
+								$inhaler_count++;
+							}
+						}
+						if ($steroid_count > 0 && $inhaler_count > 0) {
+							$data['tx']++;
+						}
+					}
+				}
+			}
+			$data['percent_tx'] = round($data['tx']/$data['count']*100);
 		}
 		return $data;
 	}

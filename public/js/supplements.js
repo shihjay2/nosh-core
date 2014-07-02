@@ -309,7 +309,7 @@ $(document).ready(function() {
 	});
 	$("#sup_date_active").mask("99/99/9999");
 	$("#sup_date_active").datepicker();
-	$("#sup_route").addOption({"by mouth":"PO","per rectum":"PR","subcutaneously":"SC","intramuscularly":"IM","intravenously":"IV"}, false);
+	$("#sup_route").addOption({"by mouth":"PO","per rectum":"PR","transdermal":"TD","subcutaneously":"SC","intramuscularly":"IM","intravenously":"IV"}, false);
 	$("#sup_route").selectOptions();
 	$("#sup_dosage").click(function(){
 		var sup_name = $("#sup_supplement").val();

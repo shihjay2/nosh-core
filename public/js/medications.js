@@ -111,7 +111,7 @@ $(document).ready(function() {
 	});
 	$("#rxl_date_active").mask("99/99/9999");
 	$("#rxl_date_active").datepicker();
-	$("#rxl_route").addOption({"by mouth":"PO","per rectum":"PR","subcutaneously":"SC","intramuscularly":"IM","intravenously":"IV"}, false);
+	$("#rxl_route").addOption({"by mouth":"PO","per rectum":"PR","transdermal":"TD","subcutaneously":"SC","intramuscularly":"IM","intravenously":"IV"}, false);
 	$("#rxl_route").selectOptions();
 	$("#rxl_dosage").focus(function(){
 		var rx_name = $("#rxl_name").val();
@@ -916,7 +916,7 @@ $(document).ready(function() {
 	});
 	$("#messages_rxl_date_prescribed").mask("99/99/9999");
 	$("#messages_rxl_date_prescribed").datepicker();
-	$("#messages_rxl_route").addOption({"by mouth":"PO","per rectum":"PR","subcutaneously":"SC","intramuscularly":"IM","intravenously":"IV"}, false);
+	$("#messages_rxl_route").addOption({"by mouth":"PO","per rectum":"PR","transdermal":"TD","subcutaneously":"SC","intramuscularly":"IM","intravenously":"IV"}, false);
 	$("#messages_rxl_route").selectOptions();
 	$("#messages_rxl_dosage").focus(function(){
 		var rx_name = $("#messages_rxl_name").val();

@@ -10,6 +10,11 @@ $(document).ready(function() {
 			if (noshdata.group_id == '100') {
 				$("#schedule_patient_step").hide();
 			}
+			$(this).dialog('option', {
+				height: 500,
+				width: 800,
+				position: { my: 'center', at: 'center', of: '#maincontent' }
+			});
 		},
 		buttons: [
 		{
