@@ -5274,4 +5274,74 @@ class AjaxChartController extends BaseController {
 		$this->audit('Delete');
 		echo 'Result deleted!';
 	}
+	
+	public function postHedisAudit()
+	{
+		$pid = Session::get('pid');
+		$html = '';
+		$return = array();
+		$a = time() - 568024668; //18 years
+		$b = time() - 2335212524; //74 years
+		$c = time() - 410240038; //13 years
+		$d = time() - 441796964; //14 years
+		$e = time() - 94670778; //3 years
+		$f = time() - 63113852; //2 years
+		$g = time() - 284012334; //9 years
+		$h = time() - 378683112; //12 years
+		$i = time() - 1262277040; //40 years
+		$j = time() - 2177427894; //69 years
+		$k = time() - 2019643264; //64 years
+		$l = time() - 1577846300; //50 years
+		$m = time() - 2366769450; //75 years
+		$n = time() - 662695446; //21 years
+		$o = time() - 504910816; //16 years
+		$p = time() - 757366224; //24 years
+		$q = time() - 2051200190; //65 years
+		$demographics = DB::table('demographics')->where('pid', '=', $pid)->first();
+		$dob = $this->human_to_unix($demographics->DOB);
+		// ABA
+		if ($dob >= $a && $dob <= $b) {
+			$return['aba'] = $this->hedis_aba($pid);
+		}
+		// WCC
+		if ($dob >= $e && $dob <= $a) {
+			$return['wcc'] = $this->hedis_wcc($pid);
+		}
+		// CIS
+		if ($dob <= $e) {
+			$return['cis'] = $this->hedis_cis($pid);
+		}
+		// IMA
+		if ($dob >= $c && $dob <= $a) {
+			$return['ima'] = $this->hedis_ima($pid);
+		}
+		// HPV
+		if ($dob >= $g && $dob <= $c && $demographics->sex == 'f') {
+			$return['hpv'] = $this->hedis_hpv($pid);
+		}
+		// LSC
+		if ($dob <= $f) {
+			$return['lsc'] = $this->hedis_lsc($pid);
+		}
+		// BCS
+		if ($dob >= $i && $dob <= $j && $demographics->sex == 'f') {
+			$return['bcs'] = $this->hedis_bcs($pid);
+		}
+		// CCS
+		if ($dob >= $n && $dob <= $k && $demographics->sex == 'f') {
+			$return['ccs'] = $this->hedis_ccs($pid);
+		}
+		// COL
+		if ($dob >= $l && $dob <= $m) {
+			$return['col'] = $this->hedis_col($pid);
+		}
+		// CHL
+		if ($dob >= $o && $dob <= $p && $demographics->sex == 'f') {
+			$return['chl'] = $this->hedis_chl($pid);
+		}
+		// GSO
+		if ($dob >= $q) {
+			$return['gso'] = $this->hedis_gso($pid);
+		}
+	}
 }

@@ -1435,6 +1435,37 @@ $(document).ready(function() {
 					}
 				}
 			},
+			'Save and Add Another': function() {
+				var bValid = true;
+				$("#edit_test_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				if (bValid) {
+					var str = $("#edit_test_form").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxchart/save-test-form",
+							data: str,
+							success: function(data){
+								$.jGrowl(data);
+								reload_grid("tests_list");
+								$('#edit_test_form').clearForm();
+								var currentDate = getCurrentDate();
+								$('#results_test_datetime').val(currentDate);
+								if ($("#results_test_provider_id").val() == '' && noshdata.group_id == '2') {
+									$("#results_test_provider_id").val(noshdata.user_id);
+								}
+							}
+						});
+					} else {
+						$.jGrowl("Please complete the form");
+					}
+				}
+			},
 			Cancel: function() {
 				$('#edit_test_form').clearForm();
 				$('#edit_test_dialog').dialog('close');

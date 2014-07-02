@@ -5677,18 +5677,58 @@ class BaseController extends Controller {
 		curl_setopt($ch,CURLOPT_FAILONERROR,1);
 		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
 		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-		curl_setopt($ch,CURLOPT_TIMEOUT, 15);
+		curl_setopt($ch,CURLOPT_TIMEOUT, 60);
+		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT ,0);
 		$result = curl_exec($ch);
-		curl_close($ch);
 		$result_array = json_decode($result, true);
 		$return_array = array();
 		$i = 0;
-		foreach ($result_array[0]['ChunkingResult']['DetailedChunkList'] as $row) {
-			$return_array[$i]['term'] = $row['Term'];
-			$return_array[$i]['id'] = $row['ConceptId'];
-			$i++;
+		if (!empty($result_array)) {
+			foreach ($result_array[0]['ChunkingResult']['DetailedChunkList'] as $row) {
+				$return_array[$i]['term'] = $row['Term'];
+				$return_array[$i]['id'] = $row['ConceptId'];
+				$i++;
+			}
+		} else {
+			if(curl_errno($ch)){
+				$return_array[] = 'Error:' . curl_error($ch);
+			}
 		}
+		curl_close($ch);
 		return $return_array;
+	}
+	
+	protected function clinithink_crossmap($id, $type)
+	{
+		$url = 'http://clinithink.api.mashery.com/v1/prd/search/CrossMaps?apiKey=gaaedrzjnyhtga7vc576xqjt';
+		if ($type == 'icd9') {
+			$type_id = '100046';
+		}
+		$fields_string = 'crossMapSetId=' . $type_id . '&conceptId=' . $id;
+		$headers = array(
+			"X-Originating-Ip: " . $_SERVER['SERVER_ADDR']
+		);
+		$ch = curl_init();
+		curl_setopt($ch,CURLOPT_URL, $url);
+		curl_setopt($ch,CURLOPT_POST, 1);
+		curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+		curl_setopt($ch,CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch,CURLOPT_FAILONERROR,1);
+		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch,CURLOPT_TIMEOUT, 60);
+		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT ,0);
+		$result = curl_exec($ch);
+		$result_array = json_decode($result, true);
+		if (!empty($result_array)) {
+			$ret = $result_array['MappingResults'][0]['MappingCodes'][0]['Code'];
+		} else {
+			if(curl_errno($ch)){
+				$ret = 'Error:' . curl_error($ch);
+			}
+		}
+		curl_close($ch);
+		return $ret;
 	}
 	
 	protected function getCSVDelimiter($fileName)
@@ -5736,5 +5776,844 @@ class BaseController extends Controller {
 		}
 		$delimiter = $delA[$delKey];
 		return $delimiter;
+	}
+	
+	protected function hedis_aba($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Adult BMI Assessment not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('vitals')->where('pid', '=', $pid)->where('BMI', '!=', '')->orderBy('eid', 'desc')->first();
+		if ($query) {
+			$score++;
+		} else {
+			$query1 = DB::table('assessment')
+				->where('pid', '=', $pid)
+				->where(function($query_array1) {
+					$assessment_item_array = array('V85.0','V85.1','V85.21','V85.22','V85.23','V85.24','V85.25','V85.30','V85.31','V85.32','V85.33','V85.34','V85.35','V85.36','V85.37','V85.38','V85.39','V85.41','V85.42','V85.43','V85.44','V85.45','V85.51','V85.52','V85.53','V85.54','Z68.1','Z68.20','Z68.21','Z68.22','Z68.23','Z68.24','Z68.25','Z68.26','Z68.27','Z68.28','Z68.29','Z68.30','Z68.31','Z68.32','Z68.33','Z68.34','Z68.35','Z68.36','Z68.37','Z68.38','Z68.39','Z68.41','Z68.42','Z68.43','Z68.44','Z68.45');
+					$i = 0;
+					foreach ($assessment_item_array as $assessment_item) {
+						if ($i == 0) {
+							$query_array1->where('assessment_icd1', '=', $assessment_item)->orWhere('assessment_icd2', '=', $assessment_item)->orWhere('assessment_icd3', '=', $assessment_item)->orWhere('assessment_icd4', '=', $assessment_item)->orWhere('assessment_icd5', '=', $assessment_item)->orWhere('assessment_icd6', '=', $assessment_item)->orWhere('assessment_icd7', '=', $assessment_item)->orWhere('assessment_icd8', '=', $assessment_item)->orWhere('assessment_icd9', '=', $assessment_item)->orWhere('assessment_icd10', '=', $assessment_item)->orWhere('assessment_icd11', '=', $assessment_item)->orWhere('assessment_icd12', '=', $assessment_item);
+						} else {
+							$query_array1->orWhere('assessment_icd1', '=', $assessment_item)->orWhere('assessment_icd2', '=', $assessment_item)->orWhere('assessment_icd3', '=', $assessment_item)->orWhere('assessment_icd4', '=', $assessment_item)->orWhere('assessment_icd5', '=', $assessment_item)->orWhere('assessment_icd6', '=', $assessment_item)->orWhere('assessment_icd7', '=', $assessment_item)->orWhere('assessment_icd8', '=', $assessment_item)->orWhere('assessment_icd9', '=', $assessment_item)->orWhere('assessment_icd10', '=', $assessment_item)->orWhere('assessment_icd11', '=', $assessment_item)->orWhere('assessment_icd12', '=', $assessment_item);
+						}
+						$i++;
+					}
+				})
+				->orderBy('eid', 'desc')
+				->first();
+			if ($query1) {
+				$score++;
+			} else {
+				$data['fix'][] = 'BMI needs to measured';
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Adult BMI Assessment performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_wcc($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Weight Assessment and Counseling for Nutrition and Physical Activity for Children and Adolescents not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('vitals')->where('pid', '=', $pid)->where('BMI', '!=', '')->orderBy('eid', 'desc')->first();
+		if ($query) {
+			$score++;
+		} else {
+			$data['fix'][] = 'BMI, height, and weight needs to be measured';
+		}
+		$query1 = DB::table('billing_core')
+			->where('pid', '=', $pid)
+			->where(function($query_array1) {
+				$wcc_item_array = array('97802','97803','97804');
+				$i = 0;
+				foreach ($wcc_item_array as $wcc_item) {
+					if ($i == 0) {
+						$query_array1->where('cpt', '=', $wcc_item);
+					} else {
+						$query_array1->orWhere('cpt', '=', $wcc_item);
+					}
+					$i++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query1) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Nutritional counseling needs to be performed';
+		}
+		$query2 = DB::table('assessment')
+			->where('pid', '=', $pid)
+			->where(function($query_array2) {
+				$assessment_item_array2 = array('V85.51','V85.52','V85.53','V85.54','Z68.51','Z68.52','Z68.53','Z68.54');
+				$count2 = 0;
+				foreach ($assessment_item_array2 as $assessment_item2) {
+					if ($count2 == 0) {
+						$query_array2->where('assessment_icd1', '=', $assessment_item2)->orWhere('assessment_icd2', '=', $assessment_item2)->orWhere('assessment_icd3', '=', $assessment_item2)->orWhere('assessment_icd4', '=', $assessment_item2)->orWhere('assessment_icd5', '=', $assessment_item2)->orWhere('assessment_icd6', '=', $assessment_item2)->orWhere('assessment_icd7', '=', $assessment_item2)->orWhere('assessment_icd8', '=', $assessment_item2)->orWhere('assessment_icd9', '=', $assessment_item2)->orWhere('assessment_icd10', '=', $assessment_item2)->orWhere('assessment_icd11', '=', $assessment_item2)->orWhere('assessment_icd12', '=', $assessment_item2);
+					} else {
+						$query_array2->orWhere('assessment_icd1', '=', $assessment_item2)->orWhere('assessment_icd2', '=', $assessment_item2)->orWhere('assessment_icd3', '=', $assessment_item2)->orWhere('assessment_icd4', '=', $assessment_item2)->orWhere('assessment_icd5', '=', $assessment_item2)->orWhere('assessment_icd6', '=', $assessment_item2)->orWhere('assessment_icd7', '=', $assessment_item2)->orWhere('assessment_icd8', '=', $assessment_item2)->orWhere('assessment_icd9', '=', $assessment_item2)->orWhere('assessment_icd10', '=', $assessment_item2)->orWhere('assessment_icd11', '=', $assessment_item2)->orWhere('assessment_icd12', '=', $assessment_item2);
+					}
+					$count2++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query2) {
+			$score++;
+		} else {
+			$data['fix'][] = 'BMI, height, and weight needs to be measured';
+		}
+		$query3 = DB::table('assessment')
+			->where('pid', '=', $pid)
+			->where(function($query_array3) {
+				$assessment_item_array3 = array('V65.3','Z71.3');
+				$count3 = 0;
+				foreach ($assessment_item_array3 as $assessment_item3) {
+					if ($count3 == 0) {
+						$query_array3->where('assessment_icd1', '=', $assessment_item3)->orWhere('assessment_icd2', '=', $assessment_item3)->orWhere('assessment_icd3', '=', $assessment_item3)->orWhere('assessment_icd4', '=', $assessment_item3)->orWhere('assessment_icd5', '=', $assessment_item3)->orWhere('assessment_icd6', '=', $assessment_item3)->orWhere('assessment_icd7', '=', $assessment_item3)->orWhere('assessment_icd8', '=', $assessment_item3)->orWhere('assessment_icd9', '=', $assessment_item3)->orWhere('assessment_icd10', '=', $assessment_item3)->orWhere('assessment_icd11', '=', $assessment_item3)->orWhere('assessment_icd12', '=', $assessment_item3);
+					} else {
+						$query_array3->orWhere('assessment_icd1', '=', $assessment_item3)->orWhere('assessment_icd2', '=', $assessment_item3)->orWhere('assessment_icd3', '=', $assessment_item3)->orWhere('assessment_icd4', '=', $assessment_item3)->orWhere('assessment_icd5', '=', $assessment_item3)->orWhere('assessment_icd6', '=', $assessment_item3)->orWhere('assessment_icd7', '=', $assessment_item3)->orWhere('assessment_icd8', '=', $assessment_item3)->orWhere('assessment_icd9', '=', $assessment_item3)->orWhere('assessment_icd10', '=', $assessment_item3)->orWhere('assessment_icd11', '=', $assessment_item3)->orWhere('assessment_icd12', '=', $assessment_item3);
+					}
+					$count3++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query3) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Nutritional counseling needs to be performed';
+		}
+		$query4 = DB::table('assessment')
+			->where('pid', '=', $pid)
+			->where(function($query_array4) {
+				$assessment_item_array4 = array('V65.41','Z71.89');
+				$count4 = 0;
+				foreach ($assessment_item_array4 as $assessment_item4) {
+					if ($count4 == 0) {
+						$query_array4->where('assessment_icd1', '=', $assessment_item4)->orWhere('assessment_icd2', '=', $assessment_item4)->orWhere('assessment_icd3', '=', $assessment_item4)->orWhere('assessment_icd4', '=', $assessment_item4)->orWhere('assessment_icd5', '=', $assessment_item4)->orWhere('assessment_icd6', '=', $assessment_item4)->orWhere('assessment_icd7', '=', $assessment_item4)->orWhere('assessment_icd8', '=', $assessment_item4)->orWhere('assessment_icd9', '=', $assessment_item4)->orWhere('assessment_icd10', '=', $assessment_item4)->orWhere('assessment_icd11', '=', $assessment_item4)->orWhere('assessment_icd12', '=', $assessment_item4);
+					} else {
+						$query_array4->orWhere('assessment_icd1', '=', $assessment_item4)->orWhere('assessment_icd2', '=', $assessment_item4)->orWhere('assessment_icd3', '=', $assessment_item4)->orWhere('assessment_icd4', '=', $assessment_item4)->orWhere('assessment_icd5', '=', $assessment_item4)->orWhere('assessment_icd6', '=', $assessment_item4)->orWhere('assessment_icd7', '=', $assessment_item4)->orWhere('assessment_icd8', '=', $assessment_item4)->orWhere('assessment_icd9', '=', $assessment_item4)->orWhere('assessment_icd10', '=', $assessment_item4)->orWhere('assessment_icd11', '=', $assessment_item4)->orWhere('assessment_icd12', '=', $assessment_item4);
+					}
+					$count4++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query4) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Physical activity counseling needs to be performed.';
+		}
+		if ($score >= 2) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Weight Assessment and Counseling for Nutrition and Physical Activity for Children and Adolescents performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_cis($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Childhood Immunization Status not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('vitals')->where('pid', '=', $pid)->where('BMI', '!=', '')->orderBy('eid', 'desc')->first();
+		if ($query) {
+			$score++;
+		}
+		// DTaP
+		$query_1 = DB::table('immunizations')
+			->where('pid', '=', $pid)
+			->where(function($query_array_1) {
+				$imm_array_1 = array('20', '106', '107', '146', '110', '50', '120', '130', '132', '1', '22', '102');
+				$count_1 = 0;
+				foreach ($imm_array_1 as $imm_1) {
+					if ($i == 0) {
+						$query_array_1->where('imm_cvxcode', '=', $imm_1);
+					} else {
+						$query_array_1->orWhere('imm_cvxcode', '=', $imm_1);
+					}
+					$count_1++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query_1) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Needs DTaP immunization';
+		}
+		// IPV
+		$query_2 = DB::table('immunizations')
+			->where('pid', '=', $pid)
+			->where(function($query_array_2) {
+				$imm_array_2 = array('146', '110', '120', '130', '132', '10');
+				$count_2 = 0;
+				foreach ($imm_array_2 as $imm_2) {
+					if ($i == 0) {
+						$query_array_2->where('imm_cvxcode', '=', $imm_2);
+					} else {
+						$query_array_2->orWhere('imm_cvxcode', '=', $imm_2);
+					}
+					$count_2++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query_2) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Needs IPV immunization';
+		}
+		// MMR
+		$query_3 = DB::table('immunizations')
+			->where('pid', '=', $pid)
+			->where(function($query_array_3) {
+				$imm_array_3 = array('3', '94', '5', '6', '7', '38');
+				$count_3 = 0;
+				foreach ($imm_array_3 as $imm_3) {
+					if ($i == 0) {
+						$query_array_3->where('imm_cvxcode', '=', $imm_3);
+					} else {
+						$query_array_3->orWhere('imm_cvxcode', '=', $imm_3);
+					}
+					$count_3++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query_3) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Needs MMR immunization';
+		}
+		// Hib
+		$query_4 = DB::table('immunizations')
+			->where('pid', '=', $pid)
+			->where(function($query_array_4) {
+				$imm_array_4 = array('146','50','120','132', '22', '102', '46', '47', '48', '49', '17', '51', '148');
+				$count_4 = 0;
+				foreach ($imm_array_4 as $imm_4) {
+					if ($i == 0) {
+						$query_array_4->where('imm_cvxcode', '=', $imm_4);
+					} else {
+						$query_array_4->orWhere('imm_cvxcode', '=', $imm_4);
+					}
+					$count_4++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query_4) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Needs Hib immunization';
+		}
+		// HepB
+		$query_5 = DB::table('immunizations')
+			->where('pid', '=', $pid)
+			->where(function($query_array_5) {
+				$imm_array_5 = array('146','110','132','102','104','8','42','43','44','45','51');
+				$count_5 = 0;
+				foreach ($imm_array_5 as $imm_5) {
+					if ($i == 0) {
+						$query_array_5->where('imm_cvxcode', '=', $imm_5);
+					} else {
+						$query_array_5->orWhere('imm_cvxcode', '=', $imm_5);
+					}
+					$count_5++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query_5) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Needs Hepatitis B immunization';
+		}
+		// Varicella
+		$query_6 = DB::table('immunizations')
+			->where('pid', '=', $pid)
+			->where(function($query_array_6) {
+				$imm_array_6 = array('21');
+				$count_6 = 0;
+				foreach ($imm_array_6 as $imm_6) {
+					if ($i == 0) {
+						$query_array_6->where('imm_cvxcode', '=', $imm_6);
+					} else {
+						$query_array_6->orWhere('imm_cvxcode', '=', $imm_6);
+					}
+					$count_6++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query_6) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Needs Varicella immunization';
+		}
+		// Pneumococcal
+		$query_7 = DB::table('immunizations')
+			->where('pid', '=', $pid)
+			->where(function($query_array_7) {
+				$imm_array_7 = array('133','100','109');
+				$count_7 = 0;
+				foreach ($imm_array_7 as $imm_7) {
+					if ($i == 0) {
+						$query_array_7->where('imm_cvxcode', '=', $imm_7);
+					} else {
+						$query_array_7->orWhere('imm_cvxcode', '=', $imm_7);
+					}
+					$count_7++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query_7) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Needs Pneumoccocal immunization';
+		}
+		// HepA
+		$query_8 = DB::table('immunizations')
+			->where('pid', '=', $pid)
+			->where(function($query_array_8) {
+				$imm_array_8 = array('52','83','84','31','85','104');
+				$count_8 = 0;
+				foreach ($imm_array_8 as $imm_8) {
+					if ($i == 0) {
+						$query_array_8->where('imm_cvxcode', '=', $imm_8);
+					} else {
+						$query_array_8->orWhere('imm_cvxcode', '=', $imm_8);
+					}
+					$count_8++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query_8) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Needs Hepatitis A immunization';
+		}
+		// Rotavirus
+		$query_9 = DB::table('immunizations')
+			->where('pid', '=', $pid)
+			->where(function($query_array_9) {
+				$imm_array_9 = array('119','116','74','122');
+				$count_9 = 0;
+				foreach ($imm_array_9 as $imm_9) {
+					if ($i == 0) {
+						$query_array_9->where('imm_cvxcode', '=', $imm_9);
+					} else {
+						$query_array_9->orWhere('imm_cvxcode', '=', $imm_9);
+					}
+					$count_9++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query_9) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Needs Rotavirus immunization';
+		}
+		// Influenza
+		$query_10 = DB::table('immunizations')
+			->where('pid', '=', $pid)
+			->where(function($query_array_10) {
+				$imm_array_10 = array('123','135','111','149','141','140','144','15','88','16','127','128','125','126');
+				$count_10 = 0;
+				foreach ($imm_array_10 as $imm_10) {
+					if ($i == 0) {
+						$query_array_10->where('imm_cvxcode', '=', $imm_10);
+					} else {
+						$query_array_10->orWhere('imm_cvxcode', '=', $imm_10);
+					}
+					$count_10++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query_10) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Needs influenza immunization';
+		}
+		if ($score >= 11) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Childhood Immunization Status performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_ima($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Immunizations for Adolescents not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('vitals')->where('pid', '=', $pid)->where('BMI', '!=', '')->orderBy('eid', 'desc')->first();
+		if ($query) {
+			$score++;
+		}
+		// Meningococcal
+		$query_1 = DB::table('immunizations')
+			->where('pid', '=', $pid)
+			->where(function($query_array_1) {
+				$imm_array_1 = array('103', '148', '147', '136', '114', '32', '108');
+				$count_1 = 0;
+				foreach ($imm_array_1 as $imm_1) {
+					if ($i == 0) {
+						$query_array_1->where('imm_cvxcode', '=', $imm_1);
+					} else {
+						$query_array_1->orWhere('imm_cvxcode', '=', $imm_1);
+					}
+					$count_1++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query_1) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Needs meningococcal immunization';
+		}
+		// Tdap
+		$query_2 = DB::table('immunizations')
+			->where('pid', '=', $pid)
+			->where(function($query_array_2) {
+				$imm_array_2 = array('138', '113', '9', '139', '115');
+				$count_2 = 0;
+				foreach ($imm_array_2 as $imm_2) {
+					if ($i == 0) {
+						$query_array_2->where('imm_cvxcode', '=', $imm_2);
+					} else {
+						$query_array_2->orWhere('imm_cvxcode', '=', $imm_2);
+					}
+					$count_2++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->first();
+		if ($query_2) {
+			$score++;
+		} else {
+			$data['fix'][] = 'Needs Tdap immunization';
+		}
+		if ($score >= 2) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Immunizations for Adolescents performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_hpv($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Human Papillomavirus Vaccine for Female Adolescents not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('vitals')->where('pid', '=', $pid)->where('BMI', '!=', '')->orderBy('eid', 'desc')->first();
+		if ($query) {
+			$score++;
+		}
+		// HPV
+		$query_1 = DB::table('immunizations')
+			->where('pid', '=', $pid)
+			->where(function($query_array_1) {
+				$imm_array_1 = array('118', '62', '137');
+				$count_1 = 0;
+				foreach ($imm_array_1 as $imm_1) {
+					if ($i == 0) {
+						$query_array_1->where('imm_cvxcode', '=', $imm_1);
+					} else {
+						$query_array_1->orWhere('imm_cvxcode', '=', $imm_1);
+					}
+					$count_1++;
+				}
+			})
+			->orderBy('eid', 'desc')
+			->get();
+		if ($query_1) {
+			$count = count($query1);
+			if ($dob >= $e) {
+				if ($count == 3) {
+					$score++;
+				}
+			}
+			if ($dob >= $a && $dob < $b) {
+				if ($count > 0) {
+					$score++;
+				}
+			}
+		} else {
+			$data['fix'][] = 'Needs HPV immunization';
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Human Papillomavirus Vaccine for Female Adolescents performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_lsc($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Lead Screening in Children not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('tests')->where('pid', '=', $pid)->where('test_name', 'LIKE', "%lead%")->orderBy('test_datetime', 'desc')->first();
+		if ($query) {
+			$score++;
+		} else {
+			$query1 = DB::table('documents')
+				->where('pid', '=', $pid)
+				->where('documents_desc', 'LIKE', "%lead%")
+				->where('documents_type', '=', 'Laboratory')
+				->first();
+			if ($query1) {
+				$score++;
+			} else {
+				$query2 = DB::table('tags_relate')
+					->join('tags', 'tags.tags_id', '=', 'tags_relate.tags_id')
+					->where('tags_relate.pid', '=', $pid)
+					->where('tags.tag', 'LIKE', "%lead%")
+					->first();
+				if ($query2) {
+					$score++;
+				} else {
+					$data['fix'][] = 'Lead level needs to be measured';
+				}
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Lead Screening in Children performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_bcs($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Breast Cancer Screening not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('tests')->where('pid', '=', $pid)->where('test_name', 'LIKE', "%mammogram%")->orderBy('test_datetime', 'desc')->first();
+		if ($query) {
+			$score++;
+		} else {
+			$query1 = DB::table('documents')
+				->where('pid', '=', $pid)
+				->where('documents_desc', 'LIKE', "%mammogram%")
+				->where('documents_type', '=', 'Imaging')
+				->first();
+			if ($query1) {
+				$score++;
+			} else {
+				$query2 = DB::table('tags_relate')
+					->join('tags', 'tags.tags_id', '=', 'tags_relate.tags_id')
+					->where('tags_relate.pid', '=', $pid)
+					->where('tags.tag', 'LIKE', "%mammogram%")
+					->first();
+				if ($query2) {
+					$score++;
+				} else {
+					$data['fix'][] = 'Mammogram needs to be performed';
+				}
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Breast Cancer Screening performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_ccs($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Cervical Cancer Screening not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('tests')->where('pid', '=', $pid)->where('test_name', 'LIKE', "%pap%")->orderBy('test_datetime', 'desc')->first();
+		if ($query) {
+			$score++;
+		} else {
+			$query1 = DB::table('documents')
+				->where('pid', '=', $pid)
+				->where('documents_desc', 'LIKE', "%pap%")
+				->where('documents_type', '=', 'Laboratory')
+				->first();
+			if ($query1) {
+				$score++;
+			} else {
+				$query2 = DB::table('tags_relate')
+					->join('tags', 'tags.tags_id', '=', 'tags_relate.tags_id')
+					->where('tags_relate.pid', '=', $pid)
+					->where('tags.tag', 'LIKE', "%pap%")
+					->first();
+				if ($query2) {
+					$score++;
+				} else {
+					$data['fix'][] = 'Pap test needs to be performed';
+				}
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Cervical Cancer Screening performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_col($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Colorectal Cancer Screening not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('tests')->where('pid', '=', $pid)
+			->where(function($query_array) {
+				$query_array->where('test_name', 'LIKE', "%colonoscopy%")
+					->orWhere('test_name', 'LIKE', "%$sigmoidoscopy%");
+			})
+			->orderBy('test_datetime', 'desc')
+			->first();
+		if ($query) {
+			$score++;
+		} else {
+			$query1 = DB::table('documents')
+				->where('pid', '=', $pid)
+				->where(function($query_array1) {
+					$query_array1->where('documents_desc', 'LIKE', "%colonoscopy%")
+						->orWhere('documents_desc', 'LIKE', "%$sigmoidoscopy%");
+				})
+				->where('documents_type', '=', 'Endoscopy')
+				->first();
+			if ($query1) {
+				$score++;
+			} else {
+				$query2 = DB::table('tags_relate')
+					->join('tags', 'tags.tags_id', '=', 'tags_relate.tags_id')
+					->where('tags_relate.pid', '=', $pid)
+					->where(function($query_array2) {
+						$query_array2->where('tags.tag', 'LIKE', "%colonoscopy%")
+							->orWhere('tags.tag', 'LIKE', "%$sigmoidoscopy%");
+					})
+					->first();
+				if ($query2) {
+					$score++;
+				} else {
+					$query3 = DB::table('documents')
+						->where('pid', '=', $pid)
+						->where(function($query_array3) {
+							$query_array1->where('documents_desc', 'LIKE', "%guaiac%")
+								->orWhere('documents_desc', 'LIKE', "%$fobt%");
+						})
+						->where('documents_type', '=', 'Laboratory')
+						->first();
+					if ($query3) {
+						$score++;
+					} else {
+						$query4 = DB::table('billing_core')
+							->where('pid', '=', $pid)
+							->where(function($query_array4) {
+								$fobt_item_array = array('82270','82274');
+								$fobt_count = 0;
+								foreach ($fobt_item_array as $fobt_item) {
+									if ($fobt_count == 0) {
+										$query_array4->where('cpt', '=', $fobt_item);
+									} else {
+										$query_array4->orWhere('cpt', '=', $fobt_item);
+									}
+									$fobt_count++;
+								}
+							})
+							->orderBy('eid', 'desc')
+							->first();
+						if ($query4) {
+							$score++;
+						} else {
+							$data['fix'][] = 'Colon cancer screening needs to be performed';
+						}
+					}
+				}
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Colorectal Cancer Screening performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_chl($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Chlamydia Screening not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('tests')->where('pid', '=', $pid)->where('test_name', 'LIKE', "%chlamydia%")->orderBy('test_datetime', 'desc')->first();
+		if ($query) {
+			$score++;
+		} else {
+			$query1 = DB::table('documents')
+				->where('pid', '=', $pid)
+				->where('documents_desc', 'LIKE', "%chlamydia%")
+				->where('documents_type', '=', 'Laboratory')
+				->first();
+			if ($query1) {
+				$score++;
+			} else {
+				$query2 = DB::table('tags_relate')
+					->join('tags', 'tags.tags_id', '=', 'tags_relate.tags_id')
+					->where('tags_relate.pid', '=', $pid)
+					->where('tags.tag', 'LIKE', "%chlamydia%")
+					->first();
+				if ($query2) {
+					$score++;
+				} else {
+					$data['fix'][] = 'Chlamydia test needs to be performed';
+				}
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Chlamydia Screening performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_gso($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Glaucoma Screening Older Adults not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('tests')->where('pid', '=', $pid)->where('test_name', 'LIKE', "%glaucoma%")->orderBy('test_datetime', 'desc')->first();
+		if ($query) {
+			$score++;
+		} else {
+			$query1 = DB::table('documents')
+				->where('pid', '=', $pid)
+				->where('documents_desc', 'LIKE', "%glaucoma%")
+				->where('documents_type', '=', 'Referrals')
+				->first();
+			if ($query1) {
+				$score++;
+			} else {
+				$query2 = DB::table('tags_relate')
+					->join('tags', 'tags.tags_id', '=', 'tags_relate.tags_id')
+					->where('tags_relate.pid', '=', $pid)
+					->where('tags.tag', 'LIKE', "%glaucoma%")
+					->first();
+				if ($query2) {
+					$score++;
+				} else {
+					$data['fix'][] = 'Glaucoma screening needs to be performed';
+				}
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Glaucoma Screening Older Adults performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_cwp()
+	{
+		$data = array();
+		$data['count'] = 0;
+		$data['test'] = 0;
+		$data['abx'] = 0;
+		$data['abx_no_test'] = 0;
+		$query = DB::table('assessment')
+			->join('encounters', 'encounters.eid', '=', 'assessment.eid')
+			->where('encounters.addendum', '=', 'n')
+			->where('encounters.practice_id', '=', Session::get('practice_id'))
+			->where('encounters.encounter_signed', '=', 'Yes')
+			->where(function($query_array1) {
+				$assessment_item_array = array('462','J02.9','034.0','J02.0','J03.00','074.0','B08.5','474.00','J35.01','099.51','A56.4','032.0','A36.0','472.1','J31.2','098.6','A54.5');
+				$i = 0;
+				foreach ($assessment_item_array as $assessment_item) {
+					if ($i == 0) {
+						$query_array1->where('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
+					} else {
+						$query_array1->orWhere('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
+					}
+					$i++;
+				}
+			})
+			->select('encounters.eid','encounters.pid')
+			->get();
+		if ($query) {
+			$data['count'] = count($query);
+			foreach ($query as $row) {
+				$test = 0;
+				$query1 = DB::table('billing_core')
+					->where('eid', '=', $row->eid)
+					->where(function($query_array2) {
+						$item2_array = array('87880','87070','87071','87081','87430','87650','87651','87652');
+						$j = 0;
+						foreach ($item2_array as $item2) {
+							if ($j == 0) {
+								$query_array2->where('cpt', '=', $item2);
+							} else {
+								$query_array2->orWhere('cpt', '=', $item2);
+							}
+							$j++;
+						}
+					})
+					->first();
+				if ($query1) {
+					$data['test']++;
+					$test++;
+				}
+				$query2 = DB::table('rx')->where('eid', '=', $row->eid)->first();
+				if ($query2) {
+					if ($query2->rx_rx != '') {
+						$abx_count = 0;
+						$search = array('cillin','amox','zith','cef','kef','mycin','eryth','pen','bac','sulf');
+						foreach ($search as $needle) {
+							$pos = stripos($query2->rx_rx, $needle);
+							if ($pos !== false) {
+								$abx_count++;
+							}
+						}
+						if ($abx_count > 0) {
+							$data['abx']++;
+							if ($test == 0) {
+								$data['abx_no_test']++;
+							}
+						}
+					}
+				}
+			}
+		}
+		return $data;
 	}
 }
