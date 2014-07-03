@@ -6903,4 +6903,130 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
+	
+	protected function hedis_asm()
+	{
+		$data = array();
+		$data['count'] = 0;
+		$data['tx'] = 0;
+		$data['percent_tx'] = 0;
+		$query0 = DB::table('issues')
+			->join('demographics', 'demographics.pid', '=', 'issues.pid')
+			->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
+			->where('demographics_relate.practice_id', '=', Session::get('practice_id'))
+			->where('issues.issue_date_inactive', '=', '0000-00-00 00:00:00')
+			->where(function($query_array1) {
+				$issues_item_array = array('493.90','J45.909','J45.998','493.00','J45.20','493.01','J45.22','493.02','J45.21','493.10','493.11','493.12','493.20','J44.9','493.21','J44.0','493.22','J44.1','493.81','J45.990','493.82','J45.991','493.91','J45.902','493.92','J45.901');
+				$i = 0;
+				foreach ($issues_item_array as $issues_item) {
+					if ($i == 0) {
+						$query_array1->where('issues.issue', 'LIKE', "%$issues_item%");
+					} else {
+						$query_array1->orWhere('issues.issue', 'LIKE', "%$issues_item%");
+					}
+					$i++;
+				}
+			})
+			->select('demographics.pid');
+		$result0 = $query0->get();
+		if ($result0) {
+			$query = array();
+			foreach ($result0 as $row0) {
+				$demographics = DB::table('demographics')->where('pid', '=', $row0->pid)->first();
+				$dob = $this->human_to_unix($demographics->DOB);
+				$a = time() - 157784630; //5 years
+				$b = time() - 1767187856; //56 years
+				if ($dob <= $a && $dob >= $b) {
+					$query[] = $row0->pid;
+				}
+			}
+			$data['count'] = count($query);
+			foreach ($query as $row) {
+				$query1 = DB::table('rx_list')->where('pid', '=', $row)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->first();
+				if ($query1) {
+					$med_count = 0;
+					$search = array('budesonide','flovent','pulmicort','qvar','advair','aerobid','alvesco','asmanex','dulera','pulmicort','symbicort','breo','fluticasone','beclomethasone','flunisolide','ciclesonide','mometasone','cromolyn','phylline','lukast','singulair','accolate','theo');
+					foreach ($search as $needle) {
+						$pos = stripos($query1->rxl_medication, $needle);
+						if ($pos !== false) {
+							$med_count++;
+						}
+					}
+					if ($med_count > 0) {
+						$data['tx']++;
+					}
+				}
+			}
+			$data['percent_tx'] = round($data['tx']/$data['count']*100);
+		}
+		return $data;
+	}
+	
+	protected function hedis_amr()
+	{
+		$data = array();
+		$data['count'] = 0;
+		$data['tx'] = 0;
+		$data['percent_tx'] = 0;
+		$query0 = DB::table('issues')
+			->join('demographics', 'demographics.pid', '=', 'issues.pid')
+			->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
+			->where('demographics_relate.practice_id', '=', Session::get('practice_id'))
+			->where('issues.issue_date_inactive', '=', '0000-00-00 00:00:00')
+			->where(function($query_array1) {
+				$issues_item_array = array('493.90','J45.909','J45.998','493.00','J45.20','493.01','J45.22','493.02','J45.21','493.10','493.11','493.12','493.20','J44.9','493.21','J44.0','493.22','J44.1','493.81','J45.990','493.82','J45.991','493.91','J45.902','493.92','J45.901');
+				$i = 0;
+				foreach ($issues_item_array as $issues_item) {
+					if ($i == 0) {
+						$query_array1->where('issues.issue', 'LIKE', "%$issues_item%");
+					} else {
+						$query_array1->orWhere('issues.issue', 'LIKE', "%$issues_item%");
+					}
+					$i++;
+				}
+			})
+			->select('demographics.pid');
+		$result0 = $query0->get();
+		if ($result0) {
+			$query = array();
+			foreach ($result0 as $row0) {
+				$demographics = DB::table('demographics')->where('pid', '=', $row0->pid)->first();
+				$dob = $this->human_to_unix($demographics->DOB);
+				$a = time() - 157784630; //5 years
+				$b = time() - 2019643264; //64 years
+				if ($dob <= $a && $dob >= $b) {
+					$query[] = $row0->pid;
+				}
+			}
+			$data['count'] = count($query);
+			foreach ($query as $row) {
+				$query1 = DB::table('rx_list')->where('pid', '=', $row)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->first();
+				if ($query1) {
+					$controller_count = 0;
+					$rescue_count = 0;
+					$search = array('budesonide','flovent','pulmicort','qvar','advair','aerobid','alvesco','asmanex','dulera','pulmicort','symbicort','breo','fluticasone','beclomethasone','flunisolide','ciclesonide','mometasone','cromolyn','phylline','lukast','singulair','accolate','theo');
+					foreach ($search as $needle) {
+						$pos = stripos($query1->rxl_medication, $needle);
+						if ($pos !== false) {
+							$controller_count++;
+						}
+					}
+					$search1 = array('albuterol','ventolin','alupent','metproterenol');
+					foreach ($search1 as $needle1) {
+						$pos1 = stripos($query1->rxl_medication, $needle1);
+						if ($pos1 !== false) {
+							$rescue_count++;
+						}
+					}
+					$total = $controller_count + $rescue_count;
+					$ratio = round($controller_count/$total*100);
+					if ($ratio > 50) {
+						$data['tx']++;
+					}
+				}
+			}
+			$data['percent_tx'] = round($data['tx']/$data['count']*100);
+		}
+		return $data;
+	}
 }

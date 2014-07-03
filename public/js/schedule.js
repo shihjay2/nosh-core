@@ -11,8 +11,8 @@ $(document).ready(function() {
 				$("#schedule_patient_step").hide();
 			}
 			$(this).dialog('option', {
-				height: 500,
-				width: 800,
+				height: 640,
+				width: 925,
 				position: { my: 'center', at: 'center', of: '#maincontent' }
 			});
 		},
