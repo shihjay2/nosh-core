@@ -316,6 +316,12 @@ class ChartController extends BaseController {
 		return Response::download($file_path);
 	}
 	
+	public function hippa_request_print($id)
+	{
+		$file_path = __DIR__."/../../public/temp/hippa_request_" . $id . ".pdf";
+		return Response::download($file_path);
+	}
+	
 	public function export_demographics($type)
 	{
 		$practice_id = Session::get('practice_id');

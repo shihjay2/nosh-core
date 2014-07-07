@@ -1,6 +1,4 @@
 $(document).ready(function() {
-	//var windowHeight = $(window).height() - 115;
-	//$('#menucontainer').css('max-height', windowHeight);
 	$.ajax({
 		type: "POST",
 		url: "ajaxchart/demographics-load",
@@ -17,7 +15,6 @@ $(document).ready(function() {
 		}
 	});
 	$("#menu_accordion").accordion({
-		//heightStyle: "fill",
 		activate: function (event, ui) {
 			var id = ui.newPanel[0].id;
 			if (id != "menu_accordion_chart") {
@@ -60,4 +57,77 @@ $(document).ready(function() {
 		});	
 		$("#prevention_list_dialog").dialog('open');
 	});
+	$("#hedis_chart_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 500, 
+		width: 800, 
+		draggable: false,
+		resizable: false,
+		open: function(event, ui) {
+			$('#hedis_chart_load').hide();
+		},
+		close: function(event, ui) {
+			$('#hedis_chart_items').html('');
+			$('#hedis_chart_load').hide();
+			$('#hedis_chart_question').show();
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#hedis_chart").click(function() {
+		$("#hedis_chart_dialog").dialog('open');
+	});
+	$("#hedis_chart_time").mask("99/99/9999").datepicker();
+	$("#hedis_chart_spec").click(function() {
+		var a = $("#hedis_chart_time").val();
+		if (a != '') {
+			$('#hedis_chart_load').show();
+			$.ajax({
+				type: "POST",
+				url: "ajaxchart/hedis-chart-audit/spec",
+				data: "time=" + a,
+				success: function(data){
+					$('#hedis_chart_items').html(data);
+					$('#hedis_chart_load').hide();
+					$('#hedis_chart_question').hide();
+				}
+			});
+		} else {
+			$.jGrowl('Enter a time value!');
+		}
+	});
+	$("#hedis_chart_all").click(function() {
+		$('#hedis_chart_load').show();
+		$.ajax({
+			type: "POST",
+			url: "ajaxchart/hedis-chart-audit/all",
+			success: function(data){
+				$('#hedis_chart_items').html(data);
+				$('#hedis_chart_load').hide();
+				$('#hedis_chart_question').hide();
+			}
+		});
+	});
+	$("#hedis_chart_year").click(function() {
+		$('#hedis_chart_load').show();
+		$.ajax({
+			type: "POST",
+			url: "ajaxchart/hedis-chart-audit/year",
+			success: function(data){
+				$('#hedis_chart_items').html(data);
+				$('#hedis_chart_load').hide();
+				$('#hedis_chart_question').hide();
+			}
+		});
+	});
+	if (noshdata.hedis != '') {
+		$("#hedis_chart_dialog").dialog('open');
+		$.ajax({
+			type: "POST",
+			url: "ajaxsearch/hedis-unset",
+			success: function(data){
+				noshdata.hedis = '';
+			}
+		});
+	}
 });

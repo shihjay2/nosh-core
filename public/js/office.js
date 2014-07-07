@@ -229,6 +229,7 @@ $(document).ready(function() {
 		resizable: false,
 		open: function(event, ui) {
 			$("#office_accordion").accordion({ heightStyle: "content" });
+			$('#hedis_office_load').hide();
 			jQuery("#vaccine_inventory").jqGrid('GridUnload');
 			jQuery("#vaccine_inventory").jqGrid({
 				url:"ajaxoffice/vaccine-inventory",
@@ -942,6 +943,46 @@ $(document).ready(function() {
 			$("#tag_modal_view").html('');
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#hedis_office_time").mask("99/99/9999").datepicker();
+	$("#hedis_office_spec").click(function() {
+		var a = $("#hedis_office_time").val();
+		if (a != '') {
+			$('#hedis_office_load').show();
+			$.ajax({
+				type: "POST",
+				url: "ajaxoffice/hedis-audit/spec",
+				data: "time=" + a,
+				success: function(data){
+					$('#hedis_office_items').html(data);
+					$('#hedis_office_load').hide();
+				}
+			});
+		} else {
+			$.jGrowl('Enter a time value!');
+		}
+	});
+	$("#hedis_office_all").click(function() {
+		$('#hedis_office_load').show();
+		$.ajax({
+			type: "POST",
+			url: "ajaxoffice/hedis-audit/all",
+			success: function(data){
+				$('#hedis_office_items').html(data);
+				$('#hedis_office_load').hide();
+			}
+		});
+	});
+	$("#hedis_office_year").click(function() {
+		$('#hedis_office_load').show();
+		$.ajax({
+			type: "POST",
+			url: "ajaxoffice/hedis-audit/year",
+			success: function(data){
+				$('#hedis_office_items').html(data);
+				$('#hedis_office_load').hide();
+			}
+		});
 	});
 	$("#export_demographics").button().click(function(){
 		window.open("export_demographics/all");

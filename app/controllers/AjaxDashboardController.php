@@ -2931,6 +2931,11 @@ class AjaxDashboardController extends BaseController {
 								DB::connection('mysql2')->table('hippa')->insert((array) $hippa_row);
 							}
 							DB::connection('mysql2')->table('hippa')->update(array('practice_id' => '1'));
+							$hippa_request = DB::table('hippa_request')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->get();
+							foreach ($hippa_request as $hippa_request_row) {
+								DB::connection('mysql2')->table('hippa_request')->insert((array) $hippa_request_row);
+							}
+							DB::connection('mysql2')->table('hippa_request')->update(array('practice_id' => '1'));
 							$immunizations = DB::table('immunizations')->where('pid', '=', $pid)->get();
 							foreach ($immunizations as $immunizations_row) {
 								DB::connection('mysql2')->table('immunizations')->insert((array) $immunizations_row);

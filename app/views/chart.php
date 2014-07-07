@@ -16,6 +16,7 @@
 	noshdata.mtm = '<?php if(Session::get('mtm')) { echo Session::get('mtm');} ?>';
 	noshdata.default_template = '<?php echo $encounter_template;?>';
 	noshdata.mtm_extension = '<?php if(Session::get('mtm_extension')) { echo Session::get('mtm_extension');} ?>';
+	noshdata.hedis = '<?php if(Session::get('hedis')) { echo Session::get('hedis');} ?>';
 </script>
 <div id="nosh_chart_common_div" style="width:100%">
 	<fieldset class="ui-corner-all">
@@ -214,4 +215,15 @@
 		<label for="creditcard_expiration">Expiration Date</label>
 		<input type="text" style="width:95%" name="creditcard_expiration" id="creditcard_expiration"/>
 	</form>
+</div>
+<div id="hedis_chart_dialog" title="HEDIS Audit">
+	<div id="hedis_chart_question" class="pure-form">
+		<label for="hedis_chart_time">Choose Time Period for Audit to Begin:</label>
+		<input type="text" style="width:150px" name="hedis_chart_time" id="hedis_chart_time"/>
+		<button type="button" id="hedis_chart_spec" class="nosh_button">Specified Time</button>
+		<button type="button" id="hedis_chart_all" class="nosh_button">All</button>
+		<button type="button" id="hedis_chart_year" class="nosh_button">Past Year</button><br><br>
+	</div>
+	<div id="hedis_chart_load"><?php echo HTML::image('images/indicator.gif', 'Loading'); ?> Loading...</div>
+	<div id="hedis_chart_items"></div>
 </div>

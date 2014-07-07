@@ -4620,7 +4620,7 @@ class BaseController extends Controller {
 		$data['disclaimer'] = '<br>Please send a check payable to ' . $practice->practice_name . ' and mail it to:';
 		$data['disclaimer'] .= '<br>' . $practice->billing_street_address1;
 		if ($practice->billing_street_address2 != '') {
-			$data['text'] .= ', ' . $practice->billing_street_address2;
+			$data['disclaimer'] .= ', ' . $practice->billing_street_address2;
 		}
 		$data['disclaimer'] .= '<br>' . $practice->billing_city . ', ' . $practice->billing_state . ' ' . $practice->billing_zip;
 		$data['patientInfo1'] = $row->firstname . ' ' . $row->lastname;
@@ -4653,6 +4653,80 @@ class BaseController extends Controller {
 		}
 		$body .= '</table></body></html>';
 		return $body;
+	}
+	
+	protected function page_hippa_request($id)
+	{
+		$result = DB::table('hippa_request')->where('hippa_request_id', '=', $id)->first();
+		$row = Demographics::find($result->pid);
+		$practice = Practiceinfo::find(Session::get('practice_id'));
+		$data['practiceName'] = $practice->practice_name;
+		$data['practiceLogo'] = $this->practice_logo(Session::get('practice_id'));
+		$data['practiceInfo1'] = $practice->street_address1;
+		if ($practice->street_address2 != '') {
+			$data['practiceInfo1'] .= ', ' . $practice->street_address2;
+		}
+		$data['practiceInfo2'] = $practice->city . ', ' . $practice->state . ' ' . $practice->zip;
+		$data['practiceInfo3'] = 'Phone: ' . $practice->phone . ', Fax: ' . $practice->fax;
+		$data['patientInfo1'] = $row->firstname . ' ' . $row->lastname;
+		$data['patientInfo2'] = $row->address;
+		$data['patientInfo3'] = $row->city . ', ' . $row->state . ' ' . $row->zip;
+		$data['patientInfo'] = $row;
+		$dob = $this->human_to_unix($row->DOB);
+		$data['dob'] = date('m/d/Y', $dob);
+		$data['signature_title'] = 'PATIENT SIGNATURE';
+		$data['signature_text'] = '';
+		if ($dob >= $this->age_calc(18,'year')) {
+			$data['signature_title'] = 'SIGNATURE OF PATIENT REPRESENTATIVE';
+			$data['signature_text'] = '<br>Relationship of Representative:<br><br><br>';
+		}
+		if ($row->ss != '') {
+			$data['ss'] = 'Social Security Number: ' . $row->ss . '<br>';
+		} else {
+			$data['ss'] = '';
+		}
+		if ($row->phone_home != '') {
+			$data['phone'] = 'Phone Number: ' . $row->phone_home;
+		} elseif ($row->phone_cell != '') {
+			$data['phone'] = 'Phone Number: ' . $row->phone_cell;
+		} else {
+			$data['phone'] = '';
+		}
+		$data['title'] = "AUTHORIZATION TO RELEASE MEDICAL RECORDS";
+		$data['date'] = date('F jS, Y', time());
+		$data['reason'] = $result->request_reason;
+		$data['type'] = $result->request_type;
+		if ($result->request_reason == 'General Medical Records') {
+			$data['type'] .= ' - excluding protected records: (Copies of medical records will be limited to two years of information including lab, x-ray unless otherwise requested.)<br>';
+		}
+		if ($result->history_physical != '') {
+			$data['type'] .= ' dated ' . $result->history_physical . '.<br>';
+		}
+		if ($result->lab_type != '') {
+			$data['type'] .= '<br>' . $result->lab_type . ', Dated ' . $result->lab_date . '.<br>';
+		}
+		if ($result->op != '') {
+			$data['type'] .= ' for ' . $result->op . '.<br>';
+		}
+		if ($result->accident_f != '') {
+			$data['type'] .= ' dated from ' . $result->accident_f . ' to ' . $result->accdient_t . '.<br>';
+		}
+		if ($result->other != '') {
+			$data['type'] .= '<br>' . $result->other . '<br>';
+		}
+		$data['from'] = $result->request_to;
+		if ($result->address_id != '') {
+			$address = DB::table('addressbook')->where('address_id', '=', $result->address_id)->first();
+			if ($address) {
+				$data['from'] = $address->displayname . '<br>' . $address->street_address1 . '<br>';
+				if ($address->street_address2 != '') {
+					$data['from'] .= $address->street_address2 . '<br>';
+				}
+				$data['from'] .= $address->city . ', ' . $address->state . ' ' . $address->zip . '<br>';
+				$data['from'] .= $address->phone .'<br>';
+			}
+		}
+		return View::make('pdf.hippa_request', $data);
 	}
 	
 	protected function page_mtm_cp($pid)
@@ -5786,10 +5860,75 @@ class BaseController extends Controller {
 		return $delimiter;
 	}
 	
+	protected function age_calc($num, $type)
+	{
+		if ($type == 'year') {
+			$a = 31556926*$num;
+		}
+		if ($type == 'month') {
+			$a = 2629743*$num;
+		}
+		$b = time() - $a;
+		return $b;
+	}
+	
+	protected function hedis_assessment_query($pid, $type, $assessment_item_array)
+	{
+		$query = DB::table('assessment')
+			->join('encounters', 'encounters.eid', '=', 'assessment.eid')
+			->where('encounters.addendum', '=', 'n')
+			->where('encounters.pid', '=', $pid)
+			->where('encounters.encounter_signed', '=', 'Yes');
+		if ($type != 'all') {
+			if ($type == 'year') {
+				$date_param = date('Y-m-d H:i:s', time() - 31556926);
+				$query->where('encounters.encounter_DOS', '>=', $date_param);
+			} else {
+				$date_param = date('Y-m-d H:i:s', strtotime($type));
+				$query->where('encounters.encounter_DOS', '>=', $date_param);
+			}
+		}
+		$query->where(function($query_array) use ($assessment_item_array) {
+				$count = 0;
+				foreach ($assessment_item_array as $assessment_item) {
+					if ($count == 0) {
+						$query_array->where('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
+					} else {
+						$query_array->orWhere('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
+					}
+					$count++;
+				}
+			})
+			->select('encounters.eid','encounters.pid');
+		$result = $query->get();
+		return $result;
+	}
+	
+	protected function hedis_issue_query($pid, $issues_item_array)
+	{
+		$query = DB::table('issues')
+			->where('pid','=', $pid)
+			->where('issue_date_inactive', '=', '0000-00-00 00:00:00')
+			->where(function($query_array) {
+				$issues_item_array = array('496','J44.9');
+				$count = 0;
+				foreach ($issues_item_array as $issues_item) {
+					if ($count == 0) {
+						$query_array->where('issue', 'LIKE', "%$issues_item%");
+					} else {
+						$query_array->orWhere('issue', 'LIKE', "%$issues_item%");
+					}
+					$count++;
+				}
+			})
+			->first();
+		return $query;
+	}
+	
 	protected function hedis_aba($pid)
 	{
 		$data = array();
-		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Adult BMI Assessment not performed';
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Adult BMI Assessment not performed';
 		$data['goal'] = 'n';
 		$data['fix'] = array();
 		$score = 0;
@@ -5829,7 +5968,7 @@ class BaseController extends Controller {
 	protected function hedis_wcc($pid)
 	{
 		$data = array();
-		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Weight Assessment and Counseling for Nutrition and Physical Activity for Children and Adolescents not performed';
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Weight Assessment and Counseling for Nutrition and Physical Activity for Children and Adolescents not performed';
 		$data['goal'] = 'n';
 		$data['fix'] = array();
 		$score = 0;
@@ -5933,7 +6072,7 @@ class BaseController extends Controller {
 	protected function hedis_cis($pid)
 	{
 		$data = array();
-		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Childhood Immunization Status not performed';
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Childhood Immunization Status not performed';
 		$data['goal'] = 'n';
 		$data['fix'] = array();
 		$score = 0;
@@ -6171,7 +6310,7 @@ class BaseController extends Controller {
 	protected function hedis_ima($pid)
 	{
 		$data = array();
-		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Immunizations for Adolescents not performed';
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Immunizations for Adolescents not performed';
 		$data['goal'] = 'n';
 		$data['fix'] = array();
 		$score = 0;
@@ -6233,7 +6372,7 @@ class BaseController extends Controller {
 	protected function hedis_hpv($pid)
 	{
 		$data = array();
-		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Human Papillomavirus Vaccine for Female Adolescents not performed';
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Human Papillomavirus Vaccine for Female Adolescents not performed';
 		$data['goal'] = 'n';
 		$data['fix'] = array();
 		$score = 0;
@@ -6283,7 +6422,7 @@ class BaseController extends Controller {
 	protected function hedis_lsc($pid)
 	{
 		$data = array();
-		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Lead Screening in Children not performed';
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Lead Screening in Children not performed';
 		$data['goal'] = 'n';
 		$data['fix'] = array();
 		$score = 0;
@@ -6321,7 +6460,7 @@ class BaseController extends Controller {
 	protected function hedis_bcs($pid)
 	{
 		$data = array();
-		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Breast Cancer Screening not performed';
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Breast Cancer Screening not performed';
 		$data['goal'] = 'n';
 		$data['fix'] = array();
 		$score = 0;
@@ -6359,7 +6498,7 @@ class BaseController extends Controller {
 	protected function hedis_ccs($pid)
 	{
 		$data = array();
-		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Cervical Cancer Screening not performed';
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Cervical Cancer Screening not performed';
 		$data['goal'] = 'n';
 		$data['fix'] = array();
 		$score = 0;
@@ -6397,14 +6536,14 @@ class BaseController extends Controller {
 	protected function hedis_col($pid)
 	{
 		$data = array();
-		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Colorectal Cancer Screening not performed';
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Colorectal Cancer Screening not performed';
 		$data['goal'] = 'n';
 		$data['fix'] = array();
 		$score = 0;
 		$query = DB::table('tests')->where('pid', '=', $pid)
 			->where(function($query_array) {
 				$query_array->where('test_name', 'LIKE', "%colonoscopy%")
-					->orWhere('test_name', 'LIKE', "%$sigmoidoscopy%");
+					->orWhere('test_name', 'LIKE', "%sigmoidoscopy%");
 			})
 			->orderBy('test_datetime', 'desc')
 			->first();
@@ -6415,7 +6554,7 @@ class BaseController extends Controller {
 				->where('pid', '=', $pid)
 				->where(function($query_array1) {
 					$query_array1->where('documents_desc', 'LIKE', "%colonoscopy%")
-						->orWhere('documents_desc', 'LIKE', "%$sigmoidoscopy%");
+						->orWhere('documents_desc', 'LIKE', "%sigmoidoscopy%");
 				})
 				->where('documents_type', '=', 'Endoscopy')
 				->first();
@@ -6427,7 +6566,7 @@ class BaseController extends Controller {
 					->where('tags_relate.pid', '=', $pid)
 					->where(function($query_array2) {
 						$query_array2->where('tags.tag', 'LIKE', "%colonoscopy%")
-							->orWhere('tags.tag', 'LIKE', "%$sigmoidoscopy%");
+							->orWhere('tags.tag', 'LIKE', "%sigmoidoscopy%");
 					})
 					->first();
 				if ($query2) {
@@ -6436,8 +6575,8 @@ class BaseController extends Controller {
 					$query3 = DB::table('documents')
 						->where('pid', '=', $pid)
 						->where(function($query_array3) {
-							$query_array1->where('documents_desc', 'LIKE', "%guaiac%")
-								->orWhere('documents_desc', 'LIKE', "%$fobt%");
+							$query_array3->where('documents_desc', 'LIKE', "%guaiac%")
+								->orWhere('documents_desc', 'LIKE', "%fobt%");
 						})
 						->where('documents_type', '=', 'Laboratory')
 						->first();
@@ -6479,7 +6618,7 @@ class BaseController extends Controller {
 	protected function hedis_chl($pid)
 	{
 		$data = array();
-		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Chlamydia Screening not performed';
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Chlamydia Screening not performed';
 		$data['goal'] = 'n';
 		$data['fix'] = array();
 		$score = 0;
@@ -6517,7 +6656,7 @@ class BaseController extends Controller {
 	protected function hedis_gso($pid)
 	{
 		$data = array();
-		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Glaucoma Screening Older Adults not performed';
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Glaucoma Screening Older Adults not performed';
 		$data['goal'] = 'n';
 		$data['fix'] = array();
 		$score = 0;
@@ -6552,248 +6691,123 @@ class BaseController extends Controller {
 		return $data;
 	}
 	
-	protected function hedis_cwp($type)
+	protected function hedis_cwp($cwp_result)
 	{
 		$data = array();
-		$data['count'] = 0;
+		$data['count'] = count($cwp_result);
 		$data['test'] = 0;
 		$data['abx'] = 0;
 		$data['abx_no_test'] = 0;
 		$data['percent_test'] = 0;
 		$data['percent_abx'] = 0;
 		$data['percent_abx_no_test'] = 0;
-		$query0 = DB::table('assessment')
-			->join('encounters', 'encounters.eid', '=', 'assessment.eid')
-			->where('encounters.addendum', '=', 'n')
-			->where('encounters.practice_id', '=', Session::get('practice_id'))
-			->where('encounters.encounter_signed', '=', 'Yes');
-		if ($type != 'all') {
-			if ($type == 'year') {
-				$date_param = date('Y-m-d H:i:s', time() - 31556926);
-				$query0->where('encounters.encounter_DOS', '>=', $date_param);
-			} else {
-				$date_param = date('Y-m-d H:i:s', strtotime($type));
-				$query0->where('encounters.encounter_DOS', '>=', $date_param);
-			}
-		}
-		$query0->where(function($query_array1) {
-				$assessment_item_array = array('462','J02.9','034.0','J02.0','J03.00','074.0','B08.5','474.00','J35.01','099.51','A56.4','032.0','A36.0','472.1','J31.2','098.6','A54.5');
-				$i = 0;
-				foreach ($assessment_item_array as $assessment_item) {
-					if ($i == 0) {
-						$query_array1->where('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
-					} else {
-						$query_array1->orWhere('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
+		foreach ($cwp_result as $row) {
+			$test = 0;
+			$query1 = DB::table('billing_core')
+				->where('eid', '=', $row->eid)
+				->where(function($query_array2) {
+					$item2_array = array('87880','87070','87071','87081','87430','87650','87651','87652');
+					$j = 0;
+					foreach ($item2_array as $item2) {
+						if ($j == 0) {
+							$query_array2->where('cpt', '=', $item2);
+						} else {
+							$query_array2->orWhere('cpt', '=', $item2);
+						}
+						$j++;
 					}
-					$i++;
-				}
-			})
-			->select('encounters.eid','encounters.pid');
-		$result0 = $query0->get();
-		if ($result0) {
-			$query = array();
-			foreach ($result0 as $row0) {
-				$demographics = DB::table('demographics')->where('pid', '=', $row0->pid)->first();
-				$dob = $this->human_to_unix($demographics->DOB);
-				$a = time() - 63113852; //2 years
-				$b = time() - 568024668; //18 years
-				if ($dob <= $a && $dob >= $b) {
-					$query[] = $row0->eid;
-				}
+				})
+				->first();
+			if ($query1) {
+				$data['test']++;
+				$test++;
 			}
-			$data['count'] = count($query);
-			if ($data['count'] > 0) {
-				foreach ($query as $row) {
-					$test = 0;
-					$query1 = DB::table('billing_core')
-						->where('eid', '=', $row)
-						->where(function($query_array2) {
-							$item2_array = array('87880','87070','87071','87081','87430','87650','87651','87652');
-							$j = 0;
-							foreach ($item2_array as $item2) {
-								if ($j == 0) {
-									$query_array2->where('cpt', '=', $item2);
-								} else {
-									$query_array2->orWhere('cpt', '=', $item2);
-								}
-								$j++;
-							}
-						})
-						->first();
-					if ($query1) {
-						$data['test']++;
-						$test++;
+			$query2 = DB::table('rx')->where('eid', '=', $row->eid)->first();
+			if ($query2) {
+				if ($query2->rx_rx != '') {
+					$abx_count = 0;
+					$search = array('cillin','amox','zith','cef','kef','mycin','eryth','pen','bac','sulf');
+					foreach ($search as $needle) {
+						$pos = stripos($query2->rx_rx, $needle);
+						if ($pos !== false) {
+							$abx_count++;
+						}
 					}
-					$query2 = DB::table('rx')->where('eid', '=', $row)->first();
-					if ($query2) {
-						if ($query2->rx_rx != '') {
-							$abx_count = 0;
-							$search = array('cillin','amox','zith','cef','kef','mycin','eryth','pen','bac','sulf');
-							foreach ($search as $needle) {
-								$pos = stripos($query2->rx_rx, $needle);
-								if ($pos !== false) {
-									$abx_count++;
-								}
-							}
-							if ($abx_count > 0) {
-								$data['abx']++;
-								if ($test == 0) {
-									$data['abx_no_test']++;
-								}
-							}
+					if ($abx_count > 0) {
+						$data['abx']++;
+						if ($test == 0) {
+							$data['abx_no_test']++;
 						}
 					}
 				}
 			}
-			$data['percent_test'] = round($data['test']/$data['count']*100);
-			$data['percent_abx'] = round($data['abx']/$data['count']*100);
-			$data['percent_abx_no_test'] = round($data['abx_no_test']/$data['count']*100);
 		}
+		$data['percent_test'] = round($data['test']/$data['count']*100);
+		$data['percent_abx'] = round($data['abx']/$data['count']*100);
+		$data['percent_abx_no_test'] = round($data['abx_no_test']/$data['count']*100);
 		return $data;
 	}
 	
-	protected function hedis_uri($type)
+	protected function hedis_uri($uri_result)
 	{
 		$data = array();
-		$data['count'] = 0;
+		$data['count'] = count($uri_result);
 		$data['abx'] = 0;
 		$data['percent_abx'] = 0;
-		$query0 = DB::table('assessment')
-			->join('encounters', 'encounters.eid', '=', 'assessment.eid')
-			->where('encounters.addendum', '=', 'n')
-			->where('encounters.practice_id', '=', Session::get('practice_id'))
-			->where('encounters.encounter_signed', '=', 'Yes');
-		if ($type != 'all') {
-			if ($type == 'year') {
-				$date_param = date('Y-m-d H:i:s', time() - 31556926);
-				$query0->where('encounters.encounter_DOS', '>=', $date_param);
-			} else {
-				$date_param = date('Y-m-d H:i:s', strtotime($type));
-				$query0->where('encounters.encounter_DOS', '>=', $date_param);
-			}
-		}
-		$query0->where(function($query_array1) {
-				$assessment_item_array = array('465.9','J06.9','487.1','J10.1','J11.1');
-				$i = 0;
-				foreach ($assessment_item_array as $assessment_item) {
-					if ($i == 0) {
-						$query_array1->where('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
-					} else {
-						$query_array1->orWhere('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
+		foreach ($uri_result as $row) {
+			$query1 = DB::table('rx')->where('eid', '=', $row->eid)->first();
+			if ($query1) {
+				if ($query1->rx_rx != '') {
+					$abx_count = 0;
+					$search = array('cillin','amox','zith','cef','kef','mycin','eryth','pen','bac','sulf');
+					foreach ($search as $needle) {
+						$pos = stripos($query2->rx_rx, $needle);
+						if ($pos !== false) {
+							$abx_count++;
+						}
 					}
-					$i++;
-				}
-			})
-			->select('encounters.eid','encounters.pid');
-		$result0 = $query0->get();
-		if ($result0) {
-			$query = array();
-			foreach ($result0 as $row0) {
-				$demographics = DB::table('demographics')->where('pid', '=', $row0->pid)->first();
-				$dob = $this->human_to_unix($demographics->DOB);
-				$a = time() - 7889229; //3 months
-				$b = time() - 568024668; //18 years
-				if ($dob <= $a && $dob >= $b) {
-					$query[] = $row0->eid;
-				}
-			}
-			$data['count'] = count($query);
-			foreach ($query as $row) {
-				$query1 = DB::table('rx')->where('eid', '=', $row)->first();
-				if ($query1) {
-					if ($query1->rx_rx != '') {
-						$abx_count = 0;
-						$search = array('cillin','amox','zith','cef','kef','mycin','eryth','pen','bac','sulf');
-						foreach ($search as $needle) {
-							$pos = stripos($query2->rx_rx, $needle);
-							if ($pos !== false) {
-								$abx_count++;
-							}
-						}
-						if ($abx_count > 0) {
-							$data['abx']++;
-						}
+					if ($abx_count > 0) {
+						$data['abx']++;
 					}
 				}
 			}
-			$data['percent_abx'] = round($data['abx']/$data['count']*100);
 		}
+		$data['percent_abx'] = round($data['abx']/$data['count']*100);
 		return $data;
 	}
 	
-	protected function hedis_aab($type)
+	protected function hedis_aab($aab_result)
 	{
 		$data = array();
-		$data['count'] = 0;
+		$data['count'] = count($aab_result);
 		$data['abx'] = 0;
 		$data['percent_abx'] = 0;
-		$query0 = DB::table('assessment')
-			->join('encounters', 'encounters.eid', '=', 'assessment.eid')
-			->where('encounters.addendum', '=', 'n')
-			->where('encounters.practice_id', '=', Session::get('practice_id'))
-			->where('encounters.encounter_signed', '=', 'Yes');
-		if ($type != 'all') {
-			if ($type == 'year') {
-				$date_param = date('Y-m-d H:i:s', time() - 31556926);
-				$query0->where('encounters.encounter_DOS', '>=', $date_param);
-			} else {
-				$date_param = date('Y-m-d H:i:s', strtotime($type));
-				$query0->where('encounters.encounter_DOS', '>=', $date_param);
-			}
-		}
-		$query0->where(function($query_array1) {
-				$assessment_item_array = array('466.0','J20.9');
-				$i = 0;
-				foreach ($assessment_item_array as $assessment_item) {
-					if ($i == 0) {
-						$query_array1->where('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
-					} else {
-						$query_array1->orWhere('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
+		foreach ($query as $row) {
+			$query1 = DB::table('rx')->where('eid', '=', $row->eid)->first();
+			if ($query1) {
+				if ($query1->rx_rx != '') {
+					$abx_count = 0;
+					$search = array('cillin','amox','zith','cef','kef','mycin','eryth','pen','bac','sulf','cycl','lox');
+					foreach ($search as $needle) {
+						$pos = stripos($query1->rx_rx, $needle);
+						if ($pos !== false) {
+							$abx_count++;
+						}
 					}
-					$i++;
-				}
-			})
-			->select('encounters.eid','encounters.pid');
-		$result0 = $query0->get();
-		if ($result0) {
-			$query = array();
-			foreach ($result0 as $row0) {
-				$demographics = DB::table('demographics')->where('pid', '=', $row0->pid)->first();
-				$dob = $this->human_to_unix($demographics->DOB);
-				$a = time() - 7889229; //3 months
-				$b = time() - 568024668; //18 years
-				if ($dob <= $a && $dob >= $b) {
-					$query[] = $row0->eid;
-				}
-			}
-			$data['count'] = count($query);
-			foreach ($query as $row) {
-				$query1 = DB::table('rx')->where('eid', '=', $row)->first();
-				if ($query1) {
-					if ($query1->rx_rx != '') {
-						$abx_count = 0;
-						$search = array('cillin','amox','zith','cef','kef','mycin','eryth','pen','bac','sulf','cycl','lox');
-						foreach ($search as $needle) {
-							$pos = stripos($query1->rx_rx, $needle);
-							if ($pos !== false) {
-								$abx_count++;
-							}
-						}
-						if ($abx_count > 0) {
-							$data['abx']++;
-						}
+					if ($abx_count > 0) {
+						$data['abx']++;
 					}
 				}
 			}
-			$data['percent_abx'] = round($data['abx']/$data['count']*100);
 		}
+		$data['percent_abx'] = round($data['abx']/$data['count']*100);
 		return $data;
 	}
 	
 	protected function hedis_spr($pid)
 	{
 		$data = array();
-		$data['html'] = HTML::image('images/button_cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Use of Spirometry Testing in the Assessment and Diagnosis of COPD not performed';
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Use of Spirometry Testing in the Assessment and Diagnosis of COPD not performed';
 		$data['goal'] = 'n';
 		$data['fix'] = array();
 		$score = 0;
@@ -6828,205 +6842,774 @@ class BaseController extends Controller {
 		return $data;
 	}
 	
-	protected function hedis_pce($type)
+	protected function hedis_pce($pce_result)
 	{
 		$data = array();
-		$data['count'] = 0;
+		$data['count'] = count($pce_result);
 		$data['tx'] = 0;
 		$data['percent_tx'] = 0;
-		$query0 = DB::table('assessment')
-			->join('encounters', 'encounters.eid', '=', 'assessment.eid')
-			->where('encounters.addendum', '=', 'n')
-			->where('encounters.practice_id', '=', Session::get('practice_id'))
-			->where('encounters.encounter_signed', '=', 'Yes');
-		if ($type != 'all') {
-			if ($type == 'year') {
-				$date_param = date('Y-m-d H:i:s', time() - 31556926);
-				$query0->where('encounters.encounter_DOS', '>=', $date_param);
-			} else {
-				$date_param = date('Y-m-d H:i:s', strtotime($type));
-				$query0->where('encounters.encounter_DOS', '>=', $date_param);
-			}
-		}
-		$query0->where(function($query_array1) {
-				$assessment_item_array = array('491.21','J44.1');
-				$i = 0;
-				foreach ($assessment_item_array as $assessment_item) {
-					if ($i == 0) {
-						$query_array1->where('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
-					} else {
-						$query_array1->orWhere('assessment.assessment_icd1', '=', $assessment_item)->orWhere('assessment.assessment_icd2', '=', $assessment_item)->orWhere('assessment.assessment_icd3', '=', $assessment_item)->orWhere('assessment.assessment_icd4', '=', $assessment_item)->orWhere('assessment.assessment_icd5', '=', $assessment_item)->orWhere('assessment.assessment_icd6', '=', $assessment_item)->orWhere('assessment.assessment_icd7', '=', $assessment_item)->orWhere('assessment.assessment_icd8', '=', $assessment_item)->orWhere('assessment.assessment_icd9', '=', $assessment_item)->orWhere('assessment.assessment_icd10', '=', $assessment_item)->orWhere('assessment.assessment_icd11', '=', $assessment_item)->orWhere('assessment.assessment_icd12', '=', $assessment_item);
-					}
-					$i++;
-				}
-			})
-			->select('encounters.eid','encounters.pid');
-		$result0 = $query0->get();
-		if ($result0) {
-			$query = array();
-			foreach ($result0 as $row0) {
-				$demographics = DB::table('demographics')->where('pid', '=', $row0->pid)->first();
-				$dob = $this->human_to_unix($demographics->DOB);
-				$a = time() - 1262277040; //40 years
-				if ($dob <= $a) {
-					$query[] = $row0->eid;
-				}
-			}
-			$data['count'] = count($query);
-			foreach ($query as $row) {
-				$query1 = DB::table('rx')->where('eid', '=', $row)->first();
-				if ($query1) {
-					if ($query1->rx_rx != '') {
-						$steroid_count = 0;
-						$inhaler_count = 0;
-						$search = array('sone','medrol','pred','celestone','cortef','decadron','rayos');
-						foreach ($search as $needle) {
-							$pos = stripos($query1->rx_rx, $needle);
-							if ($pos !== false) {
-								$steroid_count++;
-							}
-						}
-						$search1 = array('terol','hfa','xopenex','maxair','combivent','ipratro','duoneb');
-						foreach ($search1 as $needle1) {
-							$pos1 = stripos($query1->rx_rx, $needle1);
-							if ($pos1 !== false) {
-								$inhaler_count++;
-							}
-						}
-						if ($steroid_count > 0 && $inhaler_count > 0) {
-							$data['tx']++;
-						}
-					}
-				}
-			}
-			$data['percent_tx'] = round($data['tx']/$data['count']*100);
-		}
-		return $data;
-	}
-	
-	protected function hedis_asm()
-	{
-		$data = array();
-		$data['count'] = 0;
-		$data['tx'] = 0;
-		$data['percent_tx'] = 0;
-		$query0 = DB::table('issues')
-			->join('demographics', 'demographics.pid', '=', 'issues.pid')
-			->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
-			->where('demographics_relate.practice_id', '=', Session::get('practice_id'))
-			->where('issues.issue_date_inactive', '=', '0000-00-00 00:00:00')
-			->where(function($query_array1) {
-				$issues_item_array = array('493.90','J45.909','J45.998','493.00','J45.20','493.01','J45.22','493.02','J45.21','493.10','493.11','493.12','493.20','J44.9','493.21','J44.0','493.22','J44.1','493.81','J45.990','493.82','J45.991','493.91','J45.902','493.92','J45.901');
-				$i = 0;
-				foreach ($issues_item_array as $issues_item) {
-					if ($i == 0) {
-						$query_array1->where('issues.issue', 'LIKE', "%$issues_item%");
-					} else {
-						$query_array1->orWhere('issues.issue', 'LIKE', "%$issues_item%");
-					}
-					$i++;
-				}
-			})
-			->select('demographics.pid');
-		$result0 = $query0->get();
-		if ($result0) {
-			$query = array();
-			foreach ($result0 as $row0) {
-				$demographics = DB::table('demographics')->where('pid', '=', $row0->pid)->first();
-				$dob = $this->human_to_unix($demographics->DOB);
-				$a = time() - 157784630; //5 years
-				$b = time() - 1767187856; //56 years
-				if ($dob <= $a && $dob >= $b) {
-					$query[] = $row0->pid;
-				}
-			}
-			$data['count'] = count($query);
-			foreach ($query as $row) {
-				$query1 = DB::table('rx_list')->where('pid', '=', $row)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->first();
-				if ($query1) {
-					$med_count = 0;
-					$search = array('budesonide','flovent','pulmicort','qvar','advair','aerobid','alvesco','asmanex','dulera','pulmicort','symbicort','breo','fluticasone','beclomethasone','flunisolide','ciclesonide','mometasone','cromolyn','phylline','lukast','singulair','accolate','theo');
+		foreach ($pce_result as $row) {
+			$query1 = DB::table('rx')->where('eid', '=', $row->eid)->first();
+			if ($query1) {
+				if ($query1->rx_rx != '') {
+					$steroid_count = 0;
+					$inhaler_count = 0;
+					$search = array('sone','medrol','pred','celestone','cortef','decadron','rayos');
 					foreach ($search as $needle) {
-						$pos = stripos($query1->rxl_medication, $needle);
+						$pos = stripos($query1->rx_rx, $needle);
 						if ($pos !== false) {
-							$med_count++;
+							$steroid_count++;
 						}
 					}
-					if ($med_count > 0) {
-						$data['tx']++;
-					}
-				}
-			}
-			$data['percent_tx'] = round($data['tx']/$data['count']*100);
-		}
-		return $data;
-	}
-	
-	protected function hedis_amr()
-	{
-		$data = array();
-		$data['count'] = 0;
-		$data['tx'] = 0;
-		$data['percent_tx'] = 0;
-		$query0 = DB::table('issues')
-			->join('demographics', 'demographics.pid', '=', 'issues.pid')
-			->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
-			->where('demographics_relate.practice_id', '=', Session::get('practice_id'))
-			->where('issues.issue_date_inactive', '=', '0000-00-00 00:00:00')
-			->where(function($query_array1) {
-				$issues_item_array = array('493.90','J45.909','J45.998','493.00','J45.20','493.01','J45.22','493.02','J45.21','493.10','493.11','493.12','493.20','J44.9','493.21','J44.0','493.22','J44.1','493.81','J45.990','493.82','J45.991','493.91','J45.902','493.92','J45.901');
-				$i = 0;
-				foreach ($issues_item_array as $issues_item) {
-					if ($i == 0) {
-						$query_array1->where('issues.issue', 'LIKE', "%$issues_item%");
-					} else {
-						$query_array1->orWhere('issues.issue', 'LIKE', "%$issues_item%");
-					}
-					$i++;
-				}
-			})
-			->select('demographics.pid');
-		$result0 = $query0->get();
-		if ($result0) {
-			$query = array();
-			foreach ($result0 as $row0) {
-				$demographics = DB::table('demographics')->where('pid', '=', $row0->pid)->first();
-				$dob = $this->human_to_unix($demographics->DOB);
-				$a = time() - 157784630; //5 years
-				$b = time() - 2019643264; //64 years
-				if ($dob <= $a && $dob >= $b) {
-					$query[] = $row0->pid;
-				}
-			}
-			$data['count'] = count($query);
-			foreach ($query as $row) {
-				$query1 = DB::table('rx_list')->where('pid', '=', $row)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->first();
-				if ($query1) {
-					$controller_count = 0;
-					$rescue_count = 0;
-					$search = array('budesonide','flovent','pulmicort','qvar','advair','aerobid','alvesco','asmanex','dulera','pulmicort','symbicort','breo','fluticasone','beclomethasone','flunisolide','ciclesonide','mometasone','cromolyn','phylline','lukast','singulair','accolate','theo');
-					foreach ($search as $needle) {
-						$pos = stripos($query1->rxl_medication, $needle);
-						if ($pos !== false) {
-							$controller_count++;
-						}
-					}
-					$search1 = array('albuterol','ventolin','alupent','metproterenol');
+					$search1 = array('terol','hfa','xopenex','maxair','combivent','ipratro','duoneb');
 					foreach ($search1 as $needle1) {
-						$pos1 = stripos($query1->rxl_medication, $needle1);
+						$pos1 = stripos($query1->rx_rx, $needle1);
 						if ($pos1 !== false) {
-							$rescue_count++;
+							$inhaler_count++;
 						}
 					}
-					$total = $controller_count + $rescue_count;
-					$ratio = round($controller_count/$total*100);
-					if ($ratio > 50) {
+					if ($steroid_count > 0 && $inhaler_count > 0) {
 						$data['tx']++;
 					}
 				}
 			}
-			$data['percent_tx'] = round($data['tx']/$data['count']*100);
+		}
+		$data['percent_tx'] = round($data['tx']/$data['count']*100);
+		return $data;
+	}
+	
+	protected function hedis_asm($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Use of Appropriate Medications for People with Asthma not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query1 = DB::table('rx_list')->where('pid', '=', $pid)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->first();
+		if ($query1) {
+			$med_count = 0;
+			$search = array('budesonide','flovent','pulmicort','qvar','advair','aerobid','alvesco','asmanex','dulera','pulmicort','symbicort','breo','fluticasone','beclomethasone','flunisolide','ciclesonide','mometasone','cromolyn','phylline','lukast','singulair','accolate','theo');
+			foreach ($search as $needle) {
+				$pos = stripos($query1->rxl_medication, $needle);
+				if ($pos !== false) {
+					$med_count++;
+				}
+			}
+			if ($med_count > 0) {
+				$score++;
+			} else {
+				$data['fix'][] = 'If the patient does not have mild, intermittent asthma, a controller medication is recommended.';
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Use of Appropriate Medications for People with Asthma performed';
+			$data['goal'] = 'y';
 		}
 		return $data;
+	}
+	
+	protected function hedis_amr($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Medication Management for People with Asthma not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query1 = DB::table('rx_list')->where('pid', '=', $pid)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->first();
+		if ($query1) {
+			$controller_count = 0;
+			$rescue_count = 0;
+			$search = array('budesonide','flovent','pulmicort','qvar','advair','aerobid','alvesco','asmanex','dulera','pulmicort','symbicort','breo','fluticasone','beclomethasone','flunisolide','ciclesonide','mometasone','cromolyn','phylline','lukast','singulair','accolate','theo');
+			foreach ($search as $needle) {
+				$pos = stripos($query1->rxl_medication, $needle);
+				if ($pos !== false) {
+					$controller_count++;
+				}
+			}
+			$search1 = array('albuterol','ventolin','alupent','metproterenol');
+			foreach ($search1 as $needle1) {
+				$pos1 = stripos($query1->rxl_medication, $needle1);
+				if ($pos1 !== false) {
+					$rescue_count++;
+				}
+			}
+			$total = $controller_count + $rescue_count;
+			$ratio = round($controller_count/$total*100);
+			if ($ratio > 50) {
+				$score++;
+			} else {
+				$data['fix'][] = 'If the patient does not have mild, intermittent asthma, a ratio of controller medications to the total number of asthma medications of greater than 0.5 is recommended.';
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Medication Management for People with Asthma performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_cmc($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Cholesterol Management for Patients With Cardiovascular Conditions not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('tests')->where('pid', '=', $pid)
+			->where(function($query_array) {
+					$query_array->where('test_name', 'LIKE', "%ldl%")
+						->orWhere('test_name', 'LIKE', "%cholesterol%")
+						->orWhere('test_name', 'LIKE', "%lipid%");
+				})
+			->orderBy('test_datetime', 'desc')
+			->first();
+		if ($query) {
+			$score++;
+		} else {
+			$query1 = DB::table('documents')
+				->where('pid', '=', $pid)
+				->where(function($query_array1) {
+					$query_array1->where('documents_desc', 'LIKE', "%ldl%")
+						->orWhere('documents_desc', 'LIKE', "%cholesterol%")
+						->orWhere('documents_desc', 'LIKE', "%lipid%");
+				})
+				->where('documents_type', '=', 'Laboratory')
+				->first();
+			if ($query1) {
+				$score++;
+			} else {
+				$query2 = DB::table('tags_relate')
+					->join('tags', 'tags.tags_id', '=', 'tags_relate.tags_id')
+					->where('tags_relate.pid', '=', $pid)
+					->where(function($query_array2) {
+						$query_array2->where('tags.tag', 'LIKE', "%ldl%")
+							->orWhere('tags.tag', 'LIKE', "%cholesterol%")
+							->orWhere('tags.tag', 'LIKE', "%lipid%");
+					})
+					->first();
+				if ($query2) {
+					$score++;
+				} else {
+					$data['fix'][] = 'LDL needs to be measured';
+				}
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Cholesterol Management for Patients With Cardiovascular Conditions performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_cbp($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Controlling High Blood Pressure not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$systolic = 0;
+		$diastolic = 0;
+		$query = DB::table('vitals')->where('pid', '=', $pid)->where('bp_systolic', '!=', '')->where('bp_diastolic', '!=', '')->orderBy('eid', 'desc')->first();
+		if ($query) {
+			if ($query->bp_systolic < 140) {
+				$systolic++;
+			}
+			if ($query->bp_diastolic < 90) {
+				$diastolic++;
+			}
+			$score = $systolic + $diastolic;
+			if ($score == 2) {
+				$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Controlling High Blood Pressure performed';
+				$data['goal'] = 'y';
+			} else {
+				$data['fix'][] = 'Blood pressure needs to be under better control.';
+			}
+		} else {
+			$data['fix'][] = 'Blood pressures need to be measured.';
+		}
+		return $data;
+	}
+	
+	protected function hedis_pbh($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Persistence of Beta-Blocker Treatment After a Heart Attack not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query1 = DB::table('rx_list')->where('pid', '=', $pid)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->first();
+		if ($query1) {
+			$search = array('olol','ilol','alol','betapace','brevibloc','bystolic','coreg','corgard','inderal','innopran','kerlone','levatol','lopressor','sectral','tenormin','oprol','trandate','zebeta','sorine','corzide','tenoretic','ziac');
+			foreach ($search as $needle) {
+				$pos = stripos($query1->rxl_medication, $needle);
+				if ($pos !== false) {
+					$score++;
+				}
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Persistence of Beta-Blocker Treatment After a Heart Attack performed';
+			$data['goal'] = 'y';
+		} else {
+			$data['fix'][] = 'Beta blocker is recommended.';
+		}
+		return $data;
+	}
+	
+	protected function hedis_cdc($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Comprehensive Diabetes Care not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		// HgbA1c
+		$query = DB::table('tests')->where('pid', '=', $pid)
+			->where(function($query_array) {
+					$query_array->where('test_name', 'LIKE', "%hgba1c%")
+						->orWhere('test_name', 'LIKE', "%a1c%");
+				})
+			->orderBy('test_datetime', 'desc')
+			->first();
+		if ($query) {
+			$score++;
+		} else {
+			$query1 = DB::table('documents')
+				->where('pid', '=', $pid)
+				->where(function($query_array1) {
+					$query_array1->where('documents_desc', 'LIKE', "%hgba1c%")
+						->orWhere('documents_desc', 'LIKE', "%a1c%");
+				})
+				->where('documents_type', '=', 'Laboratory')
+				->first();
+			if ($query1) {
+				$score++;
+			} else {
+				$query2 = DB::table('tags_relate')
+					->join('tags', 'tags.tags_id', '=', 'tags_relate.tags_id')
+					->where('tags_relate.pid', '=', $pid)
+					->where(function($query_array2) {
+						$query_array2->where('tags.tag', 'LIKE', "%hgba1c%")
+							->orWhere('tags.tag', 'LIKE', "%a1c%");
+					})
+					->first();
+				if ($query2) {
+					$score++;
+				} else {
+					$data['fix'][] = 'HgbA1c needs to be measured';
+				}
+			}
+		}
+		// LDL
+		$query3 = DB::table('tests')->where('pid', '=', $pid)
+			->where(function($query_array3) {
+					$query_array3->where('test_name', 'LIKE', "%ldl%")
+						->orWhere('test_name', 'LIKE', "%cholesterol%")
+						->orWhere('test_name', 'LIKE', "%lipid%");
+				})
+			->orderBy('test_datetime', 'desc')
+			->first();
+		if ($query3) {
+			$score++;
+		} else {
+			$query4 = DB::table('documents')
+				->where('pid', '=', $pid)
+				->where(function($query_array4) {
+					$query_array4->where('documents_desc', 'LIKE', "%ldl%")
+						->orWhere('documents_desc', 'LIKE', "%cholesterol%")
+						->orWhere('documents_desc', 'LIKE', "%lipid%");
+				})
+				->where('documents_type', '=', 'Laboratory')
+				->first();
+			if ($query4) {
+				$score++;
+			} else {
+				$query5 = DB::table('tags_relate')
+					->join('tags', 'tags.tags_id', '=', 'tags_relate.tags_id')
+					->where('tags_relate.pid', '=', $pid)
+					->where(function($query_array5) {
+						$query_array5->where('tags.tag', 'LIKE', "%ldl%")
+							->orWhere('tags.tag', 'LIKE', "%cholesterol%")
+							->orWhere('tags.tag', 'LIKE', "%lipid%");
+					})
+					->first();
+				if ($query5) {
+					$score++;
+				} else {
+					$data['fix'][] = 'LDL needs to be measured';
+				}
+			}
+		}
+		// Nephropathy screening
+		$query6 = DB::table('tests')->where('pid', '=', $pid)
+			->where('test_name', 'LIKE', "%microalbumin%")
+			->orderBy('test_datetime', 'desc')
+			->first();
+		if ($query6) {
+			$score++;
+		} else {
+			$query7 = DB::table('documents')
+				->where('pid', '=', $pid)
+				->where('documents_desc', 'LIKE', "%microalbumin%")
+				->where('documents_type', '=', 'Laboratory')
+				->first();
+			if ($query7) {
+				$score++;
+			} else {
+				$query8 = DB::table('tags_relate')
+					->join('tags', 'tags.tags_id', '=', 'tags_relate.tags_id')
+					->where('tags_relate.pid', '=', $pid)
+					->where('tags.tag', 'LIKE', "%microalbumin%")
+					->first();
+				if ($query8) {
+					$score++;
+				} else {
+					$data['fix'][] = 'Urine microalbumin needs to be measured';
+				}
+			}
+		}
+		// Eye exam
+		$query9 = DB::table('documents')
+			->where('pid', '=', $pid)
+			->where(function($query_array9) {
+				$query_array9->where('documents_desc', 'LIKE', "%ophthal%")
+					->orWhere('documents_desc', 'LIKE', "%dilated eye%")
+					->orWhere('documents_desc', 'LIKE', "%diabetic eye%");
+			})
+			->where('documents_type', '=', 'Referrals')
+			->first();
+		if ($query9) {
+			$score++;
+		} else {
+			$query10 = DB::table('tags_relate')
+				->join('tags', 'tags.tags_id', '=', 'tags_relate.tags_id')
+				->where('tags_relate.pid', '=', $pid)
+				->where(function($query_array10) {
+					$query_array10->where('tags.tag', 'LIKE', "%ophthal%")
+						->orWhere('tags.tag', 'LIKE', "%dilated eye%")
+						->orWhere('tags.tag', 'LIKE', "%diabetic eye%");
+				})
+				->first();
+			if ($query10) {
+				$score++;
+			} else {
+				$data['fix'][] = 'Diabetic eye exam needs to be performed';
+			}
+		}
+		// BP
+		$systolic = 0;
+		$diastolic = 0;
+		$query11 = DB::table('vitals')->where('pid', '=', $pid)->where('bp_systolic', '!=', '')->where('bp_diastolic', '!=', '')->orderBy('eid', 'desc')->first();
+		if ($query11) {
+			if ($query11->bp_systolic < 140) {
+				$systolic++;
+			}
+			if ($query11->bp_diastolic < 90) {
+				$diastolic++;
+			}
+			$bp_score = $systolic + $diastolic;
+			if ($bp_score == 2) {
+				$score++;
+			} else {
+				$data['fix'][] = 'Blood pressure needs to be under better control.';
+			}
+		} else {
+			$data['fix'][] = 'Blood pressures need to be measured.';
+		}
+		if ($score == 5) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Comprehensive Diabetes Care performed';
+			$data['goal'] = 'y';
+		}
+		return $data;
+	}
+	
+	protected function hedis_art($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Disease Modifying Anti-Rheumatic Drug Therapy for Rheumatoid Arthritis not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query1 = DB::table('rx_list')->where('pid', '=', $pid)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->first();
+		if ($query1) {
+			$search = array('methotrexate','azathioprine','cyclophosphamide','cyclosporine','azasan','cytoxan','gengraf','imuran','neoral','rheumatrex','trexall','embrel','remicade','cimzia','humira','simponi','cuprimine','hydroxychloroquine','sulfasalazine','actemra','arava','azulfidine','kineret','leflunomide','myochrysine','orencia','plaquenil','ridaura');
+			foreach ($search as $needle) {
+				$pos = stripos($query1->rxl_medication, $needle);
+				if ($pos !== false) {
+					$score++;
+				}
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Disease Modifying Anti-Rheumatic Drug Therapy for Rheumatoid Arthritis performed';
+			$data['goal'] = 'y';
+		} else {
+			$data['fix'][] = 'DMARD is recommended.';
+		}
+		return $data;
+	}
+	
+	protected function hedis_omw($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Disease Modifying Anti-Rheumatic Drug Therapy for Rheumatoid Arthritis not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query1 = DB::table('rx_list')->where('pid', '=', $pid)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->first();
+		if ($query1) {
+			$search = array('actonel','dronate','atelvia','boniva','fosamax','reclast','binosto','zoledronic','estraderm','estradiol','estropipate','femhrt','jinteli','menest','premarin','premphase','vivelle','activella','alora','cenestin','climara','estrace','gynodiol','menostar','mimvey','ogen','prefest','minivelle','evista','forteo','prolia');
+			foreach ($search as $needle) {
+				$pos = stripos($query1->rxl_medication, $needle);
+				if ($pos !== false) {
+					$score++;
+				}
+			}
+		}
+		$query2 = DB::table('documents')
+			->where('pid', '=', $pid)
+			->where(function($query_array2) {
+				$query_array2->where('documents_desc', 'LIKE', "%dexa%")
+					->orWhere('documents_desc', 'LIKE', "%osteoporosis%")
+					->orWhere('documents_desc', 'LIKE', "%bone density%");
+			})
+			->where('documents_type', '=', 'Imaging')
+			->first();
+		if ($query2) {
+			$score++;
+		} else {
+			$query3 = DB::table('tags_relate')
+				->join('tags', 'tags.tags_id', '=', 'tags_relate.tags_id')
+				->where('tags_relate.pid', '=', $pid)
+				->where(function($query_array3) {
+					$query_array3->where('tags.tag', 'LIKE', "%dexa%")
+						->orWhere('tags.tag', 'LIKE', "%osteoporosis%")
+						->orWhere('tags.tag', 'LIKE', "%bone density%");
+				})
+				->first();
+			if ($query3) {
+				$score++;
+			} else {
+				$query4 = DB::table('tests')->where('pid', '=', $pid)
+					->where(function($query_array4) {
+							$query_array4->where('test_name', 'LIKE', "%dexa%")
+								->orWhere('test_name', 'LIKE', "%osteoporosis%")
+								->orWhere('test_name', 'LIKE', "%bone density%");
+						})
+					->first();
+				if ($query4) {
+					$score++;
+				}
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Disease Modifying Anti-Rheumatic Drug Therapy for Rheumatoid Arthritis performed';
+			$data['goal'] = 'y';
+		} else {
+			$data['fix'][] = 'Bone density screening needs to be performed or osteoporosis prevention medication is recommended';
+		}
+		return $data;
+	}
+	
+	protected function hedis_lbp($lbp_result)
+	{
+		$data = array();
+		$data['count'] = count($lbp_result);
+		$data['no_rad'] = 0;
+		$data['percent_no_rad'] = 0;
+		$rad = 0;
+		foreach ($lbp_result as $row) {
+			$encounter = DB::table('encounters')->where('eid', '=', $row->eid)->first();
+			$date_a = date('Y-m-d', $this->human_to_unix($encounter->encounter_DOS));
+			$date_b = date('Y-m-d', $this->human_to_unix($encounter->encounter_DOS) + 2419200); //28 days from DOS
+			$date_c = date('Y-m-d H:i:s', $this->human_to_unix($encounter->encounter_DOS));
+			$date_d = date('Y-m-d H:i:s', $this->human_to_unix($encounter->encounter_DOS) + 2419200);
+			$pid = $encounter->pid;
+			$query2 = DB::table('documents')
+				->where('pid', '=', $pid)
+				->where('documents_desc', 'LIKE', "%ray%")
+				->where('documents_date', '>=', $date_a)
+				->where('documents_date', '<=', $date_b)
+				->where(function($query_array2) {
+					$query_array2->where('documents_desc', 'LIKE', "%lumbar%")
+						->orWhere('documents_desc', 'LIKE', "%low back%");
+				})
+				->where('documents_type', '=', 'Imaging')
+				->first();
+			if ($query2) {
+				$rad++;
+			} else {
+				$query3 = DB::table('tests')->where('pid', '=', $pid)
+					->where('test_name', 'LIKE', "%ray%")
+					->where('test_datetime', '>=', $date_c)
+					->where('test_datetime', '<=', $date_d)
+					->where(function($query_array) {
+							$query_array->where('test_name', 'LIKE', "%lumbar%")
+								->orWhere('test_name', 'LIKE', "%low back%");
+						})
+					->first();
+				if ($query3) {
+					$rad++;
+				}
+			}
+		}
+		$data['no_rad'] = $data['count'] - $rad;
+		$data['percent_no_rad'] = round($data['no_rad']/$data['count']*100);
+		return $data;
+	}
+	
+	protected function hedis_amm($pid)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Antidepressant Medication Management not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query1 = DB::table('rx_list')->where('pid', '=', $pid)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->first();
+		if ($query1) {
+			$search = array('celexa','opram','prozac','fluoxetine','lexapro','luvox','paroxetine','paxil','pexeva','sarafem','sertraline','symbyax','viibryd','zoloft','cymbalta','effexor','pristiq','venlafaxine','khedezla','ptyline','amoxapine','anafranil','pramine','doxepin','elavil','limbitrol','norpramin','pamelor','surmontil','tofranil','vivactil','emsam','marplan','nardil','parnate','tranylcypromine','bupropion','aplenzin','budeprion','maprotiline','mirtazapine','nefazodone','oleptro','remeron','serzone','trazodone','wellbutrin','forfivo');
+			foreach ($search as $needle) {
+				$pos = stripos($query1->rxl_medication, $needle);
+				if ($pos !== false) {
+					$score++;
+				}
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Antidepressant Medication Management performed';
+			$data['goal'] = 'y';
+		} else {
+			$data['fix'][] = 'Antidepressant medication is recommended.';
+		}
+		return $data;
+	}
+	
+	protected function hedis_add($pid, $date)
+	{
+		$data = array();
+		$data['html'] = HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Follow-Up Care for Children Prescribed ADHD Medication not performed';
+		$data['goal'] = 'n';
+		$data['fix'] = array();
+		$score = 0;
+		$query = DB::table('encounters')
+			->where('pid', '=', $pid)
+			->where('addendum', '=', 'n')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->where('encounter_signed', '=', 'Yes')
+			->where('encounter_DOS', '>=', $date)
+			->get();
+		if ($query) {
+			foreach ($query as $row) {
+				$query1 = DB::table('billing_core')
+					->where('eid', '=', $row->eid)
+					->where(function($query_array1) {
+						$add_item_array = array('90791','90792','90804','90805','90806','90807','90808','90809','90810','90811','90812','90813','90814','90815','90832','90833','90834','90836','90837','90838','90839','90840','96150','96151','96152','96153','96154','98960','98961','98962','98966','98967','98968','99078','99201','99202','99203','99204','99205','99211','99212','99213','99214','99215','99217','99218','99219','99220','99241','99242','99243','99244','99245','99341','99342','99343','99344','99345','99347','99348','99349','99350','99383','99384','99393','99394','99401','99402','99403','99404','99411','99412','99441','99442','99443','99510');
+						$i = 0;
+						foreach ($add_item_array as $add_item) {
+							if ($i == 0) {
+								$query_array1->where('cpt', '=', $add_item);
+							} else {
+								$query_array1->orWhere('cpt', '=', $add_item);
+							}
+							$i++;
+						}
+					})
+					->first();
+				if ($query1) {
+					$score++;
+				}
+			}
+		}
+		if ($score >= 1) {
+			$data['html'] = HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')) . ' Follow-Up Care for Children Prescribed ADHD Medication performed';
+			$data['goal'] = 'y';
+		} else {
+			$data['fix'][] = 'Encounters monitoring ADD needs to be performed';
+		}
+		return $data;
+	}
+	
+	protected function hedis_audit($type, $function, $pid)
+	{
+		$html = '';
+		$return = array();
+		$demographics = DB::table('demographics')->where('pid', '=', $pid)->first();
+		$dob = $this->human_to_unix($demographics->DOB);
+		// ABA
+		if ($dob <= $this->age_calc(18,'year') && $dob >= $this->age_calc(74,'year')) {
+			$return['aba'] = $this->hedis_aba($pid);
+		}
+		// WCC
+		if ($dob <= $this->age_calc(3,'year') && $dob >= $this->age_calc(18,'year')) {
+			$return['wcc'] = $this->hedis_wcc($pid);
+		}
+		// CIS
+		if ($dob >= $this->age_calc(3,'year')) {
+			$return['cis'] = $this->hedis_cis($pid);
+		}
+		// IMA
+		if ($dob <= $this->age_calc(13,'year') && $dob >= $this->age_calc(18,'year')) {
+			$return['ima'] = $this->hedis_ima($pid);
+		}
+		// HPV
+		if ($dob <= $this->age_calc(9,'year') && $dob >= $this->age_calc(13,'year') && $demographics->sex == 'f') {
+			$return['hpv'] = $this->hedis_hpv($pid);
+		}
+		// LSC
+		if ($dob >= $this->age_calc(2,'year')) {
+			$return['lsc'] = $this->hedis_lsc($pid);
+		}
+		// BCS
+		if ($dob <= $this->age_calc(40,'year') && $dob >= $this->age_calc(69,'year') && $demographics->sex == 'f') {
+			$return['bcs'] = $this->hedis_bcs($pid);
+		}
+		// CCS
+		if ($dob <= $this->age_calc(21,'year') && $dob >= $this->age_calc(64,'year') && $demographics->sex == 'f') {
+			$return['ccs'] = $this->hedis_ccs($pid);
+		}
+		// COL
+		if ($dob <= $this->age_calc(50,'year') && $dob >= $this->age_calc(75,'year')) {
+			$return['col'] = $this->hedis_col($pid);
+		}
+		// CHL
+		if ($dob <= $this->age_calc(16,'year') && $dob >= $this->age_calc(24,'year') && $demographics->sex == 'f') {
+			$return['chl'] = $this->hedis_chl($pid);
+		}
+		// GSO
+		if ($dob <= $this->age_calc(65,'year')) {
+			$return['gso'] = $this->hedis_gso($pid);
+		}
+		// CWP
+		$cwp_assessment_item_array = array('462','J02.9','034.0','J02.0','J03.00','074.0','B08.5','474.00','J35.01','099.51','A56.4','032.0','A36.0','472.1','J31.2','098.6','A54.5');
+		$cwp_result = $this->hedis_assessment_query($pid, $type, $cwp_assessment_item_array);
+		if ($cwp_result && $dob <= $this->age_calc(2,'year') && $dob >= $this->age_calc(18,'year')) {
+			$return['cwp'] = $this->hedis_cwp($cwp_result);
+		}
+		// URI
+		$uri_assessment_item_array = array('465.9','J06.9','487.1','J10.1','J11.1');
+		$uri_result = $this->hedis_assessment_query($pid, $type, $uri_assessment_item_array);
+		if ($uri_result && $dob <= $this->age_calc(3,'month') && $dob >= $this->age_calc(18,'year')) {
+			$return['uri'] = $this->hedis_uri($uri_result);
+		}
+		// AAB
+		$aab_assessment_item_array = array('466.0','J20.9');
+		$aab_result = $this->hedis_assessment_query($pid, $type, $aab_assessment_item_array);
+		if ($aab_result && $dob <= $this->age_calc(3,'month') && $dob >= $this->age_calc(18,'year')) {
+			$return['aab'] = $this->hedis_uri($aab_result);
+		}
+		// SPR
+		$spr_issues_item_array = array('496','J44.9');
+		$spr_query = $this->hedis_issue_query($pid, $spr_issues_item_array);
+		if ($spr_query && $dob <= $this->age_calc(40,'year')) {
+			$return['spr'] = $this->hedis_spr($pid);
+		}
+		// PCE
+		$pce_assessment_item_array = array('491.21','J44.1');
+		$pce_result = $this->hedis_assessment_query($pid, $type, $pce_assessment_item_array);
+		if ($pce_result && $dob <= $this->age_calc(40,'year')) {
+			$return['pce'] = $this->hedis_pce($pce_result);
+		}
+		// ASM and AMR
+		$asm_issues_item_array = array('493.90','J45.909','J45.998','493.00','J45.20','493.01','J45.22','493.02','J45.21','493.10','493.11','493.12','493.20','J44.9','493.21','J44.0','493.22','J44.1','493.81','J45.990','493.82','J45.991','493.91','J45.902','493.92','J45.901');
+		$asm_query = $this->hedis_issue_query($pid, $asm_issues_item_array);
+		if ($asm_query && $dob <= $this->age_calc(5,'year') && $dob >= $this->age_calc(56,'year')) {
+			$return['asm'] = $this->hedis_asm($pid);
+			$return['amr'] = $this->hedis_amr($pid);
+		}
+		// CMC and PBH
+		$cmc_issues_item_array = array('410','I20','I21','I22','I23','I24','I25','414.8');
+		$cmc_query = $this->hedis_issue_query($pid, $cmc_issues_item_array);
+		if ($cmc_query && $dob <= $this->age_calc(18,'year') && $dob >= $this->age_calc(75,'year')) {
+			$return['cmc'] = $this->hedis_cmc($pid);
+		}
+		if ($cmc_query && $dob <= $this->age_calc(18,'year')) {
+			$return['pbh'] = $this->hedis_pbh($pid);
+		}
+		// CBP
+		$cbp_issues_item_array = array('401','402','403','404','405','I10','I11','I12','I13','I15');
+		$cbp_query = $this->hedis_issue_query($pid, $cbp_issues_item_array);
+		if ($cbp_query && $dob <= $this->age_calc(18,'year') && $dob >= $this->age_calc(85,'year')) {
+			$return['cbp'] = $this->hedis_cbp($pid);
+		}
+		// CDC
+		$cdc_issues_item_array = array('250','E08','E09','E10','E11','E13');
+		$cdc_query = $this->hedis_issue_query($pid, $cdc_issues_item_array);
+		if ($cdc_query && $dob <= $this->age_calc(18,'year') && $dob >= $this->age_calc(75,'year')) {
+			$return['cdc'] = $this->hedis_cdc($pid);
+		}
+		// ART
+		$art_issues_item_array = array('714.0','M05','M06');
+		$art_query = $this->hedis_issue_query($pid, $art_issues_item_array);
+		if ($art_query) {
+			$return['art'] = $this->hedis_art($pid);
+		}
+		// OMW
+		$omw_assessment_item_array = array('800','801','802','803','804','805','806','807','808','809','810','811','812','813','814','815','816','817','818','819','820','821','822','823','824','825','826','827','828','829','S02','S12','S22','S32','S42','S52','S62','S72','S82','S92');
+		$omw_result = $this->hedis_assessment_query($pid, $type, $omw_assessment_item_array);
+		if ($omw_result && $dob <= $this->age_calc(67,'year') && $demographics->sex == 'f') {
+			$return['omw'] = $this->hedis_omw($pid);
+		}
+		// LBP
+		$lbp_assessment_item_array = array('724.2','M54.5');
+		$lbp_result = $this->hedis_assessment_query($pid, $type, $lbp_assessment_item_array);
+		if ($lbp_result) {
+			$return['lbp'] = $this->hedis_lbp($lbp_result);
+		}
+		// AMM
+		$amm_issues_item_array = array('311','296.2','296.3','F32','F33');
+		$amm_query = $this->hedis_issue_query($pid, $amm_issues_item_array);
+		if ($amm_query && $dob <= $this->age_calc(18,'year')) {
+			$return['amm'] = $this->hedis_amm($pid);
+		}
+		// ADD
+		$add_issues_item_array = array('314.0','F90');
+		$add_query = $this->hedis_issue_query($pid, $add_issues_item_array);
+		if ($add_query && $dob <= $this->age_calc(6,'year') && $dob >= $this->age_calc(12,'year')) {
+			$return['add'] = $this->hedis_add($pid, $add_query->issue_date_active);
+		}
+		if (!empty($return)) {
+			foreach ($return as $item => $row) {
+				if ($item != 'cwp' && $item != 'uri' && $item != 'aab' && $item != 'pce' && $item != 'lbp') {
+					$html .= $row['html'] . '<br>';
+					if (!empty($row['fix'])) {
+						$html .= '<strong>Fixes:</strong><ul>';
+						foreach ($row['fix'] as $row1) {
+							$html .= '<li>' . $row1 . '</li>';
+						}
+						$html .= '</ul>';
+					}
+				} else {
+					if ($item == 'cwp') {
+						$html .= '<strong>Appropriate Testing for Children With Pharyngitis:</strong>';
+						$html .= '<ul><li>Percentage tested: ' . $row['percent_test'] . '</li>';
+						$html .= '<li>Percentage treated with antibiotics: ' . $row['percent_abx'] . '</li>';
+						$html .= '<li>Percentage treated with antibiotics without testing: ' . $row['percent_abx_no_test'] . '</li></ul>';
+					}
+					if ($item == 'uri') {
+						$html .= '<strong>Appropriate Treatment for Children With Upper Respiratory Infection:</strong>';
+						$html .= '<ul><li>Percentage treated with antibiotics: ' . $row['percent_abx'] . '</li></ul>';
+					}
+					if ($item == 'aab') {
+						$html .= '<strong>Avoidance of Antibiotic Treatment for Adults with Acute Bronchitis:</strong>';
+						$html .= '<ul><li>Percentage treated with antibiotics: ' . $row['percent_abx'] . '</li></ul>';
+					}
+					if ($item == 'pce') {
+						$html .= '<strong>Pharmacotherapy Management of COPD Exacerbation:</strong>';
+						$html .= '<ul><li>Percentage treated for COPD exacerbations: ' . $row['percent_tx'] . '</li></ul>';
+					}
+					if ($item == 'lbp') {
+						$html .= '<strong>Use of Imaging Studies for Low Back Pain:</strong>';
+						$html .= '<ul><li>Percentage of instances where no imaging study was performed for a diagnosis of low back pain: ' . $row['percent_no_rad'] . '</li></ul>';
+					}
+				}
+				$html .= '<hr class="ui-state-default"/>';
+			}
+		}
+		if ($function == 'chart') {
+			return $html;
+		} else {
+			return $return;
+		}
 	}
 }

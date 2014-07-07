@@ -1056,8 +1056,188 @@ class AjaxOfficeController extends BaseController {
 		}
 		$file_path = "/var/www/nosh/temp/" . time() . "_demographics.txt";
 		echo $csv;
-		//file_put_contents($file_path, $csv);
-		//File::put($file_path, $csv);
-		//return Response::download($file_path);
+	}
+	
+	public function postHedisAudit($type)
+	{
+		if ($type == 'spec') {
+			$type = Input::get('time');
+		}
+		$html = '';
+		$demographics = DB::table('demographics_relate')->where('practice_id', '=', Session::get('practice_id'))->get();
+		if ($demographics) {
+			$html .= '<strong>HEDIS Audit:</strong><br>';
+			$html .= '<table id="hedis_grid" class="pure-table pure-table-horizontal">';
+			$html .= '<thead><tr><th>Measure</th><th>Description</th><th>Result</th><th style="width:250px">Rectify</th></tr></thead><tbody>';
+			$arr = array();
+			$total_count = 0;
+			foreach ($demographics as $demographic) {
+				$arr[$demographic->pid] = $this->hedis_audit($type, 'office', $demographic->pid);
+				$total_count++;
+			}
+			$measures = array('aba','wcc','cis','ima','hpv','lsc','bcs','ccs','col','chl','gso','cwp','uri','aab','spr','pce','asm','amr','cmc','pbh','cbp','cdc','art','omw','lbp','amm','add');
+			$counter = array();
+			foreach ($measures as $measure) {
+				$counter[$measure]['count'] = 0;
+				$counter[$measure]['rectify'] = '';
+				if ($measure != 'cwp' && $measure != 'uri' && $measure != 'aab' && $measure != 'pce' && $measure != 'lbp') {
+					$counter[$measure]['goal'] = 0;
+				} else {
+					if ($measure == 'cwp') {
+						$counter[$measure]['test'] = 0;
+						$counter[$measure]['abx'] = 0;
+						$counter[$measure]['abx_no_test'] = 0;
+					}
+					if ($measure == 'uri' || $measure == 'aab') {
+						$counter[$measure]['abx'] = 0;
+					}
+					if ($measure == 'pce') {
+						$counter[$measure]['tx'] = 0;
+					}
+					if ($measure == 'lbp') {
+						$counter[$measure]['no_rad'] = 0;
+					}
+				}
+			}
+			foreach ($arr as $pid => $audit) {
+				$patient = DB::table('demographics')->where('pid', '=', $pid)->first();
+				$dob = date('m/d/Y', strtotime($patient->DOB));
+				$name = $patient->lastname . ', ' . $patient->firstname . ' (DOB: ' . $dob . ') (ID: ' . $patient->pid . ')';
+				$rectify = '<a href="#" id="hedis_' . $pid . '" class="hedis_patient">' . $name . '</a><br>';
+				foreach ($audit as $item => $row) {
+					$counter[$item]['count']++;
+					if ($item != 'cwp' && $item != 'uri' && $item != 'aab' && $item != 'pce' && $item != 'lbp') {
+						if($row['goal'] == 'y') {
+							$counter[$item]['goal']++;
+						} else {
+							$counter[$item]['rectify'] .= $rectify;
+						}
+					} else {
+						if ($item == 'cwp') {
+							$counter[$item]['test'] += $row['test'];
+							$counter[$item]['abx'] += $row['abx'];
+							$counter[$item]['abx_no_test'] += $row['abx_no_test'];
+						}
+						if ($item == 'uri' || $item == 'aab') {
+							$counter[$item]['abx'] += $row['abx'];
+						}
+						if ($item == 'pce') {
+							$counter[$item]['tx'] += $row['tx'];
+						}
+						if ($item == 'lbp') {
+							$counter[$item]['no_rad'] += $row['no_rad'];
+						}
+					}
+				}
+			}
+			foreach ($measures as $measure1) {
+				if ($measure1 != 'cwp' && $measure1 != 'uri' && $measure1 != 'aab' && $measure1 != 'pce' && $measure1 != 'lbp') {
+					if ($counter[$measure1]['count'] != 0) {
+						$counter[$measure1]['percent_goal'] = round($counter[$measure1]['goal']/$counter[$measure1]['count']*100);
+					} else {
+						$counter[$measure1]['percent_goal'] = 0;
+					}
+				} else {
+					if ($measure1 == 'cwp') {
+						if ($counter[$measure1]['count'] != 0) {
+							$counter[$measure1]['percent_test'] = round($counter[$measure1]['test']/$counter[$measure1]['count']*100);
+							$counter[$measure1]['percent_abx'] = round($counter[$measure1]['abx']/$counter[$measure1]['count']*100);
+							$counter[$measure1]['percent_abx_no_test'] = round($counter[$measure1]['abx_no_test']/$counter[$measure1]['count']*100);
+						} else {
+							$counter[$measure1]['percent_test'] = 0;
+							$counter[$measure1]['percent_abx'] = 0;
+							$counter[$measure1]['percent_abx_no_test'] = 0;
+						}
+					}
+					if ($measure1 == 'uri' || $measure1 == 'aab') {
+						if ($counter[$measure1]['count'] != 0) {
+							$counter[$measure1]['percent_abx'] = round($counter[$measure1]['abx']/$counter[$measure1]['count']*100);
+						} else {
+							$counter[$measure1]['percent_abx'] = 0;
+						}
+					}
+					if ($measure1 == 'pce') {
+						if ($counter[$measure1]['count'] != 0) {
+							$counter[$measure1]['percent_tx'] = round($counter[$measure1]['tx']/$counter[$measure1]['count']*100);
+						} else {
+							$counter[$measure1]['percent_tx'] = 0;
+						}
+					}
+					if ($measure1 == 'lbp') {
+						if ($counter[$measure1]['count'] != 0) {
+							$counter[$measure1]['percent_no_rad'] = round($counter[$measure1]['no_rad']/$counter[$measure1]['count']*100);
+						} else {
+							$counter[$measure1]['percent_no_rad'] = 0;
+						}
+					}
+				}
+			}
+			// ABA
+			$html .= '<tr><td>Adult BMI Assessment</td><td>Percentage of members 18-74 who had their BMI and weight documented at an outpatient visit</td><td>' . $counter['aba']['percent_goal'] .'%</td><td>' . $counter['aba']['rectify'] .'</td></tr>';
+			// WCC
+			$html .= '<tr><td>Weight Assessment and Counseling for Nutrition and Physical Activity for Children and Adolescents</td><td>Percentage of members 3-17 who had an outpatient visit with a PCP or OB/GYN which included evidence of BMI documentation with corresponding height&weight, counseling for nutrition and/or counseling for physical activity</td><td>' . $counter['wcc']['percent_goal'] .'%</td><td>' . $counter['wcc']['rectify'] .'</td></tr>';
+			// CIS
+			$html .= '<tr><td>Childhood Immunization Status</td><td>Percentage of children two years of age with appropriate childhood immunizations</td><td>' . $counter['cis']['percent_goal'] .'%</td><td>' . $counter['cis']['rectify'] .'</td></tr>';
+			// IMA
+			$html .= '<tr><td>Immunizations for Adolescents</td><td>Percentage of adolescents 13 years of age with appropriate immunizations</td><td>' . $counter['ima']['percent_goal'] .'%</td><td>' . $counter['ima']['rectify'] .'</td></tr>';
+			// HPV
+			$html .= '<tr><td>Human Papillomavirus Vaccine for Female Adolescents</td><td>Percentage of female adolescents 13 years of age who had three doses of HPV vaccine between 9th and 13th birthdays</td><td>' . $counter['hpv']['percent_goal'] .'%</td><td>' . $counter['hpv']['rectify'] .'</td></tr>';
+			// LSC
+			$html .= '<tr><td>Lead Screening in Children</td><td>Percentage of children 2 years of age screened for lead poisoning</td><td>' . $counter['lsc']['percent_goal'] .'%</td><td>' . $counter['lsc']['rectify'] .'</td></tr>';
+			// BCS
+			$html .= '<tr><td>Breast Cancer Screening</td><td>Percentage of women 40-69 years of age who had a mammogram</td><td>' . $counter['bcs']['percent_goal'] .'%</td><td>' . $counter['bcs']['rectify'] .'</td></tr>';
+			// CCS
+			$html .= '<tr><td>Cervical Cancer Screening</td><td>Percentage of women 21-64 years of age who had a Pap test</td><td>' . $counter['ccs']['percent_goal'] .'%</td><td>' . $counter['ccs']['rectify'] .'</td></tr>';
+			// COL
+			$html .= '<tr><td>Colorectal Cancer Screening</td><td>Percentage of members 50-75 years of age who had appropriate screening for colorectal cancer</td><td>' . $counter['col']['percent_goal'] .'%</td><td>' . $counter['col']['rectify'] .'</td></tr>';
+			// CHL
+			$html .= '<tr><td>Chlamydia Screening in Women</td><td>Sexually active women 16-24 with annual chlamydia screening</td><td>' . $counter['chl']['percent_goal'] .'%</td><td>' . $counter['chl']['rectify'] .'</td></tr>';
+			// GSO
+			$html .= '<tr><td>Glaucoma Screening Older Adults</td><td>Sexually active women 1Percentage of members 65 or older who received a glaucoma eye exam (no prior history)</td><td>' . $counter['gso']['percent_goal'] .'%</td><td>' . $counter['gso']['rectify'] .'</td></tr>';
+			// CWP
+			$html .= '<tr><td>Appropriate Testing for Children With Pharyngitis</td><td>Percentage of children ages 2-18 diagnosed with pharyngitis, prescribed an antibiotic and tested for strep</td><td>';
+			$html .= '<ul><li>Percentage tested: ' . $counter['cwp']['percent_test'] . '%</li>';
+			$html .= '<li>Percentage treated with antibiotics: ' . $counter['cwp']['percent_abx'] . '%</li>';
+			$html .= '<li>Percentage treated with antibiotics without testing: ' . $counter['cwp']['percent_abx_no_test'] . '%</li></ul>';
+			$html .= '</td><td>' . $counter['cwp']['rectify'] .'</td></tr>';
+			// URI
+			$html .= '<tr><td>Appropriate Treatment for Children With Upper Respiratory Infection</td><td>Percentage of children 3 months-18 years diagnosed with ONLY upper respiratory infection diagnosis and NOT dispensed an antibiotic</td><td>';
+			$html .= '<ul><li>Percentage treated with antibiotics: ' . $counter['uri']['percent_abx'] . '%</li></ul>';
+			$html .= '</td><td>' . $counter['uri']['rectify'] .'</td></tr>';
+			// AAB
+			$html .= '<tr><td>Avoidance of Antibiotic Treatment for Adults with Acute Bronchitis</td><td>Percentage of adults 18-64 years diagnosed with acute bronchitis who were NOT dispensed an antibiotic</td><td>';
+			$html .= '<ul><li>Percentage treated with antibiotics: ' . $counter['aab']['percent_abx'] . '%</li></ul>';
+			$html .= '</td><td>' . $counter['aab']['rectify'] .'</td></tr>';
+			// SPR
+			$html .= '<tr><td>Use of Spirometry Testing in the Assessment and Diagnosis of COPD</td><td>Percentage of members age 40 and older w/ COPD and spirometry testing</td><td>' . $counter['spr']['percent_goal'] .'%</td><td>' . $counter['spr']['rectify'] .'</td></tr>';
+			// PCE
+			$html .= '<tr><td>Pharmacotherapy Management of COPD Exacerbation</td><td>Members dispensed systemic corticosteroid & bronchodilator after COPD exacerbation</td><td>';
+			$html .= '<ul><li>Percentage treated for COPD exacerbations: ' . $counter['pce']['percent_tx'] . '%</li></ul>';
+			$html .= '</td><td>' . $counter['pce']['rectify'] .'</td></tr>';
+			// ASM and AMR
+			$html .= '<tr><td>Use of Appropriate Medications for People with Asthma</td><td>Percentage of members 5-56 years with asthma and appropriately prescribed medications</td><td>' . $counter['asm']['percent_goal'] .'%</td><td>' . $counter['asm']['rectify'] .'</td></tr>';
+			$html .= '<tr><td>Asthma Medication Ratio</td><td>Percentage of members 5-64 years with asthma who had a ratio of controller medications to total asthma medications of .5 or greater</td><td>' . $counter['amr']['percent_goal'] .'%</td><td>' . $counter['amr']['rectify'] .'</td></tr>';
+			// CMC and PBH
+			$html .= '<tr><td>Cholesterol Management for Patients With Cardiovascular Conditions</td><td>Percentage of members 18-75 who were discharged alive for acute myocardial infarction, coronary artery bypass graft or percutaneous coronary interventions, or who had a diagnosis of ischemic vascular diasease who had LDL-C screenings</td><td>' . $counter['cmc']['percent_goal'] .'%</td><td>' . $counter['cmc']['rectify'] .'</td></tr>';
+			$html .= '<tr><td>Persistence of Beta-Blocker Treatment After a Heart Attack</td><td>Percentage of members 18 years or older, discharged with a diagnosis of acute myocardial infarction and received a beta-blocker treatment for 6 months</td><td>' . $counter['pbh']['percent_goal'] .'%</td><td>' . $counter['pbh']['rectify'] .'</td></tr>';
+			// CBP
+			$html .= '<tr><td>Controlling High Blood Pressure</td><td>Percentage of members 18-85 with a diagnosis of hypertension and whose blood pressure was controlled</td><td>' . $counter['cbp']['percent_goal'] .'%</td><td>' . $counter['cbp']['rectify'] .'</td></tr>';
+			// CDC
+			$html .= '<tr><td>Comprehensive Diabetes Care</td><td>The percentage of members 18-75 years of age with diabetes (type 1 or type 2) who had each of the following: 1) HbA1c, 2) LDL Screening, 3) Nephropathy Screening, 4) Retinal Eye Exam, 5) Blood Pressure control.</td><td>' . $counter['cdc']['percent_goal'] .'%</td><td>' . $counter['cdc']['rectify'] .'</td></tr>';
+			// ART
+			$html .= '<tr><td>Disease Modifying Anti-Rheumatic Drug Therapy for Rheumatoid Arthritis</td><td>Percentage of members w/ RA dispensed a DMARD</td><td>' . $counter['art']['percent_goal'] .'%</td><td>' . $counter['art']['rectify'] .'</td></tr>';
+			// OMW
+			$html .= '<tr><td>Osteoporosis Management in Women Who Had Fracture</td><td>Percentage of women 67 years or older who suffered a fracture and then a DEXA scan or osteoporosis medication within 6 months of incident</td><td>' . $counter['omw']['percent_goal'] .'%</td><td>' . $counter['omw']['rectify'] .'</td></tr>';
+			// LBP
+			$html .= '<tr><td>Osteoporosis Management in Women Who Had Fracture</td><td>Percentage of members with a primary diagnosis of low back pain who did not have an imaging study within 28 days of diagnosis</td><td>';
+			$html .= '<ul><li>Percentage of instances where no imaging study was performed for a diagnosis of low back pain: ' . $counter['lbp']['percent_no_rad'] . '%</li></ul>';
+			$html .= '</td><td>' . $counter['lbp']['rectify'] .'</td></tr>';
+			// AMM
+			$html .= '<tr><td>Antidepressant Medication Management</td><td>Percentage of members 18 years or older diagnosed with depression and treated with antidepressant meds</td><td>' . $counter['amm']['percent_goal'] .'%</td><td>' . $counter['amm']['rectify'] .'</td></tr>';
+			// ADD
+			$html .= '<tr><td>Follow-Up Care for Children Prescribed ADHD Medication</td><td>Percentage of children 6-12 with newly diagnosed ADHD who received the appropriate follow-up treatment and medication</td><td>' . $counter['add']['percent_goal'] .'%</td><td>' . $counter['add']['rectify'] .'</td></tr>';
+			$html .= '</tbody></table>';
+		}
+		echo $html;
 	}
 }

@@ -132,6 +132,50 @@ class AjaxSearchController extends BaseController {
 		}
 	}
 	
+	public function postMtmunset()
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			Session::forget('mtm');
+			echo 'OK';
+		}
+	}
+	
+	public function postHedisSet()
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			if (Session::get('hedis') != FALSE) {
+				Session::forget('hedis');
+			}
+			Session::put('hedis', 'open');
+			$data['message'] = 'OK';
+			$data['url'] = route('chart');
+			echo json_encode($data);
+		}
+	}
+	
+	public function postHedisUnset()
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			Session::forget('hedis');
+			echo 'OK';
+		}
+	}
+	
 	public function postNewpatient()
 	{
 		$dob = date('Y-m-d', strtotime(Input::get('DOB')));
@@ -1796,6 +1840,30 @@ class AjaxSearchController extends BaseController {
 		echo json_encode($data);
 	}
 	
+	public function postRequestReason()
+	{
+		$q = strtolower(Input::get('term'));
+		if (!$q) return;
+		$data['response'] = 'false';
+		$query = DB::table('hippa_request')
+			->where('request_reason', 'LIKE', "%$q%")
+			->where('practice_id', '=', Session::get('practice_id'))
+			->select('request_reason')
+			->distinct()
+			->get();
+		if ($query) {
+			$data['message'] = array();
+			$data['response'] = 'true';
+			foreach ($query as $row) {
+				$data['message'][] = array(
+					'label' => $row->request_reason,
+					'value' => $row->request_reason
+				);
+			}
+		}
+		echo json_encode($data);
+	}
+	
 	public function postPaymentType()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1962,6 +2030,7 @@ class AjaxSearchController extends BaseController {
 	public function postRefProvider1($specialty)
 	{
 		$arr['html'] = '<label for="hippa_address_id">Records Release To (Provider):</label>';
+		$arr['html1'] = '<label for="hippa_request_address_id">Records Request To (Provider):</label>';
 		$data = array(''=>'Select Provider');
 		$data['Patient Favorites'] = array();
 		$data['Address Book'] = array();
@@ -1984,6 +2053,12 @@ class AjaxSearchController extends BaseController {
 		if ($query2) {
 			foreach ($query2 as $row2) {
 				$address[] = $row2->address_id;
+			}
+		}
+		$query3 = DB::table('hippa_request')->where('pid', '=', Session::get('pid'))->select('address_id')->distinct()->get();
+		if ($query3) {
+			foreach ($query3 as $row3) {
+				$address[] = $row3->address_id;
 			}
 		}
 		if (!empty($address)) {
@@ -2010,7 +2085,9 @@ class AjaxSearchController extends BaseController {
 			}
 		}
 		$arr['html'] .= Form::select('address_id', $data, null, array('id'=>'hippa_address_id','style'=>'width:300px','class'=>'text'));
+		$arr['html1'] .= Form::select('address_id', $data, null, array('id'=>'hippa_request_address_id','style'=>'width:300px','class'=>'text'));
 		$arr['html'] .= '<button type="button" id="hippa_address_id2" class="nosh_button_add">Add/Edit</button>';
+		$arr['html1'] .= '<button type="button" id="hippa_request_address_id2" class="nosh_button_add">Add/Edit</button>';
 		return $arr;
 	}
 	

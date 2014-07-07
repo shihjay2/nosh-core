@@ -3056,6 +3056,36 @@ $(document).on('click', "#hippa_address_id2", function (){
 	} else {
 		$("#print_to_dialog").dialog("option", "title", "Add Provider");
 	}
+	$("#print_to_origin").val('hippa');
+	$("#print_to_dialog").dialog('open');
+});
+$(document).on("change", "#hippa_request_address_id", function () {
+	var a = $(this).find("option:selected").first().text();
+	if (a != 'Select Provider') {
+		$("#hippa_request_to").val(a);
+	} else {
+		$("#hippa_request_to").val('');
+	}
+});
+$(document).on('click', "#hippa_request_address_id2", function (){
+	var id = $("#hippa_request_address_id").val();
+	if(id){
+		$("#print_to_dialog").dialog("option", "title", "Edit Provider");
+		$.ajax({
+			type: "POST",
+			url: "ajaxsearch/orders-provider1",
+			data: "address_id=" + id,
+			dataType: "json",
+			success: function(data){
+				$.each(data, function(key, value){
+					$("#print_to_form :input[name='" + key + "']").val(value);
+				});
+			}
+		});
+	} else {
+		$("#print_to_dialog").dialog("option", "title", "Add Provider");
+	}
+	$("#print_to_origin").val('request');
 	$("#print_to_dialog").dialog('open');
 });
 $(document).on('click', '.assessment_clear', function(){
@@ -3066,6 +3096,25 @@ $(document).on('click', '.assessment_clear', function(){
 	$("#assessment_icd" + parts[2]).val('');
 	$("#assessment_icd" + parts[2] + "_div").html('');
 	$("#assessment_icd" + parts[2] + "_div_button").hide();
+});
+$(document).on('click', '.hedis_patient', function() {
+	var id = $(this).attr('id');
+	var pid = id.replace('hedis_', '');
+	$.ajax({
+		type: "POST",
+		url: "ajaxsearch/openchart",
+		data: "pid=" + pid,
+		success: function(data){
+			$.ajax({
+				type: "POST",
+				url: "ajaxsearch/hedis-set",
+				dataType: "json",
+				success: function(data){
+					window.location = data.url;
+				}
+			});
+		}
+	});
 });
 function textdump(elem) {
 	var id = $(elem).attr('id');

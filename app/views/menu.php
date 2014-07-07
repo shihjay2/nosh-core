@@ -11,13 +11,6 @@
 			<?php echo $psych;?>
 			<br>
 			<div class="pure-g" style="font-size:1.1em">
-<!--
-				<div class="pure-u-1-2"><?php echo HTML::image('images/chart2.png', 'Encounters', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="encounter_list" title="Past encounters" class="nosh_tooltip">Encounters</a></div>
-				<div class="pure-u-1-2"><?php echo HTML::image('images/newmessage.png', 'Messages', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="messages_list" title="Telephone messages and e-mail encounters" class="nosh_tooltip">Messages</a></div>
-				<div class="pure-u-1-2"><?php echo HTML::image('images/search.png', 'Documents', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="documents_list" title="Lab, imaging, cardiopulmonary, referral, and other associated documents for this patient." class="nosh_tooltip">Documents</a></div>
-				<div class="pure-u-1-2"><?php echo HTML::image('images/billing.png', 'Billing', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="billing_list" title="Past claims, payments, and balances for this patient" class="nosh_tooltip">Billing</a></div>
-				<div class="pure-u-1-2"><?php echo HTML::image('images/printmgr.png', 'Send Records', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="print_list" title="Print, fax, and create C-CDA documents of this patient's records." class="nosh_tooltip">Send Records</a></div>
--->
 				<div class="pure-u-1-2"><?php echo HTML::image('images/prevent.png', 'Prevention', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="prevention_list" title="View prevention recommendations from U.S. Preventatitve Services Task Force and the CDC" class="nosh_tooltip">Prevention</a></div>
 				<div class="pure-u-1-2"><?php echo HTML::image('images/sign.png', 'Orders', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="order_list" title="View pending order and historical order history for the patient" class="nosh_tooltip">Orders</a></div>
 				<?php if($mtm == 'y') {?>
@@ -26,6 +19,7 @@
 				<?php if (Session::get('agealldays') <6574.5) {?>
 					<div class="pure-u-1-2"><?php echo HTML::image('images/plot.png', 'Growth Charts', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="gc_list" title="View growth charts" class="nosh_tooltip">Growth Charts</a></div>
 				<?php }?>
+				<div class="pure-u-1-2"><?php echo HTML::image('images/help.png', 'HEDIS Audit', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="hedis_chart" title="View a HEDIS audit for this patient" class="nosh_tooltip">HEDIS Audit</a></div>
 			</div>
 		</div>
 		<h3><button class="demographics_list nosh_button_edit">Edit</button><a href="#"><?php echo HTML::image('images/personal.png', 'Demographics', array('border' => '0', 'height' => '20', 'width' => '20', 'style' => 'vertical-align:middle;')); ?> Demographics</a></h3>

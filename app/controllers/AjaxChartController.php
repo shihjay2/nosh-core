@@ -3054,6 +3054,91 @@ class AjaxChartController extends BaseController {
 		echo "Item added to queue!";
 	}
 	
+	public function postRecordsRequest()
+	{
+		$practice_id = Session::get('practice_id');
+		$pid = Session::get('pid');
+		$page = Input::get('page');
+		$limit = Input::get('rows');
+		$sidx = Input::get('sidx');
+		$sord = Input::get('sord');
+		$query = DB::table('hippa_request')
+			->where('pid', '=', $pid)
+			->where('practice_id', '=', $practice_id)
+			->get();
+		if($query) { 
+			$count = count($query);
+			$total_pages = ceil($count/$limit); 
+		} else { 
+			$count = 0;
+			$total_pages = 0;
+		}
+		if ($page > $total_pages) $page=$total_pages;
+		$start = $limit*$page - $limit;
+		if($start < 0) $start = 0;
+		$query1 = DB::table('hippa_request')
+			->where('pid', '=', $pid)
+			->where('practice_id', '=', $practice_id)
+			->orderBy($sidx, $sord)
+			->skip($start)
+			->take($limit)
+			->get();
+		$response['page'] = $page;
+		$response['total'] = $total_pages;
+		$response['records'] = $count;
+		if ($query1) {
+			$response['rows'] = $query1;
+		} else {
+			$response['rows'] = '';
+		}
+		echo json_encode($response);
+	}
+	
+	public function postRecordsRequestSave()
+	{
+		$pid = Session::get('pid');
+		$arr = array();
+		$data = array(
+			'hippa_date_request' => date('Y-m-d H:i:s', strtotime(Input::get('hippa_date_request'))),
+			'pid' => $pid,
+			'request_reason' => Input::get('request_reason'),
+			'request_type' => Input::get('request_type'),
+			'request_to' => Input::get('request_to'),
+			'practice_id' => Session::get('practice_id'),
+			'address_id' => Input::get('address_id'),
+			'history_physical' => Input::get('history_physical'),
+			'lab_type' => Input::get('lab_type'),
+			'lab_date' => Input::get('lab_date'),
+			'op' => Input::get('op'),
+			'accident_f' => Input::get('accident_f'),
+			'accident_t' => Input::get('accident_t'),
+			'other' => Input::get('other')
+		);
+		if (Input::get('hippa_request_id') != '') {
+			$id = Input::get('hippa_request_id');
+			DB::table('hippa_request')->where('hippa_request_id', '=', $id)->update($data);
+			$this->audit('Update');
+		} else {
+			$id = DB::table('hippa_request')->insertGetId($data);
+			$this->audit('Add');
+		}
+		$url = time() . "_" . Session::get('user_id');
+		$file_path = __DIR__."/../../public/temp/hippa_request_" . $url . ".pdf";
+		$html = $this->page_hippa_request($id);
+		$this->generate_pdf($html, $file_path);
+		echo $url;
+	}
+	
+	public function postRequestReceived($id)
+	{
+		$data = array(
+			'received' => 'Yes'
+		);
+		DB::table('hippa_request')->where('hippa_request_id', '=', $id)->update($data);
+		$this->audit('Update');
+		echo 'Marked as recieved!';
+	}
+	
 	// Billing functions
 	public function postBillingEncounters()
 	{
@@ -5275,93 +5360,12 @@ class AjaxChartController extends BaseController {
 		echo 'Result deleted!';
 	}
 	
-	public function postHedisAudit()
+	public function postHedisChartAudit($type)
 	{
-		$pid = Session::get('pid');
-		$html = '';
-		$return = array();
-		$a = time() - 568024668; //18 years
-		$b = time() - 2335212524; //74 years
-		$c = time() - 410240038; //13 years
-		$d = time() - 441796964; //14 years
-		$e = time() - 94670778; //3 years
-		$f = time() - 63113852; //2 years
-		$g = time() - 284012334; //9 years
-		$h = time() - 378683112; //12 years
-		$i = time() - 1262277040; //40 years
-		$j = time() - 2177427894; //69 years
-		$k = time() - 2019643264; //64 years
-		$l = time() - 1577846300; //50 years
-		$m = time() - 2366769450; //75 years
-		$n = time() - 662695446; //21 years
-		$o = time() - 504910816; //16 years
-		$p = time() - 757366224; //24 years
-		$q = time() - 2051200190; //65 years
-		$demographics = DB::table('demographics')->where('pid', '=', $pid)->first();
-		$dob = $this->human_to_unix($demographics->DOB);
-		// ABA
-		if ($dob <= $a && $dob >= $b) {
-			$return['aba'] = $this->hedis_aba($pid);
+		if ($type == 'spec') {
+			$type = Input::get('time');
 		}
-		// WCC
-		if ($dob <= $e && $dob >= $a) {
-			$return['wcc'] = $this->hedis_wcc($pid);
-		}
-		// CIS
-		if ($dob >= $e) {
-			$return['cis'] = $this->hedis_cis($pid);
-		}
-		// IMA
-		if ($dob <= $c && $dob >= $a) {
-			$return['ima'] = $this->hedis_ima($pid);
-		}
-		// HPV
-		if ($dob <= $g && $dob >= $c && $demographics->sex == 'f') {
-			$return['hpv'] = $this->hedis_hpv($pid);
-		}
-		// LSC
-		if ($dob >= $f) {
-			$return['lsc'] = $this->hedis_lsc($pid);
-		}
-		// BCS
-		if ($dob <= $i && $dob >= $j && $demographics->sex == 'f') {
-			$return['bcs'] = $this->hedis_bcs($pid);
-		}
-		// CCS
-		if ($dob <= $n && $dob >= $k && $demographics->sex == 'f') {
-			$return['ccs'] = $this->hedis_ccs($pid);
-		}
-		// COL
-		if ($dob <= $l && $dob >= $m) {
-			$return['col'] = $this->hedis_col($pid);
-		}
-		// CHL
-		if ($dob <= $o && $dob >= $p && $demographics->sex == 'f') {
-			$return['chl'] = $this->hedis_chl($pid);
-		}
-		// GSO
-		if ($dob <= $q) {
-			$return['gso'] = $this->hedis_gso($pid);
-		}
-		// SPR
-		$spr_query = DB::table('issues')
-			->where('pid','=', $pid)
-			->where('issue_date_inactive', '=', '0000-00-00 00:00:00')
-			->where(function($query_array1) {
-				$issues_item_array = array('496','J44.9');
-				$i = 0;
-				foreach ($issues_item_array as $issues_item) {
-					if ($i == 0) {
-						$query_array1->where('issue', 'LIKE', "%$issues_item%");
-					} else {
-						$query_array1->orWhere('issue', 'LIKE', "%$issues_item%");
-					}
-					$i++;
-				}
-			})
-			->first();
-		if ($spr_query && $dob <= $i) {
-			$return['spr'] = $this->hedis_spr($pid);
-		}
+		$html = $this->hedis_audit($type, 'chart', Session::get('pid'));
+		echo $html;
 	}
 }

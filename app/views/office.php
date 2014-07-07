@@ -90,6 +90,18 @@
 				<div id="tag_query_results_pager" class="scroll" style="text-align:center;"></div><br>
 			</fieldset>
 		</div>
+		<h3>HEDIS Audit Report</h3>
+		<div>
+			<div id="hedis_office_question" class="pure-form">
+				<label for="hedis_office_time">Choose Time Period for Audit to Begin:</label>
+				<input type="text" style="width:150px" name="hedis_office_time" id="hedis_office_time"/>
+				<button type="button" id="hedis_office_spec" class="nosh_button">Specified Time</button>
+				<button type="button" id="hedis_office_all" class="nosh_button">All</button>
+				<button type="button" id="hedis_office_year" class="nosh_button">Past Year</button><br><br>
+			</div>
+			<div id="hedis_office_load"><?php echo HTML::image('images/indicator.gif', 'Loading'); ?> Loading...</div>
+			<div id="hedis_office_items"></div>
+		</div>
 		<h3>Export Data</h3>
 		<div>
 			Export demographic information to CSV file: <button type="button" id="export_demographics" class="nosh_button">All Patients</button> <button type="button" id="export_demographics1" class="nosh_button">Active Patients Only</button>

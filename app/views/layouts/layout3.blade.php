@@ -63,7 +63,8 @@
 				'label_text': '',
 				'progress': 0,
 				'default_template' : '',
-				'mtm_extension': ''
+				'mtm_extension': '',
+				'hedis': ''
 			};
 			var medcache = {};
 			var medcache1 = {};

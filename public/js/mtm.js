@@ -449,6 +449,12 @@ $(document).ready(function() {
 	});
 	if (noshdata.mtm != '') {
 		$("#mtm_dialog").dialog('open');
-		noshdata.mtm = '';
+		$.ajax({
+			type: "POST",
+			url: "ajaxsearch/mtmunset",
+			success: function(data){
+				noshdata.mtm = '';
+			}
+		});
 	}
 });

@@ -17,35 +17,13 @@ $(document).ready(function() {
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
-			jQuery("#records_release").jqGrid('GridUnload');
-			jQuery("#records_release").jqGrid({
-				url: "ajaxchart/records-release",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Date','Reason','Released To','Role'],
-				colModel:[
-					{name:'hippa_id',index:'hippa_id',width:1,hidden:true},
-					{name:'hippa_date_release',index:'hippa_date_release',width:100,formatter:'date',formatoptions:{srcformat:"ISO8601Long", newformat: "ISO8601Short"}},
-					{name:'hippa_reason',index:'hippa_reason',width:400},
-					{name:'hippa_provider',index:'hippa_provider',width:200},
-					{name:'hippa_role',index:'hippa_role',width:1,hidden:true}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#records_release_pager'),
-				sortname: 'hippa_date_release',
-			 	viewrecords: true,
-			 	sortorder: "desc",
-			 	caption:"View Past Records Releases",
-			 	height: "100%",
-			 	jsonReader: { repeatitems : false, id: "0" }
-			}).navGrid('#records_release_pager',{search:false,edit:false,add:false,del:false});
 			$.ajax({
 				url: "ajaxsearch/ref-provider1/all",
 				dataType: "json",
 				type: "POST",
 				success: function(data){
 					$("#print_chart_form_provider").html(data.html);
+					$("#hippa_request_provider").html(data.html1);
 					loadbuttons();
 				}
 			});
@@ -78,6 +56,61 @@ $(document).ready(function() {
 		window.open("ccda/" + hippa_id);
 	});
 	$("#print_list").click(function() {
+		jQuery("#records_release").jqGrid('GridUnload');
+		jQuery("#records_release").jqGrid({
+			url: "ajaxchart/records-release",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Date','Reason','Released To','Role'],
+			colModel:[
+				{name:'hippa_id',index:'hippa_id',width:1,hidden:true},
+				{name:'hippa_date_release',index:'hippa_date_release',width:100,formatter:'date',formatoptions:{srcformat:"ISO8601Long", newformat: "ISO8601Short"}},
+				{name:'hippa_reason',index:'hippa_reason',width:400},
+				{name:'hippa_provider',index:'hippa_provider',width:200},
+				{name:'hippa_role',index:'hippa_role',width:1,hidden:true}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#records_release_pager'),
+			sortname: 'hippa_date_release',
+			viewrecords: true,
+			sortorder: "desc",
+			caption:"View Past Records Releases",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#records_release_pager',{search:false,edit:false,add:false,del:false});
+		jQuery("#records_request").jqGrid('GridUnload');
+		jQuery("#records_request").jqGrid({
+			url: "ajaxchart/records-request",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Date','Reason','From','Received','Type','History','Lab Type','Lab Date','Operation','Accident From','Accident To','Other','Address'],
+			colModel:[
+				{name:'hippa_request_id',index:'hippa_request_id',width:1,hidden:true},
+				{name:'hippa_date_request',index:'hippa_date_request',width:100,formatter:'date',formatoptions:{srcformat:"ISO8601Long", newformat: "ISO8601Short"}},
+				{name:'request_reason',index:'request_reason',width:345},
+				{name:'request_to',index:'request_to',width:200},
+				{name:'received',index:'recieved',width:50},
+				{name:'request_type',index:'request_type',width:1,hidden:true},
+				{name:'history_physical',index:'history_physical',width:1,hidden:true},
+				{name:'lab_type',index:'lab_type',width:1,hidden:true},
+				{name:'lab_date',index:'lab_date',width:1,hidden:true},
+				{name:'op',index:'op',width:1,hidden:true},
+				{name:'accident_f',index:'accident_f',width:1,hidden:true},
+				{name:'accident_t',index:'accident_t',width:1,hidden:true},
+				{name:'other',index:'other',width:1,hidden:true},
+				{name:'address_id',index:'address_id',width:1,hidden:true}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#records_request_pager'),
+			sortname: 'hippa_date_request',
+			viewrecords: true,
+			sortorder: "desc",
+			caption:"Records Requests",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#records_request_pager',{search:false,edit:false,add:false,del:false});
 		$("#print_list_dialog").dialog('open');
 	});
 	$("#print_chart").click(function() {
@@ -100,6 +133,118 @@ $(document).ready(function() {
 			$("#print_chart2_dialog").dialog('open');
 		} else {
 			$.jGrowl("Please select item!");
+		}
+	});
+	$("#new_records_request").click(function() {
+		var currentDate = getCurrentDate();
+		$('#hippa_date_request').val(currentDate);
+		$("#hippa_request_dialog").dialog('open');
+	});
+	$("#edit_records_request").click(function() {
+		var item = jQuery("#records_request").getGridParam('selrow');
+		if(item){
+			jQuery("#records_request").GridToForm(item,"#hippa_request_form");
+			$("#hippa_request_dialog").dialog('open');
+		} else {
+			$.jGrowl("Please select item!");
+		}
+	});
+	$("#hippa_request_received").click(function() {
+		var item = jQuery("#records_request").getGridParam('selrow');
+		if(item){
+			$.ajax({
+				url: "ajaxchart/request-received/" + item,
+				type: "POST",
+				success: function(data){
+					$.jGrowl(data);
+					reload_grid("records_request");
+				}
+			});
+		} else {
+			$.jGrowl("Please select item!");
+		}
+	});
+	$('#hippa_date_request').mask("99/99/9999").datepicker();
+	$('#hippa_request_history_physical').mask("99/99/9999").datepicker();
+	$('#hippa_request_lab_date').mask("99/99/9999").datepicker();
+	$('#hippa_request_accident_f').mask("99/99/9999").datepicker();
+	$('#hippa_request_accident_t').mask("99/99/9999").datepicker();
+	$('#request_type').change(function(){
+		var a = $('#request_type').val();
+		if (a == 'History and Physical') {
+			$('#hippa_request_history_physical_div').show();
+			$('.hippa_request_lab_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('#hippa_request_op_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('.hippa_request_accident_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('#hippa_request_other_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+		}
+		if (a == 'Lab, Imaging, Cardiopulmonary Reports') {
+			$('.hippa_request_lab_div').show();
+			$('#hippa_request_history_physical_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('#hippa_request_op_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('.hippa_request_accident_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('#hippa_request_other_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+		}
+		if (a == 'Operative Reports') {
+			$('#hippa_request_op_div').show();
+			$('#hippa_request_history_physical_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('.hippa_request_lab_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('.hippa_request_accident_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('#hippa_request_other_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+		}
+		if (a == 'Accident or Injury') {
+			$('.hippa_request_accident_div').show();
+			$('#hippa_request_history_physical_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('.hippa_request_lab_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('#hippa_request_op_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('#hippa_request_other_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+		}
+		if (a == 'Other') {
+			$('#hippa_request_other_div').show();
+			$('#hippa_request_history_physical_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('.hippa_request_lab_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('#hippa_request_op_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
+			$('.hippa_request_accident_div').hide().find("input").each(function() {
+				$(this).val('');
+			});
 		}
 	});
 	$("#print_accordion").accordion({
@@ -1131,10 +1276,19 @@ $(document).ready(function() {
 									type: "POST",
 									success: function(data1){
 										$("#print_chart_form_provider").html(data1.html);
+										$("#hippa_request_provider").html(data1.html1);
 										loadbuttons();
-										$("#hippa_address_id").val(data.id);
-										var a = $("#hippa_address_id").find("option:selected").first().text();
-										$("#hippa_provider1").val(a);
+										var b = $("#print_to_origin").val();
+										if (b == 'hippa') {
+											$("#hippa_address_id").val(data.id);
+											var a = $("#hippa_address_id").find("option:selected").first().text();
+											$("#hippa_provider1").val(a);
+										} else {
+											$("#hippa_request_address_id").val(data.id);
+											var a = $("#hippa_request_address_id").find("option:selected").first().text();
+											$("#hippa_request_to").val(a);
+										}
+										$("#print_to_origin").val('');
 									}
 								});
 							}
@@ -1146,6 +1300,7 @@ $(document).ready(function() {
 			},
 			Cancel: function() {
 				$("#print_to_form").clearForm();
+				$("#print_to_origin").val('');
 				$("#print_to_dialog").dialog('close');
 			}
 		},
@@ -1154,4 +1309,114 @@ $(document).ready(function() {
 	$("#print_to_state").addOption(states, false);
 	$("#print_to_phone").mask("(999) 999-9999");
 	$("#print_to_fax").mask("(999) 999-9999");
+	$("#hippa_request_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 500, 
+		width: 800, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		open: function(event,ui) {
+			$("#request_reason").autocomplete({
+				source: function (req, add){
+					$.ajax({
+						url: "ajaxsearch/request-reason",
+						dataType: "json",
+						type: "POST",
+						data: req,
+						success: function(data){
+							if(data.response =='true'){
+								add(data.message);
+							}
+						}
+					});
+				},
+				minLength: 3
+			});
+		},
+		buttons: {
+			'Save': function() {
+				var bValid = true;
+				$("#hippa_request_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				var a = $('#request_type').val();
+				if (a == 'History and Physical') {
+					$("#hippa_request_history_physical_div").find("input").each(function() {
+						var input_id = $(this).attr('id');
+						var id1 = $("#" + input_id); 
+						var text = $("label[for='" + input_id + "']").html();
+						bValid = bValid && checkEmpty(id1, text);
+					});
+				}
+				if (a == 'Lab, Imaging, Cardiopulmonary Reports') {
+					$(".hippa_request_lab_div").find("input").each(function() {
+						var input_id = $(this).attr('id');
+						var id1 = $("#" + input_id); 
+						var text = $("label[for='" + input_id + "']").html();
+						bValid = bValid && checkEmpty(id1, text);
+					});
+				}
+				if (a == 'Operative Reports') {
+					$("#hippa_request_op_div").find("input").each(function() {
+						var input_id = $(this).attr('id');
+						var id1 = $("#" + input_id); 
+						var text = $("label[for='" + input_id + "']").html();
+						bValid = bValid && checkEmpty(id1, text);
+					});
+				}
+				if (a == 'Accident or Injury') {
+					$('.hippa_request_accident_div').find("input").each(function() {
+						var input_id = $(this).attr('id');
+						var id1 = $("#" + input_id); 
+						var text = $("label[for='" + input_id + "']").html();
+						bValid = bValid && checkEmpty(id1, text);
+					});
+				}
+				if (a == 'Other') {
+					$('#hippa_request_other_div').find("input").each(function() {
+						var input_id = $(this).attr('id');
+						var id1 = $("#" + input_id); 
+						var text = $("label[for='" + input_id + "']").html();
+						bValid = bValid && checkEmpty(id1, text);
+					});
+				}
+				if (bValid) {
+					var str = $("#hippa_request_form").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxchart/records-request-save",
+							data: str,
+							async: false,
+							success: function(data){
+								$("#hippa_request_form").clearForm();
+								$("#hippa_request_dialog").dialog('close');
+								reload_grid("records_request");
+								noshdata.success_doc = true;
+								noshdata.id_doc = data;
+							}
+						});
+						if (noshdata.success_doc == true) {
+							window.open("hippa_request_print/" + noshdata.id_doc);
+							noshdata.success_doc = '';
+							noshdata.id_doc = '';
+						}
+					} else {
+						$.jGrowl("Please complete the form");
+					}
+				}
+			},
+			Cancel: function() {
+				$("#hippa_request_form").clearForm();
+				$("#hippa_request_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
 });
