@@ -1,4 +1,6 @@
 $(document).ready(function() {
+	$('.js').show();
+	$('#dialog_load').dialog('close');
 	function newencounter() {
 		var str = $("#new_encounter_form").serialize();
 		if(str){

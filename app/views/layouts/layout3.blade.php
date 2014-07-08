@@ -25,6 +25,7 @@
 		<?php echo HTML::style('css/fullcalendar.print.css', array('media' => 'print'));?>
 		{{ $style }}
 		<script type="text/javascript">
+			document.documentElement.className = 'js';
 			var noshdata = {
 				'user_id': '<?php echo Session::get('user_id'); ?>',
 				'pid': '',

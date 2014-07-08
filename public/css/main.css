@@ -366,3 +366,7 @@ ul.ui-autocomplete.ui-menu {
 	font-size: 1em;
 }
 
+.js {
+	display: none;
+}
+
