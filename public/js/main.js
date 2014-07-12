@@ -1203,10 +1203,10 @@ function ros_get_data() {
 	});
 }
 function ros_dialog_open() {
-	//if ($('#ros_skin_form').is(':empty') == '') {
+	if ($('#ros_skin_form').is(':empty')) {
 		$('#dialog_load').dialog('option', 'title', "Loading templates...").dialog('open');
 		ros_template_renew();
-	//}
+	}
 	ros_get_data();
 }
 function pe_form_load() {
