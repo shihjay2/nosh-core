@@ -788,86 +788,12 @@ class AjaxMessagingController extends BaseController {
 				'success' => '0',
 				'attempts' => '0'
 			);
+			DB::table('sendfax')->where('job_id', '=', $job_id)->update($fax_data);
+			$this->audit('Update');
 			if ($draft == 'yes') {
-				DB::table('sendfax')->where('job_id', '=', $job_id)->update($fax_data);
-				$this->audit('Update');
 				$arr = 'Fax Job ' . $job_id . ' Updated';
 			} else {
-				$faxrecipients = '';
-				$faxnumbers = '';
-				$recipientlist = DB::table('recipients')->where('job_id', '=', $job_id)->get();
-				foreach ($recipientlist as $row3) {
-					$faxrecipients .= $row3->faxrecipient . ', Fax: ' . $row3->faxnumber . "\n";
-					if ($faxnumbers != '') {
-						$faxnumbers .= ',' . $row3->faxnumber;
-					} else {
-						$faxnumbers .= $row3->faxnumber;
-					}
-				}
-				$practice_row = Practiceinfo::find(Session::get('practice_id'));
-				$faxnumber_array = explode(",", $faxnumbers);
-				$faxnumber_to = array();
-				$pagesInfo = DB::table('pages')->where('job_id', '=', $job_id)->get();
-				$faxpages = '';
-				$totalpages = 0;
-				$senddate = date('Y-m-d H:i:s');
-				foreach ($pagesInfo as $row4) {
-					$faxpages .= ' ' . $row4->file;
-					$totalpages = $totalpages + $row4->pagecount;
-				}
-				$cover_filename = '';
-				if ($fax_data['faxcoverpage'] == 'yes') {
-					$cover_filename = Session::get('documents_dir') . 'sentfax/' . $job_id . '/coverpage.pdf';
-					$cover_html = $this->page_intro('Cover Page', Session::get('practice_id'))->render();
-					$cover_html .= $this->page_coverpage($job_id, $totalpages, $faxrecipients, date("M d, Y, h:i", time()))->render();
-					$this->generate_pdf($cover_html, $cover_filename, 'footerpdf');
-					while(!file_exists($cover_filename)) {
-						sleep(2);
-					}
-				}
-				$config = array(
-					'driver' => 'smtp',
-					'host' => 'smtp.gmail.com',
-					'port' => 465,
-					'from' => array('address' => null, 'name' => null),
-					'encryption' => 'ssl',
-					'username' => $practice_row->fax_email,
-					'password' => $practice_row->fax_email_password,
-					'sendmail' => '/usr/sbin/sendmail -bs',
-					'pretend' => false
-				);
-				Config::set('mail',$config);
-				$data_message = array();
-				Mail::send('emails.blank', $data_message, function($message) use ($faxnumber_array, $practice_row, $fax_data, $cover_filename, $pagesInfo) {
-					$i = 0;
-					foreach ($faxnumber_array as $faxnumber_row) {
-						if ($i == 0) {
-							$message->to($faxnumber_row . '@' . $practice_row->fax_type);
-						} else {
-							$message->cc($faxnumber_row . '@' . $practice_row->fax_type);
-						}
-						$i++;
-					}
-					$message->from($practice_row->email, $practice_row->practice_name);
-					$message->subject($fax_data['faxsubject']);
-					if ($fax_data['faxcoverpage'] == 'yes') {
-						$message->attach($cover_filename);
-					}
-					foreach ($pagesInfo as $row5) {
-						$message->attach($row5->file);
-					}
-				});
-				$fax_update_data = array(
-					'sentdate' => date('Y-m-d'),
-					'ready_to_send' => '1',
-					'senddate' => $senddate,
-					'faxdraft' => '0',
-					'attempts' => '0',
-					'success' => '1'
-				);
-				DB::table('sendfax')->where('job_id', '=', $job_id)->update($fax_update_data);
-				$this->audit('Update');
-				$arr = 'Fax Job ' . $job_id . ' Sent';
+				$arr = $this->send_fax($job_id, '', '');
 			}
 			Session::forget('fax_job_id');
 			echo $arr;
@@ -1108,11 +1034,15 @@ class AjaxMessagingController extends BaseController {
 		$i = 0;
 		foreach (Input::file('file') as $file) {
 			if ($file) {
+				if ($file->getMimeType() != 'application/pdf') {
+					echo "This is not a PDF file.  Try again.";
+					exit (0);
+				}
 				$directory = Session::get('documents_dir') . 'sentfax/';
 				$file_size = $file->getSize();
-				$file_original = $file->getClientOriginalName();
-				$file->move($directory, $file->getClientOriginalName());
-				$file_path = $directory . $file->getClientOriginalName();
+				$file_original = str_replace('.' . $file->getClientOriginalExtension(), '', $file->getClientOriginalName()) . '_' . time() . '.pdf';
+				$file->move($directory, $file_original);
+				$file_path = $directory . $file_original;
 				while(!file_exists($file_path)) {
 					sleep(2);
 				}

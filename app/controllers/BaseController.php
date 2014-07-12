@@ -113,7 +113,8 @@ class BaseController extends Controller {
 			'/js/plugins/shapes/wPaint.menu.main.shapes.min.js',
 			'/js/plugins/file/wPaint.menu.main.file.min.js',
 			'/js/jqueryui-editable.min.js',
-			'/js/jquery.touchswipe.min.js'
+			'/js/jquery.touchswipe.min.js',
+			'/js/jquery.ui.touch-punch.min.js'
 		);
 		if(Session::get('group_id') == '1') {
 			$homejsfiles = array(
@@ -3471,6 +3472,9 @@ class BaseController extends Controller {
 		}
 		if ($fax_data->faxcoverpage == 'yes') {
 			$cover_filename = Session::get('documents_dir') . 'sentfax/' . $job_id . '/coverpage.pdf';
+			if(file_exists($cover_filename)) {
+				unlink($cover_filename);
+			}
 			$cover_html = $this->page_intro('Cover Page', Session::get('practice_id'))->render();
 			$cover_html .= $this->page_coverpage($job_id, $totalpages, $faxrecipients, date("M d, Y, h:i", time()))->render();
 			$this->generate_pdf($cover_html, $cover_filename, 'footerpdf');
@@ -3478,46 +3482,71 @@ class BaseController extends Controller {
 				sleep(2);
 			}
 		}
-		$config = array(
-			'driver' => 'smtp',
-			'host' => $practice_row->fax_email_smtp,
-			'port' => 465,
-			'from' => array('address' => null, 'name' => null),
-			'encryption' => 'ssl',
-			'username' => $practice_row->fax_email,
-			'password' => $practice_row->fax_email_password,
-			'sendmail' => '/usr/sbin/sendmail -bs',
-			'pretend' => false
-		);
-		Config::set('mail',$config);
-		$data_message = array();
-		Mail::send('emails.blank', $data_message, function($message) use ($faxnumber_array, $practice_row, $fax_data, $cover_filename, $pagesInfo) {
-			$i = 0;
-			foreach ($faxnumber_array as $faxnumber_row) {
-				if ($i == 0) {
-					$message->to($faxnumber_row . '@' . $practice_row->fax_type);
-				} else {
-					$message->cc($faxnumber_row . '@' . $practice_row->fax_type);
+		if ($practice_row->fax_type != 'phaxio') {
+			$config = array(
+				'driver' => 'smtp',
+				'host' => $practice_row->fax_email_smtp,
+				'port' => 465,
+				'from' => array('address' => null, 'name' => null),
+				'encryption' => 'ssl',
+				'username' => $practice_row->fax_email,
+				'password' => $practice_row->fax_email_password,
+				'sendmail' => '/usr/sbin/sendmail -bs',
+				'pretend' => false
+			);
+			Config::set('mail',$config);
+			$data_message = array();
+			Mail::send('emails.blank', $data_message, function($message) use ($faxnumber_array, $practice_row, $fax_data, $cover_filename, $pagesInfo) {
+				$i = 0;
+				foreach ($faxnumber_array as $faxnumber_row) {
+					if ($i == 0) {
+						$message->to($faxnumber_row . '@' . $practice_row->fax_type);
+					} else {
+						$message->cc($faxnumber_row . '@' . $practice_row->fax_type);
+					}
+					$i++;
 				}
-				$i++;
-			}
-			$message->from($practice_row->email, $practice_row->practice_name);
-			$message->subject($fax_data->faxsubject);
+				$message->from($practice_row->email, $practice_row->practice_name);
+				$message->subject($fax_data->faxsubject);
+				if ($fax_data->faxcoverpage == 'yes') {
+					$message->attach($cover_filename);
+				}
+				foreach ($pagesInfo as $row5) {
+					$message->attach($row5->file);
+				}
+			});
+			$fax_update_data = array(
+				'sentdate' => date('Y-m-d'),
+				'ready_to_send' => '1',
+				'senddate' => $senddate,
+				'faxdraft' => '0',
+				'attempts' => '0',
+				'success' => '1'
+			);
+		} else {
+			$phaxio_files_array = array();
 			if ($fax_data->faxcoverpage == 'yes') {
-				$message->attach($cover_filename);
+				$phaxio_files_array[] = $cover_filename;
 			}
-			foreach ($pagesInfo as $row5) {
-				$message->attach($row5->file);
+			foreach ($pagesInfo as $phaxio_file) {
+				$phaxio_files_array[] = $phaxio_file->file;
 			}
-		});
-		$fax_update_data = array(
-			'sentdate' => date('Y-m-d'),
-			'ready_to_send' => '1',
-			'senddate' => $senddate,
-			'faxdraft' => '0',
-			'attempts' => '0',
-			'success' => '1'
-		);
+			$phaxio = new Phaxio($practice_row->phaxio_api_key, $practice_row->phaxio_api_secret);
+			$phaxio_result = $phaxio->sendFax($faxnumber_array, $phaxio_files_array);
+			$phaxio_result_array = json_decode($phaxio_result, true);
+			$fax_update_data = array(
+				'sentdate' => date('Y-m-d'),
+				'ready_to_send' => '1',
+				'senddate' => $senddate,
+				'faxdraft' => '0',
+				'attempts' => '0',
+				'success' => '0'
+			);
+			if ($phaxio_result_array['success'] == true) {
+				$fax_update_data['success'] = '2';
+				$fax_update_data['command'] = $phaxio_result_array['faxId'];
+			}
+		}
 		DB::table('sendfax')->where('job_id', '=', $job_id)->update($fax_update_data);
 		$this->audit('Update');
 		Session::forget('job_id');
@@ -4883,7 +4912,8 @@ class BaseController extends Controller {
 				'className' => 'colorblack',
 				'editable' => false,
 				'reason' => 'Closed',
-				'status' => 'Closed'
+				'status' => 'Closed',
+				'notes' => ''
 			);
 			$events[] = $event1;
 			$repeat_start = $repeat_start + 604800;
@@ -4907,7 +4937,8 @@ class BaseController extends Controller {
 				'className' => 'colorblack',
 				'editable' => false,
 				'reason' => 'Closed',
-				'status' => 'Closed'
+				'status' => 'Closed',
+				'notes' => ''
 			);
 			$events[] = $event1;
 			$repeat_start = $repeat_start + 604800;
@@ -4931,7 +4962,8 @@ class BaseController extends Controller {
 				'className' => 'colorblack',
 				'editable' => false,
 				'reason' => 'Closed',
-				'status' => 'Closed'
+				'status' => 'Closed',
+				'notes' => ''
 			);
 			$events[] = $event1;
 			$repeat_start = $repeat_start + 604800;

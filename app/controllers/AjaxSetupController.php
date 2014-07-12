@@ -105,7 +105,9 @@ class AjaxSetupController extends BaseController {
 			'fax_email' => Input::get('fax_email'),
 			'fax_email_password' => Input::get('fax_email_password'),
 			'fax_email_hostname' => Input::get('fax_email_hostname'),
-			'fax_email_smtp' => Input::get('fax_email_smtp')
+			'fax_email_smtp' => Input::get('fax_email_smtp'),
+			'phaxio_api_key' => Input::get('phaxio_api_key'),
+			'phaxio_api_secret' => Input::get('phaxio_api_secret')
 		);
 		DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->update($data);
 		$this->audit('Update');
@@ -669,11 +671,11 @@ class AjaxSetupController extends BaseController {
 	
 	public function postIcdUpdate($icd)
 	{
-		Session::put('icd_update_progress_note','');
-		Session::put('icd_update_progress', 0);
-		Session::put('icd_complete', false);
+		$track = __DIR__.'/../../public/temp/track';
+		$tracknote = __DIR__.'/../../public/temp/tracknote';
+		$trackcomplete = __DIR__.'/../../public/temp/trackcomplete';
 		set_time_limit(0);
-		ini_set('memory_limit','196M');
+		ini_set('memory_limit','384M');
 		$table = 'icd' . $icd;
 		DB::table($table)->truncate();
 		$year = date('Y');
@@ -684,7 +686,7 @@ class AjaxSetupController extends BaseController {
 			$link1 = array();
 			if (isset($html)) {
 				if ($icd == '9') {
-					$div = $html->find('[class=codeList]',0);
+					$div = $html->find('div[class=definitionList]',0);
 				} else {
 					$div = $html->find('[class=innerWrapper]',0);
 				}
@@ -694,8 +696,8 @@ class AjaxSetupController extends BaseController {
 						$link1[] = $a->href;
 					}
 				}
-				Session::put('icd_update_progress_note', 'Retreived first nodes.');
 			}
+			File::put($tracknote,'Retreived first nodes.');
 			$link2 = array();
 			foreach ($link1 as $page1) {
 				$cr1 = curl_init($baseurl . $page1);
@@ -704,7 +706,7 @@ class AjaxSetupController extends BaseController {
 				$data1 = curl_exec($cr1);
 				curl_close($cr1);
 				$dom1 = new Htmldom($data1);
-				$div1 = $dom1->find('[class=codeList]',0);
+				$div1 = $dom1->find('div[class=definitionList]',0);
 				if (isset($div1)) {
 					foreach ($div1->find('li') as $li1) {
 						$a1 = $li1->find('a',0);
@@ -712,8 +714,9 @@ class AjaxSetupController extends BaseController {
 					}
 				}
 			}
-			Session::put('icd_update_progress_note', 'Retreived second nodes.');
+			File::put($tracknote,'Retreived second nodes.');
 			$link3 = array();
+			$link4 = array();
 			$i = 0;
 			foreach ($link2 as $page2) {
 				$cr2 = curl_init($baseurl . $page2);
@@ -722,7 +725,7 @@ class AjaxSetupController extends BaseController {
 				$data2 = curl_exec($cr2);
 				curl_close($cr2);
 				$dom2 = new Htmldom($data2);
-				$div2 = $dom2->find('[class=codeList]',0);
+				$div2 = $dom2->find('ul[class=definitionList]',0);
 				if (isset($div2)) {
 					foreach ($div2->find('li') as $li2) {
 						$a2 = $li2->find('a',0);
@@ -737,20 +740,14 @@ class AjaxSetupController extends BaseController {
 						$greencheck2 = $line2->find('img[src*=bullet_triangle_green.png]',0);
 						if (isset($greencheck2)) {
 							$icd9_0 = $line2->find('[class=identifier]',0);
-							$data0['icd' . $icd] = $icd9_0->innertext;
-							$description0 = $line2->find('[class=threeDigitCodeListDescription]',0);
-							$description0_text = $description0->innertext;
-							$data0['icd' . $icd . '_description'] = str_replace("&#8230;", $main_description0_text, $description0_text);
-							$data0['icd' . $icd . '_description'] = str_replace('[', '(', $data0['icd' . $icd . '_description']);
-							$data0['icd' . $icd . '_description'] = str_replace(']', ')', $data0['icd' . $icd . '_description']);
-							DB::table($table)->insert($data0);
+							$link4[$icd9_0->innertext] = $icd9_0->href;
 							$i++;
 							Session::put('icd_update_progress', $i);
 						}
 					}
 				}
 			}
-			Session::put('icd_update_progress_note', 'Retreived third nodes.');
+			File::put($tracknote,'Retreived third nodes.');
 			foreach ($link3 as $page3) {
 				$cr3 = curl_init($baseurl . $page3);
 				curl_setopt($cr3, CURLOPT_RETURNTRANSFER, true); 
@@ -766,39 +763,73 @@ class AjaxSetupController extends BaseController {
 						$greencheck3 = $line3->find('img[src*=bullet_triangle_green.png]',0);
 						if (isset($greencheck3)) {
 							$icd9 = $line3->find('[class=identifier]',0);
-							$data['icd' . $icd] = $icd9->innertext;
-							$description = $line3->find('[class=threeDigitCodeListDescription]',0);
-							$description_text = $description->innertext;
-							$data['icd' . $icd . '_description'] = str_replace("&#8230;", $main_description_text, $description_text);
-							$data['icd' . $icd . '_description'] = str_replace('[', '(', $data['icd' . $icd . '_description']);
-							$data['icd' . $icd . '_description'] = str_replace(']', ')', $data['icd' . $icd . '_description']);
-							DB::table($table)->insert($data);
+							$link4[$icd9->innertext] = $icd9->href;
 							$i++;
 							Session::put('icd_update_progress', $i);
 						}
 					}
 				}
 			}
-			Session::put('icd_update_progress_note', 'Retreived fourth nodes.');
-			Session::put('icd_complete', true);
-			echo 'ICD' . $icd . ' database updated!';
+			File::put($tracknote,'Retreived fourth nodes.  Inserting nodes into database...');
+			$count = 0;
+			$total = count($link4);
+			foreach ($link4 as $icd_val => $page4) {
+				$cr4 = curl_init($baseurl . $page4);
+				curl_setopt($cr4, CURLOPT_RETURNTRANSFER, true); 
+				curl_setopt($cr4, CURLOPT_CONNECTTIMEOUT, 0);
+				$data4 = curl_exec($cr4);
+				curl_close($cr4);
+				$dom4 = new Htmldom($data4);
+				$linecheck4 = $dom4->find('div[class=contentBlurb]',0);
+				$line_desc = $dom4->find('div[class=description]',0);
+				$data_desc['icd' . $icd] = $icd_val;
+				$data_desc['icd' . $icd . '_description'] = $line_desc->innertext;
+				DB::table($table)->insert($data_desc);
+				$count++;
+				if (isset($linecheck4)) {
+					if (strpos($linecheck4->innertext, "Disease Synonyms") !== FALSE) {
+						foreach ($linecheck4->find('li') as $line4) {
+							$data_syn['icd' . $icd] = $icd_val;
+							$data_syn['icd' . $icd . '_description'] = $line4->innertext;
+							DB::table($table)->insert($data_syn);
+							$count++;
+						}
+					}
+				}
+				File::put($track,$count);
+			}
+			File::put($trackcomplete,'true');
+			echo 'ICD' . $icd . ' database updated with ' . $count . 'records!';
 		}
-		
 	}
 	
-	public function postSetupProgress($type)
+	public function postSetupProgress()
 	{
-		$data['progress'] = Session::get($type . '_update_progress');
-		$data['note'] = Session::get($type . '_update_progress_note');
-		$data['complete'] = Session::get($type . '_complete');
+		$track = __DIR__.'/../../public/temp/track';
+		$tracknote = __DIR__.'/../../public/temp/tracknote';
+		$trackcomplete = __DIR__.'/../../public/temp/trackcomplete';
+		$data['progress'] = File::get($track);
+		$data['note'] = File::get($tracknote);
+		$data['complete'] = File::get($trackcomplete);
 		echo json_encode($data);
+	}
+	
+	public function postSetupReset()
+	{
+		$track = __DIR__.'/../../public/temp/track';
+		$tracknote = __DIR__.'/../../public/temp/tracknote';
+		$trackcomplete = __DIR__.'/../../public/temp/trackcomplete';
+		File::put($track,'0');
+		File::put($tracknote,'');
+		File::put($trackcomplete,'false');
+		echo 'OK';
 	}
 	
 	public function postMedUpdate()
 	{
-		Session::put('med_update_progress_note', 'Unzipped file from the FDA website.');
-		Session::put('med_update_progress', 0);
-		Session::put('med_complete', false);
+		$track = __DIR__.'/../../public/temp/track';
+		$tracknote = __DIR__.'/../../public/temp/tracknote';
+		$trackcomplete = __DIR__.'/../../public/temp/trackcomplete';
 		$product = __DIR__.'/../../public/import/drugs/Product.txt';
 		$product_link = __DIR__.'/../../public/import/drugs/meds_full.txt';
 		$package = __DIR__.'/../../public/import/drugs/package.txt';
@@ -814,8 +845,7 @@ class AjaxSetupController extends BaseController {
 		$link = $e->href;
 		$wget = "wget http://www.fda.gov" . $link . " --directory-prefix='".__DIR__. "/../../public/import/'";
 		$last_line = system($wget, $return_val);
-		Session::put('med_update_progress_note', 'Downloaded .zip file from the FDA website.');
-		Session::put('med_update_progress', 0); 
+		File::put($tracknote,'Downloaded .zip file from the FDA website.');
 		$zip = strrchr($link, '/');
 		$unzip = "unzip ".__DIR__."/../../import" . $zip . " -d ".__DIR__."/../../import/drugs/";
 		exec($unzip);
@@ -826,32 +856,31 @@ class AjaxSetupController extends BaseController {
 		if (!file_exists($package_link)) {
 			symlink($package, $package_link);
 		}
-		Session::put('med_update_progress_note', 'Unzipped file from the FDA website.');
-		Session::put('med_update_progress', 0); 
+		File::put($tracknote,'Unzipped file from the FDA website.');
 		ini_set('memory_limit','196M');
 		$product_command = "mysqlimport -u " . $_ENV['mysql_username']. " -p". $_ENV['mysql_password'] . " --columns=@x,PRODUCTNDC,PRODUCTTYPENAME,PROPRIETARYNAME,PROPRIETARYNAMESUFFIX,NONPROPRIETARYNAME,DOSAGEFORMNAME,ROUTENAME,STARTMARKETINGDATE,ENDMARKETINGDATE,MARKETINGCATEGORYNAME,APPLICATIONNUMBER,LABELERNAME,SUBSTANCENAME,ACTIVE_NUMERATOR_STRENGTH,ACTIVE_INGRED_UNIT,PHARM_CLASSES,DEASCHEDULE --local --delete nosh " . $product_link;
 		$package_command = "mysqlimport -u " . $_ENV['mysql_username']. " -p". $_ENV['mysql_password'] . " --columns=@x,PRODUCTNDC,NDCPACKAGECODE,PACKAGEDESCRIPTION --local --delete nosh " . $package_link;
 		shell_exec($product_command);
-		Session::put('med_update_progress_note', 'Imported Product.txt file into NOSH database.');
+		File::put($tracknote,'Imported Product.txt file into NOSH database.');
 		$i = DB::table('meds_full')->count();
-		Session::put('med_update_progress', $i); 
+		File::put($track,$i);
 		shell_exec($package_command);
-		Session::put('med_update_progress_note', 'Imported package.txt file into NOSH database.');
+		File::put($tracknote,'Imported package.txt file into NOSH database.');
 		$i += DB::table('meds_full_package')->count();
-		Session::put('med_update_progress', $i);
-		Session::put('med_complete', true);
+		File::put($track,$i);
+		File::put($trackcomplete,'true');
 		echo 'Medication database updated!';
 	}
 	
 	public function postSupplementsUpdate()
 	{
-		Session::put('supplement_update_progress_note', '');
-		Session::put('supplement_update_progress', 0);
-		Session::put('supplement_complete', false);
+		$track = __DIR__.'/../../public/temp/track';
+		$tracknote = __DIR__.'/../../public/temp/tracknote';
+		$trackcomplete = __DIR__.'/../../public/temp/trackcomplete';
 		DB::table('supplements_list')->truncate();
 		$html = new Htmldom("http://www.nlm.nih.gov/medlineplus/druginfo/herb_All.html");
 		if (isset($html)) {
-			Session::put('supplement_update_progress_note', 'Retrieved data from the NIH website.');
+			File::put($tracknote,'Retrieved data from the NIH website.');
 			$i = 0;
 			foreach ($html->find('[class=herbul]') as $div) {
 				foreach ($div->find('li') as $li) {
@@ -864,22 +893,22 @@ class AjaxSetupController extends BaseController {
 					}
 					
 				}
-				Session::put('supplement_update_progress', $i);
+				File::put($track,$i);
 			}
 		}
-		Session::put('supplement_complete', true);
+		File::put($trackcomplete,'true');
 		echo 'Supplements database updated!';
 	}
 	
 	public function postCvxUpdate()
 	{
-		Session::put('cvx_update_progress_note', '');
-		Session::put('cvx_update_progress', 0);
-		Session::put('cvx_complete', false);
+		$track = __DIR__.'/../../public/temp/track';
+		$tracknote = __DIR__.'/../../public/temp/tracknote';
+		$trackcomplete = __DIR__.'/../../public/temp/trackcomplete';
 		DB::table('cvx')->truncate();
 		$xml = simplexml_load_file('http://www2a.cdc.gov/vaccines/iis/iisstandards/XML.asp?rpt=cvx');
 		$i = 0;
-		Session::put('cvx_update_progress_note', 'Retrieved data from the CDC website.');
+		File::put($tracknote,'Retrieved data from the CDC website.');
 		foreach ($xml->CVXInfo as $cvx) {
 			$data = array(
 				'cvx_code' => (string) $cvx->Value[2],
@@ -888,22 +917,22 @@ class AjaxSetupController extends BaseController {
 			);
 			DB::table('cvx')->insert($data);
 			$i++;
-			Session::put('cvx_update_progress', $i);
+			File::put($track,$i);
 		}
-		Session::put('cvx_complete', true);
+		File::put($trackcomplete,'true');
 		echo 'CVX immunization database updated!';
 	}
 	
 	public function cpt_update()
 	{
-		Session::put('cpt_update_progress_note', '');
-		Session::put('cpt_update_progress', 0);
-		Session::put('cpt_complete', false);
+		$track = __DIR__.'/../../public/temp/track';
+		$tracknote = __DIR__.'/../../public/temp/tracknote';
+		$trackcomplete = __DIR__.'/../../public/temp/trackcomplete';
 		$directory = __DIR__.'/../../public/import';
 		foreach (Input::file('file') as $file) {
 			if ($file) {
 				if ($file->getMimeType() != 'text/plain' && $file->getClientOriginalName() != 'LONGULT.txt') {
-					Session::put('cpt_complete', true);
+					File::put($trackcomplete,'true');
 					echo "This is not the correct CPT code file.  Try again.";
 					exit (0);
 				}
@@ -912,7 +941,7 @@ class AjaxSetupController extends BaseController {
 				$file_path = $directory . "/" . $file->getClientOriginalName();
 			}
 		}
-		Session::put('cpt_update_progress_note', 'Uploaded CPT file successfully.');
+		File::put($tracknote,'Uploaded CPT file successfully.');
 		Schema::rename('cpt', 'cpt_copy');
 		Schema::create('cpt', function($table) {
 			$table->increments('cpt_id');
@@ -921,7 +950,7 @@ class AjaxSetupController extends BaseController {
 			$table->string('cpt_charge', 255)->nullable();
 			$table->boolean('cpt_common')->nullable();
 		});
-		Session::put('cpt_update_progress_note', 'Created copy of existing CPT table.');
+		File::put($tracknote,'Created copy of existing CPT table.');
 		$file_array = file($file_path);
 		$i = 0;
 		foreach ($file_array as $key => $value) {
@@ -935,10 +964,10 @@ class AjaxSetupController extends BaseController {
 				);
 				DB::table('cpt')->insert($data);
 				$i++;
-				Session::put('cpt_update_progress', $i);
+				File::put($track,$i);
 			}
 		}
-		Session::put('cpt_update_progress_note', 'Reconciling previous CPT code entries into new database.');
+		File::put($tracknote,'Reconciling previous CPT code entries into new database.');
 		$cpt_arr = DB::table('cpt_copy')->whereNotNull('cpt_charge')->get();
 		$j = 0;
 		foreach ($cpt_arr as $cpt_row) {
@@ -953,17 +982,17 @@ class AjaxSetupController extends BaseController {
 			}
 			$j++;
 		}
-		Session::put('cpt_update_progress_note', 'Reconcilied ' . $j . ' records.');
+		File::put($tracknote,'Reconcilied ' . $j . ' records.');
 		Schema::drop('cpt_copy');
-		Session::put('cpt_complete', true);
+		File::put($trackcomplete,'true');
 		echo 'CPT database updated!';
 	}
 	
 	public function postNpiUpdate()
 	{
-		Session::forget('npi_update_progress_note', '');
-		Session::forget('npi_update_progress', 0);
-		Session::put('npi_complete', false);
+		$track = __DIR__.'/../../public/temp/track';
+		$tracknote = __DIR__.'/../../public/temp/tracknote';
+		$trackcomplete = __DIR__.'/../../public/temp/trackcomplete';
 		ini_set('memory_limit','96M');
 		$html = new Htmldom("http://www.nucc.org/index.php?option=com_content&view=article&id=107&Itemid=132");
 		if (isset($html)) {
@@ -971,12 +1000,12 @@ class AjaxSetupController extends BaseController {
 			$link = $e->href;
 			$wget = "wget http://www.nucc.org/" . $link . " --directory-prefix='".__DIR__."/../../import/' --output-document='npi_taxonomy.csv'";
 			$last_line = system($wget, $return_val);
-			Session::put('npi_update_progress_note', 'Retrieved data from the NUCC website.');
+			File::put($tracknote,'Retrieved data from the NUCC website.');
 			DB::table('npi')->truncate();
 			$i = 0;
 			if (($npi_handle = fopen(__DIR__.'/../../import/npi_taxonomy.csv', "r")) !== FALSE) {
 				while (($npi1 = fgetcsv($npi_handle, 0, ",", '"')) !== FALSE) {
-					if ($npi1[0] != '' || $npi1[0] != 'Code') {
+					if ($npi1[0] != '' && $npi1[0] != 'Code') {
 						$npi_data = array (
 							'code' => $npi1[0],
 							'type' => $npi1[1],
@@ -986,14 +1015,14 @@ class AjaxSetupController extends BaseController {
 						DB::table('npi')->insert($npi_data);
 						$i++;
 					}
-					Session::put('npi_update_progress', $i);
+					File::put($track,$i);
 				}
-				fclose($npi_csv);
+				fclose($npi_handle);
 			}
-			Session::put('npi_complete', true);
+			File::put($trackcomplete,'true');
 			echo 'NPI database updated!';
 		} else {
-			Session::put('npi_complete', true);
+			File::put($trackcomplete,'true');
 			echo 'Unable to contact NUCC website.  Please try again later.';
 		}
 	}

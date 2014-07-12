@@ -183,6 +183,7 @@ function loadcalendar (y,m,d,view) {
 			} else {
 				if (noshdata.group_id != '1') {
 					if (noshdata.group_id != '100') {
+						$("#event_dialog").dialog("option", "title", "Schedule an Appointment");
 						$("#event_dialog").dialog('open');
 						$("#title").focus();
 						$("#start_date").val($.fullCalendar.formatDate(date, 'MM/dd/yyyy'));
@@ -224,6 +225,7 @@ function loadcalendar (y,m,d,view) {
 							$("#reason_form").show();
 							$("#other_event").hide();
 							$("#event_choose").hide();
+							$("#event_dialog").dialog("option", "title", "Schedule an Appointment");
 							$("#event_dialog").dialog('open');
 						}
 					}
@@ -232,10 +234,6 @@ function loadcalendar (y,m,d,view) {
 		},
 		eventClick: function(calEvent, jsEvent, view) {
 			if (noshdata.group_id != '1') {
-				if (calEvent.editable != false) {
-					$("#event_dialog").dialog('open');
-					$("#title").focus();
-				}
 				$("#event_id").val(calEvent.id);
 				$("#event_id_span").text(calEvent.id);
 				$("#schedule_pid").val(calEvent.pid);
@@ -264,9 +262,15 @@ function loadcalendar (y,m,d,view) {
 					$("#until").val('');
 				}
 				$("#status").val(calEvent.status);
+				$("#notes").val(calEvent.notes);
 				$("#delete_form").show();
 				$(".nosh_schedule_exist_event").show();
 				$("#event_choose").hide();
+				if (calEvent.editable != false) {
+					$("#event_dialog").dialog("option", "title", "Edit an Appointment");
+					$("#event_dialog").dialog('open');
+					$("#title").focus();
+				}
 			}
 		},
 		eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
@@ -318,7 +322,7 @@ function loadcalendar (y,m,d,view) {
 			}
 		},
 		eventRender: function(event, element) {
-			var display = 'Reason: ' + event.reason + '<br>Status: ' + event.status;
+			var display = 'Reason: ' + event.reason + '<br>Status: ' + event.status + '<br>' + event.notes;
 			element.tooltip({
 				items: element,
 				hide: false,
@@ -729,14 +733,14 @@ function hpi_autosave(type) {
 	var old0 = $("#"+type+"_old").val();
 	var new0 = $("#"+type).val();
 	if (old0 != new0) {
+		var str = encodeURIComponent(new0);
 		$.ajax({
 			type: "POST",
 			url: "ajaxencounter/hpi-save/" + type,
-			data: type+'=' + $("#"+type).val(),
+			data: type+'=' + str,
 			success: function(data){
 				$.jGrowl(data);
-				var a = $("#"+type).val();
-				$("#"+type+"_old").val(a);
+				$("#"+type+"_old").val(new0);
 			}
 		});
 	}
@@ -1567,6 +1571,52 @@ $(document).ready(function() {
 			textdump(elem);
 		}
 	});
+	$("#textdump_group").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 300, 
+		width: 400, 
+		draggable: false,
+		resizable: false,
+		focus: function (event, ui) {
+			var id = $("#textdump_group_id").val();
+			if (id != '') {
+				$("#"+id).focus();
+			}
+		},
+		close: function (event, ui) {
+			$("#textdump_group_target").val('');
+			$("#textdump_group_add").val('');
+			$("#textdump_group_html").html('');
+		}
+	});
+	$("#textdump").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 300, 
+		width: 400, 
+		draggable: false,
+		resizable: false,
+		close: function (event, ui) {
+			$("#textdump_target").val('');
+			$("#textdump_input").val('');
+			$("#textdump_add").val('');
+			$("#textdump_group_item").val('');
+			$("#textdump_html").html('');
+		},
+		buttons: {
+			Cancel: function() {
+				var id = $("#textdump_target").val();
+				var a = $("#textdump_input").val();
+				var b = $("#"+id).val();
+				var c = b.replace(a, "");
+				$("#"+id).val(c);
+				$("#textdump").dialog('close');
+			}
+		}
+	});
+	$("#textdump_group_html").tooltip();
+	$("#textdump_html").tooltip();
 });
 $(document).on("click", ".ui-jqgrid-titlebar", function() {
 	$(".ui-jqgrid-titlebar-close", this).click();

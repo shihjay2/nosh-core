@@ -19,7 +19,7 @@
 			rounded: true,
 			imgpath: "",
 			themepath: "https://code.jquery.com/ui/",
-			jqueryuiversion: "1.11.0-beta.2",
+			jqueryuiversion: "1.11.0",
 			initialtext: "Switch Theme",
 			buttonpretext: "Theme:",
 			closeonselect: true,

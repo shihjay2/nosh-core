@@ -186,7 +186,8 @@ return array(
 		'Zipper'          => 'Chumper\Zipper\Facades\Zipper',
 		'RxNormApi'       => 'RxNormApis\RxNormApi',
 		'ApiBaseClass'    => 'ApiBaseClasses\ApiBaseClass',
-		'Ccdaparser'      => 'Ccdaparsers\Ccdaparser'
+		'Ccdaparser'      => 'Ccdaparsers\Ccdaparser',
+		'Phaxio'          => 'Phaxios\Phaxio'
 	),
 
 );

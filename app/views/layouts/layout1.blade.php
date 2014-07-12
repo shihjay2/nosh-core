@@ -27,8 +27,8 @@
 			};
 			var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 		</script>
-		<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-		<script type="text/javascript" src="https://code.jquery.com/ui/1.11.0-beta.2/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="https://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
 		<?php echo HTML::script('js/jquery.maskedinput.min.js'); ?>
 		<?php echo HTML::script('js/jquery.jgrowl.js'); ?>
 		<?php echo HTML::script('js/jquery.selectboxes.js'); ?>

@@ -89,7 +89,7 @@ $(document).ready(function() {
 	$("#event_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
-		height: 450, 
+		height: 500, 
 		width: 600, 
 		modal: true, 
 		closeOnEscape: false,
@@ -280,4 +280,5 @@ $(document).ready(function() {
 			$("#until").val('');
 		}
 	});
+	swipe();
 });

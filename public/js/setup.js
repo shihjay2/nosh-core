@@ -125,6 +125,20 @@ $(document).ready(function() {
 					$.each(data, function(key, value){
 						$("#setup_accordion :input[name='" + key + "']").val(value);
 						$("#" + key + "_old").val(value);
+						if (key == 'fax_type') {
+							if (value == '') {
+								$("#fax_show1").hide();
+								$("#fax_show2").hide();
+							}
+							if (value == 'efaxsend.com' || value == 'rcfax.com' || value == 'metrofax.com') {
+								$("#fax_show1").show();
+								$("#fax_show2").hide();
+							}
+							if (value == 'phaxio') {
+								$("#fax_show1").hide();
+								$("#fax_show2").show();
+							}
+						}
 					});
 				}
 			});
@@ -257,7 +271,22 @@ $(document).ready(function() {
 		$("#billing_state").val(d);
 		$("#billing_zip").val(e);
 	});
-	$("#fax_type").addOption({"":"No fax service.","efaxsend.com":"eFax","rcfax.com":"ExtremeFax","metrofax.com":"MetroFax","rcfax.com":"RingCentral"});
+	$("#fax_type").addOption({"":"No fax service.","efaxsend.com":"eFax","rcfax.com":"ExtremeFax","metrofax.com":"MetroFax","phaxio":"Phaxio","rcfax.com":"RingCentral"});
+	$("#fax_type").change(function () {
+		var a = $("#fax_type").val();
+		if (a == '') {
+			$("#fax_show1").hide();
+			$("#fax_show2").hide();
+		}
+		if (a == 'efaxsend.com' || a == 'rcfax.com' || a == 'metrofax.com') {
+			$("#fax_show1").show();
+			$("#fax_show2").hide();
+		}
+		if (a == 'phaxio') {
+			$("#fax_show1").hide();
+			$("#fax_show2").show();
+		}
+	});
 	$("#fax_email").change(function (){
 		var a = $("#fax_email").val();
 		var b = a.substr(a.indexOf("@")+1);

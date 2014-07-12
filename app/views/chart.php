@@ -182,23 +182,6 @@
 <div id="csv_dialog" title="Assign the CSV headers to the NOSH database fields...">
 	<form class="pure-form pure-form-stacked" id="csv_form"></form>
 </div>
-<div id="textdump_group" title="Template Groups">
-	<form id="textdump_group_form" class="pure-form">
-		<input type="text" style="width:95%" name="textdump_group_add" id="textdump_group_add" placeholder="Add template group here"/>
-		<input type="hidden" name="target" id="textdump_group_target"/>
-		<input type="hidden" id="textdump_group_id">
-	</form><br>
-	<div id="textdump_group_html" title="Click on a group to open templates."></div>
-</div>
-<div id="textdump" title="Template">
-	<input type="hidden" id="textdump_input"/>
-	<form id="textdump_form" class="pure-form">
-		<input type="text" style="width:95%" name="textdump_add" id="textdump_add" placeholder="Add text to template here"/>
-		<input type="hidden" name="target" id="textdump_target"/>
-		<input type="hidden" name="group" id="textdump_group_item">
-	</form><br>
-	<div id="textdump_html" title="Click on a text to copy it to the preview."></div>
-</div>
 <div id="copy_encounter_dialog" title="Copy Encounter">
 	<form id="copy_encounter_form" class="pure-form">
 		<label for="copy_encounter_from">Copy encounter from:</label>

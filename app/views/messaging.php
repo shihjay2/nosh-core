@@ -150,11 +150,16 @@
 <div id="fax_view_dialog" title="Documents Viewer">
 	<input type="hidden" id="view_received_id"/>
 	<input type="hidden" id="fax_filepath"/>
-	<button type="button" id="save_fax" class="nosh_button_extlink">Download</button>
-	<button type="button" id="import_fax" class="nosh_button_save">Import</button><br>
-	<div class="pure-form">
-		<label for="import_fax_pages">Select Pages (leave blank for all):</label><input type="text" style="width:100px" id="import_fax_pages"/>
+	<div class="pure-g">
+		<div class="pure-u-1-2">
+			<button type="button" id="save_fax" class="nosh_button_extlink">Download</button>
+			<button type="button" id="import_fax" class="nosh_button_save">Import</button>
+		</div>
+		<div class="pure-u-1-2 pure-form">
+			<label for="import_fax_pages">Select Pages (leave blank for all):</label><input type="text" style="width:100px" id="import_fax_pages"/>
+		</div>
 	</div>
+	<br>
 	<div id="embedURL1"></div>
 </div>
 <div id="pages_view_dialog" title="Pages Viewer">

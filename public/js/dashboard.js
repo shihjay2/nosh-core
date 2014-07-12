@@ -818,6 +818,7 @@ $(document).ready(function() {
 	var mySigUpload1 = $("#signature_upload_submit").upload({
 		action: 'signatureupload',
 		onComplete: function(data){
+			$("#signature_upload_submit").parent().find('input').val('');
 			$.jGrowl(data);
 			signature();
 		}
@@ -826,6 +827,7 @@ $(document).ready(function() {
 		action: 'importupload',
 		onComplete: function(data){
 			$.jGrowl(data);
+			$("#import_entire").parent().find('input').val('');
 		}
 	});
 });

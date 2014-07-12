@@ -9,6 +9,8 @@ $(document).ready(function() {
 	function statusfn (cellvalue, options, rowObject){
 		if (cellvalue == '1') {
 			return 'Sent';
+		} else if (cellvalue == '2') {
+			return 'Pending';
 		} else {
 			return 'Not Sent';
 		}
@@ -330,6 +332,8 @@ $(document).ready(function() {
 							data: "job_id=" + id,
 							success: function(data){
 								loadfaxjob();
+								$(".messaging_fax_dialog_old").hide();
+								$(".messaging_fax_dialog_new").show();
 								$("#messaging_fax_dialog").dialog('open');
 							}
 						});
@@ -364,6 +368,8 @@ $(document).ready(function() {
 							data: "job_id=" + id,
 							success: function(data){
 								loadfaxjob();
+								$(".messaging_fax_dialog_old").show();
+								$(".messaging_fax_dialog_new").hide();
 								$("#messaging_fax_dialog").dialog('open');
 							}
 						});
@@ -784,6 +790,7 @@ $(document).ready(function() {
 		dialogClass: "noclose",
 		open: function (event, ui) {
 			$("#messaging_fax_accordion").accordion({ heightStyle: "content" });
+			$("#messaging_fax_accordion").accordion("option", "active", 0);
 			jQuery("#send_list").jqGrid('GridUnload');
 			jQuery("#send_list").jqGrid({
 				url: "ajaxmessaging/send-list",
@@ -794,7 +801,11 @@ $(document).ready(function() {
 				colModel:[
 					{name:'sendlist_id',index:'sendlist_id',width:1,hidden:true},
 					{name:'faxrecipient',index:'faxrecipient',width:300,editable:true},
-					{name:'faxnumber',index:'faxnumber',width:100,editable:true}
+					{name:'faxnumber',index:'faxnumber',width:100,editable:true,editoptions:{
+						dataInit:function(elem){
+							$(elem).mask("(999) 999-9999");
+						}
+					}}
 				],
 				rowNum:10,
 				rowList:[10,20,30],
@@ -859,8 +870,11 @@ $(document).ready(function() {
 			});
 			$("#quick_search_contact").focus();
 		},
-		buttons: {
-			'Send': function() {
+		buttons: [{
+			text: 'Send',
+			id: 'messaging_fax_dialog_save',
+			class: 'nosh_button_save messaging_fax_dialog_new',
+			click: function() {
 				var str = $("#sendfinal").serialize();
 				if(str){
 					$.ajax({
@@ -871,13 +885,18 @@ $(document).ready(function() {
 							$.jGrowl(data);
 							$("#sendfinal").clearForm();
 							$("#messaging_fax_dialog").dialog('close');
+							reload_grid("sent_faxes");
 						}
 					});
 				} else {
 					$.jGrowl("Please complete the form");
 				}
-			},
-			'Draft': function() {
+			}
+		},{
+			text: 'Draft',
+			id: 'messaging_fax_dialog_draft',
+			class: 'nosh_button messaging_fax_dialog_new',
+			click: function() {
 				var str = $("#sendfinal").serialize();
 				if(str){
 					$.ajax({
@@ -888,13 +907,18 @@ $(document).ready(function() {
 							$.jGrowl(data);
 							$("#sendfinal").clearForm();
 							$("#messaging_fax_dialog").dialog('close');
+							reload_grid("draft_faxes");
 						}
 					});
 				} else {
 					$.jGrowl("Please complete the form");
 				}
-			},
-			Cancel: function() {
+			}
+		},{
+			text: 'Cancel',
+			id: 'messaging_fax_dialog_cancel',
+			class: 'nosh_button_cancel messaging_fax_dialog_new',
+			click: function() {
 				$.ajax({
 					type: "POST",
 					url: "ajaxmessaging/cancel-fax",
@@ -906,7 +930,37 @@ $(document).ready(function() {
 					}
 				});
 			}
-		},
+		},{
+			text: 'Resend',
+			id: 'messaging_fax_dialog_resend',
+			class: 'nosh_button_save messaging_fax_dialog_old',
+			click: function() {
+				var str = $("#sendfinal").serialize();
+				if(str){
+					$.ajax({
+						type: "POST",
+						url: "ajaxmessaging/send-fax",
+						data: str,
+						success: function(data){
+							$.jGrowl(data);
+							$("#sendfinal").clearForm();
+							$("#messaging_fax_dialog").dialog('close');
+							reload_grid("sent_faxes");
+						}
+					});
+				} else {
+					$.jGrowl("Please complete the form");
+				}
+			}
+		},{
+			text: 'Cancel',
+			id: 'messaging_fax_dialog_cancel1',
+			class: 'nosh_button_cancel messaging_fax_dialog_old',
+			click: function() {
+				$("#sendfinal").clearForm();
+				$("#messaging_fax_dialog").dialog('close');
+			}
+		}],
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#fax_view_dialog").dialog({ 
@@ -941,6 +995,8 @@ $(document).ready(function() {
 				$("#faxcoverpage").prop('checked', false);
 				$(".formmessagecoverpage").hide();
 				$("#faxmessage").val('');
+				$(".messaging_fax_dialog_old").hide();
+				$(".messaging_fax_dialog_new").show();
 				$("#messaging_fax_dialog").dialog('open');
 			}
 		});	
@@ -1107,6 +1163,7 @@ $(document).ready(function() {
 		onComplete: function(data){
 			$.jGrowl(data);
 			reload_grid("pages_list");
+			$("#addfile").parent().find('input').val('');
 		}
 	});
 	$("#pages_view_dialog").dialog({ 

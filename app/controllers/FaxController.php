@@ -15,7 +15,7 @@ class FaxController extends BaseController {
 			$smtp_user = $row1->fax_email;
 			$smtp_pass = $row1->fax_email_password;
 			$smtp_host = $row1->fax_email_hostname;
-			if ($fax_type != "") {
+			if ($fax_type != "" && $fax_type != "phaxio") {
 				$ret = 'Fax module active<br>';
 				date_default_timezone_set($row1->timezone);
 				if ($fax_type === "efaxsend.com") {
@@ -97,7 +97,48 @@ class FaxController extends BaseController {
 					$ret .= 'No connection made.';
 				}
 			}
+			if ($fax_type == 'phaxio') {
+				$phaxio_pending = DB::table('sendfax')->where('practice_id', '=', $row1->practice_id)->where('success', '=', '2')->get();
+				if ($phaxio_pending) {
+					foreach ($phaxio_pending as $phaxio_row) {
+						$phaxio = new Phaxio($row1->phaxio_api_key, $row1->phaxio_api_secret);
+						$phaxio_result = $phaxio->faxStatus($phaxio_row->command);
+						$phaxio_result_array = json_decode($phaxio_result, true);
+						if ($phaxio_result_array['data'][0]['status'] == 'success') {
+							$fax_update_data['success'] = '1';
+							DB::table('sendfax')->where('job_id', '=', $phaxio_row->job_id)->update($fax_update_data);
+							$this->audit('Update');
+						}
+						if ($phaxio_result_array['data'][0]['status'] == 'failure') {
+							$fax_update_data['success'] = '0';
+							DB::table('sendfax')->where('job_id', '=', $phaxio_row->job_id)->update($fax_update_data);
+							$this->audit('Update');
+						}
+					}
+				}
+			}
 		}
 		return $ret;
+	}
+	
+	public function phaxio($practice_id)
+	{
+		$row = DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->first();
+		if ($row->fax_type == 'phaxio') {
+			$result = json_decode(Input::get('fax'), true);
+			$data['fileDateTime'] = date('Y-m-d H:i:s', $result['completed_at']);
+			$data['practice_id'] = $practice_id;
+			$data['fileFrom'] = $result['from_number'];
+			$data['filePages'] = $result['num_pages'];
+			$file1 = $result['id'] . '_' . time() . '.pdf';
+			$path = $row->documents_dir . 'received/' . $practice_id . '/' . $file1;
+			$phaxio = new Phaxio($row->phaxio_api_key, $row->phaxio_api_secret);
+			$file_result = $phaxio->faxFile($result['id']);
+			File::put($path, $file_result);
+			$data['fileName'] = $file1;
+			$data['filePath'] = $path;
+			DB::table('received')->insert($data);
+			$this->audit('Add');
+		}
 	}
 }

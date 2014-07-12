@@ -606,6 +606,9 @@ class AjaxInstallController extends BaseController {
 		if ($practice->version < "1.8.2") {
 			$this->update182();
 		}
+		if ($practice->version < "1.8.3") {
+			$this->update183();
+		}
 		return Redirect::to('/');
 	}
 	
@@ -946,6 +949,23 @@ class AjaxInstallController extends BaseController {
 		}
 		$practiceinfo_data = array(
 			'version' => '1.8.2'
+		);
+		// Update version
+		DB::table('practiceinfo')->update($practiceinfo_data);
+	}
+	
+	public function update183()
+	{
+		// Update ICD9 database
+		DB::table('icd9')->truncate();
+		$db_name = $_ENV['mysql_database'];
+		$db_username = $_ENV['mysql_username'];
+		$db_password = $_ENV['mysql_password'];
+		$icd9_sql_file = __DIR__."/../../import/icd9.sql";
+		$icd9_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $icd9_sql_file;
+		system($icd9_command);
+		$practiceinfo_data = array(
+			'version' => '1.8.3'
 		);
 		// Update version
 		DB::table('practiceinfo')->update($practiceinfo_data);

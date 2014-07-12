@@ -385,6 +385,7 @@ $(document).ready(function() {
 			$("#new_import_message").html(data1.result1);
 			$("#new_import_documents_id").val(data1.id);
 			$('#new_import1').val('');
+			$("#new_import").parent().find('input').val('');
 			$("#new_import_dialog").dialog('open');
 		}
 	});
@@ -392,11 +393,13 @@ $(document).ready(function() {
 		action: 'ccrupload',
 		onComplete: function(data){
 			$.jGrowl(data);
+			$("#import_ccr").parent().find('input').val('');
 		}
 	});
 	var myUpload2 = $("#import_ccda").upload({
 		action: 'ccdaupload',
 		onComplete: function(data){
+			$("#import_ccda").parent().find('input').val('');
 			var data1 = JSON.parse(data);
 			$.jGrowl(data1.message);
 			if (data1.result == true) {
@@ -521,6 +524,7 @@ $(document).ready(function() {
 	var myUpload3 = $("#chart_import_csv").upload({
 		action: 'csvupload',
 		onComplete: function(data){
+			$("#chart_import_csv").parent().find('input').val('');
 			var data1 = JSON.parse(data);
 			$.jGrowl(data1.message);
 			if (data1.message != 'Error with CSV file!') {
@@ -1125,52 +1129,6 @@ $(document).ready(function() {
 			}
 		}
 	});
-	$("#textdump_group").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 400, 
-		draggable: false,
-		resizable: false,
-		focus: function (event, ui) {
-			var id = $("#textdump_group_id").val();
-			if (id != '') {
-				$("#"+id).focus();
-			}
-		},
-		close: function (event, ui) {
-			$("#textdump_group_target").val('');
-			$("#textdump_group_add").val('');
-			$("#textdump_group_html").html('');
-		}
-	});
-	$("#textdump").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 400, 
-		draggable: false,
-		resizable: false,
-		close: function (event, ui) {
-			$("#textdump_target").val('');
-			$("#textdump_input").val('');
-			$("#textdump_add").val('');
-			$("#textdump_group_item").val('');
-			$("#textdump_html").html('');
-		},
-		buttons: {
-			Cancel: function() {
-				var id = $("#textdump_target").val();
-				var a = $("#textdump_input").val();
-				var b = $("#"+id).val();
-				var c = b.replace(a, "");
-				$("#"+id).val(c);
-				$("#textdump").dialog('close');
-			}
-		}
-	});
-	$("#textdump_group_html").tooltip();
-	$("#textdump_html").tooltip();
 	$("#copy_encounter").click(function(){
 		$("#copy_encounter_dialog").dialog('open');
 	});

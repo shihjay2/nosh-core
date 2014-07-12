@@ -261,14 +261,15 @@ div#encounter_template table td, div#encounter_template table th {
 
 .ui-autocomplete {
 	max-height: 200px;
+	max-width: 500px;
 	overflow-y: auto;
-	overflow-x: auto;
-	padding-right: 20px;
+	overflow-x: hidden;
 }
 
-ul.ui-autocomplete.ui-menu {
-	z-index: 4000;
+.ui-autocomplete-loading {
+	background: url('../images/indicator.gif') no-repeat right center;
 }
+
 
 .hpi_template_div {
 	height:250px;

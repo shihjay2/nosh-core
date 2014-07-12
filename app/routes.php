@@ -28,6 +28,7 @@ Route::get('install_fix', array('as' => 'install_fix', 'uses' => 'InstallControl
 Route::get('update', array('as' => 'update', 'uses' => 'AjaxInstallController@update'));
 Route::get('update_system', array('as' => 'update_system', 'uses' => 'BackupController@update_system'));
 Route::get('set_version', array('as' => 'set_version', 'uses' => 'AjaxInstallController@set_version'));
+Route::post('phaxio/{id}', array('as' => 'phaxio', 'uses' => 'FaxController@phaxio'));
 Route::get('bluebutton/{id}', array('as' => 'bluebutton', 'before' => 'force.ssl|auth', 'uses' => 'AjaxCommonController@bluebutton'));
 Route::group(array('before' => 'force.ssl|csrf_header'), function() {
 	Route::controller('ajaxinstall', 'AjaxInstallController');
@@ -189,7 +190,7 @@ Route::filter('update', function()
 		Artisan::call('migrate:install');
 	}
 	Artisan::call('migrate');
-	$current_version = "1.8.2";
+	$current_version = "1.8.3";
 	$row = Practiceinfo::find(1);
 	// Check version number
 	if ($row->version < $current_version) {

@@ -68,17 +68,20 @@ class AjaxScheduleController extends BaseController {
 						$event['title'] = 'Appointment taken';
 						$event['reason'] = 'Private';
 						$event['status'] = 'Private';
+						$event['notes'] = '';
 						$event['editable'] = false;
 					} else {
 						$event['title'] = $row->title;
 						$event['reason'] = $row->reason;
 						$event['status'] = $row->status;
+						$event['notes'] = '';
 						$event['editable'] = true;
 					}
 				} else {
 					$event['title'] = $row->title;
 					$event['reason'] = $row->reason;
 					$event['status'] = $row->status;
+					$event['notes'] = $row->notes;
 					if (Session::get('group_id') == '1') {
 						$event['editable'] = false;
 					} else {
@@ -121,7 +124,8 @@ class AjaxScheduleController extends BaseController {
 								'until' => $until,
 								'className' => 'colorblack',
 								'provider_id' => $row2->provider_id,
-								'status' => 'Repeated Event'
+								'status' => 'Repeated Event',
+								'notes' => ''
 							);
 							if (Session::get('group_id') == '100') {
 								$event1['title'] = 'Provider Not Available';
@@ -160,7 +164,8 @@ class AjaxScheduleController extends BaseController {
 									'until' => $until,
 									'className' => 'colorblack',
 									'provider_id' => $row2->provider_id,
-									'status' => 'Repeated Event'
+									'status' => 'Repeated Event',
+									'notes' => ''
 								);
 								if (Session::get('group_id') == '100') {
 									$event1['title'] = 'Provider Not Available';
@@ -368,6 +373,9 @@ class AjaxScheduleController extends BaseController {
 				'provider_id' => $provider_id,
 				'user_id' => Session::get('user_id')
 			);
+			if (Session::get('group_id') != '100') {
+				$data['notes'] = Input::get('notes');
+			}
 			if ($id == '') {
 				$data['timestamp'] = null;
 				$appt_id = DB::table('schedule')->insertGetId($data);
@@ -382,9 +390,12 @@ class AjaxScheduleController extends BaseController {
 					DB::table('repeat_schedule')->where('repeat_id', '=', $nid1)->delete();
 					$this->audit('Delete');
 				} else {
+					$notify = DB::table('schedule')->where('appt_id', '=', $id)->first();
 					DB::table('schedule')->where('appt_id', '=', $id)->update($data);
 					$this->audit('Update');
-					$this->schedule_notification($id);
+					if ($notify->start != $start && $notify->end != $end) {
+						$this->schedule_notification($id);
+					}
 				}
 			}
 		}
