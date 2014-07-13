@@ -1008,7 +1008,6 @@ $(document).ready(function() {
 		$("#preview_dialog").dialog('open');
 	});
 	$('#detail_encounter').click(function(){
-		$("#new_encounter_dialog").dialog('open');
 		$.ajax({
 			type: "POST",
 			url: "ajaxencounter/get-encounter",
@@ -1027,6 +1026,7 @@ $(document).ready(function() {
 						$("#new_encounter_form :input[name='" + key + "']").val(value);
 					}
 				});
+				$("#new_encounter_dialog").dialog('open');
 			}
 		});
 		

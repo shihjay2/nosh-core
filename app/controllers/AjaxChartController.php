@@ -5317,6 +5317,7 @@ class AjaxChartController extends BaseController {
 	public function postCloseencounter()
 	{
 		Session::forget('eid');
+		Session::forget('encounter_active');
 		echo 'OK';
 	}
 	

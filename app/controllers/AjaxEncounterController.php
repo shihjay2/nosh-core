@@ -161,6 +161,7 @@ class AjaxEncounterController extends BaseController {
 				$this->audit('Add');
 			}
 			Session::forget('eid');
+			Session::forget('encounter_active');
 			echo 'Encounter Signed!';
 		}
 	}
@@ -198,6 +199,8 @@ class AjaxEncounterController extends BaseController {
 			$this->audit('Delete');
 			DB::table('billing')->where('eid', '=', Session::get('eid'))->delete();
 			$this->audit('Delete');
+			Session::forget('eid');
+			Session::forget('encounter_active');
 			echo 'Encounter deleted!';
 		}
 	}

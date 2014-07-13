@@ -402,23 +402,16 @@ function open_schedule() {
 	$("#provider_list2").focus();
 }
 function openencounter() {
-	$('#dialog_load').dialog('option', 'title', "Loading encounter...").dialog('open');
 	$("#encounter_body").html('');
 	$("#encounter_body").load('ajaxencounter/loadtemplate');
+	$('#dialog_load').dialog('option', 'title', "Loading encounter...").dialog('open');
 	$("#encounter_link_span").html('<a href="#" id="encounter_panel">[Active Encounter #: ' + noshdata.eid + ']</a>');
-	$("#encounter_panel").click(function() {
-		noshdata.encounter_active = 'y';
-		openencounter();
-		$("#nosh_chart_div").hide();
-		$("#nosh_encounter_div").show();
-	});
 	$.ajax({
 		type: "POST",
 		url: "ajaxsearch/get-tags/eid/" + noshdata.eid,
 		dataType: "json",
 		success: function(data){
 			$("#encounter_tags").tagit("fill",data);
-			$('#dialog_load').dialog('close');
 		}
 	});
 }
@@ -1617,6 +1610,12 @@ $(document).ready(function() {
 	});
 	$("#textdump_group_html").tooltip();
 	$("#textdump_html").tooltip();
+});
+$(document).on("click", "#encounter_panel", function() {
+	noshdata.encounter_active = 'y';
+	openencounter();
+	$("#nosh_chart_div").hide();
+	$("#nosh_encounter_div").show();
 });
 $(document).on("click", ".ui-jqgrid-titlebar", function() {
 	$(".ui-jqgrid-titlebar-close", this).click();
