@@ -358,6 +358,7 @@ $(document).ready(function() {
 			$('#hpi_pf_template').addOption(data.options, false);
 			$('#hpi_pf_template').sortOptions();
 			$('#hpi_pf_template').val("");
+			$('#dialog_load').dialog('close');
 		}
 	});
 	$('#hpi_pf_template').change(function(){
