@@ -65,7 +65,9 @@
 				'progress': 0,
 				'default_template' : '',
 				'mtm_extension': '',
-				'hedis': ''
+				'hedis': '',
+				'notification_appt': '',
+				'notification_alert': ''
 			};
 			var medcache = {};
 			var medcache1 = {};

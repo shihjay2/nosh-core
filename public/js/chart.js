@@ -1253,4 +1253,5 @@ $(document).ready(function() {
 	$(".add_creditcard").click(function() {
 		$("#creditcard_dialog").dialog('open');
 	});
+	setInterval(chart_notification, 10000);
 });

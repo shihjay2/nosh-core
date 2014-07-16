@@ -401,6 +401,25 @@ function open_schedule() {
 	});
 	$("#provider_list2").focus();
 }
+function chart_notification() {
+	if (noshdata.group_id == '2') {
+		$.ajax({
+			type: "POST",
+			url: "ajaxchart/notification",
+			dataType: "json",
+			success: function(data){
+				if (data.appt != noshdata.notification_appt && data.appt != '') {
+					$.jGrowl(data.appt, {sticky:true, header:data.appt_header});
+					noshdata.notification_appt = data.appt;
+				}
+				if (data.alert != noshdata.notification_alert && data.alert != '') {
+					$.jGrowl(data.alert, {sticky:true, header:data.alert_header});
+					noshdata.notification_alert = data.alert;
+				}
+			}
+		});
+	}
+}
 function openencounter() {
 	$("#encounter_body").html('');
 	$("#encounter_body").load('ajaxencounter/loadtemplate');

@@ -5369,4 +5369,42 @@ class AjaxChartController extends BaseController {
 		$html = $this->hedis_audit($type, 'chart', Session::get('pid'));
 		echo $html;
 	}
+	
+	public function postNotification()
+	{
+		$pid = Session::get('pid');
+		$user_id = Session::get('user_id');
+		$practice_id = Session::get('practice_id');
+		$start_time = time() - 86400;
+		$end_time = time() + 86400;
+		$query = DB::table('schedule')->where('pid', '=', Session::get('pid'))
+			->whereBetween('start', array($start_time, $end_time))
+			->first();
+		$data = array(
+			'appt' => '',
+			'appt_header' => 'Appointment Alert',
+			'alert' => '',
+			'alert_header' => 'Alert Notification'
+		);
+		if ($query) {
+			if ($query->notes != '') {
+				$data['appt'] = $query->notes;
+			}
+		}
+		$query1 = DB::table('alerts')
+			->where('pid', '=', $pid)
+			->where('alert_date_complete', '=', '0000-00-00 00:00:00')
+			->where('alert_reason_not_complete', '=', '')
+			->where('practice_id', '=', $practice_id)
+			->get();
+		if ($query1) {
+			foreach ($query1 as $row1) {
+				$alert_date = $this->human_to_unix($row1->alert_date_active);
+				if ($alert_date >= $start_time && $alert_date <= $end_time) {
+					$data['alert'] .= $row1->alert . ': ' . $row1->alert_description . '<br>';
+				}
+			}
+		}
+		echo json_encode($data);
+	}
 }
