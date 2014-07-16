@@ -147,7 +147,7 @@
 </div>
 <div id="provider_info_dialog" title="Edit Provider Information">
 	<div id="provider_info_accordion">
-		<h3 class="provider_info_class1"><a href="#">Accounts</a></h3>
+		<h3 class="provider_info_class1"><a href="#">Provider Information</a></h3>
 		<div class="provider_info_class1">
 			<form name="provider_info_form" id="provider_info_form" class="pure-form pure-form-aligned">
 				<input type="hidden" name="id" id="provider_info_id"/>

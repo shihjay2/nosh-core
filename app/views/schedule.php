@@ -46,8 +46,8 @@
 		</div>
 		<div id="patient_appt">
 			<?php if (Session::get('group_id') != '100') {?>
-				<div class="pure-control-group"><label for="notes">Notes/Tasks: <span class="textdump_text"></span> for templates.</label><textarea name="notes" id="notes" class="text textdump" style="width:400px" rows="4" placeholder="Enter room assignments, tasks, or alerts for the appointment"></textarea></div>
 				<div class="pure-control-group"><label for="patient_search">Patient:</label><input type="text" name="patient_search" id="patient_search" style="width:400px" class="text" /></div>
+				<div class="pure-control-group"><label for="notes">Notes/Tasks: <span class="textdump_text"></span> for templates.</label><textarea name="notes" id="notes" class="text textdump" style="width:400px" rows="4" placeholder="Enter room assignments, tasks, or alerts for the appointment"></textarea></div>
 			<?php }?>
 			<div class="pure-control-group"><label for="schedule_visit_type">Visit Type:</label><select name="visit_type" id="schedule_visit_type" class="text"></select></div>
 		</div>
