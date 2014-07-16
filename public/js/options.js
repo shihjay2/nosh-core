@@ -17,6 +17,26 @@ $(document).ready(function() {
 		});
 		return ret;
 	}
+	function checkFormDuplicateTitle(type) {
+		var a = true;
+		$.ajax({
+			type: "POST",
+			url: "ajaxsearch/check-title/" + type,
+			data: 'title=' + $('#configuration_'+type+'_forms_title').val() + '&id=' + $('#configuration_'+type+'_forms_template_id').val(),
+			dataType: "json",
+			async: false,
+			success: function(data){
+				if (data.response == true) {
+					$.jGrowl(data.message);
+					$('#configuration_'+type+'_forms_title').addClass("ui-state-error");
+					a = false;
+				} else {
+					$('#configuration_'+type+'_forms_title').removeClass("ui-state-error");
+				}
+			}
+		});
+		return a;
+	}
 	$("#configuration_accordion").accordion({
 		heightStyle: "content",
 		active: false,
@@ -1345,6 +1365,7 @@ $(document).ready(function() {
 		buttons: {
 			'Save': function() {
 				var bValid = true;
+				bValid = bValid && checkFormDuplicateTitle('hpi');
 				$("#configuration_hpi_forms_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
 					var id1 = $("#" + input_id); 
@@ -1410,6 +1431,7 @@ $(document).ready(function() {
 		buttons: {
 			'Save': function() {
 				var bValid = true;
+				bValid = bValid && checkFormDuplicateTitle('ros');
 				$("#configuration_ros_forms_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
 					var id1 = $("#" + input_id); 
@@ -1476,6 +1498,7 @@ $(document).ready(function() {
 		buttons: {
 			'Save': function() {
 				var bValid = true;
+				bValid = bValid && checkFormDuplicateTitle('pe');
 				$("#configuration_pe_forms_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
 					var id1 = $("#" + input_id); 

@@ -2818,4 +2818,27 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
+	
+	public function postCheckTitle($type)
+	{
+		$data['response'] = true;
+		if (Input::get('id') != '') {
+			$check = DB::table('templates')->where('template_id', '=', Input::get('id'))->first();
+			if ($check->template_name == Input::get('title')) {
+				$data['response'] = false;
+				echo json_encode($data);
+				exit(0);
+			}
+		}
+		$query = DB::table('templates')
+			->where('category', '=', $type)
+			->where('template_name', '=', Input::get('title'))
+			->first();
+		if ($query) {
+			$data['message'] = "Title name already exists!";
+		} else {
+			$data['response'] = false;
+		}
+		echo json_encode($data);
+	}
 }
