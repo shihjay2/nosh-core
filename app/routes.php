@@ -94,6 +94,7 @@ Route::group(array('before' => 'force.ssl|acl1'), function() {
 	Route::get('export_demographics/{type}', array('as' => 'export_demographics', 'uses' => 'ChartController@export_demographics'));
 	Route::get('export_address_csv', array('as' => 'export_address_csv', 'uses' => 'HomeController@export_address_csv'));
 	Route::post('csvupload', array('as' => 'csvupload', 'uses' => 'AjaxChartController@import_csv'));
+	Route::post('eraupload', array('as' => 'eraupload', 'uses' => 'AjaxFinancialController@eraupload'));
 });
 Route::group(array('before' => 'force.ssl|acl2'), function() {
 	Route::get('encounter', array('as' => 'encounter', function()

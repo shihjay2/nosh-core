@@ -1470,6 +1470,7 @@ class AjaxDashboardController extends BaseController {
 					$records1[$i]['sex'] = $row->sex;
 					$records1[$i]['group'] = $row->group;
 					$records1[$i]['age'] = $row->age;
+					$records1[$i]['scoring'] = $row->scoring;
 					$i++;
 				}
 				$response['rows'] = $records1;
@@ -2769,6 +2770,13 @@ class AjaxDashboardController extends BaseController {
 						}
 					}
 					DB::connection('mysql2')->table('demographics_relate')->update(array('practice_id' => '1'));
+					$era = DB::table('era')->where('practice_id', '=', Session::get('practice_id'))->get();
+					if ($era) {
+						foreach ($era as $era_row) {
+							DB::connection('mysql2')->table('era')->insert((array) $era_row);
+						}
+					}
+					DB::connection('mysql2')->table('era')->update(array('practice_id' => '1'));
 					$messaging = DB::table('messaging')->where('practice_id', '=', Session::get('practice_id'))->get();
 					if ($messaging) {
 						foreach ($messaging as $messaging_row) {

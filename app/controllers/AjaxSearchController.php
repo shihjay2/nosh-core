@@ -2841,4 +2841,24 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
+	
+	public function postEncounterList($pid)
+	{
+		$result = DB::table('encounters')->where('pid', '=', $pid)
+			->where('addendum', '=', 'n')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->orderBy('encounter_DOS', 'asc')
+			->get();
+		$data = array(
+			'' => 'Choose an encounter...'
+		);
+		if ($result) {
+			foreach ($result as $row) {
+				$key = $row->eid;
+				$value = date('Y-m-d', $this->human_to_unix($row->encounter_DOS)) . ' (Chief complaint: ' . $row->encounter_cc . ')';
+				$data[$key] = $value;
+			}
+		}
+		echo json_encode($data);
+	}
 }

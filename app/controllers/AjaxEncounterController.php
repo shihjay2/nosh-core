@@ -2393,6 +2393,9 @@ class AjaxEncounterController extends BaseController {
 			}
 		}
 		Session::put('eid', $new_eid);
+		Session::put('encounter_active', 'y');
+		Session::put('encounter_template', $encounter->encounter_template);
+		Session::put('encounter_DOS', $encounter->encounter_DOS);
 		echo $new_eid;
 	}
 	

@@ -323,8 +323,61 @@ $(document).ready(function() {
 					});
 				}
 			}).navGrid('#yearly_stats_pager',{search:false,edit:false,add:false,del:false});
+			jQuery("#era_list").jqGrid('GridUnload');
+			jQuery("#era_list").jqGrid({
+				url:"ajaxfinancial/era-list",
+				datatype: "json",
+				mtype: "POST",
+				colNames:['ID','Date Uploaded'],
+				colModel:[
+					{name:'era_id',index:'era_id',width:200},
+					{name:'era_date',index:'era_date',width:200,formatter:'date',formatoptions:{srcformat:"ISO8601Long", newformat: "ISO8601Short"}}
+				],
+				rowNum:10,
+				rowList:[10,20,30],
+				pager: jQuery('#era_list_pager'),
+				sortname: 'era_id',
+			 	viewrecords: true,
+			 	sortorder: "asc",
+			 	caption:"Uploaded ERA 835's",
+			 	height: "100%",
+			 	jsonReader: { repeatitems : false, id: "0" },
+			 	onSelectRow: function(id) {
+					$('#dialog_load').dialog('option', 'title', "Loading ERA Details...").dialog('open');
+					$.ajax({
+						type: "POST",
+						url: "ajaxfinancial/era-load/" + id,
+						success: function(data){
+							$("#era_dialog").html(data);
+							$("#era_dialog").dialog('open');
+							$('#dialog_load').dialog('close');
+						}
+					});
+				},
+			}).navGrid('#era_list_pager',{search:false,edit:false,add:false,del:false});
+		},
+		beforeClose: function (event, ui) {
+			if ($('#claim_associate_div').is(':empty')) {
+				return true;
+			} else {
+				if(confirm('You have some unassigned ERA 835 claims.  Are you sure you want to close this window?')){
+					return true;
+				} else {
+					return false;
+				}
+			}
 		},
 		position: { my: 'center', at: 'top', of: '#maincontent' }
+	});
+	$("#era_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 640, 
+		width: 925, 
+		modal: true,
+		draggable: false,
+		resizable: false,
+		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#submit_bill_dialog").dialog({ 
 		bgiframe: true, 
@@ -613,6 +666,72 @@ $(document).ready(function() {
 				noshdata.success_doc = '';
 				noshdata.id_doc = '';
 			}
+		}
+	});
+	var myEraUpload = $("#import_era").upload({
+		action: 'eraupload',
+		onComplete: function(data){
+			var data1 = JSON.parse(data);
+			if(data1.result !== false) {
+				if (data1.html == true) {
+					var json_array = [data1];
+					var html = '';
+					for (var i = 0; i < json_array[0]['form'].length; i++) {
+						html += '<div id="' + json_array[0]['form'][i]['id5'] + '">';
+						html += '<form id="' + json_array[0]['form'][i]['id3'] + '" class="pure-form pure-form-stacked">';
+						html += '<input type="hidden" name="claim_era" value="' + json_array[0]['form'][i]['era_id'] + '" />';
+						html += '<input type="hidden" name="claim_era1" value="' + json_array[0]['form'][i]['i'] + '" />';
+						html += '<label for="' + json_array[0]['form'][i]['id1'] + '">Choose Patient</label><input type="text" name="claim_pid" id="' + json_array[0]['form'][i]['id1'] + '" class="text claim_pid" style="width:300px" />';
+						html += '<label for="' + json_array[0]['form'][i]['id2'] + '">Choose Encounter</label><select name="claim_eid" id="' + json_array[0]['form'][i]['id2'] + '" class="text claim_eid" style="width:300px" required><option value="">Select a patient first.</option></select>';
+						html += '<button type="button" id="' + json_array[0]['form'][i]['id4'] + '" class="nosh_button_save claim_associate">Associate Claim</button></form><br><br>';
+						html += '<strong>ERA 835 Details</strong><ul>';
+						html += '<li>Patient Last Name: ' + json_array[0]['form'][i]['patient_lastname'] + '</li>';
+						html += '<li>Patient First Name: ' + json_array[0]['form'][i]['patient_firstname'] + '</li>';
+						html += '<li>Date of Service: ' + json_array[0]['form'][i]['dos'] + '</li>';
+						html += '<li>Payment Requested: ' + json_array[0]['form'][i]['amount_charged'] + '</li>';
+						html += '<li>Payment Allowed: ' + json_array[0]['form'][i]['amount_approved'] + '</li>';
+						for (var j = 0; j < json_array[0]['form'][i]['cpt'].length; j++) {
+							html += '<li>CPT code: ' + json_array[0]['form'][i]['cpt'][j]  +'</li>';
+						}
+						html += '</ul><hr class="ui-state-default"/></div>';
+					}
+					$("#claim_associate_div").html(html);
+					loadbuttons();
+					$(".claim_pid").autocomplete({
+						source: function (req, add){
+							$.ajax({
+								url: "ajaxsearch/search",
+								dataType: "json",
+								type: "POST",
+								data: req,
+								success: function(data){
+									if(data.response =='true'){
+										add(data.message);
+									}
+								}
+							});
+						},
+						minLength: 1,
+						select: function(event, ui){
+							var a = $(this).attr('id');
+							var b = a.replace('pid', 'eid');
+							var pid = ui.item.id;
+							$.ajax({
+								url: "ajaxsearch/encounter-list/" + pid,
+								dataType: "json",
+								type: "POST",
+								success: function(data){
+									$("#" + b).removeOption(/./);
+									$("#" + b).addOption(data, false)
+								}
+							});
+							
+						}
+					});
+				}
+			}
+			$.jGrowl(data1.message);
+			$("#import_era").parent().find('input').val('');
 		}
 	});
 });

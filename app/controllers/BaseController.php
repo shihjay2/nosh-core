@@ -2708,7 +2708,7 @@ class BaseController extends Controller {
 		$pos = $encounterInfo->encounter_location;
 		$bill_Box25 = $practiceInfo->tax_id;
 		$bill_Box25 = $this->string_format($bill_Box25, 15);
-		$bill_Box26 = $this->string_format($pid, 14);
+		$bill_Box26 = $this->string_format($pid . '_' . $eid, 14);
 		$bill_Box32A = $practiceInfo->practice_name;
 		$bill_Box32A = $this->string_format($bill_Box32A, 26);
 		$bill_Box32B = $practiceInfo->street_address1;
@@ -2921,7 +2921,7 @@ class BaseController extends Controller {
 				'bill_Box24J5' 				=> $cpt_final[4]['npi'],	//NPI 5
 				'bill_Box24J6' 				=> $cpt_final[5]['npi'],	//NPI 6
 				'bill_Box25' 				=> $bill_Box25,		//Clinic Tax ID
-				'bill_Box26' 				=> $bill_Box26,		//pid
+				'bill_Box26' 				=> $bill_Box26,		//pid_eid
 				'bill_Box27'				=> $bill_Box27,		//Accept Assignment
 				'bill_Box27P'				=> $bill_Box27P,	//Accept Assignment
 				'bill_Box28' 				=> $bill_Box28,		//Total Charges
@@ -7642,6 +7642,336 @@ class BaseController extends Controller {
 			return $html;
 		} else {
 			return $return;
+		}
+	}
+	
+	protected function parse_era_2100(&$return, $cb)
+	{
+		if ($return['loopid'] == '2110' || $return['loopid'] == '2100') {
+			// Production date is posted with adjustments, so make sure it exists.
+			if (!$return['production_date']) $return['production_date'] = $return['check_date'];
+			// Force the sum of service payments to equal the claim payment
+			// amount, and the sum of service adjustments to equal the CLP's
+			// (charged amount - paid amount - patient responsibility amount).
+			// This may result from claim-level adjustments, and in this case the
+			// first SVC item that we stored was a 'Claim' type.  It also may result
+			// from poorly reported payment reversals, in which case we may need to
+			// create the 'Claim' service type here.
+			$paytotal = $return['amount_approved'];
+			$adjtotal = $return['amount_charged'] - $return['amount_approved'] - $return['amount_patient'];
+			foreach ($return['svc'] as $svc) {
+				$paytotal -= $svc['paid'];
+				foreach ($svc['adj'] as $adj) {
+					if ($adj['group_code'] != 'PR') $adjtotal -= $adj['amount'];
+				}
+			}
+			$paytotal = round($paytotal, 2);
+			$adjtotal = round($adjtotal, 2);
+			if ($paytotal != 0 || $adjtotal != 0) {
+				if ($return['svc'][0]['code'] != 'Claim') {
+					array_unshift($return['svc'], array());
+					$return['svc'][0]['code'] = 'Claim';
+					$return['svc'][0]['mod']  = '';
+					$return['svc'][0]['chg']  = '0';
+					$return['svc'][0]['paid'] = '0';
+					$return['svc'][0]['adj']  = array();
+					$return['warnings'] .= "Procedure 'Claim' is inserted artificially to force claim balancing.\n";
+				}
+				$return['svc'][0]['paid'] += $paytotal;
+				if ($adjtotal) {
+					$j = count($return['svc'][0]['adj']);
+					$return['svc'][0]['adj'][$j] = array();
+					$return['svc'][0]['adj'][$j]['group_code']  = 'CR'; // presuming a correction or reversal
+					$return['svc'][0]['adj'][$j]['reason_code'] = 'Balancing';
+					$return['svc'][0]['adj'][$j]['amount'] = $adjtotal;
+				}
+				// if ($return['svc'][0]['code'] != 'Claim') {
+				//   $return['warnings'] .= "First service item payment amount " .
+				//   "adjusted by $paytotal due to payment imbalance. " .
+				//   "This should not happen!\n";
+				// }
+			}
+			$cb($return);
+		}
+	}
+	
+	function parse_era($era_string)
+	{
+		$return = array();
+		$lines = explode('~', $era_string);
+		$pos1 = strpos($era_string, '~');
+		if ($pos1 !== false) {
+			if (substr($lines[0], 0, 3) === 'ISA') {
+				$element_delimiter = substr($lines[0], 3, 1);
+				$sub_element_delimiter = substr($lines[0], -1);
+				$return['loop_id'] = '';
+				$return['st_segment_count'] = 0;
+				$return['clp_segment_count'] = 0;
+				foreach ($lines as $line) {
+					$pos2 = strpos($line, $element_delimiter);
+					if ($pos2 !== false) {
+						$elements = explode($element_delimiter, $line);
+						if ($elements[0] == 'ISA') {
+							if ($return['loop_id'] != '') {
+								$return['error'][] = 'Unexpected ISA segment for ' . $return['loop_id'];
+							} else {
+								$return['isa_sender_id'] = trim($elements[6]);
+								$return['isa_receiver_id'] = trim($elements[8]);
+								$return['isa_control_number'] = trim($elements[13]);
+							}
+						} elseif ($elements[0] == 'GS') {
+							if ($return['loop_id'] != '') {
+								$return['error'][] = 'Unexpected GS segment for ' . $return['loop_id'];
+							} else {
+								$return['gs_date'] = trim($elements[4]);
+								$return['gs_time'] = trim($elements[5]);
+								$return['gs_control_number'] = trim($elements[6]);
+							}
+						} elseif ($elements[0] == 'ST') {
+							if ($return['loop_id'] != '') {
+								$return['error'][] = 'Unexpected ST segment for ' . $return['loop_id'];
+							} else {
+								//$this->parse_era_2100($return, $cb);
+								$return['st_control_number'] = trim($elements[2]);
+								$return['st_segment_count'] = 0;
+							}
+						} elseif ($elements[0] == 'BPR') {
+							if ($return['loop_id'] != '') {
+								$return['error'][] = 'Unexpected BPR segment for ' . $return['loop_id'];
+							} else {
+								$return['check_amount'] = trim($elements[2]);
+								$return['check_date'] = strtotime(trim($elements[16])); // converted to unix time
+							}
+						} elseif ($elements[0] == 'TRN') {
+							if ($return['loop_id'] != '') {
+								$return['error'][] = 'Unexpected TRN segment for ' . $return['loop_id'];
+							} else {
+								$return['check_number'] = trim($elements[2]);
+								$return['payer_tax_id'] = substr($elements[3], 1); // converted to 9 digits
+								if (isset($elements[4])) {
+									$return['payer_id'] = trim($elements[4]);
+								}
+							}
+						} elseif ($elements[0] == 'DTM' && $elements[1] == '405') {
+							if ($return['loop_id'] != '') {
+								$return['error'][] = 'Unexpected DTM/405 segment for ' . $return['loop_id'];
+							} else {
+								$return['production_date'] = strtotime(trim($elements[2])); // converted to unix time
+							}
+						} elseif ($elements[0] == 'N1' && $elements[1] == 'PR') {
+							if ($return['loop_id'] != '') {
+								$return['error'][] = 'Unexpected N1|PR segment for ' . $return['loop_id'];
+							} else {
+								$return['loop_id'] = '1000A';
+								$return['payer_name'] = trim($elements[2]);
+							}
+						} elseif ($elements[0] == 'N3' && $return['loop_id'] == '1000A') {
+							$return['payer_street'] = trim($elements[1]);
+						} elseif ($elements[0] == 'N4' && $return['loop_id'] == '1000A') {
+							$return['payer_city'] = trim($elements[1]);
+							$return['payer_state'] = trim($elements[2]);
+							$return['payer_zip'] = trim($elements[3]);
+						} elseif ($elements[0] == 'N1' && $elements[1] == 'PE') {
+							if ($return['loop_id'] != '1000A') {
+								$return['error'][] = 'Unexpected N1|PE segment for ' . $return['loop_id'];
+							} else {
+								$return['loop_id'] = '1000B';
+								$return['payee_name'] = trim($elements[2]);
+								$return['payee_tax_id'] = trim($elements[4]);
+							}
+						} elseif ($elements[0] == 'N3' && $return['loop_id'] == '1000B') {
+							$return['payee_street'] = trim($elements[1]);
+						} elseif ($elements[0] == 'N4' && $return['loop_id'] == '1000B') {
+							$return['payee_city']  = trim($elements[1]);
+							$return['payee_state'] = trim($elements[2]);
+							$return['payee_zip']   = trim($elements[3]);
+						} elseif ($elements[0] == 'LX') {
+							if (!$return['loop_id']) {
+								$return['error'][] = 'Unexpected LX segment for ' . $return['loop_id'];
+							} else {
+								//$this->parse_era_2100($return, $cb);
+								$return['loop_id'] = '2000';
+							}
+						} elseif ($elements[0] == 'CLP') {
+							if (!$return['loop_id']) {
+								$return['error'][] = 'Unexpected CLP segment for ' . $return['loop_id'];
+							} else {
+								//$this->parse_era_2100($return, $cb);
+								$return['loop_id'] = '2100';
+								// Clear some stuff to start the new claim:
+								$claim_num = $return['clp_segment_count'];
+								$return['clp_segment_count']++;
+								$return['claim'][$claim_num]['subscriber_lastname']     = '';
+								$return['claim'][$claim_num]['subscriber_firstname']     = '';
+								$return['claim'][$claim_num]['subscriber_middle']     = '';
+								$return['claim'][$claim_num]['subscriber_member_id'] = '';
+								$return['claim'][$claim_num]['claim_forward'] = 0;
+								$return['claim'][$claim_num]['item'] = array();
+								$return['claim'][$claim_num]['bill_Box26'] = trim($elements[1]); // HCFA Box 26 pid_eid
+								$return['claim'][$claim_num]['claim_status_code'] = trim($elements[2]);
+								$return['claim'][$claim_num]['amount_charged'] = trim($elements[3]);
+								$return['claim'][$claim_num]['amount_approved'] = trim($elements[4]);
+								$return['claim'][$claim_num]['amount_patient'] = trim($elements[5]); // pt responsibility, copay + deductible
+								$return['claim'][$claim_num]['payer_claim_id'] = trim($elements[7]); // payer's claim number
+							}
+						} elseif ($elements[0] == 'CAS' && $return['loop_id'] == '2100') {
+							$return['adjustment'] = array();
+							$i = 0;
+							for ($k = 2; $k < 20; $k += 3) {
+								if (!$elements[$k]) break;
+								$return['claim'][$claim_num]['adjustment'][$i]['group_code'] = $elements[1];
+								$return['claim'][$claim_num]['adjustment'][$i]['reason_code'] = $elements[$k];
+								$return['claim'][$claim_num]['adjustment'][$i]['amount'] = $elements[$k+1];
+								$i++;
+							}
+						} elseif ($elements[0] == 'NM1' && $elements[1] == 'QC' && $return['loop_id'] == '2100') {
+							$return['claim'][$claim_num]['patient_lastname'] = trim($elements[3]);
+							$return['claim'][$claim_num]['patient_firstname'] = trim($elements[4]);
+							$return['claim'][$claim_num]['patient_middle'] = trim($elements[5]);
+							$return['claim'][$claim_num]['patient_member_id'] = trim($elements[9]);
+						} elseif ($elements[0] == 'NM1' && $elements[1] == 'IL' && $return['loop_id'] == '2100') {
+							$return['claim'][$claim_num]['subscriber_lastname'] = trim($elements[3]);
+							$return['claim'][$claim_num]['subscriber_firstname'] = trim($elements[4]);
+							$return['claim'][$claim_num]['subscriber_middle'] = trim($elements[5]);
+							$return['claim'][$claim_num]['subscriber_member_id'] = trim($elements[9]);
+						} elseif ($elements[0] == 'NM1' && $elements[1] == '82' && $return['loop_id'] == '2100') {
+							$return['claim'][$claim_num]['provider_lastname'] = trim($elements[3]);
+							$return['claim'][$claim_num]['provider_firstname'] = trim($elements[4]);
+							$return['claim'][$claim_num]['provider_middle'] = trim($elements[5]);
+							$return['claim'][$claim_num]['provider_member_id'] = trim($elements[9]);
+						} elseif ($elements[0] == 'NM1' && $elements[1] == 'TT' && $return['loop_id'] == '2100') {
+							$return['claim'][$claim_num]['claim_forward'] = 1; // claim automatic forward case to another payer.
+						} elseif ($elements[0] == 'REF' && $elements[1] == '1W' && $return['loop_id'] == '2100') {
+							$return['claim'][$claim_num]['claim_comment'] = trim($elements[2]);
+						} elseif ($elements[0] == 'DTM' && $elements[1] == '050' && $return['loop_id'] == '2100') {
+							$return['claim'][$claim_num]['claim_date'] = strtotime(trim($elements[2])); // converted to unix time
+						} else if ($elements[0] == 'PER' && $return['loop_id'] == '2100') {
+							$return['claim'][$claim_num]['payer_insurance'] = trim($elements[2]);
+						} else if ($elements[0] == 'SVC') {
+							if (!$return['loop_id']) {
+								$return['error'][] = 'Unexpected SVC segment for ' . $return['loop_id'];
+							} else {
+								$return['loop_id'] = '2110';
+								if (isset($elements[6])) {
+									$item = explode($sub_element_delimiter, $elements[6]);
+								} else {
+									$item = explode($sub_element_delimiter, $elements[1]);
+								}
+								if ($item[0] != 'HC') {
+									$return['error'][] = 'item segment has unexpected qualifier';
+								}
+								if (isset($return['claim'][$claim_num]['item'])) {
+									$l = count($return['claim'][$claim_num]['item']);
+								} else {
+									$l = 0;
+								}
+								$return['claim'][$claim_num]['item'][$l] = array();
+								if (strlen($item[1]) == 7 && empty($item[2])) {
+									$return['claim'][$claim_num]['item'][$l]['cpt'] = substr($item[1], 0, 5);
+									$return['claim'][$claim_num]['item'][$l]['modifier'] = substr($item[1], 5);
+								} else {
+									$return['claim'][$claim_num]['item'][$l]['cpt'] = $item[1];
+									$return['claim'][$claim_num]['item'][$l]['modifier'] = isset($item[2]) ? $item[2] . ':' : '';
+									$return['claim'][$claim_num]['item'][$l]['modifier'] .= isset($item[3]) ? $item[3] . ':' : '';
+									$return['claim'][$claim_num]['item'][$l]['modifier'] .= isset($item[4]) ? $item[4] . ':' : '';
+									$return['claim'][$claim_num]['item'][$l]['modifier'] .= isset($item[5]) ? $item[5] . ':' : '';
+									$return['claim'][$claim_num]['item'][$l]['modifier'] = preg_replace('/:$/','',$return['claim'][$claim_num]['item'][$l]['modifier']);
+								}
+								$return['claim'][$claim_num]['item'][$l]['charge'] = $elements[2];
+								$return['claim'][$claim_num]['item'][$l]['paid'] = $elements[3];
+								$return['claim'][$claim_num]['item'][$l]['adjustment'] = array();
+							}
+						} elseif ($elements[0] == 'DTM' && $return['loop_id'] == '2110') {
+							$return['claim'][$claim_num]['dos'] = strtotime(trim($elements[2])); // converted to unix time
+						} elseif ($elements[0] == 'CAS' && $return['loop_id'] == '2110') {
+							$m = count($return['claim'][$claim_num]['item']) - 1;
+							for ($n = 2; $n < 20; $n += 3) {
+								if (!isset($elements[$n])) break;
+								if ($elements[1] == 'CO' && $elements[$n+1] < 0) {
+									$elements[$n+1] = 0 - $elements[$n+1];
+								}
+								$o = count($return['claim'][$claim_num]['item'][$m]['adjustment']);
+								$return['claim'][$claim_num]['item'][$m]['adjustment'][$o] = array();
+								$return['claim'][$claim_num]['item'][$m]['adjustment'][$o]['group_cpt']  = $elements[1];
+								$return['claim'][$claim_num]['item'][$m]['adjustment'][$o]['reason_cpt'] = $elements[$n];
+								$return['claim'][$claim_num]['item'][$m]['adjustment'][$o]['amount'] = $elements[$n+1];
+							}
+						} elseif ($elements[0] == 'AMT' && $elements[1] == 'B6' && $return['loop_id'] == '2110') {
+							$p = count($return['claim'][$claim_num]['item']) - 1;
+							$return['claim'][$claim_num]['item'][$p]['allowed'] = $elements[2];
+						} elseif ($elements[0] == 'LQ' && $elements[1] == 'HE' && $return['loop_id'] == '2110') {
+							$q = count($return['claim'][$claim_num]['item']) - 1;
+							$return['claim'][$claim_num]['item'][$q]['remark'] = $elements[2];
+						} elseif ($elements[0] == 'PLB') {
+							for ($r = 3; $r < 15; $r += 2) {
+								if (!$elements[$r]) break;
+								$return['plb'] .= 'PROVIDER LEVEL ADJUSTMENT (not claim-specific): $' .
+									sprintf('%.2f', $elements[$r+1]) . " with reason cpt " . $elements[$r] . "\n";
+							}
+						} elseif ($elements[0] == 'SE') {
+							//$this->parse_era_2100($return, $cb);
+							$return['loop_id'] = '';
+							if ($return['st_control_number'] != trim($elements[2])) {
+								return 'Ending transaction set control number mismatch';
+							}
+							if (($return['st_segment_count'] + 1) != trim($elements[1])) {
+								return 'Ending transaction set segment count mismatch';
+							}
+						} elseif ($elements[0] == 'GE') {
+							if ($return['loop_id']) {
+								$return['error'][] = 'Unexpected GE segment';
+							}
+							if ($return['gs_control_number'] != trim($elements[2])) {
+								$return['error'][] = 'Ending functional group control number mismatch';
+							}
+						} elseif ($elements[0] == 'IEA') {
+							if ($return['loop_id']) {
+								$return['error'][] = 'Unexpected IEA segment';
+							}
+							if ($return['isa_control_number'] != trim($elements[2])) {
+								$return['error'][] = 'Ending interchange control number mismatch';
+							}
+						} else {
+							$return['error'][] = 'Unknown or unexpected segment ID ' . $elements[0];
+						}
+					} else {
+						$return['error'][] = 'Error reading line ' . $return['st_segment_count'] + 1;
+					}
+					$return['st_segment_count']++;
+				}
+				if ($elements[0] != 'IEA') {
+					$return['error'][] = 'Premature end of ERA file';
+				}
+			} else {
+				$return['invalid'] = 'First line is not an ISA segment, unable to read the file.';
+			}
+		} else {
+			$return['invalid'] = 'This is not a valid EDI 835 file!';
+		}
+		return $return;
+	}
+	
+	protected function claim_reason_code($code)
+	{
+		$url = 'http://www.wpc-edi.com/reference/codelists/healthcare/claim-adjustment-reason-codes/';
+		$html = new Htmldom($url);
+		$table = $html->find('table[id=codelist]',0);
+		$description = '';
+		foreach ($table->find('tr[class=current]') as $row) {
+			$code_row = $row->find('td[class=code]',0);
+			$description_row = $row->find('td[class=description]',0);
+			$date_row = $row->find('span[class=dates]',0);
+			if ($code == $code_row->innertext) {
+				$description = $description_row->plaintext;
+				$date = $date_row->plaintext;
+				$description = trim(str_replace($date, '', $description));
+				break;
+			}
+		}
+		if ($description == '') {
+			return $code . ', Code unknown';
+		} else {
+			return $description;
 		}
 	}
 }

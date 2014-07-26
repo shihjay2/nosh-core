@@ -17,6 +17,13 @@
 			<table id="outstanding_balance" class="scroll" cellpadding="0" cellspacing="0"></table>
 			<div id="outstanding_balance_pager" class="scroll" style="text-align:center;"></div>
 		</div>
+		<h3>Import ERA 835 Files</h3>
+		<div>
+			<button type="button" id="import_era" class="nosh_button_add">Upload 835 File</button><br><br>
+			<div id="claim_associate_div"></div><br>
+			<table id="era_list" class="scroll" cellpadding="0" cellspacing="0"></table>
+			<div id="era_list_pager" class="scroll" style="text-align:center;"></div>
+		</div>
 		<h3>Reports</h3>
 		<div>
 			<table id="monthly_stats" class="scroll" cellpadding="0" cellspacing="0"></table>
@@ -51,3 +58,4 @@
 		<button type="button" id="submit_hcfa2" class="nosh_button_print" style="width:210px">Print HCFA-1500</button>
 	</form>
 </div>
+<div id="era_dialog" title="ERA Details"></div>

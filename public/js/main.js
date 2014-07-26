@@ -3194,6 +3194,35 @@ $(document).on('click', '.hedis_patient', function() {
 		}
 	});
 });
+$(document).on('click', '.claim_associate', function() {
+	var id = $(this).attr('id');
+	var form_id = id.replace('era_button_', 'era_form_');
+	var div_id = id.replace('era_button_', 'era_div_');
+	var bValid = true;
+	$("#" + form_id).find("[required]").each(function() {
+		var input_id = $(this).attr('id');
+		var id1 = $("#" + input_id); 
+		var text = $("label[for='" + input_id + "']").html();
+		bValid = bValid && checkEmpty(id1, text);
+	});
+	if (bValid) {
+		var str = $("#" + form_id).serialize();
+		if(str){
+			$.ajax({
+				type: "POST",
+				url: "ajaxfinancial/associate-claim",
+				data: str,
+				success: function(data){
+					$.jGrowl(data);
+					$("#" + form_id).clearForm();
+					$('#' + div_id).remove();
+				}
+			});
+		} else {
+			$.jGrowl("Please complete the form");
+		}
+	}
+});
 function textdump(elem) {
 	var id = $(elem).attr('id');
 	$.ajax({

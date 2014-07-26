@@ -4735,6 +4735,7 @@ class AjaxChartController extends BaseController {
 		$pid = Session::get('pid');
 		$directory = Session::get('documents_dir') . $pid;
 		$i = 0;
+		$arr['result'] = true;
 		foreach (Input::file('file') as $file) {
 			if ($file) {
 				$new_name = str_replace('.' . $file->getClientOriginalExtension(), '', $file->getClientOriginalName()) . '_' . time() . '.xml';
@@ -4755,16 +4756,16 @@ class AjaxChartController extends BaseController {
 					$i++;
 					$arr['ccda'] = $documents_id;
 				} else {
-					$arr['message'] = "This is not read the file properly.  Try again.";
+					$arr['message'] = "This file is not in the correct format.  Try again.";
 					$arr['result'] = false;
 					unlink($file_path);
-					echo json_encode($arr);
-					exit (0);
+					break;
 				}
 			}
 		}
-		$arr['message'] = $i . 'C-CDA(s) Imported!';
-		$arr['result'] = true;
+		if ($arr['result'] !== false) {
+			$arr['message'] = $i . 'C-CDA(s) Imported!';
+		}
 		echo json_encode($arr);
 	}
 	
