@@ -44,6 +44,21 @@
 				<label for="peacehealth_id">Practice ID number:</label>
 				<input type="text" name="peacehealth_id" id="peacehealth_id" class="text" style="width:400px"/>
 			</div>
+			<h3>Birthday Announcements</h3>
+			<div>
+				<label for="birthday_extension">Enable Birthday Announcement Extension:</label>
+				<select name="birthday_extension" id="birthday_extension" class="text"></select>
+				<label for="birthday_message">Birthday Message:</label>
+				<textarea name="birthday_message" id="birthday_message" class="text" rows="4" style="width:400px"></textarea>
+				<br><br>
+				<strong>The birthday message sent out will appear like this:</strong><br><br>
+				SMS message:<br>
+				Happy Birthday, {patient's first name}, from <?php echo $practiceinfo->practice_name;?>!  Call <?php echo $practiceinfo->phone;?> if you would like to schedule an appointment with your provider.<br><br>
+				E-mail message:<br>
+				Happy Birthday, {patient's first name}, from <?php echo $practiceinfo->practice_name;?>!<br>
+				<span id="birthday_message_preview"></span><br>
+				If you would like to set up an appointment with your provider, please contact us at <?php echo $practiceinfo->phone;?> or reply to this e-mail at <?php echo $practiceinfo->email;?>.
+			</div>
 		</div>
 	</form>
 </div>

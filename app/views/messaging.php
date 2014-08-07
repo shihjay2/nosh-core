@@ -84,8 +84,11 @@
 	<button type="button" id="reply_message" class="nosh_button_reply">Reply</button>
 	<button type="button" id="reply_all_message" class="nosh_button_reactivate">Reply All</button>
 	<button type="button" id="forward_message" class="nosh_button_forward">Forward</button>
-	<button type="button" id="internal_open_chart" class="nosh_button">Open Chart</button>
-	<button type="button" id="export_message" class="nosh_button_copy">Export to Patient Chart</button><br>
+	<?php if(Session::get('group_id') != '100') {?>
+		<button type="button" id="internal_open_chart" class="nosh_button">Open Chart</button>
+		<button type="button" id="export_message" class="nosh_button_copy">Export to Patient Chart</button>
+	<?php }?>
+	<br>
 	<input type="hidden" id="message_view_message_id">
 	<input type="hidden" id="message_view_to">
 	<input type="hidden" id="message_view_from">
@@ -103,7 +106,9 @@
 	<div id="message_view1"></div>
 </div>
 <div id="internal_messages_view2_dialog" title="Internal Message">
-	<button type="button" id="export_message1" class="nosh_button_copy">Export to Patient Chart</button><br>
+	<?php if(Session::get('group_id') != '100') {?>
+		<button type="button" id="export_message1" class="nosh_button_copy">Export to Patient Chart</button><br>
+	<?php }?>
 	<form id="internal_messages_view2_form">
 		<input type="hidden" name="t_messages_subject" id="message_view_subject1">
 		<input type="hidden" name="t_messages_message" id="message_view_body1">

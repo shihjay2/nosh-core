@@ -52,7 +52,7 @@ $(document).ready(function() {
 	$("#messaging_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
-		height: 640, 
+		height: 640,
 		width: 800, 
 		draggable: false,
 		resizable: false,
@@ -249,7 +249,7 @@ $(document).ready(function() {
 				onCellSelect: function(id,iCol) {
 					if (iCol > 0) {
 						var row = jQuery("#internal_outbox").getRowData(id);
-						var text = '<br><strong>To:</strong>  ' + row['message_to'] + '<br><strong>CC:</strong> ' + row['cc'] + '<br<br><strong>Date:</strong>  ' + row['date'] + '<br><br><strong>Subject:</strong>  ' + row['subject'] + '<br><br><strong>Message:</strong> ' + row['body']; 
+						var text = '<br><strong>To:</strong>  ' + row['message_to'] + '<br><strong>CC:</strong> ' + row['cc'] + '<br><br><strong>Date:</strong>  ' + row['date'] + '<br><br><strong>Subject:</strong>  ' + row['subject'] + '<br><br><strong>Message:</strong> ' + row['body']; 
 						$("#message_view2").html(text);
 						$("#message_view_message_id").val(id);
 						$("#message_view_subject1").val(row['subject']);
@@ -1583,6 +1583,14 @@ $(document).ready(function() {
 			}
 		}
 	});
+	if (noshdata.group_id == '100') {
+		$('#messaging_dialog').dialog('option', {
+			height: $("#maincontent").height(),
+			width: $("#maincontent").width(),
+			position: { my: 'left top', at: 'left top', of: '#maincontent' }
+		});
+		$('#messaging_dialog').dialog('open');
+	}
 	function messages_tags() {
 		$("#messages_tags").show();
 		if($("#internal_messages_form_id").is(":hidden")) {

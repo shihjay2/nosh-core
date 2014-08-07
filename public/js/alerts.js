@@ -12,12 +12,14 @@ $(document).ready(function() {
 				url:"ajaxchart/alerts",
 				datatype: "json",
 				mtype: "POST",
-				colNames:['ID','Due Date','Alert','Description'],
+				colNames:['ID','Due Date','Alert','Description','Send Message','User'],
 				colModel:[
 					{name:'alert_id',index:'alert_id',width:1,hidden:true},
 					{name:'alert_date_active',index:'alert_date_active',width:100,formatter:'date',formatoptions:{srcformat:"ISO8601Long", newformat: "ISO8601Short"}},
 					{name:'alert',index:'alert',width:200},
-					{name:'alert_description',index:'alert_description',width:430}
+					{name:'alert_description',index:'alert_description',width:430},
+					{name:'alert_send_message',index:'alert_send_message',width:1,hidden:true},
+					{name:'alert_provider',index:'alert_provider',width:1,hidden:true}
 				],
 				rowNum:10,
 				rowList:[10,20,30],
@@ -91,52 +93,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		buttons: {
-			'Save': function() {
-				var bValid = true;
-				$("#edit_alert_form").find("[required]").each(function() {
-					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
-					var text = $("label[for='" + input_id + "']").html();
-					bValid = bValid && checkEmpty(id1, text);
-				});
-				if (bValid) {
-					var str = $("#edit_alert_form").serialize();
-					if(str){
-						$.ajax({
-							type: "POST",
-							url: "ajaxchart/edit-alert",
-							data: str,
-							success: function(data){
-								$.jGrowl(data);
-								reload_grid('alerts');
-								$('#edit_alert_form').clearForm();
-								$('#edit_alert_dialog').dialog('close');
-								noshdata.alert_id = '';
-							}
-						});
-					} else {
-						$.jGrowl("Please complete the form");
-					}
-				}
-			},
-			Cancel: function() {
-				$('#edit_alert_form').clearForm();
-				$('#edit_alert_dialog').dialog('close');
-				noshdata.alert_id = '';
-			}
-		},
-		position: { my: 'center', at: 'center', of: '#maincontent' }
-	});
-	$("#edit_alert_dialog1").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 800, 
-		draggable: false,
-		resizable: false,
-		closeOnEscape: false,
-		dialogClass: "noclose",
 		open: function (event, ui) {
 			$("#alert").autocomplete({
 				source: function (req, add){
@@ -189,6 +145,65 @@ $(document).ready(function() {
 				},
 				minLength: 3
 			});
+		},
+		buttons: {
+			'Save': function() {
+				var bValid = true;
+				$("#edit_alert_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				var a = $("#alert_send_message").val();
+				var b = $("#alert_provider_id").val();
+				if (a == 'y' || a == 's') {
+					if (b == '') {
+						var c = $("label[for='alert_provider']").html();
+						var text = c.replace(":","");
+						$.jGrowl(text + " Required");
+						$("#alert_provider").addClass("ui-state-error");
+						bValid = false;
+					}
+				}
+				if (bValid) {
+					var str = $("#edit_alert_form").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxchart/edit-alert",
+							data: str,
+							success: function(data){
+								$.jGrowl(data);
+								reload_grid('alerts');
+								$('#edit_alert_form').clearForm();
+								$('#edit_alert_dialog').dialog('close');
+								noshdata.alert_id = '';
+							}
+						});
+					} else {
+						$.jGrowl("Please complete the form");
+					}
+				}
+			},
+			Cancel: function() {
+				$('#edit_alert_form').clearForm();
+				$('#edit_alert_dialog').dialog('close');
+				noshdata.alert_id = '';
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#edit_alert_dialog1").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 300, 
+		width: 800, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		open: function (event, ui) {
 			$("#alert_reason_not_complete").autocomplete({
 				source: function (req, add){
 					$.ajax({
@@ -250,10 +265,12 @@ $(document).ready(function() {
 	});
 	$("#alert_date_active").mask("99/99/9999");
 	$("#alert_date_active").datepicker();
+	$("#alert_send_message").addOption({"n":"No","y":"Yes",'s':"Message Sent"}, false);
 	$(".add_alert").click(function(){
 		$('#edit_alert_form').clearForm();
 		var currentDate = getCurrentDate();
 		$('#alert_date_active').val(currentDate);
+		$("#alert_send_message").val('n');
 		$('#edit_alert_dialog').dialog('open');
 		$("#alert").focus();
 	});
@@ -263,6 +280,18 @@ $(document).ready(function() {
 			jQuery("#alerts").GridToForm(item,"#edit_alert_form");
 			var date = $('#alert_date_active').val();
 			var edit_date = editDate(date);
+			var provider = $("#alert_provider").val();
+			$("#alert_provider_id").val(provider);
+			if (provider != '') {
+				$.ajax({
+					url: "ajaxsearch/users2/" + provider,
+					type: "POST",
+					async: false,
+					success: function(data){
+						$("#alert_provider").val(data);
+					}
+				});
+			}
 			$('#alert_date_active').val(edit_date);
 			$('#edit_alert_dialog').dialog('open');
 			$("#alert").focus();

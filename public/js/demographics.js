@@ -379,6 +379,11 @@ $(document).ready(function() {
 		open_demographics();
 	});
 	$("#patient_demographics").click(function() {
+		$('#demographics_list_dialog').dialog('option', {
+			height: $("#maincontent").height(),
+			width: $("#maincontent").width(),
+			position: { my: 'left top', at: 'left top', of: '#maincontent' }
+		});
 		open_demographics();
 	});
 	function save_demographics(type) {

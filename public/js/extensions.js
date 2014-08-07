@@ -40,6 +40,9 @@ $(document).ready(function() {
 				success: function(data){
 					$.each(data, function(key, value){
 						$("#extensions_form :input[name='" + key + "']").val(value);
+						if (key == 'birthday_message' && value != '') {
+							$("#birthday_message_preview").text(value);
+						}
 					});
 				}
 			});
@@ -64,6 +67,7 @@ $(document).ready(function() {
 	$("#rcopia_extension").addOption({"n":"No","y":"Yes"});
 	$("#snomed_extension").addOption({"n":"No","y":"Yes"});
 	$("#mtm_extension").addOption({"n":"No","y":"Yes"});
+	$("#birthday_extension").addOption({"n":"No","y":"Yes"});
 	$("#extensions_form select").val("n");
 	$("#mtm_alert_users").chosen();
 	$("#rcopia_extension").change(function(){
@@ -99,5 +103,9 @@ $(document).ready(function() {
 				}
 			});
 		}
+	});
+	$("#birthday_message").change(function(){
+		var a= $(this).val();
+		$("#birthday_message_preview").text(a);
 	});
 });

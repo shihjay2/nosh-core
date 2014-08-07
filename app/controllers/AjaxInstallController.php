@@ -6,7 +6,7 @@ class AjaxInstallController extends BaseController {
 	* NOSH ChartingSystem Installation Ajax Functions
 	*/
 	
-	public function postInstallProcess()
+	public function postInstallProcess($type)
 	{
 		set_time_limit(0);
 		ini_set('memory_limit','196M');
@@ -15,14 +15,24 @@ class AjaxInstallController extends BaseController {
 		$username = Input::get('username');
 		$password = Hash::make(Input::get('password'));
 		$email = Input::get('email');
-		$practice_name = Input::get('practice_name');
-		$street_address1 = Input::get('street_address1');
-		$street_address2 = Input::get('street_address2');
+		if ($type == 'practice') {
+			$practice_name = Input::get('practice_name');
+			$street_address1 = Input::get('street_address1');
+			$street_address2 = Input::get('street_address2');
+			$phone = Input::get('phone');
+			$fax = Input::get('fax');
+			$patient_centric = 'n';
+		} else {
+			$practice_name = "NOSH for Patient: " . Input::get('firstname') . ' ' . Input::get('lastname');
+			$street_address1 = Input::get('address');
+			$street_address2 = '';
+			$phone = '';
+			$fax = '';
+			$patient_centric = 'y';
+		}
 		$city = Input::get('city');
 		$state = Input::get('state');
 		$zip = Input::get('zip');
-		$phone = Input::get('phone');
-		$fax = Input::get('fax');
 		$documents_dir = Input::get('documents_dir');
 		// Clean up documents directory string
 		$check_string = substr($documents_dir, -1);
@@ -55,10 +65,64 @@ class AjaxInstallController extends BaseController {
 			'smtp_user' => $smtp_user,
 			'smtp_pass' => $smtp_pass,
 			'vivacare' => '',
-			'version' => '1.8.0',
-			'active' => 'Y'
+			'version' => '1.8.3',
+			'active' => 'Y',
+			'patient_centric' => $patient_centric
 		);
 		DB::table('practiceinfo')->insert($data2);
+		// Insert patient
+		if ($type == 'patient') {
+			$dob = date('Y-m-d', strtotime(Input::get('DOB')));
+			$pt_password = Hash::make(Input::get('pt_password'));
+			$displayname = Input::get('firstname') . " " . Input::get('lastname');
+			$patient_data = array(
+				'lastname' => Input::get('lastname'),
+				'firstname' => Input::get('firstname'),
+				'DOB' => $dob,
+				'sex' => Input::get('gender'),
+				'active' => '1',
+				'sexuallyactive' => 'no',
+				'tobacco' => 'no',
+				'pregnant' => 'no',
+				'address' => $street_address1,
+				'city' => $city,
+				'state' => $state,
+				'zip' => $zip
+			);
+			$pid = DB::table('demographics')->insertGetId($patient_data);
+			$this->audit('Add');
+			$patient_data1 = array(
+				'billing_notes' => '',
+				'imm_notes' => '',
+				'pid' => $pid,
+				'practice_id' => '1'
+			);
+			DB::table('demographics_notes')->insert($patient_data1);
+			$this->audit('Add');
+			$patient_data2 = array(
+				'username' => Input::get('pt_username'),
+				'firstname' => Input::get('firstname'),
+				'middle' => '',
+				'lastname' => Input::get('lastname'),
+				'title' => '',
+				'displayname' => $displayname,
+				'email' => Input::get('email'),
+				'group_id' => '100',
+				'active'=> '1',
+				'practice_id' => '1',
+				'password' => $pt_password
+			);
+			$patient_user_id = DB::table('users')->insertGetId($patient_data2);
+			$patient_data3 = array(
+				'pid' => $pid,
+				'practice_id' => '1',
+				'id' => $patient_user_id
+			);
+			DB::table('demographics_relate')->insert($patient_data3);
+			$this->audit('Add');
+			$directory = $documents_dir . $pid;
+			mkdir($directory, 0775);
+		}
 		// Insert groups
 		$data3 = array(
 			'id' => '1',

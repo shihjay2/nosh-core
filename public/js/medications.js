@@ -102,12 +102,18 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$(".medications_list").click(function() {
-		$("#medications_list_dialog").dialog('open');
 		$("#oh_meds_header").hide();
+		$("#medications_list_dialog").dialog('open');
+		
 	});
 	$("#dashboard_rx").click(function() {
-		$("#medications_list_dialog").dialog('open');
+		$('#medications_list_dialog').dialog('option', {
+			height: $("#maincontent").height(),
+			width: $("#maincontent").width(),
+			position: { my: 'left top', at: 'left top', of: '#maincontent' }
+		});
 		$("#oh_meds_header").hide();
+		$("#medications_list_dialog").dialog('open');
 	});
 	$("#rxl_date_active").mask("99/99/9999");
 	$("#rxl_date_active").datepicker();

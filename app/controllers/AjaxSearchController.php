@@ -1606,6 +1606,12 @@ class AjaxSearchController extends BaseController {
 		echo json_encode($data);
 	}
 	
+	public function postUsers2($id)
+	{
+		$query = DB::table('users')->where('id', '=', $id)->first();
+		echo $query->displayname;
+	}
+	
 	public function postReaction()
 	{
 		$q = strtolower(Input::get('term'));

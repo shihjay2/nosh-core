@@ -110,19 +110,30 @@ $(document).ready(function() {
 							if (acl) {
 								$("#encounter_view").load('ajaxchart/modal-view/' + id);
 							} else {
-								$("#encounter_view").load('ajaxchart/modal-view2/' + id);
+								$("#encounter_view").load('ajaxcommon/modal-view2/' + id);
 							}
 							$("#encounter_view_dialog").dialog('open');
 						}
 					} else {
 						$.ajax({
 							type: "POST",
-							url: "ajaxcommon/patient-instructions/" + id,
-							dataType: "json",
+							url: "ajaxcommon/opennotes",
 							success: function(data){
-								$("#embedURL").html(data.html);
-								$("#document_filepath").val(data.filepath);
-								$("#documents_view_dialog").dialog('open');
+								if (data == 'y') {
+									$("#encounter_choice_eid").val(id);
+									$("#encounter_choice_dialog").dialog('open');
+								} else {
+									$.ajax({
+										type: "POST",
+										url: "ajaxcommon/patient-instructions/" + id,
+										dataType: "json",
+										success: function(data){
+											$("#embedURL").html(data.html);
+											$("#document_filepath").val(data.filepath);
+											$("#documents_view_dialog").dialog('open');
+										}
+									});
+								}
 							}
 						});
 					}
@@ -136,6 +147,42 @@ $(document).ready(function() {
 		$("#encounter_list_dialog").dialog('open');
 	});
 	$("#dashboard_encounters").click(function() {
+		$('#encounter_list_dialog').dialog('option', {
+			height: $("#maincontent").height(),
+			width: $("#maincontent").width(),
+			position: { my: 'left top', at: 'left top', of: '#maincontent' }
+		});
 		$("#encounter_list_dialog").dialog('open');
+	});
+	$("#encounter_choice_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 100, 
+		width: 300, 
+		draggable: false,
+		resizable: false,
+		modal: true,
+		close: function(event, ui) {
+			$("#encounter_choice_eid").val('');
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#encounter_view_button").click(function() {
+		var id = $("#encounter_choice_eid").val();
+		$("#encounter_view").load('ajaxcommon/modal-view2/' + id);
+		$("#encounter_view_dialog").dialog('open');
+	});
+	$("#encounter_instructions_button").click(function() {
+		var id = $("#encounter_choice_eid").val();
+		$.ajax({
+			type: "POST",
+			url: "ajaxcommon/patient-instructions/" + id,
+			dataType: "json",
+			success: function(data){
+				$("#embedURL").html(data.html);
+				$("#document_filepath").val(data.filepath);
+				$("#documents_view_dialog").dialog('open');
+			}
+		});
 	});
 });

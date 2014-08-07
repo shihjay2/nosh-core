@@ -91,7 +91,8 @@ class AjaxSetupController extends BaseController {
 			'icd' => Input::get('icd'),
 			'supplements_menu_item' => Input::get('supplements_menu_item'),
 			'immunizations_menu_item' => Input::get('immunizations_menu_item'),
-			'encounter_template' => Input::get('encounter_template')
+			'encounter_template' => Input::get('encounter_template'),
+			'opennotes' => Input::get('opennotes')
 		);
 		DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->update($data);
 		$this->audit('Update');
@@ -246,7 +247,9 @@ class AjaxSetupController extends BaseController {
 			'mtm_alert_users' => $mtm_alert_users,
 			'snomed_extension' => Input::get('snomed_extension'),
 			'vivacare' => Input::get('vivacare'),
-			'peacehealth_id' => Input::get('peacehealth_id')
+			'peacehealth_id' => Input::get('peacehealth_id'),
+			'birthday_extension' => Input::get('birthday_extension'),
+			'birthday_message' => Input::get('birthday_message')
 		);
 		if (Input::get('rcopia_extension') == 'y') {
 			$data['rcopia_update_notification_lastupdate'] = date("m/d/y H:i:s", time());

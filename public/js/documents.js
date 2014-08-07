@@ -789,6 +789,11 @@ $(document).ready(function() {
 		$("#documents_list_dialog").dialog('open');
 	});
 	$("#dashboard_health_record").click(function() {
+		$('#documents_list_dialog').dialog('option', {
+			height: $("#maincontent").height(),
+			width: $("#maincontent").width(),
+			position: { my: 'left top', at: 'left top', of: '#maincontent' }
+		});
 		$("#documents_list_dialog").dialog('open');
 	});
 	$("#menu_documents_type").addOption({"Laboratory":"Laboratory","Imaging":"Imaging","Cardiopulmonary":"Cardiopulmonary","Endoscopy":"Endoscopy","Referrals":"Referrals","Past Records":"Past Records","Other Forms":"Other Forms","Letters":"Letters"}, false);

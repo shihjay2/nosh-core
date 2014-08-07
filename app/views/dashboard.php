@@ -7,95 +7,111 @@
 </script>
 <div id="wrapper">
 	<div id="mainborder_full" class="ui-corner-all ui-tabs ui-widget ui-widget-content">
-		<div id="maincontent">
-			<h4>Welcome <?php echo $displayname;?>.</h4>
+		<?php if(Session::get('group_id') != '100') { ?>
+			<div id="maincontent">
+		<?php } else {?>
+			<div>
+		<?php }?>
+			<?php if(Session::get('group_id') != '100') { ?>
+				<h4>Welcome <?php echo $displayname;?>.</h4>
+			<?php }?>
 			<div class="pure-g">
-				<div class="pure-u-1-2">
-					<?php echo HTML::image('images/usersadmin.png', 'Change password', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?><span>If this is your first time logging in, you should </span><a href="#" id="change_password">change your password.</a>
-					<?php if(Session::get('group_id') == '1') { ?>
-						<br><?php echo HTML::image('images/dashboard.png', 'Modify clinic settings', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_setup">Modify practice settings</a>
-						<br><?php echo HTML::image('images/control.png', 'Administer NOSH extensions', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_extensions">Administer NOSH extensions</a>
-						<br><?php echo HTML::image('images/important.png', 'System updates', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_update">System updates</a>
-						<br><?php echo HTML::image('images/usersadmin.png', 'Administer users', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_users">Administer users</a>
-						<br><?php echo HTML::image('images/schedule.png', 'Setup schedule', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_admin_schedule">Administer schedule</a>
-						<br><?php echo HTML::image('images/newencounter.png', 'View system logs', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_logs">View system logs</a>
-						<br><?php echo HTML::image('images/download.png', 'Export all charts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="print_entire_charts" title="">Export all charts</a> <span id="print_entire_charts_return"></span>
-						<br><?php echo HTML::image('images/download.png', 'Export all charts in C-CDA format', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="print_entire_ccda" title="">Export all charts in C-CDA format</a> <span id="print_entire_ccda_return"></span>
-						<br><?php echo HTML::image('images/download.png', 'Export all patient Demographics', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="generate_csv_patient_demographics" title="">Export all patient demographics</a> <span id="generate_csv_patient_demographics_return"></span>
-						<br><?php echo HTML::image('images/download.png', 'Export entire NOSH database and files', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="export_entire" title="">Export entire database and files</a> <span id="export_entire_return"></span>
-						<?php if($saas_admin == "y") { ?>
-							<br><?php echo HTML::image('images/kdisknav.png', 'Import from NOSH in the Cloud', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="import_entire">Import from NOSH in the Cloud</a>
-							<br><?php echo HTML::image('images/kdisknav.png', 'Restore the database', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="restore_database_link">Restore the database</a>
+				<?php if(Session::get('group_id') != '100') { ?>
+					<div class="pure-u-1-2">
+						<?php echo HTML::image('images/usersadmin.png', 'Change password', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="change_password">Change your password.</a>
+						<?php if(Session::get('group_id') == '1') { ?>
+							<br><?php echo HTML::image('images/dashboard.png', 'Modify clinic settings', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_setup">Setup</a>
+							<br><?php echo HTML::image('images/control.png', 'Administer NOSH extensions', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_extensions">Extensions</a>
+							<?php if(Session::get('patient_centric') == 'n') {?>
+								<br><?php echo HTML::image('images/important.png', 'System updates', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_update">Updates</a>
+							<?php }?>
+							<br><?php echo HTML::image('images/users.png', 'Administer users', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_users">Users</a>
+							<?php if(Session::get('patient_centric') == 'n') {?>
+								<br><?php echo HTML::image('images/schedule.png', 'Setup schedule', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_admin_schedule">Schedule</a>
+							<?php }?>
+							<br><?php echo HTML::image('images/newencounter.png', 'View system logs', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_logs">View system logs</a>
+							<?php if(Session::get('practice_active') == 'Y') { if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh') {?>
+								<br><?php echo HTML::image('images/cancel.png', 'Cancel subscription', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="https://noshchartingsystem/registerpractice/cancel_subscription/' . Session::get('practice_id') . '">Cancel Subscriptions</a>
+							<?php }}?>
+							<?php if(Session::get('practice_active') == 'N') { if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh') {?>
+								<br><?php echo HTML::image('images/button_accept.png', 'Restart subscription', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="https://noshchartingsystem/registerpractice/restart_subscription/' . Session::get('practice_id') . '">Restart Subscriptions</a>
+							<?php }}?>
 						<?php }?>
-						<?php if(Session::get('practice_active') == 'Y' && route('home') == 'https://noshchartingsystem.com/nosh') { ?>
-							<br><?php echo HTML::image('images/cancel.png', 'Cancel subscription', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="https://noshchartingsystem/registerpractice/cancel_subscription/' . Session::get('practice_id') . '">Cancel Subscriptions</a>
+						<?php if(Session::get('group_id') == '2') {?>
+							<br><?php echo HTML::image('images/personal.png', 'Update your user information', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="provider_info">Update your user information</a>
+							<br><?php echo HTML::image('images/email.png', 'Messages', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span style="font-weight:bold;color:red;"> You have <?php echo $number_messages;?> </span><a href="#" id="dashboard_messaging" style="font-weight:bold;color:red;">messages to view.</a>
+							<br><?php echo HTML::image('images/scanner.png', 'Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_documents;?> </span><a href="#" id="dashboard_documents">new documents from the fax or scanner to view.</a>
+							<br><?php echo HTML::image('images/schedule.png', 'Appointments', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_appts;?> </span><a href="#" id="dashboard_schedule">pending appointments today.</a>
+							<br><?php echo HTML::image('images/chart1.png', 'Drafts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_drafts;?> </span><a href="#" class="dashboard_draft">unsigned messages and encounters.</a>
+							<br><?php echo HTML::image('images/important.png', 'Alerts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_reminders;?> </span><a href="#" class="dashboard_alerts">reminders.</a>
+							<br><?php echo HTML::image('images/science.png', 'Reconcile Tests', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_tests;?> </span><a href="#" class="dashboard_test_reconcile">test results to reconcile.</a>
+							<?php if($mtm_alerts_status == "y") {?>
+								<br><?php echo HTML::image('images/search.png', 'MTM', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $mtm_alerts;?> </span><a href="#" id="provider_mtm_alerts">patients on Medical Therapy Management.</a>
+							<?php }?>
+							<br><?php echo HTML::image('images/billing.png', 'Billing', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_bills;?> </span><a href="#" id="dashboard_billing">new bills to process and send.</a>
 						<?php }?>
-						<?php if(Session::get('practice_active') == 'N' && route('home') == 'https://noshchartingsystem.com/nosh') { ?>
-							<br><?php echo HTML::image('images/button_accept.png', 'Restart subscription', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="https://noshchartingsystem/registerpractice/restart_subscription/' . Session::get('practice_id') . '">Restart Subscriptions</a>
+						<?php if(Session::get('group_id') == '3') {?>
+							<br><?php echo HTML::image('images/email.png', 'Messages', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span style="font-weight:bold;color:red;"> You have <?php echo $number_messages;?> </span><a href="#" id="dashboard_messaging" style="font-weight:bold;color:red;">messages to view.</a>
+							<br><?php echo HTML::image('images/scanner.png', 'Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_documents;?> </span><a href="#" id="dashboard_documents">new documents from the fax or scanner to view.</a>
+							<br><?php echo HTML::image('images/chart1.png', 'Drafts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_drafts;?> </span><a href="#" class="dashboard_draft">unsigned messages.</a>
+							<br><?php echo HTML::image('images/important.png', 'Alerts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_reminders;?> </span><a href="#" class="dashboard_alerts">reminders.</a>
+							<br><?php echo HTML::image('images/science.png', 'Reconcile Tests', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_tests;?> </span><a href="#" class="dashboard_test_reconcile">test results to reconcile.</a>
+							<br><?php echo HTML::image('images/billing.png', 'Billing', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_bills;?> </span><a href="#" id="dashboard_billing">new bills to review.</a>
 						<?php }?>
-					<?php }?>
-					<?php if(Session::get('group_id') == '2') {?>
-						<br><?php echo HTML::image('images/personal.png', 'Update your user information', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="provider_info">Update your user information</a>
-						<br><?php echo HTML::image('images/email.png', 'Messages', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span style="font-weight:bold;color:red;"> You have <?php echo $number_messages;?> </span><a href="#" id="dashboard_messaging" style="font-weight:bold;color:red;">messages to view.</a>
-						<br><?php echo HTML::image('images/scanner.png', 'Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_documents;?> </span><a href="#" id="dashboard_documents">new documents from the fax or scanner to view.</a>
-						<br><?php echo HTML::image('images/schedule.png', 'Appointments', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_appts;?> </span><a href="#" id="dashboard_schedule">pending appointments today.</a>
-						<br><?php echo HTML::image('images/chart1.png', 'Drafts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_drafts;?> </span><a href="#" class="dashboard_draft">unsigned messages and encounters.</a>
-						<br><?php echo HTML::image('images/important.png', 'Alerts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_reminders;?> </span><a href="#" class="dashboard_alerts">reminders.</a>
-						<br><?php echo HTML::image('images/science.png', 'Reconcile Tests', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_tests;?> </span><a href="#" class="dashboard_test_reconcile">test results to reconcile.</a>
-						<?php if($mtm_alerts_status == "y") {?>
-							<br><?php echo HTML::image('images/search.png', 'MTM', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $mtm_alerts;?> </span><a href="#" id="provider_mtm_alerts">patients on Medical Therapy Management.</a>
+						<?php if(Session::get('group_id') == '4') {?>
+							<br><?php echo HTML::image('images/email.png', 'Messages', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span style="font-weight:bold;color:red;"> You have <?php echo $number_messages;?> </span><a href="#" id="dashboard_messaging" style="font-weight:bold;color:red;">messages to view.</a>
+							<br><?php echo HTML::image('images/scanner.png', 'Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_documents;?> </span><a href="#" id="dashboard_documents">new documents from the fax or scanner to view.</a>
+							<br><?php echo HTML::image('images/schedule.png', 'Appointments', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> <a href="#" id="dashboard_schedule">Clinic schedule</a>
+							<br><?php echo HTML::image('images/billing.png', 'Billing', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_bills;?> </span><a href="#" id="dashboard_billing">new bills to process and send.</a>
 						<?php }?>
-						<br><?php echo HTML::image('images/billing.png', 'Billing', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_bills;?> </span><a href="#" id="dashboard_billing">new bills to process and send.</a>
-					<?php }?>
-					<?php if(Session::get('group_id') == '3') {?>
-						<br><?php echo HTML::image('images/email.png', 'Messages', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span style="font-weight:bold;color:red;"> You have <?php echo $number_messages;?> </span><a href="#" id="dashboard_messaging" style="font-weight:bold;color:red;">messages to view.</a>
-						<br><?php echo HTML::image('images/scanner.png', 'Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_documents;?> </span><a href="#" id="dashboard_documents">new documents from the fax or scanner to view.</a>
-						<br><?php echo HTML::image('images/chart1.png', 'Drafts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_drafts;?> </span><a href="#" class="dashboard_draft">unsigned messages.</a>
-						<br><?php echo HTML::image('images/important.png', 'Alerts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_reminders;?> </span><a href="#" class="dashboard_alerts">reminders.</a>
-						<br><?php echo HTML::image('images/science.png', 'Reconcile Tests', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_tests;?> </span><a href="#" class="dashboard_test_reconcile">test results to reconcile.</a>
-						<br><?php echo HTML::image('images/billing.png', 'Billing', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_bills;?> </span><a href="#" id="dashboard_billing">new bills to review.</a>
-					<?php }?>
-					<?php if(Session::get('group_id') == '4') {?>
-						<br><?php echo HTML::image('images/email.png', 'Messages', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span style="font-weight:bold;color:red;"> You have <?php echo $number_messages;?> </span><a href="#" id="dashboard_messaging" style="font-weight:bold;color:red;">messages to view.</a>
-						<br><?php echo HTML::image('images/scanner.png', 'Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_documents;?> </span><a href="#" id="dashboard_documents">new documents from the fax or scanner to view.</a>
-						<br><?php echo HTML::image('images/schedule.png', 'Appointments', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> <a href="#" id="dashboard_schedule">Clinic schedule</a>
-						<br><?php echo HTML::image('images/billing.png', 'Billing', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span> You have <?php echo $number_bills;?> </span><a href="#" id="dashboard_billing">new bills to process and send.</a>
-					<?php }?>
-					<?php if(Session::get('group_id') == '100') {?>
-						<br><?php echo HTML::image('images/personal.png', 'Update demographics', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="patient_demographics">Update your demographic and insurance information</a>
-						<br><?php echo HTML::image('images/schedule.png', 'Schedule an appointment', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_schedule">Schedule an appointment</a>
-						<br><?php echo HTML::image('images/email.png', 'Messages', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Send a message to your provider here too!"> <a href="#" id="dashboard_messaging">View your messages.</a></span>
-						<br><?php echo HTML::image('images/sign.png', 'Forms', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your provider may want you to fill out forms for the practice.  Do this here!"> <a href="#" id="dashboard_forms">Fill out forms.</a></span>
-						<br><?php echo HTML::image('images/reminder.png', 'Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your patient instructions for your previous encounters with your provider."> <a href="#" id="dashboard_encounters">Your patient instructions.</a></span>
-					<?php }?>
-				</div>
-				<div class="pure-u-1-2">
-					<?php if(Session::get('group_id') == '100') {?>
-						<?php echo HTML::image('images/chart.png', 'Issues', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="These are your active medical issues documented by your provider(s)."> <a href="#" id="dashboard_issues">Your active medical issues.</a></span>
-						<br><?php echo HTML::image('images/rx.png', 'Medications', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="These are your active medications documented by your provider(s)."> <a href="#" id="dashboard_rx">Your active medication list.</a></span>
-						<br><?php echo HTML::image('images/supplements.png', 'Supplements', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="These are your active supplements documented by your provider(s)."> <a href="#" id="dashboard_supplements">Your active supplement list.</a></span>
-						<br><?php echo HTML::image('images/immunization.png', 'Immunizations', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your immunization records."> <a href="#" id="dashboard_immunizations">Your immunization records.</a></span>
-						<br><?php echo HTML::image('images/important.png', 'Allergies', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your medication and substance allergy list."> <a href="#" id="dashboard_allergies">Your allergy list.</a></span>
-						<br><?php echo HTML::image('images/chart1.png', 'Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your test results, outside records, and other documents."> <a href="#" id="dashboard_health_record">Your personal health record.</a></span>
+					</div>
+					<div class="pure-u-1-2">
+						<?php if(Session::get('group_id') == '1') { ?>
+							<?php echo HTML::image('images/download.png', 'Export all charts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="print_entire_charts" title="">Export all charts</a> <span id="print_entire_charts_return"></span>
+							<br><?php echo HTML::image('images/download.png', 'Export all charts in C-CDA format', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="print_entire_ccda" title="">Export all charts in C-CDA format</a> <span id="print_entire_ccda_return"></span>
+							<br><?php echo HTML::image('images/download.png', 'Export all patient Demographics', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="generate_csv_patient_demographics" title="">Export all patient demographics</a> <span id="generate_csv_patient_demographics_return"></span>
+							<br><?php echo HTML::image('images/download.png', 'Export entire NOSH database and files', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="export_entire" title="">Export entire database and files</a> <span id="export_entire_return"></span>
+							<?php if($saas_admin == "y") { ?>
+								<br><?php echo HTML::image('images/kdisknav.png', 'Import from NOSH in the Cloud', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="import_entire">Import from NOSH in the Cloud</a>
+								<br><?php echo HTML::image('images/kdisknav.png', 'Restore the database', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="restore_database_link">Restore the database</a>
+							<?php }?>
+						<?php }?>
+						<div id="draft_div" style="display:none;">
+							<table id="draft_messages" class="scroll" cellpadding="0" cellspacing="0"></table>
+							<div id="draft_messages_pager" class="scroll" style="text-align:center;"></div><br>
+							<table id="draft_encounters" class="scroll" cellpadding="0" cellspacing="0"></table>
+							<div id="draft_encounters_pager" class="scroll" style="text-align:center;"></div><br>
+						</div>
+						<div id="alert_div" style="display:none;">
+							<table id="dashboard_alert" class="scroll" cellpadding="0" cellspacing="0"></table>
+							<div id="dashboard_alert_pager" class="scroll" style="text-align:center;"></div><br>
+						</div>
+						<div id="mtm_alert_div" style="display:none;">
+							<table id="dashboard_mtm_alert" class="scroll" cellpadding="0" cellspacing="0"></table>
+							<div id="dashboard_mtm_alert_pager" class="scroll" style="text-align:center;"></div><br>
+						</div>
+					</div>
+				<?php } else {?>
+					<div class="pure-u-1-4">
+						<h4>Welcome <?php echo $displayname;?>.</h4>
+						<?php echo HTML::image('images/email.png', 'Messages', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Send a message to your provider here too!"> <a href="#" id="dashboard_messaging">View your messages.</a></span>
+						<br><?php echo HTML::image('images/schedule.png', 'Schedule an appointment', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_schedule">Schedule an appointment</a>
+						<br><?php echo HTML::image('images/personal.png', 'Update demographics', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?> <a href="#" id="patient_demographics">Edit your demographics and insurance.</a>
+						<br><?php echo HTML::image('images/sign.png', 'Forms', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your provider may want you to fill out forms for the practice.  Do this here!"> <a href="#" id="dashboard_forms">Fill out forms.</a></span>
+						<br><?php echo HTML::image('images/reminder.png', 'Office Visits', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your patient instructions for your previous encounters with your provider."> <a href="#" id="dashboard_encounters">Your past office visits.</a></span>
+						<br><?php echo HTML::image('images/chart.png', 'Issues', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="These are your active medical issues documented by your provider(s)."> <a href="#" id="dashboard_issues">Your active medical issues.</a></span>
+						<br><?php echo HTML::image('images/rx.png', 'Medications', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="These are your active medications documented by your provider(s)."> <a href="#" id="dashboard_rx">Your active medication list.</a></span>
+						<br><?php echo HTML::image('images/supplements.png', 'Supplements', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="These are your active supplements documented by your provider(s)."> <a href="#" id="dashboard_supplements">Your active supplement list.</a></span>
+						<br><?php echo HTML::image('images/immunization.png', 'Immunizations', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your immunization records."> <a href="#" id="dashboard_immunizations">Your immunization records.</a></span>
+						<br><?php echo HTML::image('images/important.png', 'Allergies', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your medication and substance allergy list."> <a href="#" id="dashboard_allergies">Your allergy list.</a></span>
+						<br><?php echo HTML::image('images/chart1.png', 'Documents', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your test results, outside records, and other documents."> <a href="#" id="dashboard_health_record">Your personal health record.</a></span>
 						<?php if (Session::get('agealldays') <6574.5) {?>
-							<br><?php echo HTML::image('images/plot.png', 'Growth charts', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="View growth charts."> <a href="#" id="dashboard_growth_chart">View growth charts.</a></span>
+							<br><?php echo HTML::image('images/plot.png', 'Growth charts', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="View growth charts."> <a href="#" id="dashboard_growth_chart">View growth charts.</a></span>
 						<?php }?>
-					<?php }?>
-					<div id="draft_div" style="display:none;">
-						<table id="draft_messages" class="scroll" cellpadding="0" cellspacing="0"></table>
-						<div id="draft_messages_pager" class="scroll" style="text-align:center;"></div><br>
-						<table id="draft_encounters" class="scroll" cellpadding="0" cellspacing="0"></table>
-						<div id="draft_encounters_pager" class="scroll" style="text-align:center;"></div><br>
+						<br><?php echo HTML::image('images/usersadmin.png', 'Change password', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;')); ?><a href="#" id="change_password">Change your password.</a>
 					</div>
-					<div id="alert_div" style="display:none;">
-						<table id="dashboard_alert" class="scroll" cellpadding="0" cellspacing="0"></table>
-						<div id="dashboard_alert_pager" class="scroll" style="text-align:center;"></div><br>
-					</div>
-					<div id="mtm_alert_div" style="display:none;">
-						<table id="dashboard_mtm_alert" class="scroll" cellpadding="0" cellspacing="0"></table>
-						<div id="dashboard_mtm_alert_pager" class="scroll" style="text-align:center;"></div><br>
-					</div>
-				</div>
+					<div class="pure-u-3-4" id="maincontent" style="padding:0px;height:90vh"></div>
+				<?php }?>
 			</div>
 		</div>
 	</div>

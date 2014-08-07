@@ -111,19 +111,16 @@
 			<div id="header" class="header ui-widget">
 				<?php if(Auth::check()) {?>
 					<div id="header_left">
-						<strong><?php echo HTML::linkRoute('home', 'Tasks') . ' '; ?></strong>
-						<?php if(Session::get('group_id') == '1') { echo HTML::linkRoute('adminsetup', 'Setup'); } ?>
-						<?php if(Session::get('group_id') == '1' && Session::get('practice_active') == 'Y') { echo HTML::linkRoute('adminusers', 'Users'); } ?>
-						<?php if(Session::get('group_id') == '1' && Session::get('practice_active') == 'Y') { echo HTML::linkRoute('adminschedule', 'Schedule'); } ?>
-						<?php if(Session::get('group_id') == '1') { echo HTML::linkRoute('adminlogs', 'Logs'); } ?>
+						<?php if(Session::get('patient_centric') == 'n') {?>
+							<strong><?php echo HTML::linkRoute('home', 'Tasks') . ' '; ?></strong>
+						<?php }?>
 						<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_messaging">Messaging</a>'; } ?>
-						<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_schedule">Schedule</a>'; } ?>
-						<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_financial">Financial</a>'; } ?>
-						<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_office">Office</a>'; } ?>
+						<?php if(Session::get('patient_centric') == 'n') {?>
+							<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_schedule">Schedule</a>'; } ?>
+							<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_financial">Financial</a>'; } ?>
+							<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_office">Office</a>'; } ?>
+						<?php }?>
 						<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_configuration">Configure</a>'; } ?>
-						<?php if(Session::get('group_id') == '100') { echo HTML::linkRoute('portalmessaging', 'Messages'); } ?>
-						<?php if(Session::get('group_id') == '100') { echo HTML::linkRoute('portalschedule', 'Schedule'); } ?>
-						<?php if(Session::get('group_id') == '100') { echo HTML::linkRoute('portalchart', 'Chart'); } ?>
 						<br>
 					</div>
 					<div id="header_right">

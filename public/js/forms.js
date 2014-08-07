@@ -72,6 +72,11 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#dashboard_forms").click(function(){
+		$('#forms_dialog').dialog('option', {
+			height: $("#maincontent").height(),
+			width: $("#maincontent").width(),
+			position: { my: 'left top', at: 'left top', of: '#maincontent' }
+		});
 		$("#forms_dialog").dialog('open');
 	});
 	$("#form_dialog").dialog({ 

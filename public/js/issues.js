@@ -62,16 +62,21 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$(".issues_list").click(function() {
-		$("#issues_list_dialog").dialog('open');
 		$('#issues_pmh_header').hide();
 		$('#issues_psh_header').hide();
 		$('#issues_assessment_header').hide();
+		$("#issues_list_dialog").dialog('open');
 	});
 	$("#dashboard_issues").click(function() {
-		$("#issues_list_dialog").dialog('open');
+		$('#issues_list_dialog').dialog('option', {
+			height: $("#maincontent").height(),
+			width: $("#maincontent").width(),
+			position: { my: 'left top', at: 'left top', of: '#maincontent' }
+		});
 		$('#issues_pmh_header').hide();
 		$('#issues_psh_header').hide();
 		$('#issues_assessment_header').hide();
+		$("#issues_list_dialog").dialog('open');
 	});
 	$("#issue_date_active").mask("99/99/9999");
 	$("#issue_date_active").datepicker();

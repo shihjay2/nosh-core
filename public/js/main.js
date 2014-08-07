@@ -349,6 +349,36 @@ function loadcalendar (y,m,d,view) {
 }
 function open_schedule() {
 	$('#dialog_load').dialog('option', 'title', "Loading schedule...").dialog('open');
+	if (noshdata.group_id == '100') {
+		$('#schedule_dialog').dialog('option', {
+			height: $("#maincontent").height(),
+			width: $("#maincontent").width(),
+			position: { my: 'left top', at: 'left top', of: '#maincontent' }
+		});
+	} else {
+		$('#schedule_dialog').dialog('option', {
+			buttons: [
+			{
+				text: "Toggle Fullscreen",
+				click: function() {
+					var w = $(this).dialog('option', 'width');
+					if (w == 925) {
+						$(this).dialog('option', {
+							height: $(window).height(),
+							width: $(window).width(),
+							position: { my: 'center', at: 'center', of: window }
+						});
+					} else {
+						$(this).dialog('option', {
+							height: 640,
+							width: 925,
+							position: { my: 'center', at: 'center', of: '#maincontent' }
+						});
+					}
+				}
+			}]
+		});
+	}
 	$("#provider_list2").removeOption(/./);
 	$.ajax({
 		url: "ajaxsearch/provider-select",

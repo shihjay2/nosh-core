@@ -1004,7 +1004,7 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#preview_encounter").click(function() {
-		$("#preview").load('ajaxchart/modal-view2/' + noshdata.eid);
+		$("#preview").load('ajaxcommon/modal-view2/' + noshdata.eid);
 		$("#preview_dialog").dialog('open');
 	});
 	$('#detail_encounter').click(function(){

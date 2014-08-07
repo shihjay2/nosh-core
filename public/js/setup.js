@@ -303,4 +303,5 @@ $(document).ready(function() {
 	});
 	$("#billing_state").addOption(states, false);
 	$("#encounter_template").addOption({'standardmedical':'Standard Medical Visit','standardpsych':'Annual Psychiatric Evaluation','standardpsych1':'Psychiatric Encounter','clinicalsupport':'Clinical Support Visit','standardmtm':'MTM Encounter'}, false);
+	$("#opennotes_tip").tooltip({ content: "Selecting Yes will allow users of the patient portal to view their encounter notes.  Click on the hyperlink for more details." });
 });

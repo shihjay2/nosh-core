@@ -161,6 +161,11 @@ $(document).ready(function() {
 		$("#allergies_list_dialog").dialog('open');
 	});
 	$("#dashboard_allergies").click(function() {
+		$('#allergies_list_dialog').dialog('option', {
+			height: $("#maincontent").height(),
+			width: $("#maincontent").width(),
+			position: { my: 'left top', at: 'left top', of: '#maincontent' }
+		});
 		$("#allergies_list_dialog").dialog('open');
 	});
 	$("#allergies_date_active").mask("99/99/9999");

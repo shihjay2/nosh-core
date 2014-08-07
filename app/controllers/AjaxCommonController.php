@@ -15,8 +15,10 @@ class AjaxCommonController extends BaseController {
 		$sidx = Input::get('sidx');
 		$sord = Input::get('sord');
 		$query = DB::table('encounters')->where('pid', '=', $pid)
-			->where('addendum', '=', 'n')
-			->where('practice_id', '=', $practice_id);
+			->where('addendum', '=', 'n');
+		if (Session::get('patient_centric') == 'n') {
+			$query->where('practice_id', '=', $practice_id);
+		}
 		if (Session::get('group_id') == '100') {
 			$query->where('encounter_signed', '=', 'Yes');
 		}
@@ -888,5 +890,16 @@ class AjaxCommonController extends BaseController {
 		$data['ccda'] = File::get($file_path);
 		$data['js'] = File::get(__DIR__.'/../../public/js/bluebutton1.js');
 		return View::make('bluebutton', $data);
+	}
+	
+	public function postOpennotes()
+	{
+		$query = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
+		echo $query->opennotes;
+	}
+	
+	public function getModalView2($eid)
+	{
+		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, false);
 	}
 }

@@ -96,11 +96,6 @@ class AjaxChartController extends BaseController {
 		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, true);
 	}
 	
-	public function getModalView2($eid)
-	{
-		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, false);
-	}
-	
 	// Menu Lists
 	public function postDemographicsList()
 	{
@@ -1527,11 +1522,13 @@ class AjaxChartController extends BaseController {
 		$sidx = Input::get('sidx');
 		$sord = Input::get('sord');
 		$query = DB::table('t_messages')
-			->where('pid', '=', $pid)
-			->where('practice_id', '=', $practice_id)
-			->get();
-		if($query) { 
-			$count = count($query);
+			->where('pid', '=', $pid);
+		if (Session::get('patient_centric') == 'n') {
+			$query->where('practice_id', '=', $practice_id);
+		}
+		$result = $query->get();
+		if($result) { 
+			$count = count($result);
 			$total_pages = ceil($count/$limit); 
 		} else { 
 			$count = 0;
@@ -1540,13 +1537,10 @@ class AjaxChartController extends BaseController {
 		if ($page > $total_pages) $page=$total_pages;
 		$start = $limit*$page - $limit;
 		if($start < 0) $start = 0;
-		$query1 = DB::table('t_messages')
-			->where('pid', '=', $pid)
-			->where('practice_id', '=', $practice_id)
-			->orderBy($sidx, $sord)
+		$query->orderBy($sidx, $sord)
 			->skip($start)
-			->take($limit)
-			->get();
+			->take($limit);
+		$query1 = $query->get();
 		$response['page'] = $page;
 		$response['total'] = $total_pages;
 		$response['records'] = $count;
@@ -1713,7 +1707,7 @@ class AjaxChartController extends BaseController {
 					'mailbox' => $row_relate->id,
 					'practice_id' => Session::get('practice_id')
 				);
-				DB::table('messaging')->insertGetId($data);
+				DB::table('messaging')->insert($data);
 				$this->audit('Add');
 				$data1a = array(
 					'pid' => $pid,
@@ -1727,7 +1721,7 @@ class AjaxChartController extends BaseController {
 					'mailbox' => '0',
 					'practice_id' => Session::get('practice_id')
 				);
-				DB::table('messaging')->insertGetId($data1a);
+				DB::table('messaging')->insert($data1a);
 				$this->audit('Add');
 				if ($row->email == '') {
 					echo 'Internal message sent!';
@@ -2156,6 +2150,11 @@ class AjaxChartController extends BaseController {
 			exit("You cannot do this.");
 		} else {
 			$pid = Session::get('pid');
+			if (Input::get('alert_send_message') != '') {
+				$alert_send_message = Input::get('alert_send_message');
+			} else {
+				$alert_send_message = 'n';
+			}
 			$data = array(
 				'alert' => Input::get('alert'),
 				'alert_description' => Input::get('alert_description'),
@@ -2165,8 +2164,9 @@ class AjaxChartController extends BaseController {
 				'alert_provider' => Input::get('id'),
 				'orders_id' => '',
 				'pid' => $pid,
-				'practice_id' => Session::get('practice_id')
-			);	
+				'practice_id' => Session::get('practice_id'),
+				'alert_send_message' => $alert_send_message
+			);
 			if(Input::get('alert_id') == '') {
 				DB::table('alerts')->insert($data);
 				$this->audit('Add');
@@ -4238,7 +4238,8 @@ class AjaxChartController extends BaseController {
 				'alert_provider' => Session::get('user_id'),
 				'orders_id' => $add,
 				'pid' => $pid,
-				'practice_id' => Session::get('practice_id')
+				'practice_id' => Session::get('practice_id'),
+				'alert_send_message' => 'n'
 			);
 			DB::table('alerts')->insert($data1);
 			$this->audit('Add');
@@ -4717,7 +4718,8 @@ class AjaxChartController extends BaseController {
 								'alert_reason_not_complete' => '',
 								'alert_provider' => $this->session->userdata('displayname'),
 								'orders_id' => '',
-								'pid' => $pid
+								'pid' => $pid,
+								'alert_send_message' => 'n'
 							);
 							DB::table('alerts')->insert($data5);
 							$this->audit('Add');

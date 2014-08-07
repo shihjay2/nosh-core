@@ -144,6 +144,16 @@ class AjaxEncounterController extends BaseController {
 			DB::table('encounters')->where('eid', '=', Session::get('eid'))->update($data);
 			$this->audit('Update');
 			if ($encounter->encounter_template == 'standardpsych') {
+				$patient = DB::table('demographics_relate')
+					->where('pid', '=', Session::get('pid'))
+					->where('practice_id', '=', Session::get('practice_id'))
+					->whereNotNull('id')
+					->first();
+				if ($patient) {
+					$alert_send_message = 'y';
+				} else {
+					$alert_send_message = 'n';
+				}
 				$psych_date = strtotime($encounter->encounter_DOS) + 31556926;
 				$description = 'Schedule Annual Psychiatric Evaluation Appointment for ' . date('F jS, Y', $psych_date);
 				$data1 = array(
@@ -154,8 +164,9 @@ class AjaxEncounterController extends BaseController {
 					'alert_reason_not_complete' => '',
 					'alert_provider' => Session::get('user_id'),
 					'orders_id' => '',
-					'pid' => $pid,
-					'practice_id' => Session::get('practice_id')
+					'pid' => Session::get('pid'),
+					'practice_id' => Session::get('practice_id'),
+					'alert_send_message' => $alert_send_message
 				);
 				DB::table('alerts')->insert($data1);
 				$this->audit('Add');

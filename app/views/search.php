@@ -7,12 +7,14 @@
 	<div id ="searchbar">
 		<div id="logo" class="innersearchbar" style="line-height:67px;width:100px;">Nosh</div>
 		<div class="innersearchbar" style="line-height:67px;width:445px;">
-			<form class="pure-form">
-				<input type="text" name="searchpt" id="searchpt" style="width:295px; font-size:1em;" class="text" placeholder="Search patient and then select to open the chart."/>
-				<input type="hidden" name="hidden_pid" id="hidden_pid">
-				<input type="hidden" name="hidden_eid" id="hidden_eid">
-				<button type="button" id="openNewPatient">New Patient</button>&nbsp
-			</form>
+			<?php if ($patient_centric == 'n') {?>
+				<form class="pure-form">
+					<input type="text" name="searchpt" id="searchpt" style="width:295px; font-size:1em;" class="text" placeholder="Search patient and then select to open the chart."/>
+					<input type="hidden" name="hidden_pid" id="hidden_pid">
+					<input type="hidden" name="hidden_eid" id="hidden_eid">
+					<button type="button" id="openNewPatient">New Patient</button>&nbsp
+				</form>
+			<?php }?>
 		</div>
 		<div class="innersearchbar" style="width:300px;font-size:1.1em;">
 			<?php if ($pt != '') { if (Route::getCurrentRoute()->getPath() != 'chart') {echo HTML::linkRoute('chart', '[Active Patient Chart: ' . $pt . ']');} else {echo '<br><a href="#" id="chart_panel">[Active Patient Chart: ' . $pt . ']</a>';}}?>
@@ -22,8 +24,8 @@
 			</span>
 		</div>
 		<div class="innersearchbar" style="float:right;line-height:67px;width:110px;font-size:1.1em;">
-			<?php if ($pt != '') {echo HTML::image('images/cancel.png', 'Cancel', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle'));}?>
-			<?php if ($pt != '') {echo HTML::linkRoute('closechart', 'Close Chart');}?>
+			<?php if ($pt != '' && $patient_centric == 'n') {echo HTML::image('images/cancel.png', 'Cancel', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle'));}?>
+			<?php if ($pt != '' && $patient_centric == 'n') {echo HTML::linkRoute('closechart', 'Close Chart');}?>
 		</div>
 	</div>
 </div>

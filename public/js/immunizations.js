@@ -66,17 +66,22 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$(".immunizations_list").click(function() {
-		$("#immunizations_list_dialog").dialog('open');
 		$('#orders_imm_header').hide();
 		$('#imm_order').hide();
 		$('#imm_menu').show();
+		$("#immunizations_list_dialog").dialog('open');
 	});
 	$("#dashboard_immunizations").click(function() {
-		$("#immunizations_list_dialog").dialog('open');
+		$('#immunizations_list_dialog').dialog('option', {
+			height: $("#maincontent").height(),
+			width: $("#maincontent").width(),
+			position: { my: 'left top', at: 'left top', of: '#maincontent' }
+		});
 		$('#orders_imm_header').hide();
 		$('#imm_order').hide();
 		$('#imm_notes_fieldset').hide();
 		$('#imm_menu').show();
+		$("#immunizations_list_dialog").dialog('open');
 	});
 	$(".class_imm_date").mask("99/99/9999").datepicker();
 	$(".class_imm_expiration").mask("99/99/9999").datepicker();

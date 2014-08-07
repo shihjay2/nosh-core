@@ -2027,6 +2027,8 @@ class BaseController extends Controller {
 	protected function getSearchData()
 	{
 		$search_data = array();
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
+		$search_data['patient_centric'] = $practice->patient_centric;
 		if (Session::get('pid')) {
 			$patient = Demographics::find(Session::get('pid'));
 			$search_data['pt'] = $patient->firstname . ' ' . $patient->lastname;

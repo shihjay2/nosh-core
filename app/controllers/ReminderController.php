@@ -10,6 +10,87 @@ class ReminderController extends BaseController {
 	{
 	}
 	
+	public function test0()
+	{
+		$text = '';
+		$eid = '32';
+		$hpi = DB::table('hpi')->where('eid', '=', $eid)->first();
+		$text .= $hpi->hpi;
+		$assessmentInfo = DB::table('assessment')->where('eid', '=', $eid)->first();
+		if ($assessmentInfo) {
+			if ($assessmentInfo->assessment_1 != '') {
+				$text .= $assessmentInfo->assessment_1 . "\n";
+			}
+			if ($assessmentInfo->assessment_2 != '') {
+				$text .= $assessmentInfo->assessment_2 . "\n";
+			}
+			if ($assessmentInfo->assessment_3 != '') {
+				$text .= $assessmentInfo->assessment_3 . "\n";
+			}
+			if ($assessmentInfo->assessment_4 != '') {
+				$text .= $assessmentInfo->assessment_4 . "\n";
+			}
+			if ($assessmentInfo->assessment_5 != '') {
+				$text .= $assessmentInfo->assessment_5 . "\n";
+			}
+			if ($assessmentInfo->assessment_6 != '') {
+				$text .= $assessmentInfo->assessment_6 . "\n";
+			}
+			if ($assessmentInfo->assessment_7 != '') {
+				$text .= $assessmentInfo->assessment_7 . "\n";
+			}
+			if ($assessmentInfo->assessment_8 != '') {
+				$text .= $assessmentInfo->assessment_8 . "\n";
+			}
+			if ($assessmentInfo->assessment_other != '') {
+				$text .= $assessmentInfo->assessment_other . "\n";
+			}
+			if ($assessmentInfo->assessment_ddx != '') {
+				$text .= $assessmentInfo->assessment_ddx . "\n";
+			}
+			if ($assessmentInfo->assessment_notes != '') {
+				$text .= $assessmentInfo->assessment_notes;
+			}
+		}
+		$orders = DB::table('orders')->where('eid', '=', $eid)->get();
+		if ($orders) {
+			foreach($orders as $ordersInfo) {
+				if ($ordersInfo->orders_labs != '') {
+					$text .= $ordersInfo->orders_labs;
+				}
+				if ($ordersInfo->orders_radiology != '') {
+					$text .= $ordersInfo->orders_radiology;
+				}
+				if ($ordersInfo->orders_cp != '') {
+					$text .= $ordersInfo->orders_cp;
+				}
+				if ($ordersInfo->orders_referrals != '') {
+					$text .= $ordersInfo->orders_referrals;
+				}
+			}
+		}
+		$plan = DB::table('plan')->where('eid', '=', $eid)->first();
+		if ($plan) {
+			$text .= $plan->plan;
+		}
+		$text = str_replace("\n", '  ', $text);
+		return $this->clinithink($text);
+		//$text_array = explode("\n", $text);
+		//$result_array = array();
+		//foreach ($text_array as $text_row) {
+			//if ($text_row != '') {
+				//$result = $this->clinithink($text_row);
+				//if (!empty($result)) {
+					//$result_array[] = $result;
+				//}
+			//}
+		//}
+		//$result_array [] = $text;
+		//return $result_array;
+		//return $this->clinithink_crossmap('73211009', 'icd9');
+		//return $this->clinithink("COMPREHENSIVE METABOLIC PANEL; Code: 30000; CPT: 80053");
+	}
+	
 	public function reminder()
 	{
 		$start = time();
@@ -23,6 +104,7 @@ class ReminderController extends BaseController {
 		$j=0;
 		$i=0;
 		$results_scan=0;
+		$birthday_count=0;
 		if ($query1) {
 			foreach ($query1 as $row) {
 				$to = $row->reminder_to;
@@ -52,6 +134,8 @@ class ReminderController extends BaseController {
 				$j++;
 			}
 		}
+		$arr = "Number of appointments: " . $j . "<br>";
+		$arr .= "Number of appointment reminders sent: " . $i . "<br>";
 		$query3 = Practiceinfo::all();
 		foreach ($query3 as $practice_row) {
 			//$updox = $this->check_extension('updox_extension', $practice_row->practice_id);
@@ -63,12 +147,24 @@ class ReminderController extends BaseController {
 				$this->rcopia_sync($practice_row->practice_id);
 			}
 			$results_scan = $this->get_scans($practice_row->practice_id);
+			$birthday = $this->check_extension('birthday_extension', $practice_row->practice_id);
+			if ($birthday) {
+				$birthday1 = DB::table('practiceinfo')->where('practice_id', '=', $practice_row->practice_id)->first();
+				if ($birthday1->timezone != null) {
+					date_default_timezone_set($birthday1->timezone);
+				}
+				$date = date('Y-m-d');
+				if ($birthday1->birthday_sent_date != $date) {
+					$birthday_count = $this->birthday_reminder($practice_row->practice_id);
+				}
+			}
 		}
 		$results_count = $this->get_results();
-		$arr = "Number of appointments: " . $j . "<br>";
-		$arr .= "Number of appointment reminders sent: " . $i . "<br>";
+		$results_alert = $this->alert_message_send();
 		$arr .= "Number of results obtained: " . $results_count . "<br>";
 		$arr .= "Number of documents scanned: " . $results_scan . "<br>";
+		$arr .= "Number of birthday announcements: " . $birthday_count . "<br>";
+		$arr .= "Number of alerts sent: " . $results_alert . "<br>";
 		return $arr;
 	}
 	
@@ -892,4 +988,105 @@ class ReminderController extends BaseController {
 		return $j;
 	}
 	
+	public function birthday_reminder($practice_id)
+	{
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->first();
+		if ($practice->timezone != null) {
+			date_default_timezone_set($practice->timezone);
+		}
+		$date = date('-m-d');
+		$i = 0;
+		$query = DB::table('demographics')
+			->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
+			->select('demographics.firstname', 'demographics.reminder_to', 'demographics.reminder_method')
+			->where('demographics_relate.practice_id', '=', $practice_id)
+			->where('demographics.active', '=', '1')
+			->where('demographics.reminder_to', '!=', '')
+			->where('DOB', 'LIKE', "%$date%")
+			->get();
+		if ($query) {
+			foreach ($query as $row) {
+				$to = $row->reminder_to;
+				if ($to != '') {
+					$data_message['clinic'] = $practice->practice_name;
+					$data_message['phone'] = $practice->phone;
+					$data_message['email'] = $practice->email;
+					$data_message['birthday_message'] = $practice->birthday_message;
+					$data_message['patientname'] = $row->firstname;
+					if ($row->reminder_method == 'Cellular Phone') {
+						$this->send_mail(array('text' => 'emails.birthdayremindertext'), $data_message, 'Happy Birthday, ' . $row->firstname, $to, $practice_id);
+					} else {
+						$this->send_mail('emails.birthdayreminder', $data_message, 'Happy Birthday, ' . $row->firstname, $to, $practice_id);
+					}
+					$i++;
+				}
+			}
+		}
+		$data['birthday_sent_date'] = date('Y-m-d');
+		DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->update($data);
+		$this->audit('Update');
+		return $i;
+	}
+	
+	public function alert_message_send()
+	{
+		$i = 0;
+		$query = DB::table('alerts')
+			->where('alert_send_message', '=', 'y')
+			->where('alert_date_complete', '=', '0000-00-00 00:00:00')
+			->where('alert_reason_not_complete', '=', '')
+			->where('alert_date_active', '<=', date('Y-m-d H:i:s', time() + 604800))
+			->get();
+		if ($query) {
+			foreach ($query as $alert) {
+				$row = DB::table('demographics')->where('pid', '=', $alert->pid)->first();
+				$row_relate = DB::table('demographics_relate')
+					->where('pid', '=', $alert->pid)
+					->where('practice_id', '=', $alert->practice_id)
+					->first();
+				$practice = DB::table('practiceinfo')->where('practice_id', '=', $alert->practice_id)->first();
+				$from = $alert->alert_provider;
+				$patient_name = $row->lastname . ', ' . $row->firstname . ' (DOB: ' . date('m/d/Y', strtotime($row->DOB)) . ') (ID: ' . $row->pid . ')';
+				$patient_name1 = $row->lastname . ', ' . $row->firstname . ' (ID: ' . $row->pid . ')';
+				$subject = $alert->alert;
+				$body = $alert->alert_description;
+				$data = array(
+					'pid' => $alert->pid,
+					'patient_name' => $patient_name,
+					'message_to' => $patient_name1,
+					'cc' => '',
+					'message_from' => $from,
+					'subject' => $subject,
+					'body' => $body,
+					'status' => 'Sent',
+					'mailbox' => $row_relate->id,
+					'practice_id' => $alert->practice_id
+				);
+				DB::table('messaging')->insert($data);
+				$this->audit('Add');
+				$data1a = array(
+					'pid' => $alert->pid,
+					'patient_name' => $patient_name,
+					'message_to' => $patient_name1,
+					'cc' => '',
+					'message_from' => $from,
+					'subject' => $subject,
+					'body' => $body,
+					'status' => 'Sent',
+					'mailbox' => '0',
+					'practice_id' => $alert->practice_id
+				);
+				DB::table('messaging')->insert($data1a);
+				$this->audit('Add');
+				if ($row->email != '') {
+					$data_message['patient_portal'] = $practice->patient_portal;
+					$this->send_mail('emails.newmessage', $data_message, 'New Message in your Patient Portal', $row->email, $alert->practice_id);
+				}
+				$data2['alert_send_message'] = 's';
+				DB::table('alerts')->where('alert_id', '=', $alert->alert_id)->update($data2);
+				$i++;
+			}
+		}
+		return $i;
+	}
 }

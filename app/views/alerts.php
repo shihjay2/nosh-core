@@ -21,6 +21,9 @@
 		<div class="pure-control-group"><label for="alert_provider">User or Provider to Alert:</label><input type="text" name="alert_provider" id="alert_provider" style="width:500px" class="text"/></div>
 		<div class="pure-control-group"><label for="alert_description">Description:</label><textarea name="alert_description" id="alert_description" rows="2" style="width:500px" class="text"></textarea></div>
 		<div class="pure-control-group"><label for="alert_date_active">Due Date:</label><input type="text" name="alert_date_active" id="alert_date_active" class="text"/></div>
+		<?php if($portal_active == true) {?>
+			<div class="pure-control-group"><label for="alert_send_message">Message to Patient about Alert:</label><select name="alert_send_message" id="alert_send_message" class="text"></select></div>
+		<?php }?>
 	</form>
 </div>
 <div id="edit_alert_dialog1" title="Alert or Task Not Completed">

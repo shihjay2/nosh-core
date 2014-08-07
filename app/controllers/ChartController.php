@@ -34,35 +34,18 @@ class ChartController extends BaseController {
 		} else {
 			$data1['fax'] = false;
 		}
+		$patient = DB::table('demographics_relate')
+			->where('pid', '=', Session::get('pid'))
+			->where('practice_id', '=', Session::get('practice_id'))
+			->whereNotNull('id')
+			->first();
+		if ($patient) {
+			$data2['portal_active'] = true;
+		} else {
+			$data2['portal_active'] = false;
+		}
 		$this->layout->style = $this->css_assets();
 		$this->layout->script = $this->js_assets('chart');
-		//$this->layout->style = '';
-		//$this->layout->script = HTML::script('/js/chart.js');
-		//$this->layout->script .= HTML::script('/js/demographics.js');
-		//$this->layout->script .= HTML::script('/js/searchbar.js');
-		//$this->layout->script .= HTML::script('/js/options.js');
-		//$this->layout->script .= HTML::script('/js/menu.js');
-		//$this->layout->script .= HTML::script('/js/issues.js');
-		//$this->layout->script .= HTML::script('/js/encounters.js');
-		//$this->layout->script .= HTML::script('/js/medications.js');
-		//$this->layout->script .= HTML::script('/js/supplements.js');
-		//$this->layout->script .= HTML::script('/js/allergies.js');
-		//$this->layout->script .= HTML::script('/js/alerts.js');
-		//$this->layout->script .= HTML::script('/js/immunizations.js');
-		//$this->layout->script .= HTML::script('/js/print.js');
-		//$this->layout->script .= HTML::script('/js/billing.js');
-		//$this->layout->script .= HTML::script('/js/documents.js');
-		//$this->layout->script .= HTML::script('/js/t_messages.js');
-		//$this->layout->script .= HTML::script('/js/lab.js');
-		//$this->layout->script .= HTML::script('/js/rad.js');
-		//$this->layout->script .= HTML::script('/js/cp.js');
-		//$this->layout->script .= HTML::script('/js/ref.js');
-		//$this->layout->script .= HTML::script('/js/messaging.js');
-		//$this->layout->script .= HTML::script('/js/schedule.js');
-		//$this->layout->script .= HTML::script('/js/financial.js');
-		//$this->layout->script .= HTML::script('/js/office.js');
-		//$this->layout->script .= HTML::script('/js/graph.js');
-		//$this->layout->script .= HTML::script('/js/image.js');
 		$this->layout->search = View::make('search', $this->getSearchData())->render();
 		$this->layout->menu = View::make('menu', $this->getMenuData())->render();
 		$this->layout->content = View::make('chart', $data)->render();
@@ -78,7 +61,7 @@ class ChartController extends BaseController {
 		$this->layout->modules .= View::make('documents')->render();
 		$this->layout->modules .= View::make('t_messages')->render();
 		$this->layout->modules .= View::make('encounters')->render();
-		$this->layout->modules .= View::make('alerts')->render();
+		$this->layout->modules .= View::make('alerts', $data2)->render();
 		$this->layout->modules .= View::make('lab')->render();
 		$this->layout->modules .= View::make('rad')->render();
 		$this->layout->modules .= View::make('cp')->render();

@@ -136,39 +136,20 @@ class HomeController extends BaseController {
 		} else {
 			$data1['fax'] = false;
 		}
-		//$this->layout->style = '';
-		//$this->layout->script = '';
 		$this->layout->style = $this->css_assets();
 		$this->layout->script = $this->js_assets('home');
 		$this->layout->content = '';
 		if(Session::get('group_id') == '1') {
-			//$this->layout->script .= HTML::script('/js/dashboard.js');
-			//$this->layout->script .= HTML::script('/js/setup.js');
-			//$this->layout->script .= HTML::script('/js/users.js');
-			//$this->layout->script .= HTML::script('/js/extensions.js');
-			//$this->layout->script .= HTML::script('/js/schedule_admin.js');
-			//$this->layout->script .= HTML::script('/js/update.js');
-			//$this->layout->script .= HTML::script('/js/logs.js');
-			//$this->layout->script .= HTML::script('/js/schedule.js');
 			$this->layout->content .= View::make('dashboard', $data)->render();
 			$this->layout->content .= View::make('setup')->render();
 			$this->layout->content .= View::make('users')->render();
-			$this->layout->content .= View::make('extensions')->render();
+			$this->layout->content .= View::make('extensions', $data)->render();
 			$this->layout->content .= View::make('schedule_admin')->render();
 			$this->layout->content .= View::make('update')->render();
 			$this->layout->content .= View::make('logs')->render();
 			$this->layout->content .= View::make('schedule')->render();
 		}
 		if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') {
-			//$this->layout->script .= HTML::script('/js/searchbar.js');
-			//$this->layout->script .= HTML::script('/js/dashboard.js');
-			//$this->layout->script .= HTML::script('/js/demographics.js');
-			//$this->layout->script .= HTML::script('/js/options.js');
-			//$this->layout->script .= HTML::script('/js/messaging.js');
-			//$this->layout->script .= HTML::script('/js/schedule.js');
-			//$this->layout->script .= HTML::script('/js/billing.js');
-			//$this->layout->script .= HTML::script('/js/financial.js');
-			//$this->layout->script .= HTML::script('/js/office.js');
 			$this->layout->content .= View::make('search', $this->getSearchData())->render();
 			$this->layout->content .= View::make('dashboard', $data)->render();
 			$this->layout->content .= View::make('demographics')->render();
@@ -180,19 +161,6 @@ class HomeController extends BaseController {
 			$this->layout->content .= View::make('office')->render();
 		}
 		if(Session::get('group_id') == '100') {
-			//$this->layout->script .= HTML::script('/js/dashboard.js');
-			//$this->layout->script .= HTML::script('/js/demographics.js');
-			//$this->layout->script .= HTML::script('/js/messaging.js');
-			//$this->layout->script .= HTML::script('/js/schedule.js');
-			//$this->layout->script .= HTML::script('/js/issues.js');
-			//$this->layout->script .= HTML::script('/js/encounters.js');
-			//$this->layout->script .= HTML::script('/js/medications.js');
-			//$this->layout->script .= HTML::script('/js/supplements.js');
-			//$this->layout->script .= HTML::script('/js/allergies.js');
-			//$this->layout->script .= HTML::script('/js/immunizations.js');
-			//$this->layout->script .= HTML::script('/js/documents.js');
-			//$this->layout->script .= HTML::script('/js/forms.js');
-			//$this->layout->script .= HTML::script('/js/graph.js');
 			$this->layout->content .= View::make('dashboard', $data)->render();
 			$this->layout->content .= View::make('demographics')->render();
 			$this->layout->content .= View::make('messaging', $data1)->render();

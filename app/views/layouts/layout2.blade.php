@@ -95,11 +95,15 @@
 						<?php if(Session::get('group_id') == '100') {?>
 							<strong>NOSH ChartingSystem Personal Health Record | </strong>
 						<?php }?>
-						<strong><?php echo HTML::linkRoute('home', 'Tasks') . ' '; ?></strong>
+						<?php if(Session::get('patient_centric') == 'n') {?>
+							<strong><?php echo HTML::linkRoute('home', 'Tasks') . ' '; ?></strong>
+						<?php }?>
 						<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_messaging">Messaging</a>'; } ?>
-						<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_schedule">Schedule</a>'; } ?>
-						<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_financial">Financial</a>'; } ?>
-						<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_office">Office</a>'; } ?>
+						<?php if(Session::get('patient_centric') == 'n') {?>
+							<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_schedule">Schedule</a>'; } ?>
+							<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_financial">Financial</a>'; } ?>
+							<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_office">Office</a>'; } ?>
+						<?php }?>
 						<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3' || Session::get('group_id') == '4') { echo '<a href="#" id="nosh_configuration">Configure</a>'; } ?>
 						<br>
 					</div>

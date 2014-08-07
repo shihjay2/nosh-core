@@ -97,12 +97,17 @@ $(document).ready(function() {
 		$("#orders_supplements_header").hide();
 	});
 	$("#dashboard_supplements").click(function() {
+		$('#supplements_list_dialog').dialog('option', {
+			height: $("#maincontent").height(),
+			width: $("#maincontent").width(),
+			position: { my: 'left top', at: 'left top', of: '#maincontent' }
+		});
 		$("#supplement_origin_orders").val("N");
 		$("#supplement_origin_orders1").val("N");
-		$("#supplements_list_dialog").dialog('open');
 		$("#edit_sup").attr("value", "Edit Supplement");
 		$("#oh_supplements_header").hide();
 		$("#orders_supplements_header").hide();
+		$("#supplements_list_dialog").dialog('open');
 	});
 	$("#edit_sup_dialog").dialog({ 
 		bgiframe: true, 
