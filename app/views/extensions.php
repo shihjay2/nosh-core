@@ -59,6 +59,27 @@
 				<span id="birthday_message_preview"></span><br>
 				If you would like to set up an appointment with your provider, please contact us at <?php echo $practiceinfo->phone;?> or reply to this e-mail at <?php echo $practiceinfo->email;?>.
 			</div>
+			<h3>Continuing Care Reminders</h3>
+			<div>
+				<label for="appointment_extension">Enable Continuing Care Reminder Extension:</label>
+				<select name="appointment_extension" id="appointment_extension" class="text"></select>
+				<label for="appointment_interval">Appointment interval (minimum time lapsed from last appointment):</label>
+				<select name="appointment_interval" id="appointment_interval" class="text"></select>
+				<label for="appointment_message">Continuing Care Reminder Message:</label>
+				<textarea name="appointment_message" id="appointment_message" class="text" rows="4" style="width:400px"></textarea>
+				<br><br>
+				<strong>The continuing care reminder message sent out will appear like this:</strong><br><br>
+				SMS message:<br>
+				Time for continuing care appointment with <?php echo $practiceinfo->practice_name;?>.  Call <?php echo $practiceinfo->phone;?> to schedule an appointment or visit <?php echo $practiceinfo->patient_portal;?> to schedule online.<br><br>
+				E-mail message:<br>
+				Dear, {patient's first name},<br>
+				It is time for your continuing care appointment with <?php echo $practiceinfo->practice_name;?>. Please call us at <?php echo $practiceinfo->phone;?> or visit <?php echo $practiceinfo->patient_portal;?> to schedule your next appointment at your earliest convenience.<br>
+				<span id="appointment_message_preview"></span><br>
+				Thank you<br>
+				<?php echo $practiceinfo->practice_name;?><br>
+				Phone: <?php echo $practiceinfo->phone;?><br>
+				Email: <?php echo $practiceinfo->email;?>
+			</div>
 		</div>
 	</form>
 </div>

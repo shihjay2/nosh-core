@@ -43,6 +43,9 @@ $(document).ready(function() {
 						if (key == 'birthday_message' && value != '') {
 							$("#birthday_message_preview").text(value);
 						}
+						if (key == 'appointment_message' && value != '') {
+							$("#appointment_message_preview").text(value);
+						}
 					});
 				}
 			});
@@ -68,6 +71,8 @@ $(document).ready(function() {
 	$("#snomed_extension").addOption({"n":"No","y":"Yes"});
 	$("#mtm_extension").addOption({"n":"No","y":"Yes"});
 	$("#birthday_extension").addOption({"n":"No","y":"Yes"});
+	$("#appointment_extension").addOption({"n":"No","y":"Yes"});
+	$("#appointment_interval").addOption({"604800":"1 week","1209600":"2 weeks","2629743":"1 month","5259486":"2 months","7889229":"3 months","15778458":"6 months","31556926":"1 year"},false);
 	$("#extensions_form select").val("n");
 	$("#mtm_alert_users").chosen();
 	$("#rcopia_extension").change(function(){
@@ -107,5 +112,9 @@ $(document).ready(function() {
 	$("#birthday_message").change(function(){
 		var a= $(this).val();
 		$("#birthday_message_preview").text(a);
+	});
+	$("#appointment_message").change(function(){
+		var a= $(this).val();
+		$("#appointment_message_preview").text(a);
 	});
 });

@@ -249,7 +249,10 @@ class AjaxSetupController extends BaseController {
 			'vivacare' => Input::get('vivacare'),
 			'peacehealth_id' => Input::get('peacehealth_id'),
 			'birthday_extension' => Input::get('birthday_extension'),
-			'birthday_message' => Input::get('birthday_message')
+			'birthday_message' => Input::get('birthday_message'),
+			'appointment_extension' => Input::get('appointment_extension'),
+			'appointment_message' => Input::get('appointment_message'),
+			'appointment_interval' => Input::get('appointment_interval')
 		);
 		if (Input::get('rcopia_extension') == 'y') {
 			$data['rcopia_update_notification_lastupdate'] = date("m/d/y H:i:s", time());

@@ -103,8 +103,6 @@ class ReminderController extends BaseController {
 			->get();
 		$j=0;
 		$i=0;
-		$results_scan=0;
-		$birthday_count=0;
 		if ($query1) {
 			foreach ($query1 as $row) {
 				$to = $row->reminder_to;
@@ -138,6 +136,11 @@ class ReminderController extends BaseController {
 		$arr .= "Number of appointment reminders sent: " . $i . "<br>";
 		$query3 = Practiceinfo::all();
 		foreach ($query3 as $practice_row) {
+			$results_scan=0;
+			$birthday_count=0;
+			$appointment_count=0;
+			$appointment_count1=0;
+			$arr .= "<strong>Practice " . $practice_row->practice_id ."</strong><br>";
 			//$updox = $this->check_extension('updox_extension', $practice_row->practice_id);
 			//if ($updox) {
 				//$this->updox_sync($practice_row->practice_id);
@@ -158,12 +161,26 @@ class ReminderController extends BaseController {
 					$birthday_count = $this->birthday_reminder($practice_row->practice_id);
 				}
 			}
+			$appointment = $this->check_extension('appointment_extension', $practice_row->practice_id);
+			if ($appointment) {
+				$appointment1 = DB::table('practiceinfo')->where('practice_id', '=', $practice_row->practice_id)->first();
+				if ($appointment1->timezone != null) {
+					date_default_timezone_set($appointment1->timezone);
+				}
+				$date1 = date('Y-m-d');
+				$appointment_count = $this->appointment_screen($practice_row->practice_id);
+				if ($appointment1->appointment_sent_date != $date1) {
+					$appointment_count1 = $this->appointment_reminder($practice_row->practice_id);
+				}
+			}
+			$arr .= "Number of documents scanned: " . $results_scan . "<br>";
+			$arr .= "Number of birthday announcements: " . $birthday_count . "<br>";
+			$arr .= "Number of patients screened needing apointments: " . $appointment_count1 . "<br>";
+			$arr .= "Number of patients reminders sent to make appointment: " . $appointment_count1 . "<br>";
 		}
 		$results_count = $this->get_results();
 		$results_alert = $this->alert_message_send();
 		$arr .= "Number of results obtained: " . $results_count . "<br>";
-		$arr .= "Number of documents scanned: " . $results_scan . "<br>";
-		$arr .= "Number of birthday announcements: " . $birthday_count . "<br>";
 		$arr .= "Number of alerts sent: " . $results_alert . "<br>";
 		return $arr;
 	}
@@ -1087,6 +1104,86 @@ class ReminderController extends BaseController {
 				$i++;
 			}
 		}
+		return $i;
+	}
+	
+	public function appointment_screen($practice_id)
+	{
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->first();
+		if ($practice->timezone != null) {
+			date_default_timezone_set($practice->timezone);
+		}
+		$i = 0;
+		$query = DB::table('demographics')
+			->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
+			->select('demographics_relate.appointment_reminder', 'demographics.pid', 'demographics_relate.demographics_relate_id')
+			->where('demographics_relate.practice_id', '=', $practice_id)
+			->where('demographics.active', '=', '1')
+			->where('demographics.reminder_to', '!=', '')
+			->get();
+		if ($query) {
+			foreach ($query as $row) {
+				$row2 = Schedule::where('pid', '=', $row->pid)->where('start', '>', time())->first();
+				if (isset($row2->start)) {
+					$data['appointment_reminder'] = 'n';
+					DB::table('demographics_relate')->where('demographics_relate_id', '=', $row->demographics_relate_id)->update($data);
+					$this->audit('update');
+				} else {
+					if ($row->appointment_reminder == 'n') {
+						$newdate = time() + $practice->appointment_interval;
+						$data['appointment_reminder'] = date('Y-m-d', $newdate);
+						DB::table('demographics_relate')->where('demographics_relate_id', '=', $row->demographics_relate_id)->update($data);
+						$this->audit('update');
+						$i++;
+					}
+				}
+			}
+		}
+		return $i;
+	}
+	
+	public function appointment_reminder($practice_id)
+	{
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->first();
+		if ($practice->timezone != null) {
+			date_default_timezone_set($practice->timezone);
+		}
+		$date = date('Y-m-d');
+		$i = 0;
+		$query = DB::table('demographics')
+			->join('demographics_relate', 'demographics_relate.pid', '=', 'demographics.pid')
+			->select('demographics.firstname', 'demographics.reminder_to', 'demographics.reminder_method', 'demographics.preferred_provider')
+			->where('demographics_relate.practice_id', '=', $practice_id)
+			->where('demographics.active', '=', '1')
+			->where('demographics.reminder_to', '!=', '')
+			->where('demographics_relate.appointment_reminder', '=', $date)
+			->get();
+		if ($query) {
+			foreach ($query as $row) {
+				$to = $row->reminder_to;
+				if ($to != '') {
+					$data_message['phone'] = $practice->phone;
+					$data_message['email'] = $practice->email;
+					$data_message['appointment_message'] = $practice->appointment_message;
+					$data_message['patientname'] = $row->firstname;
+					$data_message['patient_portal'] = $practice->patient_portal;
+					if ($row->preferred_provider == '') {
+						$data_message['doctor'] = $practice->practice_name;
+					} else {
+						$data_message['doctor'] = $row->preferred_provider;
+					}
+					if ($row->reminder_method == 'Cellular Phone') {
+						$this->send_mail(array('text' => 'emails.appointmentremindertext'), $data_message, 'Continuing Care Reminder', $to, $practice_id);
+					} else {
+						$this->send_mail('emails.appointmentreminder', $data_message, 'Continuing Care Reminder', $to, $practice_id);
+					}
+					$i++;
+				}
+			}
+		}
+		$data['appointment_sent_date'] = date('Y-m-d');
+		DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->update($data);
+		$this->audit('Update');
 		return $i;
 	}
 }
