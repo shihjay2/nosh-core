@@ -202,7 +202,7 @@ class BaseController extends Controller {
 				}
 			}
 		} else {
-			$jsfilename =  '/temp/' . $current_version . '_' . $type .'.js';
+			$jsfilename =  '/temp/' . $current_version . '_' . $type . '_' . time() . '.js';
 			$jsfile = __DIR__.'/../../public' . $jsfilename;
 			$str = '';
 			foreach ($basejsfiles as $basejsfile) {
