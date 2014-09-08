@@ -180,8 +180,12 @@ class ReminderController extends BaseController {
 		}
 		$results_count = $this->get_results();
 		$results_alert = $this->alert_message_send();
+		$results_practice_clean = $this->clean_practice();
+		$results_api = $this->process_api();
 		$arr .= "Number of results obtained: " . $results_count . "<br>";
 		$arr .= "Number of alerts sent: " . $results_alert . "<br>";
+		$arr .= "Number of unused practices cleaned: " . $results_practice_clean . "<br>";
+		$arr .= "Number of commands sent via API: " . $results_api . "<br>";
 		return $arr;
 	}
 	
@@ -1127,13 +1131,13 @@ class ReminderController extends BaseController {
 				if (isset($row2->start)) {
 					$data['appointment_reminder'] = 'n';
 					DB::table('demographics_relate')->where('demographics_relate_id', '=', $row->demographics_relate_id)->update($data);
-					$this->audit('update');
+					$this->audit('Update');
 				} else {
 					if ($row->appointment_reminder == 'n') {
 						$newdate = time() + $practice->appointment_interval;
 						$data['appointment_reminder'] = date('Y-m-d', $newdate);
 						DB::table('demographics_relate')->where('demographics_relate_id', '=', $row->demographics_relate_id)->update($data);
-						$this->audit('update');
+						$this->audit('Update');
 						$i++;
 					}
 				}
@@ -1185,5 +1189,74 @@ class ReminderController extends BaseController {
 		DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->update($data);
 		$this->audit('Update');
 		return $i;
+	}
+	
+	public function clean_practice()
+	{
+		$query = DB::table('practiceinfo')->where('practice_id', '=', '1')->where('patient_centric', '=', 'y')->first();
+		$i = 0;
+		if ($query) {
+			$time = time();
+			$query1 = DB::table('practiceinfo')->where('practice_id', '!=', '1')->where('practice_registration_timeout', '<', $time)->get();
+			if ($query1) {
+				foreach ($query1 as $row1) {
+					if ($row1->practice_registration_timeout != '') {
+						DB::table('practiceinfo')->where('practice_id', '=', $row1->practice_id)->delete();
+						$this->audit('Delete');
+						DB::table('demographics_relate')->where('practice_id', '=', $row1->practice_id)->delete();
+						$this->audit('Delete');
+						$i++;
+					}
+				}
+			}
+		}
+		return $i;
+	}
+	
+	public function process_api()
+	{
+		$i = 0;
+		$apis = DB::table('api_queue')->where('success', '=', 'n')->get();
+		foreach ($apis as $api) {
+			$json_data = unserialize($api->json);
+			$login_data = unserialize($api->login);
+			$login_url = $api->url . '/apilogin';
+			$logout_url => $api->url . '/apilogout';
+			$api_url = $api->url . '/api/v1/' . $api->action;
+			$login = $this->send_api_data($login_url, $login_data, '', '');
+			$data['success'] = 'n';
+			if ($login['url_error'] == '') {
+				if (isset($login['error'])) {
+					if ($login['error'] == true) {
+						$data['response'] = 'Error: ' . $login['message'];
+					} else {
+						$result = $this->send_api_data($api_url, $json_data, $login['username'], $login['password']);
+						if ($result['url_error'] == '') {
+							if (isset($result['error'])) {
+								if ($result['error'] == true) {
+									$data['response'] = 'Error: ' . $result['message'];
+								} else {
+									$data['success'] = 'y';
+									$data['remote_id'] = $result['remote_id'];
+									$data['response'] = $result['message'];
+									$i++;
+								}
+							} else {
+								$data['response'] = 'Error: not a valid connection, check your URL';
+							}
+						} else {
+							$data['response'] = $result['url_error'];
+						}
+						$logout = $this->send_api_data($logout_url, $login_data, '', '');
+					}
+				} else {
+					$data['response'] = 'Error: not a valid connection, check your URL';
+				}
+			} else {
+				$data['response'] = $login['url_error'];
+			}
+			DB::table('api_queue')->where('id', '=', $api->id)->update($data);
+			$this->audit('Update');
+		}
 	}
 }

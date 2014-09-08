@@ -196,7 +196,7 @@ $(document).ready(function() {
 				}
 			});
 		},
-		close: function (event, ui) {
+		beforeClose: function (event, ui) {
 			var bValid = true;
 			$("#schedule-setup1").find("[required]").each(function() {
 				var input_id = $(this).attr('id');
@@ -225,6 +225,7 @@ $(document).ready(function() {
 							data: str,
 							success: function(data){
 								$.jGrowl(data);
+								$("#schedule_needed").hide();
 								return true;
 							}
 						});

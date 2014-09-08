@@ -48,6 +48,7 @@ class AjaxEncounterController extends BaseController {
 		);
 		$eid = DB::table('encounters')->insertGetId($data);
 		$this->audit('Add');
+		$this->api_data('add', 'encounters', 'eid', $eid);
 		$data2 = array(
 			'status' => 'Attended'
 		);
@@ -60,6 +61,7 @@ class AjaxEncounterController extends BaseController {
 		);
 		DB::table('encounters')->where('eid', '=', $eid)->update($data3);
 		$this->audit('Update');
+		$this->api_data('update', 'encounters', 'eid', $eid);
 		Session::put('eid', $eid);
 		Session::put('encounter_DOS', $encounter_DOS);
 		Session::put('encounter_template', Input::get('encounter_template'));
@@ -101,6 +103,7 @@ class AjaxEncounterController extends BaseController {
 		);
 		DB::table('encounters')->where('eid', '=', $eid)->update($data);
 		$this->audit('Update');
+		$this->api_data('update', 'encounters', 'eid', $eid);
 		echo "Update successful!";
 	}
 	
@@ -143,6 +146,7 @@ class AjaxEncounterController extends BaseController {
 			);
 			DB::table('encounters')->where('eid', '=', Session::get('eid'))->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'encounters', 'eid', Session::get('eid'));
 			if ($encounter->encounter_template == 'standardpsych') {
 				$patient = DB::table('demographics_relate')
 					->where('pid', '=', Session::get('pid'))
@@ -168,8 +172,9 @@ class AjaxEncounterController extends BaseController {
 					'practice_id' => Session::get('practice_id'),
 					'alert_send_message' => $alert_send_message
 				);
-				DB::table('alerts')->insert($data1);
+				$id = DB::table('alerts')->insertGetId($data1);
 				$this->audit('Add');
+				$this->api_data('add', 'alerts', 'alert_id', $id);
 			}
 			Session::forget('eid');
 			Session::forget('encounter_active');
@@ -186,28 +191,40 @@ class AjaxEncounterController extends BaseController {
 		} else {
 			DB::table('encounters')->where('eid', '=', Session::get('eid'))->where('encounter_signed', '=', 'No')->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'encounters', 'eid', Session::get('eid'));
 			DB::table('hpi')->where('eid', '=', Session::get('eid'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'hpi', 'eid', Session::get('eid'));
 			DB::table('ros')->where('eid', '=', Session::get('eid'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'ros', 'eid', Session::get('eid'));
 			DB::table('other_history')->where('eid', '=', Session::get('eid'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'other_history', 'eid', Session::get('eid'));
 			DB::table('vitals')->where('eid', '=', Session::get('eid'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'vitals', 'eid', Session::get('eid'));
 			DB::table('pe')->where('eid', '=', Session::get('eid'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'pe', 'eid', Session::get('eid'));
 			DB::table('labs')->where('eid', '=', Session::get('eid'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'labs', 'eid', Session::get('eid'));
 			DB::table('procedure')->where('eid', '=', Session::get('eid'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'procedure', 'eid', Session::get('eid'));
 			DB::table('assessment')->where('eid', '=', Session::get('eid'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'assessment', 'eid', Session::get('eid'));
 			DB::table('orders')->where('eid', '=', Session::get('eid'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'orders', 'eid', Session::get('eid'));
 			DB::table('plan')->where('eid', '=', Session::get('eid'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'plan', 'eid', Session::get('eid'));
 			DB::table('rx')->where('eid', '=', Session::get('eid'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'rx', 'eid', Session::get('eid'));
 			DB::table('billing')->where('eid', '=', Session::get('eid'))->delete();
 			$this->audit('Delete');
 			Session::forget('eid');
@@ -322,11 +339,12 @@ class AjaxEncounterController extends BaseController {
 		if ($count) {
 			DB::table('hpi')->where('eid', '=', $eid)->update($data);
 			$this->audit('Update');
-			
+			$this->api_data('update', 'hpi', 'eid', $eid);
 			$result = $result1 . ' Updated!';
 		} else {
 			DB::table('hpi')->insert($data);
 			$this->audit('Add');
+			$this->api_data('add', 'hpi', 'eid', $eid);
 			$result = $result1 . ' Added!';
 		}
 		echo $result;
@@ -726,10 +744,12 @@ class AjaxEncounterController extends BaseController {
 		if ($count) {
 			DB::table('ros')->where('eid', '=', Session::get('eid'))->update($data); 
 			$this->audit('Update');
+			$this->api_data('update', 'ros', 'eid', Session::get('eid'));
 			$result = 'Review of Systems Updated';
 		} else {
 			DB::table('ros')->insert($data);
 			$this->audit('Add');
+			$this->api_data('add', 'ros', 'eid', Session::get('eid'));
 			$result = 'Review of Systems Added';
 		}
 		echo $result;
@@ -762,10 +782,12 @@ class AjaxEncounterController extends BaseController {
 		if ($count) {
 			DB::table('other_history')->where('eid', '=', $eid)->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'other_history', 'eid', $eid);
 			$result = 'Other History Updated';
 		} else {
 			DB::table('other_history')->insert($data);
 			$this->audit('Add');
+			$this->api_data('add', 'other_history', 'eid', $eid);
 			$result = 'Other History Added';
 		}
 		echo $result;
@@ -1015,10 +1037,12 @@ class AjaxEncounterController extends BaseController {
 		if ($count) {
 			DB::table('other_history')->where('eid', '=', $eid)->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'other_history', 'eid', $eid);
 			$result = 'Other History Updated.';
 		} else {
 			DB::table('other_history')->insert($data);
 			$this->audit('Add');
+			$this->api_data('add', 'other_history', 'eid', $eid);
 			$result = 'Other History Added.';
 		}
 		echo $result;
@@ -1124,6 +1148,7 @@ class AjaxEncounterController extends BaseController {
 		if ($count) {
 			DB::table('vitals')->where('eid', '=', $eid)->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'vitals', 'eid', $eid);
 			$result = 'Vitals Updated';
 		} else {
 			$encounterInfo = Encounters::find($eid);
@@ -1135,6 +1160,7 @@ class AjaxEncounterController extends BaseController {
 			$data['vitals_date'] = $encounterInfo->encounter_DOS;
 			DB::table('vitals')->insert($data);
 			$this->audit('Add');
+			$this->api_data('add', 'vitals', 'eid', $eid);
 			$result = 'Vitals Added';
 		}
 		echo $result;
@@ -1387,10 +1413,12 @@ class AjaxEncounterController extends BaseController {
 		if ($count) {
 			DB::table('pe')->where('eid', '=', Session::get('eid'))->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'pe', 'eid', Session::get('eid'));
 			$result = 'Physical Examination Updated';
 		} else {
 			DB::table('pe')->insert($data);
 			$this->audit('Add');
+			$this->api_data('add', 'pe', 'eid', Session::get('eid'));
 			$result = 'Physical Examination Added';
 		}
 		echo $result;
@@ -1642,10 +1670,12 @@ class AjaxEncounterController extends BaseController {
 		if ($count) {
 			DB::table('labs')->where('eid', '=', Session::get('eid'))->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'labs', 'eid', Session::get('eid'));
 			$result = 'Lab Entry Updated';
 		} else {
 			DB::table('labs')->insert($data);
 			$this->audit('Add');
+			$this->api_data('add', 'labs', 'eid', Session::get('eid'));
 			$result = 'Lab Entry Added';
 		}
 		echo $result;
@@ -1681,10 +1711,12 @@ class AjaxEncounterController extends BaseController {
 		if ($count) {
 			DB::table('procedure')->where('eid', '=', $eid)->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'procedure', 'eid', $eid);
 			$result = 'Procedure Updated';
 		} else {
 			DB::table('procedure')->insert($data);
 			$this->audit('Add');
+			$this->api_data('add', 'procedure', 'eid', $eid);
 			$result = 'Procedure Added';
 		}
 		echo $result;
@@ -1764,10 +1796,12 @@ class AjaxEncounterController extends BaseController {
 		if ($count) {
 			DB::table('assessment')->where('eid', '=', $eid)->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'assessment', 'eid', $eid);
 			$result = 'Assessment Updated';
 		} else {
 			DB::table('assessment')->insert($data);
 			$this->audit('Add');
+			$this->api_data('add', 'assessment', 'eid', $eid);
 			$result = 'Assessment Added';
 		}
 		echo $result;
@@ -1868,10 +1902,12 @@ class AjaxEncounterController extends BaseController {
 		if ($count) {
 			DB::table('plan')->where('eid', '=', $eid)->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'plan', 'eid', $eid);
 			$result = 'Orders Updated';
 		} else {
-			DB::table('plan')->insert($data);
+			$id = DB::table('plan')->insertGetId($data);
 			$this->audit('Add');
+			$this->api_data('add', 'plan', 'eid', $id);
 			$result = 'Orders Added';
 		}
 		echo $result;
@@ -1959,6 +1995,7 @@ class AjaxEncounterController extends BaseController {
 			);
 			DB::table('rx')->where('eid', '=', $eid)->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'rx', 'eid', $eid);
 			$result = 'Medication Orders Updated';
 		} else {
 			if (Input::get('rx')) {
@@ -1988,6 +2025,7 @@ class AjaxEncounterController extends BaseController {
 			);
 			DB::table('rx')->insert($data);
 			$this->audit('Add');
+			$this->api_data('update', 'rx', 'eid', $eid);
 			$result = 'Medication Orders Added';
 		}
 		echo $result;
@@ -2009,6 +2047,7 @@ class AjaxEncounterController extends BaseController {
 			);
 			DB::table('rx')->where('eid', '=', $eid)->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'rx', 'eid', $eid);
 			$result = 'Immunization Orders Updated';
 		} else {
 			$data = array(
@@ -2019,6 +2058,7 @@ class AjaxEncounterController extends BaseController {
 			);
 			DB::table('rx')->insert($data);
 			$this->audit('Add');
+			$this->api_data('update', 'rx', 'eid', $eid);
 			$result = 'Immunization Orders Added';
 		}
 		echo $result;
@@ -2373,6 +2413,7 @@ class AjaxEncounterController extends BaseController {
 				$data2['eid'] = $new_eid;
 				DB::table($table1)->insert($data2);
 				$this->audit('Add');
+				$this->api_data('add', $table1, 'eid', $new_eid);
 			}
 		}
 		foreach($table_array2 as $table2) {
@@ -2400,6 +2441,7 @@ class AjaxEncounterController extends BaseController {
 					$data3['eid'] = $new_eid;
 					DB::table($table2)->insert($data3);
 					$this->audit('Add');
+					$this->api_data('add', $table2, 'eid', $new_eid);
 				}
 			}
 		}
@@ -2725,10 +2767,12 @@ class AjaxEncounterController extends BaseController {
 		if ($count) {
 			DB::table('other_history')->where('eid', '=', $eid)->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'other_history', 'eid', $eid);
 			$result = 'Medication List Updated.';
 		} else {
 			DB::table('other_history')->insert($data);
 			$this->audit('Add');
+			$this->api_data('add', 'other_history', 'eid', $eid);
 			$result = 'Medication List Added.';
 		}
 		echo $result;

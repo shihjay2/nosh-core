@@ -1776,6 +1776,8 @@ $(document).ready(function() {
 		action: 'templateupload',
 		onComplete: function(data){
 			$.jGrowl(data);
+			$('#import_template').val('');
+			$("#import_template").parent().find('input').val('');
 			reload_grid("hpi_forms_list");
 			reload_grid("ros_forms_list");
 			reload_grid("pe_forms_list");

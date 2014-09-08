@@ -48,7 +48,17 @@ class LoginController extends BaseController {
 					Session::put('mtm_extension', $practice->mtm_extension);
 					Session::put('patient_centric', $practice->patient_centric);
 					setcookie("login_attempts", 0, time()+900, '/');
-					return Redirect::intended('/');
+					if ($practice->patient_centric == 'n') {
+						return Redirect::intended('/');
+					} else {
+						if ($user->group_id != '100' && $user->group_id != '1') {
+							$pid = DB::table('demographics')->first();
+							$this->setpatient($pid->pid);
+							return Redirect::intended('chart');
+						} else {
+							return Redirect::intended('/');
+						}
+					}
 				}
 			}
 			$attempts = $_COOKIE['login_attempts'] + 1;

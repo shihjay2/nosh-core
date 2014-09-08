@@ -9,7 +9,7 @@
 		<div id="box" align="left" class="ui-corner-all ui-tabs ui-widget ui-widget-content">
 			<form method="POST" action="login" class="pure-form pure-form-stacked">
 				<div class="pure-control-group"><label for="username">Username:</label><input type="text" id="username" name="username" class="text" style="width:300px" /></div>
-				<div class="pure-control-group"><label for="password">Password:</label><input type="password" name="password" class="text" style="width:300px" /></div>
+				<div class="pure-control-group"><label for="password">Password:</label><input type="password" id="password" name="password" class="text" style="width:300px" /></div>
 				<div class="pure-control-group"><label for="practice_id">Organization/Practice:</label><select name="practice_id" id="practice_id" class="text" /></select></div>
 				<br><br>
 				<div id="error_text">

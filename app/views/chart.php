@@ -50,6 +50,9 @@
 			<div class="pure-u-1-2"><?php echo HTML::image('images/chart1.png', 'Import C-CDA', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="import_ccda">Import C-CDA (Consolidated Clinical Document Architecture)</a></div>
 		<?php }?>
 		<div class="pure-u-1-2"><?php echo HTML::image('images/download.png', 'Import CSV', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="chart_import_csv">Import CSV File</a></div>
+		<?php if(Session::get('patient_centric') == 'n') {?>
+			<div class="pure-u-1-2"><?php echo HTML::image('images/usersadmin.png', 'Patient Centric NOSH', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="connect_patient_nosh">Connect to Patient Centric NOSH (Status: <span="connect_patient_nosh_status"><?php echo $url;?></span>)</a></div>
+		<?php }?>
 		</div>
 	</div>
 </div>
@@ -209,4 +212,10 @@
 	</div>
 	<div id="hedis_chart_load"><?php echo HTML::image('images/indicator.gif', 'Loading'); ?> Loading...</div>
 	<div id="hedis_chart_items"></div>
+</div>
+<div id="connect_patient_centric_dialog" title="Connect to a Patient Centric NOSH">
+	<form id="connect_patient_centric_form" class="pure-form pure-form-stacked">
+		<label for="connect_patient_centric_url">Enter the URL in your email that you recevied:</label>
+		<input type="text" style="width:95%" name="url" id="connect_patient_centric_url" class="text" required/>
+	</form>
 </div>

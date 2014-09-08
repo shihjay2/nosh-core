@@ -11,26 +11,28 @@
 			<div id="internal_outbox_pager" class="scroll" style="text-align:center;"></div>
 		</div>
 		<?php if(Session::get('group_id') != '100') {?>
-			<?php if($fax == true) {?>
-				<h3>Faxes</h3>
+			<?php if(Session::get('patient_centric') == 'n') {?>
+				<?php if($fax == true) {?>
+					<h3>Faxes</h3>
+					<div>
+						<button type="button" id="new_fax" class="nosh_button_add">New Fax</button><br><br>
+						<table id="received_faxes" class="scroll" cellpadding="0" cellspacing="0"></table>
+						<div id="received_faxes_pager" class="scroll" style="text-align:center;"></div><br>
+						<button type="button" id="delete_fax" class="nosh_button_delete">Delete Selected</button><br><br>
+						<table id="draft_faxes" class="scroll" cellpadding="0" cellspacing="0"></table>
+						<div id="draft_faxes_pager" class="scroll" style="text-align:center;"></div><br>
+						<table id="sent_faxes" class="scroll" cellpadding="0" cellspacing="0"></table>
+						<div id="sent_faxes_pager" class="scroll" style="text-align:center;"></div>
+					</div>
+				<?php }?>
+				<h3>Scans</h3>
 				<div>
-					<button type="button" id="new_fax" class="nosh_button_add">New Fax</button><br><br>
-					<table id="received_faxes" class="scroll" cellpadding="0" cellspacing="0"></table>
-					<div id="received_faxes_pager" class="scroll" style="text-align:center;"></div><br>
-					<button type="button" id="delete_fax" class="nosh_button_delete">Delete Selected</button><br><br>
-					<table id="draft_faxes" class="scroll" cellpadding="0" cellspacing="0"></table>
-					<div id="draft_faxes_pager" class="scroll" style="text-align:center;"></div><br>
-					<table id="sent_faxes" class="scroll" cellpadding="0" cellspacing="0"></table>
-					<div id="sent_faxes_pager" class="scroll" style="text-align:center;"></div>
+					<table id="received_scans" class="scroll" cellpadding="0" cellspacing="0"></table>
+					<div id="received_scans_pager" class="scroll" style="text-align:center;"></div><br>
+					<button type="button" id="savescan" class="nosh_button_save">Import Selected Scan</button>
+					<button type="button" id="delete_scan" class="nosh_button_delete">Delete Selected Scan</button>
 				</div>
 			<?php }?>
-			<h3>Scans</h3>
-			<div>
-				<table id="received_scans" class="scroll" cellpadding="0" cellspacing="0"></table>
-				<div id="received_scans_pager" class="scroll" style="text-align:center;"></div><br>
-				<button type="button" id="savescan" class="nosh_button_save">Import Selected Scan</button>
-				<button type="button" id="delete_scan" class="nosh_button_delete">Delete Selected Scan</button>
-			</div>
 			<h3>Address Book</h3>
 			<div>
 				<div class="pure-g">

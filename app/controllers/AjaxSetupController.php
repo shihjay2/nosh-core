@@ -31,7 +31,7 @@ class AjaxSetupController extends BaseController {
 		if (Session::get('practice_id') == '1') {
 			$data['smtp_user'] = Input::get('smtp_user');
 			$data['smtp_pass'] = Input::get('smtp_pass');
-			$data['patient_portal'] = Input::get('patient_portal');
+			$data['patient_portal'] = rtrim(Input::get('patient_portal'), '/');
 			$query = DB::table('practiceinfo')->where('practice_id', '!=', '1')->get();
 			if ($query) {
 				foreach ($query as $practice_row) {
@@ -1189,5 +1189,16 @@ class AjaxSetupController extends BaseController {
 		}
 		unlink(__DIR__.'/../../import/Tabular.xml');
 		return "Records added: " . $i;
+	}
+	
+	public function postCheckProviders()
+	{
+		$users = DB::table('users')->where('group_id', '=', '2')->where('practice_id', '=', Session::get('practice_id'))->first();
+		if ($users) {
+			$result = 'y';
+		} else {
+			$result = 'n';
+		}
+		echo $result;
 	}
 }

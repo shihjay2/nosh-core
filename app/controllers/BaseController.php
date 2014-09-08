@@ -85,7 +85,7 @@ class BaseController extends Controller {
 			'/js/json2.min.js',
 			'/js/highcharts.js',
 			'/js/exporting.js',
-			'/js/jquery.dform-1.0.0.min.js',
+			'/js/jquery.dform-1.1.0.js',
 			'/js/grid.addons.js',
 			'/js/grid.postext.js',
 			'/js/grid.setcolumns.js',
@@ -7974,6 +7974,102 @@ class BaseController extends Controller {
 			return $code . ', Code unknown';
 		} else {
 			return $description;
+		}
+	}
+	
+	public function send_api_data($url, $data, $username, $password)
+	{
+		if (is_array($data)) {
+			$data_string = json_encode($data);
+		} else {
+			$data_string = $data;
+		}
+		$ch = curl_init($url);
+		if ($username != '') {
+			curl_setopt($ch, CURLOPT_USERPWD, $username . ":" . $password);
+		}
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			'Content-Type: application/json',
+			'Content-Length: ' . strlen($data_string))
+		);
+		$result = curl_exec($ch);
+		$result_arr = json_decode($result, true);
+		if(curl_errno($ch)){
+			$result_arr['url_error'] = 'Error:' . curl_error($ch);
+		} else {
+			$result_arr['url_error'] = '';
+		}
+		curl_close($ch);
+		return $result_arr;
+	}
+	
+	public function api_sync_data()
+	{
+		$check = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->whereNotNull('api_key')->first();
+		if ($check) {
+			
+		}
+	}
+	
+	public function api_data($action, $table, $primary, $id)
+	{
+		$check = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->whereNotNull('api_key')->first();
+		if ($check) {
+			$row = DB::table($table)->where($primary, '=', $id)->first();
+			$row_data = (array) $row;
+			unset($row_data[$primary]);
+			$remote_id = '0';
+			$proceed = true;
+			if ($action == 'update' || $action == 'delete') {
+				$check1 = DB::table('api_queue')
+					->where('table', '=', $table)
+					->where('local_id', '=', $id)
+					->where('remote_id', '!=', '0')
+					->where('action', '!=', 'delete')
+					->first();
+				if ($check1) {
+					$remote_id = $check1->remote_id;
+				} else {
+					if ($action == 'delete') {
+						$action = 'add';
+					} else {
+						$proceed = false;
+					}
+				}
+			}
+			$json_data = array(
+				'api_key' => $check->api_key,
+				'table' => $table,
+				'primary' => $primary,
+				'remote_id' => $remote_id,
+				'action' => $action,
+				'data' => $row_data
+			);
+			$json = serialize(json_encode($json_data));
+			$practice = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
+			$login_data = array(
+				'api_key' => $check->api_key,
+				'npi' => $practice->npi
+			);
+			$login = serialize(json_encode($login_data));
+			$data = array(
+				'table' => $table,
+				'primary' => $primary,
+				'local_id' => $id,
+				'remote_id' => $remote_id,
+				'action' => $action,
+				'json' => $json,
+				'login' => $login,
+				'url' => $check->url,
+				'api_key' => $check->api_key
+			);
+			if ($proceed == true) {
+				DB::table('api_queue')->insert($data);
+				$this->audit('Add');
+			}
 		}
 	}
 }

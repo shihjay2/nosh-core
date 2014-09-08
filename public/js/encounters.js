@@ -80,9 +80,10 @@ $(document).ready(function() {
 			 	sortorder: "desc",
 			 	caption:"Encounters",
 			 	height: "100%",
-			 	onSelectRow: function(id) {
+			 	onSelectRow: function(row) {
+			 		var id = $("#encounters").getCell(row,'eid');
 			 		if (noshdata.group_id != '100') {
-						var status = jQuery("#encounters").getCell(id,'encounter_signed');
+						var status = jQuery("#encounters").getCell(row,'encounter_signed');
 						var acl = false;
 						if (noshdata.group_id == '2' || noshdata.group_id == '3') {
 							acl = true;

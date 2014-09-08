@@ -902,4 +902,123 @@ class AjaxCommonController extends BaseController {
 	{
 		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, false);
 	}
+	
+	public function checkapi($practicehandle)
+	{
+		if ($practicehandle == '0') {
+			$query = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		} else {
+			$query = DB::table('practiceinfo')->where('practicehandle', '=', $practicehandle)->first();
+		}
+		$result = 'No';
+		if ($query) {
+			if (Schema::hasColumn('practiceinfo', 'practice_api_key')) {
+				if ($query->practice_api_key != '') {
+					$result = $query->practice_api_key;
+				}
+			}
+		}
+		echo $result;
+	}
+	
+	public function postPracticeApi()
+	{
+		$url_check = false;
+		$url_reason = '';
+		$api_key = uniqid('nosh',true);
+		$register_code = uniqid();
+		$patient_portal = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		if (Input::get('practice_url') != '') {
+			$pos = stripos(Input::get('practice_url'), 'noshchartingsystem.com');
+			if ($pos !== false) {
+				$url_explode = explode('/', Input::get('practice_url'));
+				$url = 'https://noshchartingsystem.com/nosh/checkapi/' . $url_explode[5];
+			} else {
+				$url = Input::get('practice_url') . '/checkapi/0';
+			}
+			$ch = curl_init();
+			curl_setopt($ch,CURLOPT_URL, $url);
+			curl_setopt($ch,CURLOPT_FAILONERROR,1);
+			curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+			curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+			curl_setopt($ch,CURLOPT_TIMEOUT, 60);
+			curl_setopt($ch,CURLOPT_CONNECTTIMEOUT ,0);
+			$result = curl_exec($ch);
+			if(curl_errno($ch)){
+				$url_reason = 'Error: ' . curl_error($ch);
+			} else {
+				if ($result !== 'No') {
+					$url_check = true;
+					$api_key = $result;
+				} else {
+					$url_reason = 'Practice NOSH is not set up to accept API connections.  Please update the practice NOSH installation.';
+				}
+			}
+		}
+		$data = array(
+			'practice_api_key' => $api_key,
+			'active' => 'Y',
+			'npi' => Input::get('npi'),
+			'email' => Input::get('email'),
+			'documents_dir' => $patient_portal->documents_dir,
+			'fax_type' => '',
+			'smtp_user' => $patient_portal->smtp_user,
+			'smtp_pass' => $patient_portal->smtp_pass,
+			'vivacare' => '',
+			'version' => $patient_portal->version,
+			'patient_centric' => 'yp',
+			'practice_registration_key' => $register_code,
+			'practice_registration_timeout' => time() + 86400
+		);
+		$practice_id = DB::table('practiceinfo')->insertGetId($data);
+		$patient = DB::table('demographics')->first();
+		$data2 = array(
+			'pid' => $patient->pid,
+			'practice_id' => $practice_id,
+			'api_key' => $api_key
+		);
+		DB::table('demographics_relate')->insert($data2);
+		$this->audit('Add');
+		if ($url_check == false) {
+			$data_message['temp_url'] = rtrim($patient_portal->patient_portal, '/') . '/practiceregister/' . $register_code;
+		} else {
+			$data_message['temp_url'] = rtrim($patient_portal->patient_portal, '/') . '/practiceregisternosh/' . $register_code;
+		}
+		$this->send_mail('emails.apiregister', $data_message, 'NOSH ChartingSystem API Registration', Input::get('email'), '1');
+		echo 'Practice Added!';
+	}
+	
+	public function postConnectedPractices()
+	{
+		$pid = Session::get('pid');
+		$page = Input::get('page');
+		$limit = Input::get('rows');
+		$sidx = Input::get('sidx');
+		$sord = Input::get('sord');
+		$query = DB::table('practiceinfo')->where('patient_centric', '=', 'yp');
+		$result = $query->get();
+		if($result) { 
+			$count = count($result);
+			$total_pages = ceil($count/$limit); 
+		} else { 
+			$count = 0;
+			$total_pages = 0;
+		}
+		if ($page > $total_pages) $page=$total_pages;
+		$start = $limit*$page - $limit;
+		if($start < 0) $start = 0;
+		$query->orderBy($sidx, $sord)
+			->skip($start)
+			->take($limit);
+		$query1 = $query->get();
+		$response['page'] = $page;
+		$response['total'] = $total_pages;
+		$response['records'] = $count;
+		if ($query1) {
+			$response['rows'] = $query1;
+		} else {
+			$response['rows'] = '';
+		}
+		echo json_encode($response);
+	}
 }

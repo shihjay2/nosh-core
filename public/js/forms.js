@@ -28,9 +28,10 @@ $(document).ready(function() {
 				caption:"Click on a form:",
 				height: "100%",
 				onSelectRow: function(id){
+					var template_id = $("#forms").getCell(id,'template_id');
 					$.ajax({
 						type: "POST",
-						url: "ajaxcommon/get-form/" + id,
+						url: "ajaxcommon/get-form/" + template_id,
 						dataType: 'json',
 						success: function(data){
 							$("#form_array").val(data.array);
@@ -38,7 +39,7 @@ $(document).ready(function() {
 							var json_object = JSON.parse(data.array);
 							$('#form_content').dform(json_object);
 							$('#form_scoring').val(data.scoring);
-							$("#form_template_id").val(id);
+							$("#form_template_id").val(template_id);
 							$(".patient_form_div").css("padding","5px");
 							$('.patient_form_buttonset').buttonset();
 							$('input.form_other[type="checkbox"]').button();

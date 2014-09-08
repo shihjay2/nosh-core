@@ -28,8 +28,9 @@ $(document).ready(function() {
 			 	caption:"Labs",
 			 	hiddengrid: true,
 			 	height: "100%",
-			 	onCellSelect: function(id,iCol) {
+			 	onCellSelect: function(row,iCol) {
 					if (iCol > 1) {
+				 		var id = $("#labs").getCell(row,'documents_id');
 				 		$("#view_document_id").val(id);
 				 		$.ajax({
 							type: "POST",
@@ -70,8 +71,9 @@ $(document).ready(function() {
 			 	caption:"Imaging",
 			 	hiddengrid: true,
 			 	height: "100%",
-			 	onCellSelect: function(id,iCol) {
+			 	onCellSelect: function(row,iCol) {
 					if (iCol > 1) {
+						var id = $("#radiology").getCell(row,'documents_id');
 				 		$("#view_document_id").val(id);
 				 		$.ajax({
 							type: "POST",
@@ -112,8 +114,9 @@ $(document).ready(function() {
 			 	caption:"Cardiopulmonary",
 			 	hiddengrid: true,
 			 	height: "100%",
-			 	onCellSelect: function(id,iCol) {
+			 	onCellSelect: function(row,iCol) {
 					if (iCol > 1) {
+				 		var id = $("#cardiopulm").getCell(row,'documents_id');
 				 		$("#view_document_id").val(id);
 				 		$.ajax({
 							type: "POST",
@@ -154,8 +157,9 @@ $(document).ready(function() {
 				caption:"Endoscopy: " + $('#endoscopy_count').val(),
 				hiddengrid: true,
 				height: "100%",
-				onCellSelect: function(id,iCol) {
+				onCellSelect: function(row,iCol) {
 					if (iCol > 1) {
+				 		var id = $("#endoscopy").getCell(row,'documents_id');
 				 		$("#view_document_id").val(id);
 				 		$.ajax({
 							type: "POST",
@@ -196,8 +200,9 @@ $(document).ready(function() {
 			 	caption:"Referrals",
 			 	hiddengrid: true,
 			 	height: "100%",
-			 	onCellSelect: function(id,iCol) {
+			 	onCellSelect: function(row,iCol) {
 					if (iCol > 1) {
+				 		var id = $("#referrals").getCell(row,'documents_id');
 				 		$("#view_document_id").val(id);
 				 		$.ajax({
 							type: "POST",
@@ -238,8 +243,9 @@ $(document).ready(function() {
 				caption:"Past Records",
 				hiddengrid: true,
 				height: "100%",
-				onCellSelect: function(id,iCol) {
+				onCellSelect: function(row,iCol) {
 					if (iCol > 1) {
+				 		var id = $("#past_records").getCell(row,'documents_id');
 				 		$("#view_document_id").val(id);
 				 		$.ajax({
 							type: "POST",
@@ -280,8 +286,9 @@ $(document).ready(function() {
 			 	caption:"Other Forms",
 			 	hiddengrid: true,
 			 	height: "100%",
-			 	onCellSelect: function(id,iCol) {
+			 	onCellSelect: function(row,iCol) {
 					if (iCol > 1) {
+				 		var id = $("#outside_forms").getCell(row,'documents_id');
 				 		$("#view_document_id").val(id);
 				 		$.ajax({
 							type: "POST",
@@ -322,8 +329,9 @@ $(document).ready(function() {
 			 	caption:"Letters",
 			 	hiddengrid: true,
 			 	height: "100%",
-			 	onCellSelect: function(id,iCol) {
+			 	onCellSelect: function(row,iCol) {
 					if (iCol > 1) {
+				 		var id = $("#letters").getCell(row,'documents_id');
 				 		$("#view_document_id").val(id);
 				 		$.ajax({
 							type: "POST",
@@ -364,8 +372,9 @@ $(document).ready(function() {
 			 	caption:"Consolidated Clinical Documents (C-CDA's)",
 			 	hiddengrid: true,
 			 	height: "100%",
-			 	onCellSelect: function(id,iCol) {
+			 	onCellSelect: function(row,iCol) {
 					if (iCol > 1) {
+				 		var id = $("#ccdas").getCell(row,'documents_id');
 				 		window.open("bluebutton/" + id);
 					}
 			 	},

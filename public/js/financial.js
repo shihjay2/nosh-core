@@ -57,7 +57,8 @@ $(document).ready(function() {
 				caption:"Billed Encounters Waiting to be Submitted",
 				height: "100%",
 				onSelectRow: function(id) {
-					$("#billing_eid").val(id);
+					var eid = $("#submit_list").getCell(id,'eid');
+					$("#billing_eid").val(eid);
 					$("#submit_bill_dialog").dialog('open');
 				},
 				jsonReader: { repeatitems : false, id: "0" }
@@ -117,7 +118,8 @@ $(document).ready(function() {
 						height: '100%',
 						footerrow : true,
 						userDataOnFooter : true,
-						onSelectRow: function(id) {
+						onSelectRow: function(row) {
+							var id = $("#"+subgrid_table_id).getCell(row,'billing_core_id');
 							$('#billing_billing_core_id').val(id);
 			 				$.ajax({
 								type: "POST",
@@ -200,7 +202,8 @@ $(document).ready(function() {
 				sortorder: "desc",
 				caption:"Patients with Outstanding Balances - Clicking on a row will open the patient's chart.",
 				height: "100%",
-				onSelectRow: function(id) {
+				onSelectRow: function(row) {
+					var id = $("#outstanding_balance").getCell(row,'pid');
 					$.ajax({
 						type: "POST",
 						url: "ajaxsearch/openchart",
@@ -342,7 +345,8 @@ $(document).ready(function() {
 			 	caption:"Uploaded ERA 835's",
 			 	height: "100%",
 			 	jsonReader: { repeatitems : false, id: "0" },
-			 	onSelectRow: function(id) {
+			 	onSelectRow: function(row) {
+					var id = $("#era_list").getCell(row,'era_id');
 					$('#dialog_load').dialog('option', 'title', "Loading ERA Details...").dialog('open');
 					$.ajax({
 						type: "POST",

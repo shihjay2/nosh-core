@@ -25,16 +25,16 @@
 							<?php if(Session::get('patient_centric') == 'n') {?>
 								<br><?php echo HTML::image('images/important.png', 'System updates', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_update">Updates</a>
 							<?php }?>
-							<br><?php echo HTML::image('images/users.png', 'Administer users', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_users">Users</a>
-							<?php if(Session::get('patient_centric') == 'n') {?>
-								<br><?php echo HTML::image('images/schedule.png', 'Setup schedule', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_admin_schedule">Schedule</a>
+							<br><?php echo HTML::image('images/users.png', 'Administer users', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_users">Users<?php if($users_needed == 'y') {?><span id="users_needed" style="font-weight:bold;color:red;"> This needs to be setup before using!</span><?php }?></a>
+							<?php if(Session::get('patient_centric') == 'n' || Session::get('patient_centric') == 'yp') {?>
+								<br><?php echo HTML::image('images/schedule.png', 'Setup schedule', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_admin_schedule">Schedule<?php if($schedule_needed == 'y') {?><span id="schedule_needed" style="font-weight:bold;color:red;"> This needs to be setup before using!</span><?php }?></a>
 							<?php }?>
 							<br><?php echo HTML::image('images/newencounter.png', 'View system logs', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_logs">View system logs</a>
 							<?php if(Session::get('practice_active') == 'Y') { if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh') {?>
-								<br><?php echo HTML::image('images/cancel.png', 'Cancel subscription', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="https://noshchartingsystem/registerpractice/cancel_subscription/' . Session::get('practice_id') . '">Cancel Subscriptions</a>
+								<br><?php echo HTML::image('images/cancel.png', 'Cancel subscription', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="https://noshchartingsystem.com/registerpractice/cancel_subscription/<?php echo Session::get('practice_id'); ?>">Cancel Subscriptions</a>
 							<?php }}?>
 							<?php if(Session::get('practice_active') == 'N') { if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh') {?>
-								<br><?php echo HTML::image('images/button_accept.png', 'Restart subscription', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="https://noshchartingsystem/registerpractice/restart_subscription/' . Session::get('practice_id') . '">Restart Subscriptions</a>
+								<br><?php echo HTML::image('images/button_accept.png', 'Restart subscription', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="https://noshchartingsystem.com/registerpractice/restart_subscription/<?php echo Session::get('practice_id'); ?>">Restart Subscriptions</a>
 							<?php }}?>
 						<?php }?>
 						<?php if(Session::get('group_id') == '2') {?>
@@ -107,6 +107,9 @@
 						<br><?php echo HTML::image('images/chart1.png', 'Documents', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your test results, outside records, and other documents."> <a href="#" id="dashboard_health_record">Your personal health record.</a></span>
 						<?php if (Session::get('agealldays') <6574.5) {?>
 							<br><?php echo HTML::image('images/plot.png', 'Growth charts', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="View growth charts."> <a href="#" id="dashboard_growth_chart">View growth charts.</a></span>
+						<?php }?>
+						<?php if(Session::get('patient_centric') == 'y') {?>
+							<br><?php echo HTML::image('images/button_accept.png', 'Add a practice', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Manage practices so that a provider can document their encounters with you."> <a href="#" id="dashboard_manage_practice">Your connected practices.</a></span>
 						<?php }?>
 						<br><?php echo HTML::image('images/usersadmin.png', 'Change password', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;')); ?><a href="#" id="change_password">Change your password.</a>
 					</div>
@@ -270,4 +273,23 @@
 			<button type="button" id="reconcile_tests_cancel" class="nosh_button_cancel">Cancel</button>
 		</form>
 	</div>
+</div>
+<div id="manage_practice_dialog" title="Connected Practices">
+	<table id="manage_practice_list" class="scroll" cellpadding="0" cellspacing="0"></table>
+	<div id="manage_practice_list_pager" class="scroll" style="text-align:center;"></div><br>
+	<button type="button" id="dashboard_add_practice" class="nosh_button_add">Add</button>
+</div>
+<div id="add_practice_dialog" title="Add a Practice">
+	<form id="add_practice_form" class="pure-form pure-form-stacked">
+		<label for="add_practice_practice_name">Practice Name (for search):</label>
+		<input type="text" id="add_practice_practice_name" name="practice_name" style="width:95%" class="text"/>
+		<label for="add_practice_state">Practice State (for search):</label>
+		<select id="add_practice_state" name="practice_state" style="width:95%" class="text"></select>
+		<label for="add_practice_npi">NPI of Practice:</label>
+		<input type="text" id="add_practice_npi" name="practice_npi" style="width:95%" class="text" required/>
+		<label for="add_practice_email">Email address:</label>
+		<input type="text" id="add_practice_email" name="email" style="width:95%" class="text" required/>
+		<label for="add_practice_practice_url">Practice Portal URL (optional):</label>
+		<input type="text" id="add_practice_practice_url" name="practice_url" style="width:95%" class="text"/>
+	</form>
 </div>

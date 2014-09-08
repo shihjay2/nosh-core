@@ -154,9 +154,6 @@
 	</div>
 	<div id="install_choose_dialog" title="Choose Installation Type">
 		<button type='button' id='install_practice' title="Choose this method if you are a medical practice" style="width:310px">Install Practice Centric NOSH ChartingSystem</button><br><br>
-		Patient Centric NOSH is coming soon!
-<!--
 		<button type='button' id='install_patient' title="Choose this method if you are a patient" style="width:310px">Install Patient Centric NOSH ChartingSystem</button>
--->
 	</div>
 </div>

@@ -738,7 +738,7 @@ class AjaxSearchController extends BaseController {
 		echo $result;
 	}
 	
-	public function postGetTags ($type, $id)
+	public function postGetTags($type, $id)
 	{
 		$query = Tags_relate::where($type, '=', $id)->get();
 		$result = "";
@@ -754,6 +754,11 @@ class AjaxSearchController extends BaseController {
 		}
 		if ($type == 'eid') {
 			Session::put('encounter_active', 'n');
+		}
+		if ($type == 't_messages_id') {
+			if (Session::get('t_messages_id') != FALSE) {
+				Session::forget('t_messages_id');
+			}
 		}
 		echo json_encode($data);
 	}
@@ -2358,10 +2363,55 @@ class AjaxSearchController extends BaseController {
 			if (isset($table)) {
 				$data['response'] = "true";
 				$data['message'] = array();
-				foreach ($table->find('tbody',0)->find('tr') as $tr) {
+				foreach ($table->find('tr') as $tr) {
 					if ($tr->class == "tr_ind") {
 						$npi = $tr->id;
 						$name_item = $tr->find('span[class=name_ind]',0);
+						$name = $name_item->innertext;
+						$address_item = $tr->find('span[class=address]',0);
+						$address = $address_item->innertext;
+						$specialty_item = $tr->find('span[class=tax]',0);
+						$specialty = $specialty_item->innertext;
+						$specialty = str_replace("( ","",$specialty);
+						$specialty = str_replace(") ","",$specialty);
+						$text = $name . "; Specialty: " . $specialty . "; Address: " . $address;
+						$data['message'][] = array(
+							'label' => $text,
+							'value' => $npi
+						);
+					}
+				}
+			}
+		}
+		echo json_encode($data);
+	}
+	
+	public function postNpiLookupPractice()
+	{
+		$q = Input::get('term');
+		$q_items = explode(";", $q);
+		$data['response'] = "false";
+		$org = rawurlencode($q_items[0]);
+		$state = $q_items[1];
+		$url = 'http://docnpi.com/api/index.php?first_name=&last_name=&org_name=' . $org . '&address=&state=' . $state . '&city_name=&zip=&taxonomy=&ident=&is_person=false&is_address=false&is_org=true&is_ident=false&format=aha_table';
+		$ch = curl_init();
+		curl_setopt($ch,CURLOPT_URL, $url);
+		curl_setopt($ch,CURLOPT_FAILONERROR,1);
+		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch,CURLOPT_TIMEOUT, 15);
+		$data1 = curl_exec($ch);
+		curl_close($ch);
+		$html = new Htmldom($data1);
+		if (isset($html)) {
+			$table = $html->find('table[id=npi_results_table]',0);
+			if (isset($table)) {
+				$data['response'] = "true";
+				$data['message'] = array();
+				foreach ($table->find('tr') as $tr) {
+					if ($tr->class == "tr_org") {
+						$npi = $tr->id;
+						$name_item = $tr->find('span[class=org]',0);
 						$name = $name_item->innertext;
 						$address_item = $tr->find('span[class=address]',0);
 						$address = $address_item->innertext;

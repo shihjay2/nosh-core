@@ -290,10 +290,11 @@ $(document).ready(function() {
 					height: "100%",
 					caption:"Received Faxes",
 					onSelectRow: function(id){
-						$("#view_received_id").val(id);
+						var fax_id = $("#received_faxes").getCell(id,'received_id');
+						$("#view_received_id").val(fax_id);
 						$.ajax({
 							type: "POST",
-							url: "ajaxmessaging/view-fax/" + id,
+							url: "ajaxmessaging/view-fax/" + fax_id,
 							dataType: "json",
 							success: function(data){
 								$("#embedURL1").html(data.html);
@@ -326,10 +327,11 @@ $(document).ready(function() {
 					emptyrecords:"No drafts",
 					hiddengrid: true,
 					onSelectRow: function(id){
+						var job_id = $("#draft_faxes").getCell(id,'job_id');
 						$.ajax({
 							type: "POST",
 							url: "ajaxmessaging/set-id",
-							data: "job_id=" + id,
+							data: "job_id=" + job_id,
 							success: function(data){
 								loadfaxjob();
 								$(".messaging_fax_dialog_old").hide();
@@ -362,10 +364,11 @@ $(document).ready(function() {
 					caption:"Sent Faxes",
 					hiddengrid: true,
 					onSelectRow: function(id){
+						var job_id = $("#sent_faxes").getCell(id,'job_id');
 						$.ajax({
 							type: "POST",
 							url: "ajaxmessaging/set-id",
-							data: "job_id=" + id,
+							data: "job_id=" + job_id,
 							success: function(data){
 								loadfaxjob();
 								$(".messaging_fax_dialog_old").show();
@@ -400,10 +403,11 @@ $(document).ready(function() {
 					caption:"Scanned Documents",
 					onCellSelect: function(id,iCol){
 						if (iCol > 0) {
-							$("#view_scans_id").val(id);
+							var scans_id = $("#received_scans").getCell(id,'scans_id');
+							$("#view_scans_id").val(scans_id);
 							$.ajax({
 								type: "POST",
-								url: "ajaxmessaging/view-scan/" + id,
+								url: "ajaxmessaging/view-scan/" + scans_id,
 								dataType: "json",
 								success: function(data){
 									$("#embedURL3").html(data.html);

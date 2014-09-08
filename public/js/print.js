@@ -495,7 +495,8 @@ $(document).ready(function() {
 				height: "100%",
 				multiselect: true,
 				multiboxonly: true,
-				onSelectRow: function(id,iCol){
+				onSelectRow: function(row,iCol){
+					var id = $("#print_labs").getCell(row,'documents_id');
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
@@ -561,7 +562,8 @@ $(document).ready(function() {
 				height: "100%",
 				multiselect: true,
 				multiboxonly: true,
-				onSelectRow: function(id,iCol){
+				onSelectRow: function(row,iCol){
+					var id = $("#print_radiology").getCell(row,'documents_id');
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
@@ -627,7 +629,8 @@ $(document).ready(function() {
 				height: "100%",
 				multiselect: true,
 				multiboxonly: true,
-				onSelectRow: function(id,iCol){
+				onSelectRow: function(row,iCol){
+					var id = $("#print_cardiopulm").getCell(row,'documents_id');
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
@@ -693,7 +696,8 @@ $(document).ready(function() {
 				height: "100%",
 				multiselect: true,
 				multiboxonly: true,
-				onSelectRow: function(id,iCol){
+				onSelectRow: function(row,iCol){
+					var id = $("#print_endoscopy").getCell(row,'documents_id');
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
@@ -759,7 +763,8 @@ $(document).ready(function() {
 				height: "100%",
 				multiselect: true,
 				multiboxonly: true,
-				onSelectRow: function(id,iCol){
+				onSelectRow: function(row,iCol){
+					var id = $("#print_referrals").getCell(row,'documents_id');
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
@@ -825,7 +830,8 @@ $(document).ready(function() {
 				height: "100%",
 				multiselect: true,
 				multiboxonly: true,
-				onSelectRow: function(id,iCol){
+				onSelectRow: function(row,iCol){
+					var id = $("#print_past_records").getCell(row,'documents_id');
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
@@ -891,7 +897,8 @@ $(document).ready(function() {
 				height: "100%",
 				multiselect: true,
 				multiboxonly: true,
-				onSelectRow: function(id,iCol){
+				onSelectRow: function(row,iCol){
+					var id = $("#print_outside_forms").getCell(row,'documents_id');
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",
@@ -957,7 +964,8 @@ $(document).ready(function() {
 				height: "100%",
 				multiselect: true,
 				multiboxonly: true,
-				onSelectRow: function(id,iCol){
+				onSelectRow: function(row,iCol){
+					var id = $("#print_letters").getCell(row,'documents_id');
 					if (iCol > 0) {
 						$.ajax({
 							type: "POST",

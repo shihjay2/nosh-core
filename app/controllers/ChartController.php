@@ -44,6 +44,16 @@ class ChartController extends BaseController {
 		} else {
 			$data2['portal_active'] = false;
 		}
+		$patient1 = DB::table('demographics_relate')
+			->where('pid', '=', Session::get('pid'))
+			->where('practice_id', '=', Session::get('practice_id'))
+			->whereNotNull('url')
+			->first();
+		if ($patient1) {
+			$data['url'] = 'Connected';
+		} else {
+			$data['url'] = 'Not Connected';
+		}
 		$this->layout->style = $this->css_assets();
 		$this->layout->script = $this->js_assets('chart');
 		$this->layout->search = View::make('search', $this->getSearchData())->render();

@@ -221,4 +221,51 @@ class AjaxLoginController extends BaseController {
 			echo "OK";
 		}
 	}
+	
+	public function apilogin()
+	{
+		$data = Input::all();
+		$practice = DB::table('practiceinfo')->where('npi', '=', $data['npi'])->where('practice_api_key', '=', $data['api_key'])->first();
+		if ($practice) {
+			$password = Hash::make(time());
+			$data1 = array(
+				'username' => $practice->practice_api_key,
+				'password' => $password,
+				'group_id' => '99',
+				'practice_id' => $practice->practice_id
+			);
+			DB::table('users')->insert($data1);
+			$this->audit('Add');
+			return Response::json(array(
+				'error' => false,
+				'message' => 'Login successful',
+				'username' => $practice->practice_api_key,
+				'password' => $password
+			),200);
+		} else {
+			return Response::json(array(
+				'error' => true,
+				'message' => 'Login incorrect!'
+			),200);
+		}
+	}
+	
+	public function apilogout()
+	{
+		$data = Input::all();
+		$practice = DB::table('practiceinfo')->where('npi', '=', $data['npi'])->where('practice_api_key', '=', $data['api_key'])->first();
+		if ($practice) {
+			DB::table('users')->where('group_id', '=', '99')->where('practice_id', '=', $practice->practice_id)->delete();
+			$this->audit('Delete');
+			return Response::json(array(
+				'error' => false,
+				'message' => 'Logout successful'
+			),200);
+		} else {
+			return Response::json(array(
+				'error' => true,
+				'message' => 'Login incorrect!'
+			),200);
+		}
+	}
 }

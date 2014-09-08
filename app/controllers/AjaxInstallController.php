@@ -616,11 +616,114 @@ class AjaxInstallController extends BaseController {
 				DB::table('orderslist1')->where('orderslist1_id', '=', $row2->orderslist1_id)->update($orders_data);
 			}
 		}
-		Auth::attempt(array('username' => $username, 'password' => $password, 'active' => '1', 'practice_id' => '1'));
+		Auth::attempt(array('username' => $username, 'password' => Input::get('password'), 'active' => '1', 'practice_id' => '1'));
 		Session::put('user_id', $user_id);
 		Session::put('group_id', '1');
 		Session::put('practice_id', '1');
+		Session::put('version', $data2['version']);
+		Session::put('practice_active', $data2['active']);
+		Session::put('displayname', $displayname);
+		Session::put('documents_dir', $data2['documents_dir']);
+		Session::put('patient_centric', $data2['patient_centric']);
 		echo "OK";
+	}
+	
+	public function postPracticeRegister()
+	{
+		$base_practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$username = Input::get('username');
+		$password = Hash::make(Input::get('password'));
+		$email = Input::get('email');
+		$practice_id = Input::get('practice_id');
+		// Insert practice
+		$data2 = array(
+			'practice_name' => Input::get('practice_name'),
+			'street_address1' => Input::get('street_address1'),
+			'street_address2' => Input::get('street_address2'),
+			'city' => Input::get('city'),
+			'state' => Input::get('state'),
+			'zip' => Input::get('zip'),
+			'phone' => Input::get('phone'),
+			'fax' => Input::get('fax'),
+			'fax_type' => '',
+			'vivacare' => '',
+			'practicehandle' => Input::get('practicehandle'),
+			'practice_registration_key' => '',
+			'practice_registration_timeout' => ''
+		);
+		DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->update($data2);
+		$this->audit('Update');
+		// Insert Administrator
+		$data1 = array(
+			'username' => $username,
+			'password' => $password,
+			'email' => $email,
+			'group_id' => '1',
+			'displayname' => 'Administrator',
+			'active' => '1',
+			'practice_id' => $practice_id
+		);
+		$user_id = DB::table('users')->insertGetId($data1);
+		// Insert default calendar class
+		$data8 = array(
+			'visit_type' => 'Closed',
+			'classname' => 'colorblack',
+			'active' => 'y',
+			'practice_id' => $practice_id
+		);
+		DB::table('calendar')->insert($data8);
+		Auth::attempt(array('username' => $username, 'password' => Input::get('password'), 'active' => '1', 'practice_id' => '1'));
+		Session::put('user_id', $user_id);
+		Session::put('group_id', '1');
+		Session::put('practice_id', '1');
+		Session::put('version', $data2['version']);
+		Session::put('practice_active', $data2['active']);
+		Session::put('displayname', $displayname);
+		Session::put('documents_dir', $data2['documents_dir']);
+		Session::put('patient_centric', $data2['patient_centric']);
+		echo "OK";
+	}
+	
+	public function practiceregisternosh($api)
+	{
+		$practice = DB::table('practiceinfo')->where('practice_registration_key', '=', $api)->first();
+		if ($practice) {
+			$data = Input::all();
+			if ($practice->npi == $data['practice']['npi']) {
+				$patient_data['url'] = $data['practice']['patient_portal'];
+				DB::table('demographics_relate')->where('practice_id', '=', $practice->practice_id)->update($patient_data);
+				$this->audit('Update');
+				unset($$data['practice']['patient_portal']);
+				$data['practice']['practice_registration_key'] = '';
+				$data['practice']['practice_registration_timeout'] = '';
+				DB::table('practiceinfo')->where('practice_id', '=', $practice->practice_id)->update($data['practice']);
+				$this->audit('Update');
+				foreach ($data['users'] as $user) {
+					$user['practice_id'] = $practice->practice_id;
+					DB::table('users')->insert($user);
+					$this->audit('Add');
+				}
+				return Response::json(array(
+					'error' => false,
+					'message' => 'Practice connected',
+					'api_key' => $practice->practice_api_key
+				),200);
+			} else {
+				return Response::json(array(
+					'error' => true,
+					'message' => 'Incorrect NPI number registered for the practice!',
+				),200);
+			}
+			return Response::json(array(
+				'error' => true,
+				'message' => 'Registration link timed out or does not exist!',
+			),200);
+		} else {
+			return Response::json(array(
+				'error' => true,
+				'message' => 'Registration link timed out or does not exist!',
+			),200);
+		}
 	}
 	
 	public function postDirectoryCheck()
@@ -648,6 +751,16 @@ class AjaxInstallController extends BaseController {
 			echo "OK";
 		} else {
 			echo "Incorrect username/password for your MySQL database.  Try again.";
+		}
+	}
+	
+	public function postCheckPracticehandle()
+	{
+		$query = DB::table('practiceinfo')->where('practicehandle', '=', Input::get('practicehandle'))->first();
+		if ($query) {
+			echo "Practice Handle already used!";
+		} else {
+			echo "OK";
 		}
 	}
 	

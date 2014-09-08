@@ -385,8 +385,9 @@ class AjaxChartController extends BaseController {
 				'rcopia_sync' => 'n'
 			);
 			if(Input::get('issue_id') == '') {
-				DB::table('issues')->insert($data);
+				$id = DB::table('issues')->insertGetId($data);
 				$this->audit('Add');
+				$this->api_data('add', 'issues', 'issue_id', $id);
 				$result = Practiceinfo::find(Session::get('practice_id'));
 				if ($result->mtm_extension == 'y') {
 					$this->add_mtm_alert($pid, 'issues');
@@ -395,6 +396,7 @@ class AjaxChartController extends BaseController {
 			} else {
 				DB::table('issues')->where('issue_id', '=', Input::get('issue_id'))->update($data);
 				$this->audit('Update');
+				$this->api_data('update', 'issues', 'issue_id', Input::get('issue_id'));
 				$arr = "Issue updated!";
 			}
 			echo $arr;
@@ -415,6 +417,7 @@ class AjaxChartController extends BaseController {
 			);
 			DB::table('issues')->where('issue_id', '=', Input::get('issue_id'))->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'issues', 'issue_id', Input::get('issue_id'));
 			echo "Issue inactivated!";
 		}
 	}
@@ -442,6 +445,7 @@ class AjaxChartController extends BaseController {
 			}
 			DB::table('issues')->where('issue_id', '=', $issue_id)->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'issues', 'issue_id', $issue_id);
 			echo "Issue deleted!";
 		}
 	}
@@ -454,6 +458,7 @@ class AjaxChartController extends BaseController {
 		);
 		DB::table('issues')->where('issue_id', '=', Input::get('issue_id'))->update($data);
 		$this->audit('Update');
+		$this->api_data('update', 'issues', 'issue_id', Input::get('issue_id'));
 		echo "Issue reactivated!";
 	}
 	
@@ -487,8 +492,9 @@ class AjaxChartController extends BaseController {
 				'rxl_ndcid' => Input::get('rxl_ndcid')
 			);	
 			if(Input::get('rxl_id') == '') {
-				DB::table('rx_list')->insert($data);
+				$id = DB::table('rx_list')->insertGetId($data);
 				$this->audit('Add');
+				$this->api_data('add', 'rx_list', 'rxl_id', $id);
 				$result = Practiceinfo::find(Session::get('practice_id'));
 				if ($result->mtm_extension == 'y') {
 					$this->add_mtm_alert($pid, 'medications');
@@ -497,6 +503,7 @@ class AjaxChartController extends BaseController {
 			} else {
 				DB::table('rx_list')->where('rxl_id', '=', Input::get('rxl_id'))->update($data);
 				$this->audit('Update');
+				$this->api_data('update', 'rx_list', 'rxl_id', Input::get('rxl_id'));
 				$arr = "Medication updated!";
 			}
 			echo $arr;
@@ -545,6 +552,7 @@ class AjaxChartController extends BaseController {
 			);
 			DB::table('rx_list')->where('rxl_id', '=', Input::get('rxl_id'))->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'rx_list', 'rxl_id', Input::get('rxl_id'));
 			$result['message'] = "Medication inactivated!";
 			echo json_encode($result);
 		}
@@ -572,6 +580,7 @@ class AjaxChartController extends BaseController {
 			}
 			DB::table('rx_list')->where('rxl_id', '=', Input::get('rxl_id'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'rx_list', 'rxl_id', Input::get('rxl_id'));
 			echo "Medication deleted!";
 		}
 	}
@@ -597,6 +606,7 @@ class AjaxChartController extends BaseController {
 			);
 			DB::table('rx_list')->where('rxl_id', '=', Input::get('rxl_id'))->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'rx_list', 'rxl_id', Input::get('rxl_id'));
 			$result['message'] = "Medication reactivated!";
 			echo json_encode($result);
 		}
@@ -681,6 +691,7 @@ class AjaxChartController extends BaseController {
 				);
 				DB::table('rx_list')->where('rxl_id', '=', Input::get('rxl_id'))->update($data1);
 				$this->audit('Update');
+				$this->api_data('update', 'rx_list', 'rxl_id', Input::get('rxl_id'));
 				$result2 = Rx_list::find(Input::get('rxl_id'));
 				$old_date_active = $result2->rxl_date_active;
 				$data2 = array(
@@ -710,6 +721,7 @@ class AjaxChartController extends BaseController {
 				);
 				$add1 = DB::table('rx_list')->insertGetId($data2);
 				$this->audit('Add');
+				$this->api_data('add', 'rx_list', 'rxl_id', $add1);
 				if (Input::get('rxl_sig') == '') {
 					$instructions = Input::get('rxl_instructions');
 				} else {
@@ -906,6 +918,7 @@ class AjaxChartController extends BaseController {
 				);
 				DB::table('rx_list')->where('rxl_id', '=', $row1->rxl_id)->update($data);
 				$this->audit('Update');
+				$this->api_data('update', 'rx_list', 'rxl_id', $row1->rxl_id);
 			}
 			$practice = Practiceinfo::find(Session::get('practice_id'));
 			if($practice->rcopia_extension == 'y') {
@@ -920,6 +933,7 @@ class AjaxChartController extends BaseController {
 			}
 			DB::table('rx_list')->where('rxl_id', '=', $old_rxl_id)->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'rx_list', 'rxl_id', $old_rxl_id);
 			$result['message'] = "Entered medication in error process complete!";
 			echo json_encode($result);
 		}
@@ -1284,8 +1298,9 @@ class AjaxChartController extends BaseController {
 				}
 			}
 			if(Input::get('sup_id') == '') {
-				DB::table('sup_list')->insert($data);
+				$sup_id = DB::table('sup_list')->insertGetId($data);
 				$this->audit('Add');
+				$this->api_data('update', 'sup_list', 'sup_id', $sup_id);
 				$result = array(
 					'message' => 'Supplement added!',
 					'medtext' => Input::get('sup_supplement') . ' ' . Input::get('sup_dosage')
@@ -1305,6 +1320,7 @@ class AjaxChartController extends BaseController {
 			} else {
 				DB::table('sup_list')->where('sup_id', '=', Input::get('sup_id'))->update($data);
 				$this->audit('Update');
+				$this->api_data('update', 'sup_list', 'sup_id', Input::get('sup_id'));
 				$result = array(
 					'message' => 'Supplement updated!',
 					'medtext' => Input::get('sup_supplement') . ' ' . Input::get('sup_dosage')
@@ -1345,6 +1361,7 @@ class AjaxChartController extends BaseController {
 			);
 			DB::table('sup_list')->where('sup_id', '=', $sup_id)->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'sup_list', 'sup_id', $sup_id);
 			$result['message'] = "Supplement inactivated!";
 			echo json_encode($result);
 		}
@@ -1360,6 +1377,7 @@ class AjaxChartController extends BaseController {
 		} else {
 			DB::table('sup_list')->where('sup_id', '=', Input::get('sup_id'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'sup_list', 'sup_id', Input::get('sup_id'));
 			echo "Supplement deleted!";
 		}
 	}
@@ -1380,6 +1398,7 @@ class AjaxChartController extends BaseController {
 			);
 			DB::table('sup_list')->where('sup_id', '=', $sup_id)->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'sup_list', 'sup_id', $sup_id);
 			$result['message'] = "Supplement reactivated!";
 			echo json_encode($result);
 		}
@@ -1900,12 +1919,14 @@ class AjaxChartController extends BaseController {
 				'meds_ndcid' => $ndcid
 			);	
 			if(Input::get('allergies_id') == '') {
-				DB::table('allergies')->insert($data);
+				$id = DB::table('allergies')->insertGetId($data);
 				$this->audit('Add');
+				$this->api_data('add', 'allergies', 'allergies_id', $id);
 				$result['message'] = "Allergy added!";
 			} else {
 				DB::table('allergies')->where('allergies_id', '=', Input::get('allergies_id'))->update($data);
 				$this->audit('Update');
+				$this->api_data('update', 'allergies', 'allergies_id', Input::get('allergies_id'));
 				$result['message'] = "Allergy updated!";
 			}
 			echo json_encode($result);
@@ -1926,6 +1947,7 @@ class AjaxChartController extends BaseController {
 			);
 			DB::table('allergies')->where('allergies_id', '=', Input::get('allergies_id'))->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'allergies', 'allergies_id', Input::get('allergies_id'));
 			echo "Allergy inactivated!";
 		}
 	}
@@ -1952,6 +1974,7 @@ class AjaxChartController extends BaseController {
 			}
 			DB::table('allergies')->where('allergies_id', '=', $allergies_id)->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'allergies', 'allergies_id', $allergies_id);
 			echo "Allergy deleted!";
 		}
 	}
@@ -1970,6 +1993,7 @@ class AjaxChartController extends BaseController {
 			);
 			DB::table('allergies')->where('allergies_id', '=', Input::get('allergies_id'))->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'allergies', 'allergies_id', Input::get('allergies_id'));
 			echo "Allergy reactivated!";
 		}
 	}
@@ -2168,12 +2192,14 @@ class AjaxChartController extends BaseController {
 				'alert_send_message' => $alert_send_message
 			);
 			if(Input::get('alert_id') == '') {
-				DB::table('alerts')->insert($data);
+				$id = DB::table('alerts')->insertGetId($data);
 				$this->audit('Add');
+				$this->api_data('add', 'alerts', 'alert_id', $id);
 				echo "Alert/Task added!";
 			} else {
 				DB::table('alerts')->where('alert_id', '=', Input::get('alert_id'))->update($data);
 				$this->audit('Update');
+				$this->api_data('update', 'alerts', 'alert_id', Input::get('alert_id'));
 				echo "Alert/Task updated!";
 			}
 		}
@@ -2189,6 +2215,7 @@ class AjaxChartController extends BaseController {
 		} else {
 			DB::table('alerts')->where('alert_id', '=', Input::get('alert_id'))->delete();
 			$this->audit('Delete');
+			$this->api_data('delete', 'alerts', 'alert_id', Input::get('alert_id'));
 			echo "Alert/Task deleted!";
 		}
 	}
@@ -2206,6 +2233,7 @@ class AjaxChartController extends BaseController {
 			);
 			DB::table('alerts')->where('alert_id', '=', Input::get('alert_id'))->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'alerts', 'alert_id', Input::get('alert_id'));
 			$row = DB::table('alerts')->where('alert_id', '=', Input::get('alert_id'))->first();
 			if($row->orders_id != '') {
 				$data1 = array(
@@ -2231,6 +2259,7 @@ class AjaxChartController extends BaseController {
 			);
 			DB::table('alerts')->where('alert_id', '=', Input::get('alert_id'))->update($data);
 			$this->audit('Update');
+			$this->api_data('update', 'alerts', 'alert_id', Input::get('alert_id'));
 			echo "Alert/Task marked incomplete!";
 		}
 	}
@@ -2250,6 +2279,7 @@ class AjaxChartController extends BaseController {
 				);
 				DB::table('alerts')->where('alert_id', '=', $query->alert_id)->update($data);
 				$this->audit('Update');
+				$this->api_data('update', 'alerts', 'alert_id', $query->alert_id);
 				echo "Alert/Task marked completed!";
 			} else {
 				echo "No alert associated with this order.";
@@ -2566,12 +2596,14 @@ class AjaxChartController extends BaseController {
 				'eid' => ''
 			);
 			if(Input::get('imm_id') == '') {
-				DB::table('immunizations')->insert($data);
+				$id = DB::table('immunizations')->insertGetId($data);
 				$this->audit('Add');
+				$this->api_data('add', 'immunizations', 'imm_id', $id);
 				$result['message'] = "Immunization added!";
 			} else {
 				DB::table('immunizations')->where('imm_id', '=', Input::get('imm_id'))->update($data);
 				$this->audit('Update');
+				$this->api_data('update', 'immunizations', 'imm_id', Input::get('imm_id'));
 				$result['message'] = "Immunization updated!";
 			}
 			echo json_encode($result);
@@ -2617,8 +2649,9 @@ class AjaxChartController extends BaseController {
 			$medtext .= '<br>' . Input::get('imm_immunization') . '; Sequence: ' . Input::get('imm_sequence') . '; Dosage: ' . Input::get('imm_dosage') . ' ' . Input::get('imm_dosage_unit') . ' ' . Input::get('imm_route') . ' administered to the ' . Input::get('imm_body_site');
 			$medtext .= '<br>Manufacturer: ' . Input::get('imm_manufacturer') . '; Lot number: ' . Input::get('imm_lot') . '; Expiration date: ' . Input::get('imm_expiration');
 			if(Input::get('imm_id') == '') {
-				DB::table('immunizations')->insert($data);
+				$id = DB::table('immunizations')->insertGetId($data);
 				$this->audit('Add');
+				$this->api_data('add', 'immunizations', 'imm_id', $id);
 				$vaccine_id = Input::get('vaccine_id');
 				$inventory_result = DB::table('vaccine_inventory')
 					->where('vaccine_id', '=', $vaccine_id)
@@ -2656,6 +2689,7 @@ class AjaxChartController extends BaseController {
 		} else {
 			$this->chart_model->deleteImmunization(Input::get('imm_id'));
 			$this->audit('Delete');
+			$this->api_data('delete', 'immunizations', 'imm_id', Input::get('imm_id'));
 			echo "Immunization deleted!";
 		}
 	}
@@ -5409,5 +5443,71 @@ class AjaxChartController extends BaseController {
 			}
 		}
 		echo json_encode($data);
+	}
+	
+	public function postConnectPatientNosh()
+	{
+		$data = array();
+		$practiceinfo = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
+		$practiceinfo_data = (array) $practiceinfo;
+		unset($practiceinfo_data['practice_id']);
+		unset($practiceinfo_data['documents_dir']);
+		unset($practiceinfo_data['updox_extension']);
+		unset($practiceinfo_data['mtm_extension']);
+		unset($practiceinfo_data['mtm_alert_users']);
+		unset($practiceinfo_data['fax_type']);
+		unset($practiceinfo_data['fax_email']);
+		unset($practiceinfo_data['fax_email_password']);
+		unset($practiceinfo_data['fax_email_hostname']);
+		unset($practiceinfo_data['fax_email_smtp']);
+		unset($practiceinfo_data['phaxio_api_key']);
+		unset($practiceinfo_data['phaxio_api_secret']);
+		unset($practiceinfo_data['practice_registration_key']);
+		unset($practiceinfo_data['practice_registration_timeout']);
+		$data['practice'] = $practiceinfo_data;
+		$users = DB::table('users')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->where('group_id', '<', '100')
+			->where('active', '=', '1')
+			->get();
+		$data['users'] = array();
+		$i = 0;
+		if ($users) {
+			foreach ($users as $user) {
+				$user_data = (array) $user;
+				unset($user_data['id']);
+				$data['users'][$i] = $user_data;
+				$i++;
+			}
+		}
+		$result = $this->send_api_data(Input::get('url'), $data, '', '');
+		$message['status'] = 'n';
+		if ($result['url_error'] == '') {
+			if (isset($result['error'])) {
+				if ($result['error'] == true) {
+					$message['message'] = 'Error: ' . $result['message'];
+				} else {
+					$patient_data = array(
+						'api_key' => $result['api_key'],
+						'url' => Input::get('url')
+					);
+					DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->update($patient_data);
+					$this->audit('Update');
+					$message['status'] = 'y';
+					$message['message'] = $result['message'];
+				}
+			} else {
+				$message['message'] = 'Error: not a valid connection, check your URL';
+			}
+		} else {
+			$message['message'] = $result['url_error'];
+		}
+		echo json_encode($message);
+	}
+	
+	public function postGetPatientCentric()
+	{
+		$row = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();
+		echo $row->url;
 	}
 }

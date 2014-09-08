@@ -103,7 +103,8 @@ $(document).ready(function() {
 			 			height: '100%',
 			 			footerrow : true,
 			 			userDataOnFooter : true,
-			 			onSelectRow: function(id) {
+			 			onSelectRow: function(row) {
+			 				var id = $("#"+subgrid_table_id).getCell(row,'billing_core_id');
 			 				$('#billing_billing_core_id').val(id);
 			 				$.ajax({
 								type: "POST",
@@ -222,7 +223,8 @@ $(document).ready(function() {
 			 			height: '100%',
 			 			footerrow : true,
 			 			userDataOnFooter : true,
-			 			onSelectRow: function(id) {
+			 			onSelectRow: function(row) {
+			 				var id = $("#"+subgrid_table_id).getCell(row,'billing_core_id');
 			 				$('#billing_billing_core_id').val(id);
 			 				$.ajax({
 								type: "POST",

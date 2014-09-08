@@ -114,6 +114,26 @@ class HomeController extends BaseController {
 			} else {
 				$data['saas_admin'] = 'n';
 			}
+			if (Session::get('patient_centric') != 'y') {
+				$users = DB::table('users')->where('group_id', '=', '2')->where('practice_id', '=', Session::get('practice_id'))->first();
+				if ($users) {
+					$data['users_needed'] = 'n';
+				} else {
+					$data['users_needed'] = 'y';
+				}
+			} else {
+				$data['users_needed'] = 'n';
+			}
+			if (Session::get('patient_centric') != 'y') {
+				$schedule = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->whereNull('minTime')->first();
+				if ($schedule) {
+					$data['schedule_needed'] = 'y';
+				} else {
+					$data['schedule_needed'] = 'n';
+				}
+			} else {
+				$data['schedule_needed'] = 'n';
+			}
 		}
 		if ($data['practiceinfo']->weekends == '1') {
 			$data['weekends'] = 'true';

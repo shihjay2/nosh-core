@@ -25,6 +25,13 @@ $(document).ready(function() {
 			return "Black"
 		}
 	}
+	function practicestatus (cellvalue, options, rowObject){
+		if (cellvalue == '') {
+			return 'Connected';
+		} else {
+			return 'Pending';
+		}
+	}
 	$(".dashboard_draft").click(function(){
 		$("#draft_messages").jqGrid('GridUnload');
 		$("#draft_messages").jqGrid({
@@ -448,7 +455,7 @@ $(document).ready(function() {
 	$("#provider_info").click(function(){
 		$("#provider_info_dialog").dialog('open');
 	});
-	$("#provider_info_license_state").addOption({"":"","AL":"Alabama","AK":"Alaska","AS":"America Samoa","AZ":"Arizona","AR":"Arkansas","CA":"California","CO":"Colorado","CT":"Connecticut","DE":"Delaware","DC":"District of Columbia","FM":"Federated States of Micronesia","FL":"Florida","GA":"Georgia","GU":"Guam","HI":"Hawaii","ID":"Idaho","IL":"Illinois","IN":"Indiana","IA":"Iowa","KS":"Kansas","KY":"Kentucky","LA":"Louisiana","ME":"Maine","MH":"Marshall Islands","MD":"Maryland","MA":"Massachusetts","MI":"Michigan","MN":"Minnesota","MS":"Mississippi","MO":"Missouri","MT":"Montana","NE":"Nebraska","NV":"Nevada","NH":"New Hampshire","NJ":"New Jersey","NM":"New Mexico","NY":"New York","NC":"North Carolina","ND":"North Dakota","OH":"Ohio","OK":"Oklahoma","OR":"Oregon","PW":"Palau","PA":"Pennsylvania","PR":"Puerto Rico","RI":"Rhode Island","SC":"South Carolina","SD":"South Dakota","TN":"Tennessee","TX":"Texas","UT":"Utah","VT":"Vermont","VI":"Virgin Island","VA":"Virginia","WA":"Washington","WV":"West Virginia","WI":"Wisconsin","WY":"Wyoming"}, false);
+	$("#provider_info_license_state").addOption(states, false);
 	$("#provider_info_upin").mask("aa9999999");
 	$("#provider_info_tax_id").mask("99-9999999");
 	$("#change_signature").button().click(function(){
@@ -829,5 +836,127 @@ $(document).ready(function() {
 			$.jGrowl(data);
 			$("#import_entire").parent().find('input').val('');
 		}
+	});
+	$("#manage_practice_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 500, 
+		width: 800,
+		open: function(event, ui) {
+			$("#manage_practice_list").jqGrid('GridUnload');
+			$("#manage_practice_list").jqGrid({
+				url:"ajaxcommon/connected-practices",
+				datatype: "json",
+				mtype: "POST",
+				colNames:['ID','Practice','API Key','Status'],
+				colModel:[
+					{name:'practice_id',index:'practice_id',width:1,hidden:true},
+					{name:'practice_name',index:'practice_name',width:200},
+					{name:'api_key',index:'api_key',width:100},
+					{name:'practice_registration_timeout',index:'practice_registration_timeout',width:100,formatter:practicestatus}
+				],
+				rowNum:10,
+				rowList:[10,20,30],
+				pager: $('#manage_practice_list_pager'),
+				sortname: 'practice_id',
+			 	viewrecords: true,
+			 	sortorder: "asc",
+			 	caption:"Connected Practices",
+			 	height: "100%",
+			 	jsonReader: { repeatitems : false, id: "0" }
+			}).navGrid('#manage_practice_list_pager',{search:false,edit:false,add:false,del:false});
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#dashboard_manage_practice").click(function() {
+		$('#manage_practice_dialog').dialog('option', {
+			height: $("#maincontent").height(),
+			width: $("#maincontent").width(),
+			position: { my: 'left top', at: 'left top', of: '#maincontent' }
+		});
+		$("#manage_practice_dialog").dialog('open');
+	});
+	$("#add_practice_state").addOption(states, false);
+	$("#add_practice_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 350, 
+		width: 400, 
+		modal: true,
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		open: function (event, ui) {
+			$("#add_practice_npi").autocomplete({
+				source: function (req, add){
+					$.ajax({
+						url: "ajaxsearch/npi-lookup-practice",
+						dataType: "json",
+						type: "POST",
+						data: req,
+						success: function(data){
+							if(data.response =='true'){
+								add(data.message);
+							}
+						}
+					});
+				},
+				minLength: 3,
+				open: function() { 
+					$('.ui-menu').width(300);
+				}
+			}).focus(function() {
+				var a = $("#add_practice_practice_name").val();
+				var b = $("#add_practice_state").val();
+				if (a != "" && b != "") {
+					var q = a + ";" + b;
+					$("#add_practice_npi").autocomplete("search", q);
+				}
+			}).mask("9999999999");
+		},
+		buttons: {
+			'Save': function() {
+				var bValid = true;
+				$("#add_practice_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+					if (input_id == 'add_practice_practice_url') {
+						bValid = bValid && checkRegexp(id1, /\(?(?:(http|https):\/\/)?(?:((?:[^\W\s]|\.|-|[:]{1})+)@{1})?((?:www.)?(?:[^\W\s]|\.|-)+[\.][^\W\s]{2,4}|localhost(?=\/)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::(\d*))?([\/]?[^\s\?]*[\/]{1})*(?:\/?([^\s\n\?\[\]\{\}\#]*(?:(?=\.)){1}|[^\s\n\?\[\]\{\}\.\#]*)?([\.]{1}[^\s\?\#]*)?)?(?:\?{1}([^\s\n\#\[\]]*))?([\#][^\s\n]*)?\)?/, "eg. https://www.nosh.com/nosh" );
+					}
+					if (input_id == 'add_practice_email') {
+						bValid = bValid && checkRegexp(id1, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "eg. user@nosh.com" );
+					}
+				});
+				if (bValid) {
+					var str = $("#add_practice_form").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxcommon/practice-api",
+							data: str,
+							success: function(data){
+								$.jGrowl(data);
+								$("#add_practice_form").clearForm();
+								$("#add_practice_dialog").dialog('close');
+								reload_grid("manage_practice_list");
+							}
+						});
+					} else {
+						$.jGrowl("Please complete the form");
+					}
+				}
+			},
+			Cancel: function() {
+				$("#add_practice_form").clearForm();
+				$("#add_practice_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#dashboard_add_practice").click(function() {
+		$("#add_practice_dialog").dialog('open');
 	});
 });

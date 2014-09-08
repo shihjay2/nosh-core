@@ -82,12 +82,14 @@ App::down(function()
 require app_path().'/filters.php';
 
 Event::listen('auth.attempt', function($credentials){
-	$user = User::where('username', '=', $credentials['username'])->where('active', '=', '1')->where('practice_id', '=', $credentials['practice_id'])->first();
-	if ($user) {
-		if (strlen($user->password) == 40) {
-			if ($user->password == sha1('web_encryption_nosh_emr_3148785047' . $credentials['password'])){
-				$user->password = Hash::make($credentials['password']);
-				$user->save();
+	if (isset($credentials['practice_id'])) {
+		$user = User::where('username', '=', $credentials['username'])->where('active', '=', '1')->where('practice_id', '=', $credentials['practice_id'])->first();
+		if ($user) {
+			if (strlen($user->password) == 40) {
+				if ($user->password == sha1('web_encryption_nosh_emr_3148785047' . $credentials['password'])){
+					$user->password = Hash::make($credentials['password']);
+					$user->save();
+				}
 			}
 		}
 	}

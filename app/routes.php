@@ -156,6 +156,21 @@ Route::get('mtmheaderpdf/{pid}', array("as" => "mtmheaderpdf", function($pid)
 }));
 Route::get('backup', array('as' => 'backup', 'uses' => 'BackupController@backup'));
 Route::post('backuprestore', array('as' => 'backuprestore', 'uses' => 'BackupController@restore'));
+// API routes
+Route::get('authtest', array('before' => 'auth.basic', function()
+{
+	return View::make('hello');
+}));
+Route::get('checkapi/{practicehandle}', array('as' => 'checkapi', 'before' => 'force.ssl', 'uses' => 'AjaxCommonController@checkapi'));
+Route::get('practiceregister/{api}', array('as' => 'practiceregister', 'before' => 'force.ssl', 'uses' => 'InstallController@practiceregister'));
+Route::post('practiceregisternosh/{api}', array('as' => 'practiceregisternosh', 'uses' => 'AjaxInstallController@practiceregisternosh'));
+Route::post('apilogin', array('as' => 'apilogin', 'uses' => 'AjaxLoginController@apilogin'));
+Route::post('apilogout', array('as' => 'apilogout', 'uses' => 'AjaxLoginController@apilogout'));
+Route::group(array('prefix' => 'api/v1', 'before' => 'force.ssl|auth.basic'), function()
+{
+	Route::controller('sync', 'APIv1Controller');
+});
+// Filters
 Route::filter('needinstall', function()
 {
 	$query = Practiceinfo::find('1');
@@ -288,6 +303,11 @@ Route::filter('force.ssl', function()
 	if (!Request::secure()) {
 		return Redirect::secure(Request::path());
 	}
+});
+
+Route::filter('auth.basic', function()
+{
+	return Auth::onceBasic('username');
 });
 
 //Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));

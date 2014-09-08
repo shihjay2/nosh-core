@@ -2768,6 +2768,14 @@ $(document).on('keydown', ':text', function(e){
 		e.preventDefault();
 	}
 });
+$(document).on('keydown', ':password', function(e){
+	var a = $(this).attr('id');
+	if(a != 'password') {
+		if(e.keyCode==13) {
+			e.preventDefault();
+		}
+	}
+});
 $(document).on('keydown', '.textdump', function(e){
 	if(e.keyCode==39) {
 		if(e.shiftKey==true) {

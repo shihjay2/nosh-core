@@ -1376,21 +1376,20 @@ class AjaxDashboardController extends BaseController {
 					sleep(2);
 				}
 				$csv = File::get($file_path);
-				Config::set('formatter::formatter.csv.delimiter', "\t");
-				Config::set('formatter::formatter.csv.enclosure', '');
-				Config::set('formatter::formatter.csv.newline', "\n");
-				Config::set('formatter::formatter.csv.regex_newline', '\n');
-				Config::set('formatter::formatter.csv.escape', '\\');
-				$result = Formatter::make($csv, 'csv')->to_array();
-				if (empty(Formatter::$errors)) {
-					foreach ($result as $row) {
-						$row['practice_id'] = Session::get('practice_id');
-						DB::table('templates')->insert($row);
-						$i++;
+				$csv_line = explode("\n", $csv);
+				if (count($csv_line) == 2) {
+					$headers = explode("\t", $csv_line[0]);
+					$values = explode("\t", $csv_line[1]);
+					$row = array();
+					for ($j = 0; $j < count($headers); $j++) {
+						$row[$headers[$j]] = $values[$j];
 					}
+					$row['practice_id'] = Session::get('practice_id');
+					DB::table('templates')->insert($row);
+					$this->audit('Add');
+					$i++;
 				} else {
-					$error = '<br>Error processing file:<br>';
-					$error .= implode('<br>', Formatter::$errors);
+					$error = "<br>Incorrect format.";
 				}
 				unlink($file_path);
 			} else {

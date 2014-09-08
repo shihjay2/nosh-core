@@ -42,7 +42,7 @@
 				</div>
 			</form>
 		</div>
-		<?php if(Session::get('patient_centric') == 'n') {?>
+		<?php if(Session::get('patient_centric') == 'n' || Session::get('patient_centric') == 'yp') {?>
 			<h3>Practice Information and Preferences</h3>
 			<div>
 				<form id="setup2" class="pure-form pure-form-stacked">
@@ -124,47 +124,47 @@
 				<button type="button" id="practice_logo_upload_submit" class="nosh_button_add">Upload Logo</button><br><br>
 				<button type="button" id="practice_logo_none" class="nosh_button_cancel">No Logo</button>
 			</div>
-		<?php }?>
-		<h3>Fax Service</h3>
-		<div>
-			<form id="setup3" class="pure-form pure-form-stacked">
-				<label for="fax_type">Fax Program:</label>
-				<select name="fax_type" id="fax_type" class="text"></select><input type="hidden" id="fax_type_old"/>
-				<div id="fax_show1">
-					<label for="fax_email">E-mail address where faxes are sent:</label>
-					<input type="text" name="fax_email" id="fax_email" class="text" style="width:250px"/><input type="hidden" id="fax_email_old"/>
-					<label for="fax_email_password">Password:</label>
-					<input type="password" name="fax_email_password" id="fax_email_password" class="text" style="width:250px"/><input type="hidden" id="fax_email_password_old"/>
-					<label for="fax_email_hostname">IMAP Hostname (hostname:port):</label>
-					<input type="text" name="fax_email_hostname" id="fax_email_hostname" class="text" style="width:250px" placeholder="hostname:port"/><input type="hidden" id="fax_email_hostname_old"/>
-					<label for="fax_email_smtp">IMAP SMTP Hostname:</label>
-					<input type="text" name="fax_email_smtp" id="fax_email_smtp" class="text" style="width:250px"/><input type="hidden" id="fax_email_smtp_old"/>
+			<?php if(Session::get('patient_centric') == 'n') {?>
+				<h3>Fax Service</h3>
+				<div>
+					<form id="setup3" class="pure-form pure-form-stacked">
+						<label for="fax_type">Fax Program:</label>
+						<select name="fax_type" id="fax_type" class="text"></select><input type="hidden" id="fax_type_old"/>
+						<div id="fax_show1">
+							<label for="fax_email">E-mail address where faxes are sent:</label>
+							<input type="text" name="fax_email" id="fax_email" class="text" style="width:250px"/><input type="hidden" id="fax_email_old"/>
+							<label for="fax_email_password">Password:</label>
+							<input type="password" name="fax_email_password" id="fax_email_password" class="text" style="width:250px"/><input type="hidden" id="fax_email_password_old"/>
+							<label for="fax_email_hostname">IMAP Hostname (hostname:port):</label>
+							<input type="text" name="fax_email_hostname" id="fax_email_hostname" class="text" style="width:250px" placeholder="hostname:port"/><input type="hidden" id="fax_email_hostname_old"/>
+							<label for="fax_email_smtp">IMAP SMTP Hostname:</label>
+							<input type="text" name="fax_email_smtp" id="fax_email_smtp" class="text" style="width:250px"/><input type="hidden" id="fax_email_smtp_old"/>
+						</div>
+						<div id="fax_show2">
+							<label for="phaxio_api_key">Phaxio API Key:</label>
+							<input type="text" name="phaxio_api_key" id="phaxio_api_key" class="text" style="width:250px"/><input type="hidden" id="phaxio_api_key_old"/>
+							<label for="phaxio_api_secret">Phaxio API Secret:</label>
+							<input type="password" name="phaxio_api_secret" id="phaxio_api_secret" class="text" style="width:250px"/><input type="hidden" id="phaxio_api_secret_old"/>
+						</div>
+					</form>
 				</div>
-				<div id="fax_show2">
-					<label for="phaxio_api_key">Phaxio API Key:</label>
-					<input type="text" name="phaxio_api_key" id="phaxio_api_key" class="text" style="width:250px"/><input type="hidden" id="phaxio_api_key_old"/>
-					<label for="phaxio_api_secret">Phaxio API Secret:</label>
-					<input type="password" name="phaxio_api_secret" id="phaxio_api_secret" class="text" style="width:250px"/><input type="hidden" id="phaxio_api_secret_old"/>
+				<h3>Practice Billing Setup</h3>
+				<div>
+					<button type="button" id="transfer_address" class="nosh_button_copy">Copy Practice Address to Billing Address</button><br>
+					<form id="setup4" class="pure-form pure-form-stacked">
+						<label for="billing_street_address1">Billing Street Address:</label>
+						<input type="text" name="billing_street_address1" id="billing_street_address1" class="text" style="width:250px" required/><input type="hidden" id="billing_street_address1_old"/>
+						<label for="billing_street_address2">Billing Street Address Line 2:</label>
+						<input type="text" name="billing_street_address2" id="billing_street_address2" class="text" style="width:250px"/><input type="hidden" id="billing_street_address2_old"/>
+						<label for="billing_city">Billing City:</label>
+						<input type="text" name="billing_city" id="billing_city" class="text" style="width:250px" required/><input type="hidden" id="billing_city_old"/>
+						<label for="billing_state">Billing State:</label>
+						<select name="billing_state" id="billing_state" class="text" required></select><input type="hidden" id="billing_state_old"/>
+						<label for="billing_zip">Billing Zip:</label>
+						<input type="text" name="billing_zip" id="billing_zip" class="text" style="width:250px" required/><input type="hidden" id="billing_zip_old"/>
+					</form>
 				</div>
-			</form>
-		</div>
-		<?php if(Session::get('patient_centric') == 'n') {?>
-			<h3>Practice Billing Setup</h3>
-			<div>
-				<button type="button" id="transfer_address" class="nosh_button_copy">Copy Practice Address to Billing Address</button><br>
-				<form id="setup4" class="pure-form pure-form-stacked">
-					<label for="billing_street_address1">Billing Street Address:</label>
-					<input type="text" name="billing_street_address1" id="billing_street_address1" class="text" style="width:250px" required/><input type="hidden" id="billing_street_address1_old"/>
-					<label for="billing_street_address2">Billing Street Address Line 2:</label>
-					<input type="text" name="billing_street_address2" id="billing_street_address2" class="text" style="width:250px"/><input type="hidden" id="billing_street_address2_old"/>
-					<label for="billing_city">Billing City:</label>
-					<input type="text" name="billing_city" id="billing_city" class="text" style="width:250px" required/><input type="hidden" id="billing_city_old"/>
-					<label for="billing_state">Billing State:</label>
-					<select name="billing_state" id="billing_state" class="text" required></select><input type="hidden" id="billing_state_old"/>
-					<label for="billing_zip">Billing Zip:</label>
-					<input type="text" name="billing_zip" id="billing_zip" class="text" style="width:250px" required/><input type="hidden" id="billing_zip_old"/>
-				</form>
-			</div>
+			<?php }?>
 		<?php }?>
 	</div>
 </div>
