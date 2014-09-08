@@ -17,7 +17,7 @@ $(document).ready(function() {
 		var a = $(this).val();
 		$.ajax({
 			type: "POST",
-			url: "ajaxinstall/check-practicehandle",
+			url: "../ajaxinstall/check-practicehandle",
 			data: "practicehandle=" + a,
 			success: function(data){
 				if (data != "OK") {
@@ -53,7 +53,7 @@ $(document).ready(function() {
 			if(str){
 				$.ajax({
 					type: "POST",
-					url: "ajaxinstall/practice-register",
+					url: "../ajaxinstall/practice-register",
 					data: str,
 					success: function(data){
 						if (data != 'OK') {

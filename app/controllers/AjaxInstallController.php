@@ -653,6 +653,7 @@ class AjaxInstallController extends BaseController {
 		);
 		DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->update($data2);
 		$this->audit('Update');
+		$data3 = DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->first();
 		// Insert Administrator
 		$data1 = array(
 			'username' => $username,
@@ -676,11 +677,11 @@ class AjaxInstallController extends BaseController {
 		Session::put('user_id', $user_id);
 		Session::put('group_id', '1');
 		Session::put('practice_id', '1');
-		Session::put('version', $data2['version']);
-		Session::put('practice_active', $data2['active']);
-		Session::put('displayname', $displayname);
-		Session::put('documents_dir', $data2['documents_dir']);
-		Session::put('patient_centric', $data2['patient_centric']);
+		Session::put('version', $data3->version);
+		Session::put('practice_active', $data3->active);
+		Session::put('displayname', 'Administrator');
+		Session::put('documents_dir', $data3->documents_dir);
+		Session::put('patient_centric', $data3->patient_centric);
 		echo "OK";
 	}
 	
