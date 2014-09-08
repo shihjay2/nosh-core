@@ -1221,7 +1221,7 @@ class ReminderController extends BaseController {
 			$json_data = unserialize($api->json);
 			$login_data = unserialize($api->login);
 			$login_url = $api->url . '/apilogin';
-			$logout_url => $api->url . '/apilogout';
+			$logout_url = $api->url . '/apilogout';
 			$api_url = $api->url . '/api/v1/' . $api->action;
 			$login = $this->send_api_data($login_url, $login_data, '', '');
 			$data['success'] = 'n';
