@@ -913,9 +913,7 @@ class AjaxCommonController extends BaseController {
 		$result = 'No';
 		if ($query) {
 			if (Schema::hasColumn('practiceinfo', 'practice_api_key')) {
-				if ($query->practice_api_key != '') {
-					$result = $query->practice_api_key;
-				}
+				$result = $query->practice_api_key;
 			}
 		}
 		echo $result;
