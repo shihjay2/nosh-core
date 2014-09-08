@@ -8,6 +8,44 @@ class ReminderController extends BaseController {
 	
 	public function test()
 	{
+		$url_check = false;
+		$url_reason = '';
+		$api_key = uniqid('nosh',true);
+		$register_code = uniqid();
+		$patient_portal = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$url1 = 'https://192.168.43.252';
+		if ($url1 != '') {
+			$pos = stripos($url1, 'noshchartingsystem.com');
+			if ($pos !== false) {
+				$url_explode = explode('/', Input::get('practice_url'));
+				$url = 'https://noshchartingsystem.com/nosh/checkapi/' . $url_explode[5];
+			} else {
+				$url = $url1 . '/checkapi/0';
+			}
+			$ch = curl_init();
+			curl_setopt($ch,CURLOPT_URL, $url);
+			curl_setopt($ch,CURLOPT_FAILONERROR,1);
+			curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+			curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+			curl_setopt($ch,CURLOPT_TIMEOUT, 60);
+			curl_setopt($ch,CURLOPT_CONNECTTIMEOUT ,0);
+			$result = curl_exec($ch);
+			if(curl_errno($ch)){
+				$url_reason = 'Error: ' . curl_error($ch);
+			} else {
+				if ($result !== 'No') {
+					$url_check = true;
+					$api_key = $result;
+				} else {
+					$url_reason = 'Practice NOSH is not set up to accept API connections.  Please update the practice NOSH installation.';
+				}
+			}
+		}
+		if ($url_check == true) {
+			echo "OK";
+		} else {
+			echo $url_reason;
+		}
 	}
 	
 	public function test0()

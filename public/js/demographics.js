@@ -390,46 +390,51 @@ $(document).ready(function() {
 		var a = $("#menu_reminder_method").val();
 		var b = $("#menu_cell_carrier").val();
 		var c = $("#menu_email").val();
+		var d = false;
 		var regexp = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i;
-		if ( !( regexp.test( c ) ) ) {
-			$.jGrowl("Email format is incorrect!");
-		} else {
-			if (a == "Cellular Phone" && b == "") {
-				$.jGrowl("Cellular carrier needs to be completed for cellular phone appointment reminders!");
-			} else {
-				var str = $("#edit_demographics_form").serialize();
-				if(str){
-					$.ajax({
-						type: "POST",
-						url: "ajaxdashboard/edit-demographics",
-						data: str,
-						success: function(data){
-							$.jGrowl('Your information is updated!');
-							if (noshdata.group_id != '100') {
-								$.ajax({
-									type: "POST",
-									url: "ajaxchart/demographics-load",
-									dataType: "json",
-									success: function(data){
-										$('#menu_ptname').html(data.ptname);
-										$('#menu_nickname').html(data.nickname);
-										$('#menu_dob').html(data.dob);
-										$('#menu_age').html(data.age);
-										$('#menu_gender1').html(data.gender);
-										if (type == 'close') {
-											$("#demographics_list_dialog").dialog('close');
-										}
+		if ( c != '') {
+			if ( !( regexp.test( c ) ) ) {
+				$.jGrowl("Email format is incorrect!");
+				d = true;
+			}
+		}
+		if (a == "Cellular Phone" && b == "") {
+			$.jGrowl("Cellular carrier needs to be completed for cellular phone appointment reminders!");
+			d = true;
+		}
+		if (d == false) {
+			var str = $("#edit_demographics_form").serialize();
+			if(str){
+				$.ajax({
+					type: "POST",
+					url: "ajaxdashboard/edit-demographics",
+					data: str,
+					success: function(data){
+						$.jGrowl('Your information is updated!');
+						if (noshdata.group_id != '100') {
+							$.ajax({
+								type: "POST",
+								url: "ajaxchart/demographics-load",
+								dataType: "json",
+								success: function(data){
+									$('#menu_ptname').html(data.ptname);
+									$('#menu_nickname').html(data.nickname);
+									$('#menu_dob').html(data.dob);
+									$('#menu_age').html(data.age);
+									$('#menu_gender1').html(data.gender);
+									if (type == 'close') {
+										$("#demographics_list_dialog").dialog('close');
 									}
-								});
-							}
-							if (type == 'close') {
-								$("#demographics_list_dialog").dialog('close');
-							}
+								}
+							});
 						}
-					});
-				} else {
-					$.jGrowl("Please complete the form.");
-				}
+						if (type == 'close') {
+							$("#demographics_list_dialog").dialog('close');
+						}
+					}
+				});
+			} else {
+				$.jGrowl("Please complete the form.");
 			}
 		}
 	}

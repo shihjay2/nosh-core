@@ -913,7 +913,7 @@ class AjaxCommonController extends BaseController {
 		$result = 'No';
 		if ($query) {
 			if (Schema::hasColumn('practiceinfo', 'practice_api_key')) {
-				$result = $query->practice_api_key;
+				$result = 'Yes';
 			}
 		}
 		echo $result;
@@ -947,7 +947,6 @@ class AjaxCommonController extends BaseController {
 			} else {
 				if ($result !== 'No') {
 					$url_check = true;
-					$api_key = $result;
 				} else {
 					$url_reason = 'Practice NOSH is not set up to accept API connections.  Please update the practice NOSH installation.';
 				}
@@ -956,6 +955,7 @@ class AjaxCommonController extends BaseController {
 		$data = array(
 			'practice_api_key' => $api_key,
 			'active' => 'Y',
+			'practice_name' => Input::get('practice_name'),
 			'npi' => Input::get('npi'),
 			'email' => Input::get('email'),
 			'documents_dir' => $patient_portal->documents_dir,
