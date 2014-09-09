@@ -5462,6 +5462,7 @@ class AjaxChartController extends BaseController {
 		unset($practiceinfo_data['fax_email_smtp']);
 		unset($practiceinfo_data['phaxio_api_key']);
 		unset($practiceinfo_data['phaxio_api_secret']);
+		unset($practiceinfo_data['practice_api_key']);
 		unset($practiceinfo_data['practice_registration_key']);
 		unset($practiceinfo_data['practice_registration_timeout']);
 		$data['practice'] = $practiceinfo_data;
