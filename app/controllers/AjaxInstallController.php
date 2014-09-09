@@ -700,9 +700,19 @@ class AjaxInstallController extends BaseController {
 				$data['practice']['practice_registration_timeout'] = '';
 				DB::table('practiceinfo')->where('practice_id', '=', $practice->practice_id)->update($data['practice']);
 				$this->audit('Update');
+				$users_array = array();
 				foreach ($data['users'] as $user) {
 					$user['practice_id'] = $practice->practice_id;
-					DB::table('users')->insert($user);
+					$old_user_id = $user['id'];
+					unset($user['id']);
+					$new_user_id = DB::table('users')->insertGetId($user);
+					$this->audit('Add');
+					$users_array[$old_user_id] = $new_user_id;
+				}
+				foreach ($data['providers'] as $provider) {
+					$provider_id = $provider['id'];
+					$provider['id'] = $users_array[$provider_id];
+					DB::table('providers')->insert($provider);
 					$this->audit('Add');
 				}
 				return Response::json(array(

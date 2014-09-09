@@ -5471,12 +5471,17 @@ class AjaxChartController extends BaseController {
 			->where('active', '=', '1')
 			->get();
 		$data['users'] = array();
+		$data['providers'] = array();
 		$i = 0;
 		if ($users) {
 			foreach ($users as $user) {
 				$user_data = (array) $user;
-				unset($user_data['id']);
 				$data['users'][$i] = $user_data;
+				if ($user->group_id == '2') {
+					$provider = DB::table('providers')->where('id', '=', $user->id)->first();
+					$provider_data = (array) $provider;
+					$data['providers'][$i] = $provider_data;
+				}
 				$i++;
 			}
 		}
