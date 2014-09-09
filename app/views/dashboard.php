@@ -286,7 +286,7 @@
 		<label for="add_practice_state">Practice State (for search):</label>
 		<select id="add_practice_state" name="practice_state" style="width:95%" class="text"></select>
 		<label for="add_practice_npi">NPI of Practice:</label>
-		<input type="text" id="add_practice_npi" name="practice_npi" style="width:95%" class="text" required/>
+		<input type="text" id="add_practice_npi" name="npi" style="width:95%" class="text" required/>
 		<label for="add_practice_email">Email address:</label>
 		<input type="text" id="add_practice_email" name="email" style="width:95%" class="text" required/>
 		<label for="add_practice_practice_url">Practice Portal URL (optional):</label>
