@@ -694,7 +694,8 @@ class AjaxInstallController extends BaseController {
 				$patient_data['url'] = $data['practice']['patient_portal'];
 				DB::table('demographics_relate')->where('practice_id', '=', $practice->practice_id)->update($patient_data);
 				$this->audit('Update');
-				unset($$data['practice']['patient_portal']);
+				unset($data['practice']['patient_portal']);
+				unset($data['practice']['patient_centric']);
 				$data['practice']['practice_registration_key'] = '';
 				$data['practice']['practice_registration_timeout'] = '';
 				DB::table('practiceinfo')->where('practice_id', '=', $practice->practice_id)->update($data['practice']);
