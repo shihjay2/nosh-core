@@ -2,10 +2,10 @@
 <xfdf xmlns="http://ns.adobe.com/xfdf/" xml:space="preserve">
 <fields>
 <field name="bill_id">
-<value>267</value>
+<value>227</value>
 </field>
 <field name="eid">
-<value>26</value>
+<value>27</value>
 </field>
 <field name="pid">
 <value>1</value>
@@ -17,7 +17,7 @@
 <value>0</value>
 </field>
 <field name="bill_date">
-<value>2014-03-27 16:28:04</value>
+<value>2014-09-09 21:53:45</value>
 </field>
 <field name="bill_complex">
 <value></value>
@@ -47,7 +47,7 @@
 <value>KLOWN, KRUSTY               </value>
 </field>
 <field name="bill_Box3A">
-<value>05 13 2010</value>
+<value>07 29 2010</value>
 </field>
 <field name="bill_Box3B">
 <value>X     </value>
@@ -95,10 +95,10 @@
 <value>(503) 234-1120</value>
 </field>
 <field name="bill_Box8B">
-<value>X            </value>
+<value>             </value>
 </field>
 <field name="bill_Box8BP">
-<value>EmployedBox8</value>
+<value></value>
 </field>
 <field name="bill_Box7D">
 <value>97202       </value>
@@ -152,7 +152,7 @@
 <value>   </value>
 </field>
 <field name="bill_Box11B">
-<value>AWEFWEF                      </value>
+<value>                             </value>
 </field>
 <field name="bill_Box9C">
 <value>                            </value>
@@ -179,28 +179,28 @@
 <value>                 </value>
 </field>
 <field name="bill_Box21_1">
-<value>249.00  </value>
+<value>072.3   </value>
 </field>
 <field name="bill_Box21_2">
-<value>589.0   </value>
+<value>E11.51  </value>
 </field>
 <field name="bill_Box21_3">
-<value>577.1   </value>
+<value>        </value>
 </field>
 <field name="bill_Box21_4">
 <value>        </value>
 </field>
 <field name="bill_DOS1F">
-<value>03 13 2014</value>
+<value>05 30 2014</value>
 </field>
 <field name="bill_DOS1T">
-<value>03 13 2014</value>
+<value>05 30 2014</value>
 </field>
 <field name="bill_DOS2F">
-<value>          </value>
+<value>05 30 2014</value>
 </field>
 <field name="bill_DOS2T">
-<value>          </value>
+<value>05 30 2014</value>
 </field>
 <field name="bill_DOS3F">
 <value>          </value>
@@ -230,7 +230,7 @@
 <value>11   </value>
 </field>
 <field name="bill_Box24B2">
-<value>     </value>
+<value>11   </value>
 </field>
 <field name="bill_Box24B3">
 <value>     </value>
@@ -248,7 +248,7 @@
 <value>99214 </value>
 </field>
 <field name="bill_Box24D2">
-<value>      </value>
+<value>99212 </value>
 </field>
 <field name="bill_Box24D3">
 <value>      </value>
@@ -263,7 +263,7 @@
 <value>      </value>
 </field>
 <field name="bill_Modifier1">
-<value>25         </value>
+<value>           </value>
 </field>
 <field name="bill_Modifier2">
 <value>           </value>
@@ -281,10 +281,10 @@
 <value>           </value>
 </field>
 <field name="bill_Box24E1">
-<value>AC  </value>
+<value>B   </value>
 </field>
 <field name="bill_Box24E2">
-<value>    </value>
+<value>A   </value>
 </field>
 <field name="bill_Box24E3">
 <value>    </value>
@@ -302,7 +302,7 @@
 <value>150 00</value>
 </field>
 <field name="bill_Box24F2">
-<value>0 00</value>
+<value>20 00</value>
 </field>
 <field name="bill_Box24F3">
 <value>0 00</value>
@@ -320,7 +320,7 @@
 <value>1    </value>
 </field>
 <field name="bill_Box24G2">
-<value>     </value>
+<value>1    </value>
 </field>
 <field name="bill_Box24G3">
 <value>     </value>
@@ -338,7 +338,7 @@
 <value>1023005410 </value>
 </field>
 <field name="bill_Box24J2">
-<value>           </value>
+<value>1023005410 </value>
 </field>
 <field name="bill_Box24J3">
 <value>           </value>
@@ -353,10 +353,10 @@
 <value>           </value>
 </field>
 <field name="bill_Box25">
-<value>78-7878787     </value>
+<value>               </value>
 </field>
 <field name="bill_Box26">
-<value>1             </value>
+<value>1_27          </value>
 </field>
 <field name="bill_Box27">
 <value>X     </value>
@@ -365,13 +365,13 @@
 <value>Yes</value>
 </field>
 <field name="bill_Box28">
-<value>150 00</value>
+<value>170 00</value>
 </field>
 <field name="bill_Box29">
 <value>0 00</value>
 </field>
 <field name="bill_Box30">
-<value>150 00</value>
+<value>170 00</value>
 </field>
 <field name="bill_Box31">
 <value>MICHAEL CHEN, MD     </value>
@@ -386,7 +386,7 @@
 <value>PORTLAND, OR 97202        </value>
 </field>
 <field name="bill_Box32D">
-<value>1030320203</value>
+<value>1234567890</value>
 </field>
 <field name="bill_Box33A">
 <value>(503) 234-1120</value>
@@ -401,7 +401,7 @@
 <value>PORTLAND, OR 97202           </value>
 </field>
 <field name="bill_Box33E">
-<value>1030320203</value>
+<value>1234567890</value>
 </field>
 <field name="bill_Box21_5">
 <value>        </value>
@@ -431,12 +431,12 @@
 <value>9</value>
 </field>
 <field name="Date">
-<value>03/27/2014</value>
+<value>09/09/2014</value>
 </field>
 <field name="Date2">
-<value>03/27/14</value>
+<value>09/09/14</value>
 </field>
 </fields>
-<ids original="d125f44b9bcfbd01ee59fc7f12d3ffce" modified="1395962885" />
+<ids original="d125f44b9bcfbd01ee59fc7f12d3ffce" modified="1410324923" />
 <f href="/home/mikey/Documents/NOSH/Laravel/nosh/app/controllers/../../public/hcfa1500.pdf" />
 </xfdf>

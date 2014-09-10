@@ -542,10 +542,11 @@ $(document).ready(function() {
 	$("#inactivate_vaccine").click(function(){
 		var item = jQuery("#vaccine_inventory").getGridParam('selrow');
 		if(item){
+			var id = $("#vaccine_inventory").getCell(item,'vaccine_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxoffice/inactivate-vaccine",
-				data: "vaccine_id=" + item,
+				data: "vaccine_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid("vaccine_inventory");
@@ -560,10 +561,11 @@ $(document).ready(function() {
 		var item = jQuery("#vaccine_inventory").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this vaccination entry?  This is not recommended unless entering the vaccine was a mistake!')){ 
+				var id = $("#vaccine_inventory").getCell(item,'vaccine_id');
 				$.ajax({
 					type: "POST",
 					url: "ajaxoffice/delete-vaccine",
-					data: "vaccine_id=" + item,
+					data: "vaccine_id=" + id,
 					success: function(data){
 						$.jGrowl(data);
 						reload_grid("vaccine_inventory");
@@ -578,7 +580,8 @@ $(document).ready(function() {
 	$("#reactivate_vaccine").click(function(){
 		var item = jQuery("#vaccine_inventory_inactive").getGridParam('selrow');
 		if(item){
-			$("#reactivate_vaccine_id").val(item);
+			var id = $("#vaccine_inventory_inactive").getCell(item,'vaccine_id');
+			$("#reactivate_vaccine_id").val(id);
 			$("#reactivate_vaccine_dialog").dialog('open');
 			$("#reactivate_quantity").focus();
 		} else {
@@ -664,10 +667,11 @@ $(document).ready(function() {
 		var item = jQuery("#vaccine_temp").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this vaccine temperature entry?  This is not recommended unless entering the temperature was a mistake!')){ 
+				var id = $("#vaccine_temp").getCell(item,'temp_id');
 				$.ajax({
 					type: "POST",
 					url: "ajaxoffice/delete-temp",
-					data: "temp_id=" + item,
+					data: "temp_id=" + id,
 					success: function(data){
 						$.jGrowl(data);
 						reload_grid("vaccine_temp");
@@ -781,10 +785,11 @@ $(document).ready(function() {
 	$("#inactivate_supplement").button().click(function(){
 		var item = jQuery("#supplements_inventory").getGridParam('selrow');
 		if(item){
+			var id = $("#supplements_inventory").getCell(item,'supplement_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxoffice/inactivate-supplement",
-				data: "supplement_id=" + item,
+				data: "supplement_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid("supplements_inventory");
@@ -799,10 +804,11 @@ $(document).ready(function() {
 		var item = jQuery("#supplements_inventory").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this supplement entry?  This is not recommended unless entering the supplement was a mistake!')){ 
+				var id = $("#supplements_inventory").getCell(item,'supplement_id');
 				$.ajax({
 					type: "POST",
 					url: "ajaxoffice/delete-supplement",
-					data: "supplement_id=" + item,
+					data: "supplement_id=" + id,
 					success: function(data){
 						$.jGrowl(data);
 						reload_grid("supplements_inventory");
@@ -817,6 +823,7 @@ $(document).ready(function() {
 	$("#reactivate_supplement").button().click(function(){
 		var item = jQuery("#supplements_inventory_inactive").getGridParam('selrow');
 		if(item){
+			var id = $("#supplements_inventory_inactive").getCell(item,'supplement_id');
 			$("#reactivate_supplement_inventory_id").val(item);
 			$("#reactivate_supplement_dialog").dialog('open');
 			$("#reactivate_sup_quantity").focus();

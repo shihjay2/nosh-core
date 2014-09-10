@@ -140,14 +140,15 @@ $(document).ready(function() {
 				caption:"Delete Message", 
 				buttonicon:"ui-icon-trash", 
 				onClickButton: function(){ 
-					var id = jQuery("#internal_inbox").getGridParam('selarrrow');
-					if(id){
-						var count = id.length;
+					var item = jQuery("#internal_inbox").getGridParam('selarrrow');
+					if(item){
+						var count = item.length;
 						for (var i = 0; i < count; i++) {
+							var id = $("#internal_inbox").getCell(item[i],'message_id');
 							$.ajax({
 								type: "POST",
 								url: "ajaxmessaging/delete-message",
-								data: "message_id=" + id[i],
+								data: "message_id=" + id,
 								success: function(data){
 									$.jGrowl(data);
 								}
@@ -200,14 +201,15 @@ $(document).ready(function() {
 				caption:"Delete Message", 
 				buttonicon:"ui-icon-trash", 
 				onClickButton: function(){ 
-					var id = jQuery("#internal_draft").getGridParam('selarrrow');
-					if(id){
+					var item = jQuery("#internal_draft").getGridParam('selarrrow');
+					if(item){
 						var count = id.length;
 						for (var i = 0; i < count; i++) {
+							var id = $("#internal_draft").getCell(item[i],'message_id');
 							$.ajax({
 								type: "POST",
 								url: "ajaxmessaging/delete-message",
-								data: "message_id=" + id[i],
+								data: "message_id=" + id,
 								success: function(data){
 									$.jGrowl(data);
 								}
@@ -1190,8 +1192,9 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#viewpage").click(function(){
-		var id = jQuery("#pages_list").getGridParam('selrow');
-		if(id){
+		var item = jQuery("#pages_list").getGridParam('selrow');
+		if(item){
+			var id = $("#pages_list").getCell(item,'pages_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxmessaging/view-page/" + id,
@@ -1333,7 +1336,8 @@ $(document).ready(function() {
 	$("#savescan").click(function(){
 		var click_id = jQuery("#received_scans").getGridParam('selrow');
 		if(click_id){
-			$("#scan_scans_id").val(click_id);
+			var id = $("#received_scans").getCell(click_id,'scans_id');
+			$("#scan_scans_id").val(id);
 			var row = jQuery("#received_scans").getRowData(click_id);
 			var text = "Enter details for importing document named " + row['fileName'] + ":";
 			$("#scan_import_message").html(text);
@@ -1347,10 +1351,11 @@ $(document).ready(function() {
 			if(confirm('Are you sure you want to delete the seletected documents?')){ 
 				var count = click_id.length;
 				for (var i = 0; i < count; i++) {
+					var id = $("#received_scans").getCell(click_id[i],'scans_id');
 					$.ajax({
 						type: "POST",
 						url: "ajaxmessaging/deletescan",
-						data: "scans_id=" + click_id[i],
+						data: "scans_id=" + id,
 						success: function(data){
 						}
 					});
@@ -1433,10 +1438,11 @@ $(document).ready(function() {
 		var item = jQuery("#all_contacts_list").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this contact?')){
+				var id = $("#all_contacts_list").getCell(item,'address_id');
 				$.ajax({
 					type: "POST",
 					url: "ajaxmessaging/delete-contact",
-					data: "address_id=" + item,
+					data: "address_id=" + id,
 					success: function(data){
 						$.jGrowl(data);
 						reload_grid("all_contacts_list");

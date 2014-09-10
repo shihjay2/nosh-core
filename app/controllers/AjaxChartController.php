@@ -3664,17 +3664,31 @@ class AjaxChartController extends BaseController {
 		if ($id == '') {
 			$eid = Session::get('eid');
 		} else {
-			$eid_result = Billing_core::find($id);
-			$eid = $eid_result->eid;
+			$eid = $id;
 		}
-		$icd = Input::Get('icd');
+		$icd = Input::get('icd');
 		$icd_array = str_split($icd);
 		$arr['item'] = '';
+		$assessment_array = array(
+			'A' => '1',
+			'B' => '2',
+			'C' => '3',
+			'D' => '4',
+			'E' => '5',
+			'F' => '6',
+			'G' => '7',
+			'H' => '8',
+			'I' => '9',
+			'J' => '10',
+			'K' => '11',
+			'L' => '12'
+		);
 		foreach ($icd_array as $icd1) {
 			if ($icd1) {
-				$name = 'assessment_' . $icd1;
-				$result = Assessment::find($eid);
-				$arr['item'] .= 'Diagnosis ' . $icd1 . ': ' . $result->$name . '<br>';
+				$name = 'assessment_' . $assessment_array[$icd1];
+				$result = DB::table('assessment')->where('eid', '=', $eid)->first();
+				$result1 = (array) $result;
+				$arr['item'] .= 'Diagnosis ' . $icd1 . ': ' . $result1[$name] . '<br>';
 			}
 		}
 		echo json_encode($arr);

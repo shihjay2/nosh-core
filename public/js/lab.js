@@ -140,8 +140,9 @@ $(document).ready(function() {
 	$("#messages_resend_lab").click(function(){
 		var item = jQuery("#messages_lab_list").getGridParam('selrow');
 		if(item){
-			$("#messages_lab_orders_id").val(item);
-			$('#messages_lab_choice').html("Choose an action for the lab order, reference number " + item);
+			var id = $("#messages_lab_list").getCell(item,'orders_id');
+			$("#messages_lab_orders_id").val(id);
+			$('#messages_lab_choice').html("Choose an action for the lab order, reference number " + id);
 			$("#messages_lab_action_dialog").dialog('open');
 		} else {
 			$.jGrowl("Please select order to edit!");
@@ -150,10 +151,11 @@ $(document).ready(function() {
 	$("#messages_delete_lab").click(function(){
 		var item = jQuery("#messages_lab_list").getGridParam('selrow');
 		if(item){
+			var id = $("#messages_lab_list").getCell(item,'orders_id');
 			$.ajax({
 				url: "ajaxchart/delete-orders/Laboratory",
 				type: "POST",
-				data: "orders_id=" + item,
+				data: "orders_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid("messages_lab_list");

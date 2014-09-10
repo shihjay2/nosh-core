@@ -363,10 +363,11 @@ $(document).ready(function() {
 	$("#disable_provider").click(function(){
 		var item = jQuery("#provider_list").getGridParam('selrow');
 		if(item){
+			var id = $("#provider_list").getCell(item,'id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxsetup/disable",
-				data: "id=" + item,
+				data: "id=" + id,
 				success: function(data){
 					jQuery("#provider_list").delRowData(item);
 					reload_grid("provider_list");
@@ -379,7 +380,8 @@ $(document).ready(function() {
 	$("#reset_password_provider").click(function(){
 		var item = jQuery("#provider_list").getGridParam('selrow');
 		if(item){
-			$("#user_id").val(item);
+			var id = $("#provider_list").getCell(item,'id');
+			$("#user_id").val(id);
 			$("#reset_password_dialog").dialog('open');
 		}
 	});
@@ -415,10 +417,11 @@ $(document).ready(function() {
 	$("#disable_assistant").click(function(){
 		var item = jQuery("#assistant_list").getGridParam('selrow');
 		if(item){
+			var id = $("#assistant_list").getCell(item,'id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxsetup/disable",
-				data: "id=" + item,
+				data: "id=" + id,
 				success: function(data){
 					jQuery("#assistant_list").delRowData(item);
 					reload_grid("assistant_list");
@@ -431,7 +434,8 @@ $(document).ready(function() {
 	$("#reset_password_assistant").click(function(){
 		var item = jQuery("#assistant_list").getGridParam('selrow');
 		if(item){
-			$("#user_id").val(item);
+			var id = $("#assistant_list").getCell(item,'id');
+			$("#user_id").val(id);
 			$("#reset_password_dialog").dialog('open');
 		}
 	});
@@ -467,10 +471,11 @@ $(document).ready(function() {
 	$("#disable_billing").click(function(){
 		var item = jQuery("#billing_list").getGridParam('selrow');
 		if(item){
+			var id = $("#billing_list").getCell(item,'id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxsetup/disable",
-				data: "id=" + item,
+				data: "id=" + id,
 				success: function(data){
 					jQuery("#billing_list").delRowData(item);
 					reload_grid("billing_list");
@@ -483,7 +488,8 @@ $(document).ready(function() {
 	$("#reset_password_billing").click(function(){
 		var item = jQuery("#billing_list").getGridParam('selrow');
 		if(item){
-			$("#user_id").val(item);
+			var id = $("#billing_list").getCell(item,'id');
+			$("#user_id").val(id);
 			$("#reset_password_dialog").dialog('open');
 		}
 	});
@@ -519,10 +525,11 @@ $(document).ready(function() {
 	$("#disable_patient").click(function(){
 		var item = jQuery("#patient_list").getGridParam('selrow');
 		if(item){
+			var id = $("#patient_list").getCell(item,'id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxsetup/disable",
-				data: "id=" + item,
+				data: "id=" + id,
 				success: function(data){
 					jQuery("#patient_list").delRowData(item);
 					reload_grid("patient_list");
@@ -535,7 +542,8 @@ $(document).ready(function() {
 	$("#reset_password_patient").click(function(){
 		var item = jQuery("#patient_list").getGridParam('selrow');
 		if(item){
-			$("#user_id").val(item);
+			var id = $("#patient_list").getCell(item,'id');
+			$("#user_id").val(id);
 			$("#reset_password_dialog").dialog('open');
 		}
 	});

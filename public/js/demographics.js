@@ -482,10 +482,11 @@ $(document).ready(function() {
 	$("#demographics_inactivate_insurance").button().click(function(){
 		var item = $("#demographics_insurance").getGridParam('selrow');
 		if(item){
+			var id = $("#demographics_insurance").getCell(item,'insurance_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/inactivate-insurance",
-				data: "insurance_id=" + item,
+				data: "insurance_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					updateinsurance();
@@ -500,10 +501,11 @@ $(document).ready(function() {
 		var item = $("#demographics_insurance").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this insurance?  This is not recommended unless entering the insurance was a mistake!')){ 
+				var id = $("#demographics_insurance").getCell(item,'insurance_id');
 				$.ajax({
 					type: "POST",
 					url: "ajaxdashboard/delete-insurance",
-					data: "insurance_id=" + item,
+					data: "insurance_id=" + id,
 					success: function(data){
 						$.jGrowl(data);
 						updateinsurance();
@@ -517,10 +519,11 @@ $(document).ready(function() {
 	$("#demographics_reactivate_insurance").button().click(function(){
 		var item = $("#demographics_insurance_inactive").getGridParam('selrow');
 		if(item){
+			var id = $("#demographics_insurance_inactive").getCell(item,'insurance_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/reactivate-insurance",
-				data: "insurance_id=" + item,
+				data: "insurance_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					updateinsurance();

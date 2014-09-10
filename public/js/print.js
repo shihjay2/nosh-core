@@ -128,7 +128,8 @@ $(document).ready(function() {
 	$("#edit_records_release").click(function() {
 		var item = jQuery("#records_release").getGridParam('selrow');
 		if(item){
-			$("#print_hippa_id").val(item);
+			var id = $("#records_release").getCell(item,'hippa_id');
+			$("#print_hippa_id").val(id);
 			$("#print_accordion").accordion("option", "active", 0);
 			$("#print_chart2_dialog").dialog('open');
 		} else {
@@ -152,8 +153,9 @@ $(document).ready(function() {
 	$("#hippa_request_received").click(function() {
 		var item = jQuery("#records_request").getGridParam('selrow');
 		if(item){
+			var id = $("#records_request").getCell(item,'hippa_request_id');
 			$.ajax({
-				url: "ajaxchart/request-received/" + item,
+				url: "ajaxchart/request-received/" + id,
 				type: "POST",
 				success: function(data){
 					$.jGrowl(data);
@@ -390,15 +392,16 @@ $(document).ready(function() {
 				caption:"Add Selected to Print Queue", 
 				buttonicon:"ui-icon-plus", 
 				onClickButton: function(){ 
-					var id = jQuery("#print_encounters").getGridParam('selarrrow');
+					var item = jQuery("#print_encounters").getGridParam('selarrrow');
 					var hippa_id = $("#print_hippa_id").val();
-					if(id){
-						var count = id.length;
+					if(item){
+						var count = item.length;
 						for (var i = 0; i < count; i++) {
+							var id = $("#print_encounters").getCell(item[i],'eid');
 							$.ajax({
 								type: "POST",
 								url: "ajaxchart/add-print-queue1",
-								data: "eid=" + id[i] + "&hippa_id=" + hippa_id,
+								data: "eid=" + id + "&hippa_id=" + hippa_id,
 								success: function(data){
 									$.jGrowl(data);
 								}
@@ -450,15 +453,16 @@ $(document).ready(function() {
 				caption:"Add Selected to Print Queue", 
 				buttonicon:"ui-icon-plus", 
 				onClickButton: function(){ 
-					var id = jQuery("#print_messages").getGridParam('selarrrow');
+					var item = jQuery("#print_messages").getGridParam('selarrrow');
 					var hippa_id = $("#print_hippa_id").val();
-					if(id){
-						var count = id.length;
+					if(item){
+						var count = item.length;
 						for (var i = 0; i < count; i++) {
+							var id = $("#print_messages").getCell(item[i],'t_messages_id');
 							$.ajax({
 								type: "POST",
 								url: "ajaxchart/add-print-queue2",
-								data: "t_messages_id=" + id[i] + "&hippa_id=" + hippa_id,
+								data: "t_messages_id=" + id + "&hippa_id=" + hippa_id,
 								success: function(data){
 									$.jGrowl(data);
 								}
@@ -517,15 +521,16 @@ $(document).ready(function() {
 				caption:"Add Selected to Print Queue", 
 				buttonicon:"ui-icon-plus", 
 				onClickButton: function(){ 
-					var id = jQuery("#print_labs").getGridParam('selarrrow');
+					var item = jQuery("#print_labs").getGridParam('selarrrow');
 					var hippa_id = $("#print_hippa_id").val();
-					if(id){
-						var count = id.length;
+					if(item){
+						var count = item.length;
 						for (var i = 0; i < count; i++) {
+							var id = $("#print_labs").getCell(item[i],'documents_id');
 							$.ajax({
 								type: "POST",
 								url: "ajaxchart/add-print-queue",
-								data: "documents_id=" + id[i] + "&hippa_id=" + hippa_id,
+								data: "documents_id=" + id + "&hippa_id=" + hippa_id,
 								success: function(data){
 								}
 							});
@@ -584,15 +589,16 @@ $(document).ready(function() {
 				caption:"Add Selected to Print Queue", 
 				buttonicon:"ui-icon-plus", 
 				onClickButton: function(){ 
-					var id = jQuery("#print_radiology").getGridParam('selarrrow');
+					var item = jQuery("#print_radiology").getGridParam('selarrrow');
 					var hippa_id = $("#print_hippa_id").val();
-					if(id){
-						var count = id.length;
+					if(item){
+						var count = item.length;
 						for (var i = 0; i < count; i++) {
+							var id = $("#print_radiology").getCell(item[i],'documents_id');
 							$.ajax({
 								type: "POST",
 								url: "ajaxchart/add-print-queue",
-								data: "documents_id=" + id[i] + "&hippa_id=" + hippa_id,
+								data: "documents_id=" + id + "&hippa_id=" + hippa_id,
 								success: function(data){
 								}
 							});
@@ -651,15 +657,16 @@ $(document).ready(function() {
 				caption:"Add Selected to Print Queue", 
 				buttonicon:"ui-icon-plus", 
 				onClickButton: function(){ 
-					var id = jQuery("#print_cardiopulm").getGridParam('selarrrow');
+					var item = jQuery("#print_cardiopulm").getGridParam('selarrrow');
 					var hippa_id = $("#print_hippa_id").val();
-					if(id){
-						var count = id.length;
+					if(item){
+						var count = item.length;
 						for (var i = 0; i < count; i++) {
+							var id = $("#print_cardiopulm").getCell(item[i],'documents_id');
 							$.ajax({
 								type: "POST",
 								url: "ajaxchart/add-print-queue",
-								data: "documents_id=" + id[i] + "&hippa_id=" + hippa_id,
+								data: "documents_id=" + id + "&hippa_id=" + hippa_id,
 								success: function(data){
 								}
 							});
@@ -718,15 +725,16 @@ $(document).ready(function() {
 				caption:"Add Selected to Print Queue", 
 				buttonicon:"ui-icon-plus", 
 				onClickButton: function(){ 
-					var id = jQuery("#print_endoscopy").getGridParam('selarrrow');
+					var item = jQuery("#print_endoscopy").getGridParam('selarrrow');
 					var hippa_id = $("#print_hippa_id").val();
-					if(id){
-						var count = id.length;
+					if(item){
+						var count = item.length;
 						for (var i = 0; i < count; i++) {
+							var id = $("#print_endoscopy").getCell(item[i],'documents_id');
 							$.ajax({
 								type: "POST",
 								url: "ajaxchart/add-print-queue",
-								data: "documents_id=" + id[i] + "&hippa_id=" + hippa_id,
+								data: "documents_id=" + id + "&hippa_id=" + hippa_id,
 								success: function(data){
 								}
 							});
@@ -785,15 +793,16 @@ $(document).ready(function() {
 				caption:"Add Selected to Print Queue", 
 				buttonicon:"ui-icon-plus", 
 				onClickButton: function(){ 
-					var id = jQuery("#print_referrals").getGridParam('selarrrow');
+					var item = jQuery("#print_referrals").getGridParam('selarrrow');
 					var hippa_id = $("#print_hippa_id").val();
-					if(id){
-						var count = id.length;
+					if(item){
+						var count = item.length;
 						for (var i = 0; i < count; i++) {
+							var id = $("#print_referrals").getCell(item[i],'documents_id');
 							$.ajax({
 								type: "POST",
 								url: "ajaxchart/add-print-queue",
-								data: "documents_id=" + id[i] + "&hippa_id=" + hippa_id,
+								data: "documents_id=" + id + "&hippa_id=" + hippa_id,
 								success: function(data){
 								}
 							});
@@ -852,15 +861,16 @@ $(document).ready(function() {
 				caption:"Add Selected to Print Queue", 
 				buttonicon:"ui-icon-plus", 
 				onClickButton: function(){ 
-					var id = jQuery("#print_past_records").getGridParam('selarrrow');
+					var item = jQuery("#print_past_records").getGridParam('selarrrow');
 					var hippa_id = $("#print_hippa_id").val();
-					if(id){
-						var count = id.length;
+					if(item){
+						var count = item.length;
 						for (var i = 0; i < count; i++) {
+							var id = $("#print_past_records").getCell(item[i],'documents_id');
 							$.ajax({
 								type: "POST",
 								url: "ajaxchart/add-print-queue",
-								data: "documents_id=" + id[i] + "&hippa_id=" + hippa_id,
+								data: "documents_id=" + id + "&hippa_id=" + hippa_id,
 								success: function(data){
 								}
 							});
@@ -919,15 +929,16 @@ $(document).ready(function() {
 				caption:"Add Selected to Print Queue", 
 				buttonicon:"ui-icon-plus", 
 				onClickButton: function(){ 
-					var id = jQuery("#print_outside_forms").getGridParam('selarrrow');
+					var item = jQuery("#print_outside_forms").getGridParam('selarrrow');
 					var hippa_id = $("#print_hippa_id").val();
-					if(id){
-						var count = id.length;
+					if(item){
+						var count = item.length;
 						for (var i = 0; i < count; i++) {
+							var id = $("#print_outside_forms").getCell(item[i],'documents_id');
 							$.ajax({
 								type: "POST",
 								url: "ajaxchart/add-print-queue",
-								data: "documents_id=" + id[i] + "&hippa_id=" + hippa_id,
+								data: "documents_id=" + id + "&hippa_id=" + hippa_id,
 								success: function(data){
 								}
 							});
@@ -1166,10 +1177,11 @@ $(document).ready(function() {
 	$("#remove_item").click(function(){
 		var item = jQuery("#print_items_queue").getGridParam('selrow');
 		if(item){
+			var id = $("#print_items_queue").getCell(item,'hippa_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/delete-chart-item",
-				data: "hippa_id=" + item,
+				data: "hippa_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid("print_items_queue"); 

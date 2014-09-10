@@ -195,10 +195,11 @@ $(document).ready(function() {
 	$("#inactivate_allergy").click(function(){
 		var item = jQuery("#allergies").getGridParam('selrow');
 		if(item){
+			var id = $("#allergies").getCell(item,'allergies_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/inactivate-allergy",
-				data: "allergies_id=" + item,
+				data: "allergies_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid('allergies');
@@ -213,10 +214,11 @@ $(document).ready(function() {
 		var item = jQuery("#allergies").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this allergy?')){
+				var id = $("#allergies").getCell(item,'allergies_id');
 				$.ajax({
 					type: "POST",
 					url: "ajaxchart/delete-allergy",
-					data: "allergies_id=" + item,
+					data: "allergies_id=" + id,
 					success: function(data){
 						$.jGrowl(data);
 						reload_grid('allergies');
@@ -230,10 +232,11 @@ $(document).ready(function() {
 	$("#reactivate_allergy").click(function(){
 		var item = jQuery("#allergies_inactive").getGridParam('selrow');
 		if(item){
+			var id = $("#allergies_inactive").getCell(item,'allergies_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/reactivate-allergy",
-				data: "allergies_id=" + item,
+				data: "allergies_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid('allergies');

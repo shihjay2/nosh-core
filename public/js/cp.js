@@ -139,8 +139,9 @@ $(document).ready(function() {
 	$("#messages_resend_cp").click(function(){
 		var item = jQuery("#messages_cp_list").getGridParam('selrow');
 		if(item){
-			$("#messages_cp_orders_id").val(item);
-			$('#messages_cp_choice').html("Choose an action for the cardiopulmonary order, reference number " + item);
+			var id = $("#messages_cp_list").getCell(item,'orders_id');
+			$("#messages_cp_orders_id").val(id);
+			$('#messages_cp_choice').html("Choose an action for the cardiopulmonary order, reference number " + id);
 			$("#messages_cp_action_dialog").dialog('open');
 		} else {
 			$.jGrowl("Please select order to edit!");
@@ -149,10 +150,11 @@ $(document).ready(function() {
 	$("#messages_delete_cp").click(function(){
 		var item = jQuery("#messages_cp_list").getGridParam('selrow');
 		if(item){
+			var id = $("#messages_cp_list").getCell(item,'orders_id');
 			$.ajax({
 				url: "ajaxchart/delete-orders/Cardiopulmonary",
 				type: "POST",
-				data: "orders_id=" + item,
+				data: "orders_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid("messages_cp_list");

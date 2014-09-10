@@ -147,8 +147,9 @@ $(document).ready(function() {
 						caption:"Delete Payment", 
 						buttonicon:"ui-icon-trash", 
 						onClickButton: function(){ 
-							var id = jQuery(this).getGridParam('selrow');
-							if(id){
+							var item = jQuery(this).getGridParam('selrow');
+							if(item){
+				 				var id = $(this).getCell(item,'billing_core_id');
 				 				$('#billing_billing_core_id').val(id);
 				 				$.ajax({
 									type: "POST",
@@ -521,7 +522,8 @@ $(document).ready(function() {
 		}
 	});
 	$("#bill_resubmit").click(function(){
-		var eid = jQuery("#bills_done").getGridParam('selrow');
+		var item = jQuery("#bills_done").getGridParam('selrow');
+		var eid = $("#bills_done").getCell(item,'eid');
 		$.ajax({
 			type: "POST",
 			url: "ajaxfinancial/bill-resubmit",
@@ -536,7 +538,8 @@ $(document).ready(function() {
 	$("#payment_encounter_charge1").click(function(){
 		var item = jQuery("#bills_done").getGridParam('selrow');
 		if(item){
-			$('#billing_payment_eid').val(item);
+			var eid = $("#bills_done").getCell(item,'eid');
+			$('#billing_payment_eid').val(eid);
 			var currentDate = getCurrentDate();
 			$('#billing_payment_dos_f').val(currentDate);
 			$('#billing_payment_dialog').dialog('open');

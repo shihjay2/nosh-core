@@ -403,9 +403,10 @@ $(document).ready(function() {
 					caption:"Delete", 
 					buttonicon:"ui-icon-trash", 
 					onClickButton: function(){ 
-						var id = jQuery("#labs").getGridParam('selrow');
-						if(id){
+						var item = jQuery("#labs").getGridParam('selrow');
+						if(item){
 							if(confirm('Are you sure you want to delete this document?')){ 
+								var id = $("#labs").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
 									url: "ajaxchart/delete-document",
@@ -445,9 +446,10 @@ $(document).ready(function() {
 					caption:"Delete", 
 					buttonicon:"ui-icon-trash", 
 					onClickButton: function(){ 
-						var id = jQuery("#radiology").getGridParam('selrow');
-						if(id){
+						var item = jQuery("#radiology").getGridParam('selrow');
+						if(item){
 							if(confirm('Are you sure you want to delete this document?')){ 
+								var id = $("#radiology").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
 									url: "ajaxchart/delete-document",
@@ -487,9 +489,10 @@ $(document).ready(function() {
 					caption:"Delete", 
 					buttonicon:"ui-icon-trash", 
 					onClickButton: function(){ 
-						var id = jQuery("#cardiopulm").getGridParam('selrow');
-						if(id){
+						var item = jQuery("#cardiopulm").getGridParam('selrow');
+						if(item){
 							if(confirm('Are you sure you want to delete this document?')){ 
+								var id = $("#cardiopulm").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
 									url: "ajaxchart/delete-document",
@@ -529,9 +532,10 @@ $(document).ready(function() {
 					caption:"Delete", 
 					buttonicon:"ui-icon-trash", 
 					onClickButton: function(){ 
-						var id = jQuery("#endoscopy").getGridParam('selrow');
-						if(id){
+						var item = jQuery("#endoscopy").getGridParam('selrow');
+						if(item){
 							if(confirm('Are you sure you want to delete this document?')){ 
+								var id = $("#endoscopy").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
 									url: "ajaxchart/delete-document",
@@ -571,9 +575,10 @@ $(document).ready(function() {
 					caption:"Delete", 
 					buttonicon:"ui-icon-trash", 
 					onClickButton: function(){ 
-						var id = jQuery("#referrals").getGridParam('selrow');
-						if(id){
+						var item = jQuery("#referrals").getGridParam('selrow');
+						if(item){
 							if(confirm('Are you sure you want to delete this document?')){ 
+								var id = $("#referrals").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
 									url: "ajaxchart/delete-document",
@@ -613,9 +618,10 @@ $(document).ready(function() {
 					caption:"Delete", 
 					buttonicon:"ui-icon-trash", 
 					onClickButton: function(){ 
-						var id = jQuery("#past_records").getGridParam('selrow');
-						if(id){
+						var item = jQuery("#past_records").getGridParam('selrow');
+						if(item){
 							if(confirm('Are you sure you want to delete this document?')){ 
+								var id = $("#past_records").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
 									url: "ajaxchart/delete-document",
@@ -655,9 +661,10 @@ $(document).ready(function() {
 					caption:"Delete", 
 					buttonicon:"ui-icon-trash", 
 					onClickButton: function(){ 
-						var id = jQuery("#outside_forms").getGridParam('selrow');
-						if(id){
+						var item = jQuery("#outside_forms").getGridParam('selrow');
+						if(item){
 							if(confirm('Are you sure you want to delete this document?')){ 
+								var id = $("#outside_forms").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
 									url: "ajaxchart/delete-document",
@@ -697,9 +704,10 @@ $(document).ready(function() {
 					caption:"Delete", 
 					buttonicon:"ui-icon-trash", 
 					onClickButton: function(){ 
-						var id = jQuery("#letters").getGridParam('selrow');
-						if(id){
+						var item = jQuery("#letters").getGridParam('selrow');
+						if(item){
 							if(confirm('Are you sure you want to delete this document?')){ 
+								var id = $("#letters").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
 									url: "ajaxchart/delete-document",
@@ -739,9 +747,10 @@ $(document).ready(function() {
 					caption:"Delete", 
 					buttonicon:"ui-icon-trash", 
 					onClickButton: function(){ 
-						var id = jQuery("#ccdas").getGridParam('selrow');
-						if(id){
+						var item = jQuery("#ccdas").getGridParam('selrow');
+						if(item){
 							if(confirm('Are you sure you want to delete this document?')){ 
+								var id = $("#ccdas").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
 									url: "ajaxchart/delete-document",
@@ -1167,6 +1176,7 @@ $(document).ready(function() {
 			$("#chart_results").button().click(function() {
 				var item = jQuery("#tests_list").getGridParam('selrow');
 				if (item) {
+					var id = $("#tests_list").getCell(item,'tests_id');
 					$("#chart_loading").show();
 					var options = {
 						chart: {
@@ -1214,7 +1224,7 @@ $(document).ready(function() {
 					};
 					$.ajax({
 						type: "POST",
-						url: "ajaxchart/chart-test/" + item,
+						url: "ajaxchart/chart-test/" + id,
 						dataType: "json",
 						success: function(data){
 							options.title.text = data.title;
@@ -1254,14 +1264,15 @@ $(document).ready(function() {
 		$("#results_test_type").focus();
 	});
 	$("#edit_result").click(function(){
-		var id = jQuery("#tests_list").getGridParam('selarrrow');
-		if(id){
-			var count = id.length;
+		var item = jQuery("#tests_list").getGridParam('selarrrow');
+		if(item){
+			var count = item.length;
 			if (count <= 1) {
 				for (var i = 0; i < count; i++) {
+					var id = $("#tests_list").getCell(item[i],'tests_id');
 					$.ajax({
 						type: "POST",
-						url: "ajaxchart/get-test-form/" + id[i],
+						url: "ajaxchart/get-test-form/" + id,
 						dataType: "json",
 						success: function(data){
 							$.each(data, function(key, value){
@@ -1284,15 +1295,16 @@ $(document).ready(function() {
 		}
 	});
 	$("#delete_result").click(function(){
-		var id = jQuery("#tests_list").getGridParam('selarrrow');
-		if(id){
-			var count = id.length;
+		var item = jQuery("#tests_list").getGridParam('selarrrow');
+		if(item){
+			var count = item.length;
 			if (count <= 1) {
 				for (var i = 0; i < count; i++) {
 					if(confirm('Are you sure you want to delete this result?  This is not recommended unless entering the result was a mistake!')){ 
+						var id = $("#tests_list").getCell(item[i],'tests_id');
 						$.ajax({
 							type: "POST",
-							url: "ajaxchart/delete-test/" + id[i],
+							url: "ajaxchart/delete-test/" + id,
 							success: function(data){
 								$.jGrowl(data);
 								reload_grid("tests_list");

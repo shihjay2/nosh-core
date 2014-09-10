@@ -349,10 +349,11 @@ $(document).ready(function() {
 	$("#inactivate_sup").click(function(){
 		var item = jQuery("#supplements").getGridParam('selrow');
 		if(item){
+			var id = $("#supplements").getCell(item,'sup_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/inactivate-supplement",
-				data: "sup_id=" + item,
+				data: "sup_id=" + id,
 				dataType: "json",
 				success: function(data){
 					$.jGrowl(data.message);
@@ -370,10 +371,11 @@ $(document).ready(function() {
 		var item = jQuery("#supplements").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this supplement?  This is not recommended unless entering the supplement was a mistake!')){ 
+				var id = $("#supplements").getCell(item,'sup_id');
 				$.ajax({
 					type: "POST",
 					url: "ajaxchart/delete-supplement",
-					data: "sup_id=" + item,
+					data: "sup_id=" + id,
 					success: function(data){
 						$.jGrowl(data);
 						reload_grid("supplements");
@@ -388,10 +390,11 @@ $(document).ready(function() {
 	$("#reactivate_sup").click(function(){
 		var item = jQuery("#supplements_inactive").getGridParam('selrow');
 		if(item){
+			var id = $("#supplements_inactive").getCell(item,'sup_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/reactivate-supplement",
-				data: "sup_id=" + item,
+				data: "sup_id=" + id,
 				dataType: "json",
 				success: function(data){
 					$.jGrowl(data.message);

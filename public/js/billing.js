@@ -132,8 +132,9 @@ $(document).ready(function() {
 			 			caption:"Delete Payment", 
 						buttonicon:"ui-icon-trash", 
 						onClickButton: function(){ 
-							var id = jQuery(this).getGridParam('selrow');
-							if(id){
+							var item = jQuery(this).getGridParam('selrow');
+							if(item){
+				 				var id = $(this).getCell(item,'billing_core_id');
 				 				$('#billing_billing_core_id').val(id);
 				 				$.ajax({
 									type: "POST",
@@ -252,8 +253,9 @@ $(document).ready(function() {
 			 			caption:"Delete Payment", 
 						buttonicon:"ui-icon-trash", 
 						onClickButton: function(){ 
-							var id = jQuery(this).getGridParam('selrow');
-							if(id){
+							var item = jQuery(this).getGridParam('selrow');
+							if(item){
+				 				var id = $(this).getCell(item,'billing_core_id');
 				 				$('#billing_billing_core_id').val(id);
 				 				$.ajax({
 									type: "POST",
@@ -317,6 +319,7 @@ $(document).ready(function() {
 				url: "ajaxchart/get-billing/" + id,
 				dataType: "json",
 				success: function(data){
+					$("#billing_icd1").removeOption(/./);
 					if (data.message = "OK") {
 						$("#billing_icd1").addOption(data, false).removeOption("message").trigger("liszt:updated");
 					} else {
@@ -424,9 +427,9 @@ $(document).ready(function() {
 			 	sortorder: "desc",
 			 	caption:"Procedure codes for this encounter - Click on ICD Pointer column to get diagnosis codes for each procedure.",
 			 	height: "100%",
-			 	onCellSelect: function(id,iCol) {
+			 	onCellSelect: function(row,iCol) {
 					if (iCol == 6) {
-						var item = jQuery("#billing_cpt_list").getCell(id,'icd_pointer');
+						var item = jQuery("#billing_cpt_list").getCell(row,'icd_pointer');
 						$.ajax({
 							type: "POST",
 							url: "ajaxchart/define-icd/" + id,
@@ -686,8 +689,9 @@ $(document).ready(function() {
 		$("#billing_payment_payment_type").autocomplete("search", '1');
 	});
 	$("#edit_encounter_charge").click(function(){
-		var id = jQuery("#billing_encounters").getGridParam('selrow');
-		if(id){
+		var item = jQuery("#billing_encounters").getGridParam('selrow');
+		if(item){
+			var id = $("#billing_encounters").getCell(item,'eid');
 			$("#billing_eid_1").val(id);
 			$("#billing_detail_dialog").dialog('open');
 		} else {
@@ -697,7 +701,8 @@ $(document).ready(function() {
 	$("#payment_encounter_charge").click(function(){
 		var item = jQuery("#billing_encounters").getGridParam('selrow');
 		if(item){
-			$('#billing_payment_eid').val(item);
+			var id = $("#billing_encounters").getCell(item,'eid');
+			$('#billing_payment_eid').val(id);
 			var currentDate = getCurrentDate();
 			$('#billing_payment_dos_f').val(currentDate);
 			$('#billing_payment_dialog').dialog('open');
@@ -709,7 +714,8 @@ $(document).ready(function() {
 	$("#invoice_encounter_charge").click(function(){
 		var item = jQuery("#billing_encounters").getGridParam('selrow');
 		if(item){
-			window.open("print_invoice1/" + item + "/0/0");
+			var id = $("#billing_encounters").getCell(item,'eid');
+			window.open("print_invoice1/" + id + "/0/0");
 		} else {
 			$.jGrowl("Please select encounter to print invoice!");
 		}
@@ -733,7 +739,8 @@ $(document).ready(function() {
 	$("#payment_charge").click(function(){
 		var item = jQuery("#billing_other").getGridParam('selrow');
 		if(item){
-			$('#billing_payment_other_billing_id').val(item);
+			var id = $("#billing_other").getCell(item,'other_billing_id');
+			$('#billing_payment_other_billing_id').val(id);
 			var currentDate = getCurrentDate();
 			$('#billing_payment_dos_f').val(currentDate);
 			$('#billing_payment_dialog').dialog('open');
@@ -745,7 +752,8 @@ $(document).ready(function() {
 	$("#invoice_charge").click(function(){
 		var item = jQuery("#billing_other").getGridParam('selrow');
 		if(item){
-			window.open("print_invoice2/" + item);
+			var id = $("#billing_other").getCell(item,'other_billing_id');
+			window.open("print_invoice2/" + id);
 		} else {
 			$.jGrowl("Please select encounter to print invoice!");
 		}
@@ -754,10 +762,11 @@ $(document).ready(function() {
 		var item = jQuery("#billing_other").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this miscellaneous bill?')){
+				var id = $("#billing_other").getCell(item,'other_billing_id');
 				$.ajax({
 					type: "POST",
 					url: "ajaxchart/delete-other-bill",
-					data: "billing_core_id=" + item,
+					data: "billing_core_id=" + id,
 					success: function(data){
 						$.jGrowl(data);
 						reload_grid("billing_other");
@@ -882,10 +891,11 @@ $(document).ready(function() {
 	$("#remove_billing_cpt1").click(function(){
 		var item = jQuery("#billing_cpt_list").getGridParam('selrow');
 		if(item){
+			var id = $("#billing_cpt_list").getCell(item,'billing_core_id');
 			$.ajax({
 				url: "ajaxchart/remove-cpt",
 				type: "POST",
-				data: "billing_core_id=" + item,
+				data: "billing_core_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid("billing_cpt_list");
@@ -1009,7 +1019,8 @@ $(document).ready(function() {
 	$("#billing_select_insurance1").click(function(){
 		var item = jQuery("#billing_insurance_list1").getGridParam('selrow');
 		if(item){
-			$("#billing_insurance_id_1").val(item);
+			var id = $("#billing_insurance_list1").getCell(item,'insurance_id');
+			$("#billing_insurance_id_1").val(id);
 			get_insurance_info();
 		} else {
 			$.jGrowl("Please select insurance!");
@@ -1018,7 +1029,8 @@ $(document).ready(function() {
 	$("#billing_select_insurance2").click(function(){
 		var item = jQuery("#billing_insurance_list1").getGridParam('selrow');
 		if(item){
-			$("#billing_insurance_id_2").val(item);
+			var id = $("#billing_insurance_list1").getCell(item,'insurance_id');
+			$("#billing_insurance_id_2").val(id);
 			get_insurance_info();
 		} else {
 			$.jGrowl("Please select insurance!");

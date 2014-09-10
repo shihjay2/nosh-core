@@ -153,10 +153,11 @@ $(document).ready(function() {
 	$("#inactivate_rx").click(function(){
 		var item = jQuery("#medications").getGridParam('selrow');
 		if(item){
+			var id = $("#medications").getCell(item,'rxl_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/inactivate-medication",
-				data: "rxl_id=" + item,
+				data: "rxl_id=" + id,
 				dataType: "json",
 				success: function(data){
 					$.jGrowl(data.message);
@@ -172,10 +173,11 @@ $(document).ready(function() {
 		var item = jQuery("#medications").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this medication?  This is not recommended unless entering the medication was a mistake!')){ 
+				var id = $("#medications").getCell(item,'rxl_id');
 				$.ajax({
 					type: "POST",
 					url: "ajaxchart/delete-medication",
-					data: "rxl_id=" + item,
+					data: "rxl_id=" + id,
 					success: function(data){
 						$.jGrowl(data);
 						reload_grid("medications");
@@ -190,10 +192,11 @@ $(document).ready(function() {
 	$("#reactivate_rx").click(function(){
 		var item = jQuery("#medications_inactive").getGridParam('selrow');
 		if(item){
+			var id = $("#medications_inactive").getCell(item,'rxl_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/reactivate-medication",
-				data: "rxl_id=" + item,
+				data: "rxl_id=" + id,
 				dataType: "json",
 				success: function(data){
 					$.jGrowl(data.message);
@@ -965,10 +968,11 @@ $(document).ready(function() {
 	$("#messages_eie_rx").click(function(){
 		var item = jQuery("#messages_medications").getGridParam('selrow');
 		if(item){
+			var id = $("#messages_medications").getCell(item,'rxl_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/eie-medication",
-				data: "rxl_id=" + item,
+				data: "rxl_id=" + id,
 				dataType: 'json',
 				success: function(data){
 					$.jGrowl(data.message);
@@ -989,10 +993,11 @@ $(document).ready(function() {
 	$("#messages_inactivate_rx").click(function(){
 		var item = jQuery("#messages_medications").getGridParam('selrow');
 		if(item){
+			var id = $("#messages_medications").getCell(item,'rxl_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/inactivate-medication",
-				data: "rxl_id=" + item,
+				data: "rxl_id=" + id,
 				dataType: "json",
 				success: function(data){
 					$.jGrowl(data.message);
@@ -1012,10 +1017,11 @@ $(document).ready(function() {
 		var item = jQuery("#messages_medications").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this medication?  This is not recommended unless entering the medication was a mistake!')){ 
+				var id = $("#messages_medications").getCell(item,'rxl_id');
 				$.ajax({
 					type: "POST",
 					url: "ajaxchart/delete-medication",
-					data: "rxl_id=" + item,
+					data: "rxl_id=" + id,
 					success: function(data){
 						$.jGrowl(data);
 						reload_grid("messages_medications");
@@ -1032,10 +1038,11 @@ $(document).ready(function() {
 	$("#messages_reactivate_rx").click(function(){
 		var item = jQuery("#messages_medications_inactive").getGridParam('selrow');
 		if(item){
+			var id = $("#messages_medications_inactive").getCell(item,'rxl_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/reactivate-medication",
-				data: "rxl_id=" + item,
+				data: "rxl_id=" + id,
 				dataType: "json",
 				success: function(data){
 					$.jGrowl(data.message);
@@ -1236,7 +1243,8 @@ $(document).ready(function() {
 	$("#messages_rx_fax_viewpage").click(function(){
 		var click_id = jQuery("#messages_rx_fax_list").getGridParam('selrow');
 		if(click_id){
-			window.open("view_faxpage/" + click_id);
+			var id = $("#messages_rx_fax_list").getCell(item,'pages_id');
+			window.open("view_faxpage/" + id);
 		}
 	});
 	$("#rcopia_orders_rx").button({icons: {primary: "ui-icon-link"}}).click(function() {

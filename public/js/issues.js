@@ -104,10 +104,11 @@ $(document).ready(function() {
 	$("#inactivate_issue").click(function(){
 		var item = jQuery("#issues").getGridParam('selrow');
 		if(item){
+			var id = $("#issues").getCell(item,'issue_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/inactivate-issue",
-				data: "issue_id=" + item,
+				data: "issue_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid("issues");
@@ -122,10 +123,11 @@ $(document).ready(function() {
 		var item = jQuery("#issues").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this issue?')){
+				var id = $("#issues").getCell(item,'issue_id');
 				$.ajax({
 					type: "POST",
 					url: "ajaxchart/delete-issue",
-					data: "issue_id=" + item,
+					data: "issue_id=" + id,
 					success: function(data){
 						$.jGrowl(data);
 						reload_grid("issues");
@@ -139,10 +141,11 @@ $(document).ready(function() {
 	$("#reactivate_issue").click(function(){
 		var item = jQuery("#issues_inactive").getGridParam('selrow');
 		if(item){
+			var id = $("#issues_inactive").getCell(item,'issue_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/reactivate-issue",
-				data: "issue_id=" + item,
+				data: "issue_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid("issues_inactive");

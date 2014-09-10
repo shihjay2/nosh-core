@@ -302,10 +302,11 @@ $(document).ready(function() {
 	$("#complete_alert").click(function(){
 		var item = jQuery("#alerts").getGridParam('selrow');
 		if(item){
+			var id = $("#alerts").getCell(item,'alert_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/complete-alert",
-				data: "alert_id=" + item,
+				data: "alert_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid('alerts');
@@ -319,7 +320,8 @@ $(document).ready(function() {
 	$("#incomplete_alert").click(function(){
 		var item = jQuery("#alerts").getGridParam('selrow');
 		if(item){
-			$("#alert_id1").val(item);
+			var id = $("#alerts").getCell(item,'alert_id');
+			$("#alert_id1").val(id);
 			$('#edit_alert_dialog1').dialog('open');
 		} else {
 			$.jGrowl("Please select alert to mark as incomplete!")
@@ -329,10 +331,11 @@ $(document).ready(function() {
 		var item = jQuery("#alerts").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this alert?')){
+				var id = $("#alerts").getCell(item,'alert_id');
 				$.ajax({
 					type: "POST",
 					url: "ajaxchart/delete-alert",
-					data: "alert_id=" + item,
+					data: "alert_id=" + id,
 					success: function(data){
 						$.jGrowl(data);
 						reload_grid('alerts');

@@ -704,10 +704,11 @@ $(document).ready(function() {
 	$("#inactivate_nosh_issue").click(function(){
 		var item = jQuery("#nosh_issues").getGridParam('selrow');
 		if(item){
+			var id = $("#nosh_issues").getCell(item,'issue_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/inactivate-issue",
-				data: "issue_id=" + item,
+				data: "issue_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid("nosh_issues");
@@ -795,10 +796,11 @@ $(document).ready(function() {
 	$("#inactivate_nosh_rx").click(function(){
 		var item = jQuery("#nosh_medications").getGridParam('selrow');
 		if(item){
+			var id = $("#nosh_medications").getCell(item,'rxl_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/inactivate-medication",
-				data: "rxl_id=" + item,
+				data: "rxl_id=" + id,
 				dataType: "json",
 				success: function(data){
 					$.jGrowl(data.message);
@@ -852,10 +854,11 @@ $(document).ready(function() {
 	$("#inactivate_nosh_allergy").click(function(){
 		var item = jQuery("#nosh_allergies").getGridParam('selrow');
 		if(item){
+			var id = $("#nosh_allergies").getCell(item,'allergies_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/inactivate-allergy",
-				data: "allergies_id=" + item,
+				data: "allergies_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid("nosh_allergies");

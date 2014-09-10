@@ -494,9 +494,10 @@ $(document).ready(function() {
 					caption:"Delete", 
 					buttonicon:"ui-icon-trash", 
 					onClickButton: function(){ 
-						var id = jQuery(this).getGridParam('selrow');
-						if(id){
+						var item = jQuery(this).getGridParam('selrow');
+						if(item){
 							if(confirm('Are you sure you want to delete this text?')){
+								var id = $(this).getCell(item,'template_id');
 								$.ajax({
 									type: "POST",
 									url: "ajaxsearch/deletetextdump/" + id,
@@ -685,6 +686,7 @@ $(document).ready(function() {
 			var item = jQuery("#" + parent_id_table).getGridParam('selrow');
 			if(item){
 				if(confirm('Are you sure you want to delete this order?')){
+					var id = $("#" + parent_id_table).getCell(item,'orderslist_id');
 					$.ajax({
 						type: "POST",
 						url: "ajaxdashboard/delete-orders-list",
@@ -720,6 +722,7 @@ $(document).ready(function() {
 	$("#delete_cpt").click(function(){
 		var item = jQuery("#cpt_list_config").getGridParam('selrow');
 		if(item){
+			var id = $("#cpt_list_config").getCell(item,'cpt_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/delete-cpt",
@@ -812,10 +815,11 @@ $(document).ready(function() {
 		var item = jQuery("#patient_forms_list").getGridParam('selrow');
 		if(item){ 
 			jQuery("#patient_forms_list").GridToForm(item,"#configuration_patient_forms_form");
+			var id = $("#patient_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/get-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					$("#configuration_patient_forms_json").val(data);
 					$('#configuration_patient_forms_dialog').dialog('open');
@@ -829,10 +833,11 @@ $(document).ready(function() {
 	$("#delete_patient_forms").click(function(){
 		var item = jQuery("#patient_forms_list").getGridParam('selrow');
 		if(item){
+			var id = $("#patient_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/delete-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					reload_grid("patient_forms_list");
 					$.jGrowl(data);
@@ -845,7 +850,8 @@ $(document).ready(function() {
 	$("#export_patient_forms").click(function(){
 		var item = jQuery("#patient_forms_list").getGridParam('selrow');
 		if(item){
-			window.open("templatedownload/"+item);
+			var id = $("#patient_forms_list").getCell(item,'template_id');
+			window.open("templatedownload/"+id);
 		} else {
 			$.jGrowl("Please select form to export!");
 		}
@@ -861,10 +867,11 @@ $(document).ready(function() {
 		var item = jQuery("#hpi_forms_list").getGridParam('selrow');
 		if(item){ 
 			jQuery("#hpi_forms_list").GridToForm(item,"#configuration_hpi_forms_form");
+			var id = $("#hpi_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/get-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					$("#configuration_hpi_forms_json").val(data);
 					$('#configuration_hpi_forms_dialog').dialog('open');
@@ -878,10 +885,11 @@ $(document).ready(function() {
 	$("#delete_hpi_forms").click(function(){
 		var item = jQuery("#hpi_forms_list").getGridParam('selrow');
 		if(item){
+			var id = $("#hpi_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/delete-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					reload_grid("hpi_forms_list");
 					$.jGrowl(data);
@@ -894,7 +902,8 @@ $(document).ready(function() {
 	$("#export_hpi_forms").click(function(){
 		var item = jQuery("#hpi_forms_list").getGridParam('selrow');
 		if(item){
-			window.open("templatedownload/"+item);
+			var id = $("#hpi_forms_list").getCell(item,'template_id');
+			window.open("templatedownload/"+id);
 		} else {
 			$.jGrowl("Please select form to export!");
 		}
@@ -910,10 +919,11 @@ $(document).ready(function() {
 		var item = jQuery("#ros_forms_list").getGridParam('selrow');
 		if(item){ 
 			jQuery("#ros_forms_list").GridToForm(item,"#configuration_ros_forms_form");
+			var id = $("#ros_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/get-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					$("#configuration_ros_forms_json").val(data);
 					$('#configuration_ros_forms_dialog').dialog('open');
@@ -927,10 +937,11 @@ $(document).ready(function() {
 	$("#delete_ros_forms").click(function(){
 		var item = jQuery("#ros_forms_list").getGridParam('selrow');
 		if(item){
+			var id = $("#ros_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/delete-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					reload_grid("ros_forms_list");
 					$.jGrowl(data);
@@ -943,10 +954,11 @@ $(document).ready(function() {
 	$("#default_ros_forms").click(function(){
 		var item = jQuery("#ros_forms_list").getGridParam('selrow');
 		if(item){
+			var id = $("#ros_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/default-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					reload_grid("ros_forms_list");
 					$.jGrowl(data);
@@ -960,7 +972,8 @@ $(document).ready(function() {
 	$("#export_ros_forms").click(function(){
 		var item = jQuery("#ros_forms_list").getGridParam('selrow');
 		if(item){
-			window.open("templatedownload/"+item);
+			var id = $("#ros_forms_list").getCell(item,'template_id');
+			window.open("templatedownload/"+id);
 		} else {
 			$.jGrowl("Please select form to export!");
 		}
@@ -976,10 +989,11 @@ $(document).ready(function() {
 		var item = jQuery("#pe_forms_list").getGridParam('selrow');
 		if(item){ 
 			jQuery("#pe_forms_list").GridToForm(item,"#configuration_pe_forms_form");
+			var id = $("#pe_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/get-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					$("#configuration_pe_forms_json").val(data);
 					$('#configuration_pe_forms_dialog').dialog('open');
@@ -993,10 +1007,11 @@ $(document).ready(function() {
 	$("#delete_pe_forms").click(function(){
 		var item = jQuery("#pe_forms_list").getGridParam('selrow');
 		if(item){
+			var id = $("#pe_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/delete-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					reload_grid("pe_forms_list");
 					$.jGrowl(data);
@@ -1009,10 +1024,11 @@ $(document).ready(function() {
 	$("#default_pe_forms").click(function(){
 		var item = jQuery("#pe_forms_list").getGridParam('selrow');
 		if(item){
+			var id = $("#pe_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/default-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					reload_grid("pe_forms_list");
 					$.jGrowl(data);
@@ -1026,7 +1042,8 @@ $(document).ready(function() {
 	$("#export_pe_forms").click(function(){
 		var item = jQuery("#pe_forms_list").getGridParam('selrow');
 		if(item){
-			window.open("templatedownload/"+item);
+			var id = $("#pe_forms_list").getCell(item,'template_id');
+			window.open("templatedownload/"+id);
 		} else {
 			$.jGrowl("Please select form to export!");
 		}
@@ -1042,10 +1059,11 @@ $(document).ready(function() {
 		var item = jQuery("#situation_forms_list").getGridParam('selrow');
 		if(item){ 
 			jQuery("#situation_forms_list").GridToForm(item,"#configuration_situation_forms_form");
+			var id = $("#situation_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/get-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					$("#configuration_situation_forms_json").val(data);
 					$('#configuration_situation_forms_dialog').dialog('open');
@@ -1059,10 +1077,11 @@ $(document).ready(function() {
 	$("#delete_situation_forms").click(function(){
 		var item = jQuery("#situation_forms_list").getGridParam('selrow');
 		if(item){
+			var id = $("#situation_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/delete-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					reload_grid("situation_forms_list");
 					$.jGrowl(data);
@@ -1075,7 +1094,8 @@ $(document).ready(function() {
 	$("#export_situation_forms").click(function(){
 		var item = jQuery("#situation_forms_list").getGridParam('selrow');
 		if(item){
-			window.open("templatedownload/"+item);
+			var id = $("#situation_forms_list").getCell(item,'template_id');
+			window.open("templatedownload/"+id);
 		} else {
 			$.jGrowl("Please select form to export!");
 		}
@@ -1091,10 +1111,11 @@ $(document).ready(function() {
 		var item = jQuery("#referral_forms_list").getGridParam('selrow');
 		if(item){ 
 			jQuery("#referral_forms_list").GridToForm(item,"#configuration_referral_forms_form");
+			var id = $("#referral_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/get-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					$("#configuration_referral_forms_json").val(data);
 					$('#configuration_referral_forms_dialog').dialog('open');
@@ -1108,10 +1129,11 @@ $(document).ready(function() {
 	$("#delete_referral_forms").click(function(){
 		var item = jQuery("#referral_forms_list").getGridParam('selrow');
 		if(item){
+			var id = $("#referral_forms_list").getCell(item,'template_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxdashboard/delete-template",
-				data: "template_id=" + item,
+				data: "template_id=" + id,
 				success: function(data){
 					reload_grid("referral_forms_list");
 					$.jGrowl(data);
@@ -1124,7 +1146,8 @@ $(document).ready(function() {
 	$("#export_referral_forms").click(function(){
 		var item = jQuery("#referral_forms_list").getGridParam('selrow');
 		if(item){
-			window.open("templatedownload/"+item);
+			var id = $("#referral_forms_list").getCell(item,'template_id');
+			window.open("templatedownload/"+id);
 		} else {
 			$.jGrowl("Please select form to export!");
 		}
@@ -1893,9 +1916,10 @@ $(document).ready(function() {
 		var item = jQuery("#textdump_list").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this text?')){
+				var id = $("#textdump_list").getCell(item,'template_id');
 				$.ajax({
 					type: "POST",
-					url: "ajaxsearch/deletetextdump/" + item,
+					url: "ajaxsearch/deletetextdump/" + id,
 					success: function(data){
 						$.jGrowl(data);
 						jQuery("#textdump_list").trigger("reloadGrid");
@@ -1909,7 +1933,8 @@ $(document).ready(function() {
 	$("#export_textdump").click(function(){
 		var item = jQuery("#textdump_list").getGridParam('selrow');
 		if(item){
-			window.open("texttemplatedownload/"+item);
+			var id = $("#textdump_list").getCell(item,'template_id');
+			window.open("texttemplatedownload/"+id);
 		} else {
 			$.jGrowl("Please select group to export!");
 		}

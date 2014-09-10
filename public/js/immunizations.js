@@ -120,10 +120,11 @@ $(document).ready(function() {
 		var item = jQuery("#immunizations").getGridParam('selrow');
 		if(item){
 			if(confirm('Are you sure you want to delete this immunization?')){
+				var id = $("#immunizations").getCell(item,'imm_id');
 				$.ajax({
 					type: "POST",
 					url: "ajaxchart/delete-immunization",
-					data: "imm_id=" + item,
+					data: "imm_id=" + id,
 					success: function(data){
 						$.jGrowl(data);
 						reload_grid("immunizations");

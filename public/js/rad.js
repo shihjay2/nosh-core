@@ -140,7 +140,8 @@ $(document).ready(function() {
 	$("#messages_resend_rad").click(function(){
 		var item = jQuery("#messages_rad_list").getGridParam('selrow');
 		if(item){
-			$("#messages_rad_orders_id").val(item);
+			var id = $("#messages_rad_list").getCell(item,'orders_id');
+			$("#messages_rad_orders_id").val(id);
 			var a = $("#messages_rad_t_messages_id_origin").val();
 			$("#messages_rad_t_messages_id").val(a);
 			$('#messages_rad_choice').html("Choose an action for the radiology order, reference number " + item);
@@ -152,10 +153,11 @@ $(document).ready(function() {
 	$("#messages_delete_rad").click(function(){
 		var item = jQuery("#messages_rad_list").getGridParam('selrow');
 		if(item){
+			var id = $("#messages_rad_list").getCell(item,'orders_id');
 			$.ajax({
 				url: "ajaxchart/delete-orders/Imaging",
 				type: "POST",
-				data: "orders_id=" + item,
+				data: "orders_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid("messages_rad_list");

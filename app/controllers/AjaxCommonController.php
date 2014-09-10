@@ -979,11 +979,16 @@ class AjaxCommonController extends BaseController {
 		$this->audit('Add');
 		if ($url_check == false) {
 			$data_message['temp_url'] = rtrim($patient_portal->patient_portal, '/') . '/practiceregister/' . $register_code;
+			$return = 'Practice added without NOSH integration.';
+			if ($url_reason != '') {
+				$return .= '  ' . $url_reason;
+			}
 		} else {
 			$data_message['temp_url'] = rtrim($patient_portal->patient_portal, '/') . '/practiceregisternosh/' . $register_code;
+			$return = 'Practice added with NOSH integration.';
 		}
 		$this->send_mail('emails.apiregister', $data_message, 'NOSH ChartingSystem API Registration', Input::get('email'), '1');
-		echo 'Practice Added!';
+		echo $return;
 	}
 	
 	public function postConnectedPractices()

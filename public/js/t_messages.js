@@ -378,10 +378,11 @@ $(document).ready(function() {
 			$("#message_reply_tests_performed").val(old + '\n' + test2);
 		}
 		if(item){
+			var id = $("#messages_reply_alerts").getCell(item,'alert_id');
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/complete-alert",
-				data: "alert_id=" + item,
+				data: "alert_id=" + id,
 				success: function(data){
 					$.jGrowl(data);
 					reload_grid("messages_reply_alerts");
