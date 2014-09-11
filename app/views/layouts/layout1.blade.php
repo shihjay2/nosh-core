@@ -23,7 +23,8 @@
 				'documents': '<?php echo trim(File::get(__DIR__ . '/../../../.noshdir')); ?>',
 				'error': '<?php echo route('home'); ?>',
 				'logout_url': '<?php echo route('logout'); ?>',
-				'images': '<?php echo url('images'); ?>/'
+				'images': '<?php echo url('images'); ?>/',
+				'patient_centric': '<?php if (file_exists(__DIR__ . '/../../../.patientcentric')) { echo 'y'; } else { echo 'n'; } ?>'
 			};
 			var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 		</script>

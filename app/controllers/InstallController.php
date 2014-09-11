@@ -24,14 +24,6 @@ class InstallController extends BaseController {
 		$this->layout->content = View::make('install_fix_db_conn');
 	}
 	
-	public function test2()
-	{
-		$this->layout->title = "NOSH ChartingSystem Database Connection Fixer";
-		$this->layout->style = '';
-		$this->layout->script = '';
-		$this->layout->content = View::make('encounters.pe');
-	}
-	
 	public function practiceregister($api)
 	{
 		$this->layout->title = "NOSH ChartingSystem Practice Registration";

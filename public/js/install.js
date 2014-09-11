@@ -122,7 +122,7 @@ $(document).ready(function() {
 	});
 	$("#install_choose_dialog").dialog({ 
 		bgiframe: true, 
-		autoOpen: true, 
+		autoOpen: false, 
 		height: 200, 
 		width: 450, 
 		draggable: false,
@@ -131,6 +131,12 @@ $(document).ready(function() {
 		dialogClass: "noclose",
 		modal: true
 	});
+	if (noshdata.patient_centric == 'y') {
+		$("#install_patient_form").show();
+		$("#password1").focus();
+	} else {
+		$("#install_choose_dialog").dialog('open');
+	}
 	$("#DOB").mask("99/99/9999").datepicker();
 	$("#install_patient").button().click(function() {
 		$("#install_patient_form").show();
