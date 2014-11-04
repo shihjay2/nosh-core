@@ -2,5 +2,5 @@
 wget --no-check-certificate -O - -q -t 1 localhost/nosh/backup
 DIR=$(dirname $0)
 cd $DIR
-composer install
 wget --no-check-certificate -O - -q -t 1 localhost/nosh/update_system
+composer install
