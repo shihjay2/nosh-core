@@ -8,6 +8,22 @@ class ReminderController extends BaseController {
 	
 	public function test()
 	{
+		$client_id = '5b8e4e18-fbfa-4ef2-8e49-074e571be425';
+		$client_secret = 'Pt6PD6xHQFCiWzo0QnfSXJ2XLatVAafXlGlNSw4Td9gVBVjasg7JtcogqgLDdjr6axfFoBV6FhvEoDUA0q1_BQ';
+		$open_id_url = 'http://162.243.111.18:8080/openid-connect-server-webapp/';
+		$url = route('test1');
+		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		//$oidc->addScope('npi');
+		//$oidc->addScope('practice_npi');
+		$oidc->setRedirectURL($url);
+		$oidc->authenticate();
+		$firstname = $oidc->requestUserInfo('given_name');
+		$lastname = $oidc->requestUserInfo('family_name');
+		$email = $oidc->requestUserInfo('email');
+		$npi = $oidc->requestUserInfo('npi');
+		$practice_npi = $oidc->requestUserInfo('practice_npi');
+		$user_id = $oidc->requestUserInfo('sub');
+		return $firstname . '<br>' . $lastname . '</br>' . $email . '<br>' . $npi . '<br>' . $practice_npi . '<br>' . $user_id;
 	}
 	
 	public function test0()
@@ -185,7 +201,7 @@ class ReminderController extends BaseController {
 		$arr .= "Number of results obtained: " . $results_count . "<br>";
 		$arr .= "Number of alerts sent: " . $results_alert . "<br>";
 		$arr .= "Number of unused practices cleaned: " . $results_practice_clean . "<br>";
-		$arr .= "Number of commands sent via API: " . $results_api . "<br>";
+		$arr .= "Number of commands sent via API: " . $results_api . "<br><br>";
 		return $arr;
 	}
 	
@@ -982,6 +998,9 @@ class ReminderController extends BaseController {
 		$result = Practiceinfo::find($practice_id);
 		Config::set('app.timezone' , $result->timezone);
 		$dir = $result->documents_dir . 'scans/' . $practice_id;
+		if (! file_exists($dir)) {
+			mkdir($dir, 0777);
+		}
 		$files = scandir($dir);
 		$count = count($files);
 		$j=0;

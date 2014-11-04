@@ -930,6 +930,64 @@ class AjaxDashboardController extends BaseController {
 		}
 	}
 	
+	public function postFindpractices()
+	{
+		if (Session::get('group_id') != '1') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$practices = DB::table('practiceinfo')->where('practice_id' , '!=', '1')->get();
+			$data['options'] = array();
+			foreach ($practices as $practice) {
+				$practice_id = $practice->practice_id;
+				$data['options'][$practice_id] = $practice->practice_name;
+			}
+			echo json_encode($data);
+		}
+	}
+	
+	public function postCancelpractice()
+	{
+		if (Session::get('group_id') != '1') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$practice_id = Input::get('practice_id');
+			$query1 = DB::table('users')->where('practice_id', '=', $practice_id)->where('group_id', '!=', '1')->get();
+			if ($query1) {
+				foreach ($query1 as $row1) {
+					$active = '0';
+					$disable = 'disable';
+					$password = Hash::make($disable);
+					$data = array(
+						'active' => $active,
+						'password' => $password
+					);
+					DB::table('users')->where('id', '=', $row1->id)->update($data);
+					$this->audit('Update');
+					$row2 = DB::table('demographics_relate')->where('id', '=', $row1->id)->where('practice_id', '=', $practice_id)->first();
+					if ($row2) {
+						$data1 = array(
+							'id' => NULL
+						);
+						DB::table('demographics_relate')->where('demographics_relate_id', '=', $row2->demographics_relate_id)->update($data1);
+						$this->audit('Update');
+					}
+				}
+			}
+			$data2 = array(
+				'active' => 'N'
+			);
+			DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->update($data2);
+			$this->audit('Update');
+			echo "Practice #" . $practice_id . " manually canceled!";
+		}
+	}
+	
 	public function postCheckPrintEntireChart()
 	{
 		if (Session::get('group_id') != '1') {

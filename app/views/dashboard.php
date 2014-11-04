@@ -74,6 +74,9 @@
 							<?php if($saas_admin == "y") { ?>
 								<br><?php echo HTML::image('images/kdisknav.png', 'Import from NOSH in the Cloud', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="import_entire">Import from NOSH in the Cloud</a>
 								<br><?php echo HTML::image('images/kdisknav.png', 'Restore the database', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="restore_database_link">Restore the database</a>
+								<?php if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh') {?>
+									<br><?php echo HTML::image('images/cancel.png', 'Manually cancel practice', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;'));?> <a href="#" id="manual_cancel_practice">Manually Cancel Practice</a>
+								<?php }?>
 							<?php }?>
 						<?php }?>
 						<div id="draft_div" style="display:none;">
@@ -95,9 +98,13 @@
 					<div class="pure-u-1-4">
 						<h4>Welcome <?php echo $displayname;?>.</h4>
 						<?php echo HTML::image('images/email.png', 'Messages', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Send a message to your provider here too!"> <a href="#" id="dashboard_messaging">View your messages.</a></span>
-						<br><?php echo HTML::image('images/schedule.png', 'Schedule an appointment', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_schedule">Schedule an appointment</a>
+						<?php if(Session::get('patient_centric') == 'n') {?>
+							<br><?php echo HTML::image('images/schedule.png', 'Schedule an appointment', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?> <a href="#" id="dashboard_schedule">Schedule an appointment</a>
+						<?php }?>
 						<br><?php echo HTML::image('images/personal.png', 'Update demographics', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?> <a href="#" id="patient_demographics">Edit your demographics and insurance.</a>
-						<br><?php echo HTML::image('images/sign.png', 'Forms', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your provider may want you to fill out forms for the practice.  Do this here!"> <a href="#" id="dashboard_forms">Fill out forms.</a></span>
+						<?php if(Session::get('patient_centric') == 'n') {?>
+							<br><?php echo HTML::image('images/sign.png', 'Forms', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your provider may want you to fill out forms for the practice.  Do this here!"> <a href="#" id="dashboard_forms">Fill out forms.</a></span>
+						<?php }?>
 						<br><?php echo HTML::image('images/reminder.png', 'Office Visits', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="Your patient instructions for your previous encounters with your provider."> <a href="#" id="dashboard_encounters">Your past office visits.</a></span>
 						<br><?php echo HTML::image('images/chart.png', 'Issues', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="These are your active medical issues documented by your provider(s)."> <a href="#" id="dashboard_issues">Your active medical issues.</a></span>
 						<br><?php echo HTML::image('images/rx.png', 'Medications', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle;'));?><span class="nosh_tooltip" title="These are your active medications documented by your provider(s)."> <a href="#" id="dashboard_rx">Your active medication list.</a></span>
@@ -157,11 +164,11 @@
 </div>
 <div id="restore_database_dialog" title="Restore Database">
 	<form id="restore_database_form"  class="pure-form pure-form-aligned">
-	<div class="pure-control-group">
-		<label for="backup_select">Pick one to restore:</label>
-		<select id="backup_select" class="text"></select>
-	</div>
-	<button type="button" id="restore_backup_button">Select</button>
+		<div class="pure-control-group">
+			<label for="backup_select">Pick one to restore:</label>
+			<select id="backup_select" class="text"></select>
+		</div>
+		<button type="button" id="restore_backup_button">Select</button>
 	</form>
 </div>
 <div id="provider_info_dialog" title="Edit Provider Information">
@@ -291,5 +298,14 @@
 		<input type="text" id="add_practice_email" name="email" style="width:95%" class="text" required/>
 		<label for="add_practice_practice_url">Practice Portal URL (optional):</label>
 		<input type="text" id="add_practice_practice_url" name="practice_url" style="width:95%" class="text"/>
+	</form>
+</div>
+<div id="manual_cancel_practice_dialog" title="Manually Cancel Practice">
+	<form id="manual_cancel_practice_form"  class="pure-form pure-form-aligned">
+		<div class="pure-control-group">
+			<label for="manual_cancel_practice_list">Pick practice to cancel:</label>
+			<select id="manual_cancel_practice_list" class="text"></select>
+		</div>
+		<button type="button" id="manual_cancel_practice_button">Select</button>
 	</form>
 </div>

@@ -448,7 +448,7 @@ class AjaxSetupController extends BaseController {
 	{
 		$data = array(
 			'active' => '1',
-			'password' => Hash::make(Input::get('password'))
+			'password' => substr_replace(Hash::make(Input::get('password')),"$2a",0,3)
 		);
 		DB::table('users')->where('id', '=', Input::get('id'))->update($data);
 		$this->audit('Update');
@@ -458,7 +458,7 @@ class AjaxSetupController extends BaseController {
 	{
 		$data = array(
 			'active' => '0',
-			'password' => Hash::make('disable')
+			'password' => substr_replace(Hash::make('disable'),"$2a",0,3)
 		);
 		DB::table('users')->where('id', '=', Input::get('id'))->update($data);
 		$this->audit('Update');
@@ -474,7 +474,7 @@ class AjaxSetupController extends BaseController {
 	
 	public function postResetPassword()
 	{
-		$data['password'] = Hash::make(Input::get('password'));
+		$data['password'] = substr_replace(Hash::make(Input::get('password')),"$2a",0,3);
 		DB::table('users')->where('id', '=', Input::get('id'))->update($data);
 		$this->audit('Update');
 		echo "Password changed!";

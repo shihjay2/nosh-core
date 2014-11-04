@@ -76,6 +76,10 @@ class FaxController extends BaseController {
 								$rp = '_' . time() . '.pdf';
 								$file1 = str_replace('.pdf', $rp, $filename);
 								$file2 = str_replace('.PDF', '', $filename);
+								$received_dir = $row->documents_dir . 'received/' . $row1->practice_id;
+								if (! file_exists($received_dir)) {
+									mkdir($received_dir, 0777);
+								}
 								$path = $row1->documents_dir . 'received/' . $row1->practice_id . '/' . $file1;
 								$xfp = fopen($path, 'w');
 								if( $xfp ) {
@@ -131,6 +135,10 @@ class FaxController extends BaseController {
 			$data['fileFrom'] = $result['from_number'];
 			$data['filePages'] = $result['num_pages'];
 			$file1 = $result['id'] . '_' . time() . '.pdf';
+			$received_dir = $row->documents_dir . 'received/' . $practice_id;
+			if (! file_exists($received_dir)) {
+				mkdir($received_dir, 0777);
+			}
 			$path = $row->documents_dir . 'received/' . $practice_id . '/' . $file1;
 			$phaxio = new Phaxio($row->phaxio_api_key, $row->phaxio_api_secret);
 			$file_result = $phaxio->faxFile($result['id']);

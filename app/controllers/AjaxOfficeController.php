@@ -745,6 +745,33 @@ class AjaxOfficeController extends BaseController {
 						}
 					});
 				}
+				if($search_field[$i] == 'month') {
+					$query_text1->where(function($query_array8) use ($search_op, $search_desc, $search_join, $i) {
+						$query_date = date('-m-', strtotime($search_desc[$i]));
+						if($search_op[$i] == 'equal') {
+							if($search_join[$i] != "start") {
+								if($search_join[$i] == 'AND') {
+									$query_array8->where('demographics.DOB', 'LIKE', "%$query_date%");
+								} else {
+									$query_array8->orWhere('demographics.DOB', 'LIKE', "%$query_date%");
+								}
+							} else {
+								$query_array8->where('demographics.DOB', 'LIKE', "%$query_date%");
+							}
+						}
+						if($search_op[$i] == 'not equal') {
+							if($search_join[$i] != "start") {
+								if($search_join[$i] == 'AND') {
+									$query_array8->where('demographics.DOB', 'NOT LIKE', "%$query_date%");
+								} else {
+									$query_array8->orWhere('demographics.DOB', 'NOT LIKE', "%$query_date%");
+								}		
+							} else {
+								$query_array8->where('demographics.DOB', 'NOT LIKE', "%$query_date%");
+							}
+						}
+					});
+				}
 			}
 		}
 		if($search_active_only == "Yes") {

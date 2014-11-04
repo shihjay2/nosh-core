@@ -148,7 +148,7 @@ class AjaxLoginController extends BaseController {
 	public function postChangePassword($id)
 	{
 		$user = User::find($id);
-		$user->password = Hash::make(Input::get('new_password'));
+		$user->password = substr_replace(Hash::make(Input::get('new_password')),"$2a",0,3);
 		$user->save();
 		echo 'OK';
 	}

@@ -795,9 +795,17 @@ class AjaxSearchController extends BaseController {
 	{
 		$data = array();
 		if (Session::get('group_id') == '100') {
-			$query = DB::table('users')->where('group_id', '!=', '100')->where('group_id', '!=', '1')->where('practice_id', '=', Session::get('practice_id'))->get();
+			if (Session::get('patient_centric') == 'y') {
+				$query = DB::table('users')->where('group_id', '!=', '100')->where('group_id', '!=', '1')->get();
+			} else {
+				$query = DB::table('users')->where('group_id', '!=', '100')->where('group_id', '!=', '1')->where('practice_id', '=', Session::get('practice_id'))->get();
+			}
 		} else {
-			$query = DB::table('users')->where('group_id', '!=', '1')->where('practice_id', '=', Session::get('practice_id'))->get();
+			if (Session::get('patient_centric') == 'yp') {
+				$query = DB::table('users')->where('group_id', '!=', '1')->get();
+			} else {
+				$query = DB::table('users')->where('group_id', '!=', '1')->where('practice_id', '=', Session::get('practice_id'))->get();
+			}
 		}
 		if ($query) {
 			foreach ($query as $row) {

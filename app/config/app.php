@@ -187,7 +187,8 @@ return array(
 		'RxNormApi'       => 'RxNormApis\RxNormApi',
 		'ApiBaseClass'    => 'ApiBaseClasses\ApiBaseClass',
 		'Ccdaparser'      => 'Ccdaparsers\Ccdaparser',
-		'Phaxio'          => 'Phaxios\Phaxio'
+		'Phaxio'          => 'Phaxios\Phaxio',
+		'OpenIDConnectClient' => 'OpenIDConnectClients\OpenIDConnectClient'
 	),
 
 );

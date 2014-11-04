@@ -2,7 +2,7 @@ $(document).ready(function() {
 	function super_query() {
 		$("#super_query_div").html('Search patients with the following filters:<br><button type="button" id="search_add" class="nosh_button_add">Add </button> <input type="hidden" name="search_join[]" id="search_join_first" value="start"></input><select name="search_field[]" id="search_field_1" class="text search_field_class"></select> <select name="search_op[]" id="search_op_1" class="text search_op_class"></select> <input type="text" name="search_desc[]" id="search_desc_1"  class="text search_desc_class"></input>');
 		loadbuttons();
-		$("#search_field_1").addOption({"":"Select Field","age":"Patient's age","insurance":"Patient's primary insurance","issue":"Patient's active medical issue list","billing":"Patient's billing code","rxl_medication":"Patient's active medication list","imm_immunization":"Patient's immunization list","sup_supplement":"Patient's active supplement list","zip":"Zip code where patient resides","city":"City where patient resides"},false);
+		$("#search_field_1").addOption({"":"Select Field","age":"Patient's age","insurance":"Patient's primary insurance","issue":"Patient's active medical issue list","billing":"Patient's billing code","rxl_medication":"Patient's active medication list","imm_immunization":"Patient's immunization list","sup_supplement":"Patient's active supplement list","zip":"Zip code where patient resides","city":"City where patient resides","month":"Patient's birth month"},false);
 		$("#search_op_1").addOption({"":"Select Operator"},false);
 		$("#search_field_1").change(function(){
 			var a = $("#search_field_1").val();
@@ -37,6 +37,15 @@ $(document).ready(function() {
 					minLength: 3
 				});
 			}
+			if (a == "month") {
+				$("#search_op_1").removeOption(/./);
+				$("#search_op_1").addOption({"":"Select Operator","equal":"is equal to","not equal":"is not equal to"},false);
+				$("#search_desc_1").val("");
+				$("#search_desc_1").autocomplete({
+					source: availableMonths,
+					minLength: 1
+				});
+			}
 		});
 		$("#search_op_1").change(function(){
 			var a = $("#search_op_1").val();
@@ -50,7 +59,7 @@ $(document).ready(function() {
 			var a1 = a.split("_");
 			var count = parseInt(a1[2]) + 1;
 			$("#super_query_div").append('<br><select name="search_join[]" id="search_join_'+count+'" class="text search_join_class"></select> <select name="search_field[]" id="search_field_'+count+'" class="text search_field_class"></select> <select name="search_op[]" id="search_op_'+count+'" class="text search_op_class"></select> <input type="text" name="search_desc[]" id="search_desc_'+count+'"  class="text search_desc_class"></input>');
-			$("#search_field_"+count).addOption({"":"Select Field","age":"Patient's age","insurance":"Patient's primary insurance","issue":"Patient's active medical issue list","billing":"Patient's billing code","rxl_medication":"Patient's active medication list","imm_immunization":"Patient's immunization list","sup_supplement":"Patient's active supplement list","sup_supplement":"Patient's active supplement list","zip":"Zip code where patient resides","city":"City where patient resides"},false);
+			$("#search_field_"+count).addOption({"":"Select Field","age":"Patient's age","insurance":"Patient's primary insurance","issue":"Patient's active medical issue list","billing":"Patient's billing code","rxl_medication":"Patient's active medication list","imm_immunization":"Patient's immunization list","sup_supplement":"Patient's active supplement list","sup_supplement":"Patient's active supplement list","zip":"Zip code where patient resides","city":"City where patient resides","month":"Patient's birth month"},false);
 			$("#search_op_"+count).addOption({"":"Select Operator"},false);
 			$("#search_join_"+count).addOption({"AND":"And (&)","OR":"Or (||)"},false);
 			$("#search_field_"+count).change(function(){
@@ -84,6 +93,15 @@ $(document).ready(function() {
 							});
 						},
 						minLength: 3
+					});
+				}
+				if (a == "month") {
+					$("#search_op_"+count).removeOption(/./);
+					$("#search_op_"+count).addOption({"":"Select Operator","equal":"is equal to","not equal":"is not equal to"},false);
+					$("#search_desc_"+count).val("");
+					$("#search_desc_"+count).autocomplete({
+						source: availableMonths,
+						minLength: 1
 					});
 				}
 			});

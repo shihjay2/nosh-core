@@ -1,5 +1,6 @@
 <?php namespace Phaxios;
 
+use Exception;
 class Phaxio
 {
 	private $debug = false;

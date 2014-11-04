@@ -11,7 +11,7 @@
 |
 */
 
-Route::any('/', array('as' => 'home', 'before' => 'force.ssl|version_check|installfix|needinstall|update|auth', 'uses' => 'HomeController@dashboard'));
+Route::any('/', array('as' => 'home', 'before' => 'force.ssl|version_check|installfix|needinstall|update|openid|auth', 'uses' => 'HomeController@dashboard'));
 Route::any('login', array('as' => 'login', 'before' => 'force.ssl', 'uses' => 'LoginController@action'));
 Route::get('start/{practicehandle}', function($practicehandle = null)
 {
@@ -124,7 +124,7 @@ Route::group(array('before' => 'force.ssl|acl5'), function() {
 	Route::post('cpt_update', array('as' => 'cpt_update', 'uses' => 'AjaxSetupController@cpt_update'));
 	Route::post('importupload', array('as' => 'importupload', 'uses' => 'AjaxDashboardController@importupload'));
 });
-Route::get('logout', array('as' => 'logout', 'before' => 'force.ssl', 'uses' => 'LoginController@logout'));
+Route::get('logout', array('as' => 'logout', 'before' => 'force.ssl|needinstall', 'uses' => 'LoginController@logout'));
 Route::get('reminder', array('as' => 'reminder', 'uses' => 'ReminderController@reminder'));
 Route::get('fax', array('as' => 'fax', 'uses' => 'FaxController@fax'));
 Route::get('footerpdf', array("as" => "footerpdf", function()
@@ -156,6 +156,10 @@ Route::get('mtmheaderpdf/{pid}', array("as" => "mtmheaderpdf", function($pid)
 }));
 Route::get('backup', array('as' => 'backup', 'uses' => 'BackupController@backup'));
 Route::post('backuprestore', array('as' => 'backuprestore', 'uses' => 'BackupController@restore'));
+Route::get('oidc', array('as' => 'oidc', 'uses' => 'LoginController@oidc'));
+Route::get('oidc_register_client', array('as' => 'oidc_register_client', 'uses' => 'LoginController@oidc_register_client'));
+Route::get('oidc_check_patient_centric', array('as' => 'oidc_check_patient_centric', 'uses' => 'LoginController@oidc_check_patient_centric'));
+Route::any('practice_choose', array('as' => 'practice_choose', 'before' => 'force.ssl', 'uses' => 'LoginController@practice_choose'));
 // API routes
 Route::get('authtest', array('before' => 'auth.basic', function()
 {
@@ -164,6 +168,7 @@ Route::get('authtest', array('before' => 'auth.basic', function()
 Route::get('checkapi/{practicehandle}', array('as' => 'checkapi', 'before' => 'force.ssl', 'uses' => 'AjaxCommonController@checkapi'));
 Route::get('practiceregister/{api}', array('as' => 'practiceregister', 'before' => 'force.ssl', 'uses' => 'InstallController@practiceregister'));
 Route::post('practiceregisternosh/{api}', array('as' => 'practiceregisternosh', 'uses' => 'AjaxInstallController@practiceregisternosh'));
+Route::get('providerregister/{api}', array('as' => 'providerregister', 'before' => 'force.ssl', 'uses' => 'InstallController@providerregister'));
 Route::post('apilogin', array('as' => 'apilogin', 'uses' => 'AjaxLoginController@apilogin'));
 Route::post('apilogout', array('as' => 'apilogout', 'uses' => 'AjaxLoginController@apilogout'));
 Route::group(array('prefix' => 'api/v1', 'before' => 'force.ssl|auth.basic'), function()
@@ -211,6 +216,16 @@ Route::filter('update', function()
 	// Check version number
 	if ($row->version < $current_version) {
 		return Redirect::to('update');
+	}
+});
+
+Route::filter('openid', function()
+{
+	if(route('home') == 'https://hieofone.com/nosh' || route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh') {
+		$row = Practiceinfo::find(1);
+		if ($row->openidconnect_client_id == '') {
+			return Redirect::to('oidc_register_client');
+		}
 	}
 });
 

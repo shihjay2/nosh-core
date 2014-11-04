@@ -5480,26 +5480,6 @@ class AjaxChartController extends BaseController {
 		unset($practiceinfo_data['practice_registration_key']);
 		unset($practiceinfo_data['practice_registration_timeout']);
 		$data['practice'] = $practiceinfo_data;
-		$users = DB::table('users')
-			->where('practice_id', '=', Session::get('practice_id'))
-			->where('group_id', '<', '100')
-			->where('active', '=', '1')
-			->get();
-		$data['users'] = array();
-		$data['providers'] = array();
-		$i = 0;
-		if ($users) {
-			foreach ($users as $user) {
-				$user_data = (array) $user;
-				$data['users'][$i] = $user_data;
-				if ($user->group_id == '2') {
-					$provider = DB::table('providers')->where('id', '=', $user->id)->first();
-					$provider_data = (array) $provider;
-					$data['providers'][$i] = $provider_data;
-				}
-				$i++;
-			}
-		}
 		$result = $this->send_api_data(Input::get('url'), $data, '', '');
 		$message['status'] = 'n';
 		if ($result['url_error'] == '') {

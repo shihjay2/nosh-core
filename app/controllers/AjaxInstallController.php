@@ -13,7 +13,7 @@ class AjaxInstallController extends BaseController {
 		$smtp_user = Input::get('smtp_user');
 		$smtp_pass = Input::get('smtp_pass');
 		$username = Input::get('username');
-		$password = Hash::make(Input::get('password'));
+		$password = substr_replace(Hash::make(Input::get('password')),"$2a",0,3);
 		$email = Input::get('email');
 		if ($type == 'practice') {
 			$practice_name = Input::get('practice_name');
@@ -60,6 +60,7 @@ class AjaxInstallController extends BaseController {
 			'zip' => $zip,
 			'phone' => $phone,
 			'fax' => $fax,
+			'email' => $email,
 			'documents_dir' => $documents_dir,
 			'fax_type' => '',
 			'smtp_user' => $smtp_user,
@@ -73,7 +74,7 @@ class AjaxInstallController extends BaseController {
 		// Insert patient
 		if ($type == 'patient') {
 			$dob = date('Y-m-d', strtotime(Input::get('DOB')));
-			$pt_password = Hash::make(Input::get('pt_password'));
+			$pt_password = substr_replace(Hash::make(Input::get('pt_password')),"$2a",0,3);
 			$displayname = Input::get('firstname') . " " . Input::get('lastname');
 			$patient_data = array(
 				'lastname' => Input::get('lastname'),
@@ -632,7 +633,7 @@ class AjaxInstallController extends BaseController {
 	{
 		$base_practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$username = Input::get('username');
-		$password = Hash::make(Input::get('password'));
+		$password = substr_replace(Hash::make(Input::get('password')),"$2a",0,3);
 		$email = Input::get('email');
 		$practice_id = Input::get('practice_id');
 		// Insert practice
@@ -700,21 +701,6 @@ class AjaxInstallController extends BaseController {
 				$data['practice']['practice_registration_timeout'] = '';
 				DB::table('practiceinfo')->where('practice_id', '=', $practice->practice_id)->update($data['practice']);
 				$this->audit('Update');
-				$users_array = array();
-				foreach ($data['users'] as $user) {
-					$user['practice_id'] = $practice->practice_id;
-					$old_user_id = $user['id'];
-					unset($user['id']);
-					$new_user_id = DB::table('users')->insertGetId($user);
-					$this->audit('Add');
-					$users_array[$old_user_id] = $new_user_id;
-				}
-				foreach ($data['providers'] as $provider) {
-					$provider_id = $provider['id'];
-					$provider['id'] = $users_array[$provider_id];
-					DB::table('providers')->insert($provider);
-					$this->audit('Add');
-				}
 				return Response::json(array(
 					'error' => false,
 					'message' => 'Practice connected',

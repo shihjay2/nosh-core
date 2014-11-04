@@ -7,6 +7,14 @@ $.ajaxSetup({
 //$(document).ajaxError(function() {
 	//window.location.replace(noshdata.error);
 //});
+$(document).idleTimeout({
+	inactivity: 28800000,
+	noconfirm: 10000,
+	alive_url: noshdata.error,
+	redirect_url: noshdata.logout_url,
+	logout_url: noshdata.logout_url,
+	sessionAlive: false
+});
 $(document).ready(function() {
 	$("#phone").mask("(999) 999-9999");
 	$("#fax").mask("(999) 999-9999");

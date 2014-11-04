@@ -959,4 +959,37 @@ $(document).ready(function() {
 	$("#dashboard_add_practice").click(function() {
 		$("#add_practice_dialog").dialog('open');
 	});
+	$("#manual_cancel_practice_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 300, 
+		width: 400, 
+		modal: true,
+		draggable: false,
+		resizable: false,
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#manual_cancel_practice").click(function() {
+		$.ajax({
+			type: "POST",
+			url: "ajaxdashboard/findpractices",
+			dataType: 'json',
+			success: function(data){
+				$("#manual_cancel_practice_list").addOption(data.options);
+			}
+		});
+		$("#manual_cancel_practice_dialog").dialog('open');
+	});
+	$("#manual_cancel_practice_button").button().click(function(){
+		var a = $("#manual_cancel_practice_list").val();
+		$.ajax({
+			type: "POST",
+			url: "ajaxdashboard/cancelpractice",
+			data: "practice_id=" + a,
+			success: function(data){
+				$.jGrowl(data);
+				$("#manual_cancel_practice_dialog").dialog('close');
+			}
+		});
+	});
 });
