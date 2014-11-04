@@ -328,7 +328,7 @@ Route::filter('auth.basic', function()
 Route::get('autoload', function()
 {
 	$command = "composer dump-autoload -d " . __DIR__."/../";
-	exec($command);
-	return "Autoload complete.";
+	$line = system($command);
+	return $line;
 });
 //Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));
