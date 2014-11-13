@@ -6,11 +6,11 @@
 	<div id="logo" align="center" style="width:100%;">Nosh</div><br>
 	<div style="width:100%"><div id="login_practice_logo" align="center" style="max-height:100px;"></div></div><br>
 	<div style="width:100%">
-		<?php if(route('home') == 'https://hieofone.com/nosh') { ?>
+		<?php if(route('home') == 'https://hieofone.com/nosh' || route('home') == 'https://localhost/nosh') { ?>
 			<div id="openid_connect_logo" align="center" style="max-height:100px;">
 				<?php echo HTML::image('images/openid_connect_large.png','OpenID Connect', array('border' => '0', 'height' => '50', 'width' => '50'));?>
 			</div>
-			<div align="center" style="max-height:100px;">
+			<div align="center" style="max-height:100px;font-size:14px;">
 				<?php echo link_to_route('oidc', 'Login with HIEofOne', $parameters = array(), $attributes = array());?>
 			</div>
 		<?php }?>
@@ -38,7 +38,7 @@
 			<a href="#" id="register" style="font-size:14px;">Are you new to the Patient Portal?</a><br><br>
 		<?php }?>
 		<a href="#" id="forgot_password"style="font-size:14px;">Did you forget your password?</a><br><br>
-		<?php echo HTML::image('images/important.png','Important Message', array('border' => '0', 'height' => '40', 'width' => '40'));?>NOSH ChartingSystem is compatible with Mozilla Firefox, Google Chrome, Apple Safari, Internet Explorer 8 and up, and Opera web browsers only.
+		<i class="fa fa-exclamation-triangle fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> NOSH ChartingSystem is compatible with Mozilla Firefox, Google Chrome, Apple Safari, Internet Explorer 8 and up, and Opera web browsers only.
 	</div>
 	<div id="register_dialog" title="New User Registration">
 		<form id="register_form" class="pure-form pure-form-aligned">

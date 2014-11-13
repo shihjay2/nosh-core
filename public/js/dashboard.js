@@ -305,10 +305,14 @@ $(document).ready(function() {
 	$.ajax({
 		type: "POST",
 		url: "ajaxlogin/check-secret",
+		dataType: "json",
 		success: function(data){
-			if (data == "Need secret question and answer!") {
-				$.jGrowl(data);
+			if (data.secret == "Need secret question and answer!") {
+				$.jGrowl(data.secret);
 				$("#change_secret_answer_dialog").dialog('open');
+			}
+			if (data.setup == 'y') {
+				$("#setup_dialog").dialog('open');
 			}
 		}
 	});
@@ -991,5 +995,50 @@ $(document).ready(function() {
 				$("#manual_cancel_practice_dialog").dialog('close');
 			}
 		});
+	});
+	$("#hieofone_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 350, 
+		width: 550, 
+		modal: true,
+		overlay: {
+			backgroundColor: '#000',
+			opacity: 50
+		},
+		buttons: {
+			'OK': function() {
+				var a = $("#hieofone_username").val();
+				$.ajax({
+					type: "POST",
+					url: "ajaxlogin/hieofone",
+					data: "username=" + a,
+					dataType: "json",
+					success: function(data){
+						if (data.response == 'y') {
+							$("#hieofone_dialog").dialog('close');
+							$.jGrowl(data.message);
+						} else {
+							$("#hieofone_error").html(data.message + '<br>');
+							if (data.message == 'There is a duplicate username in the HIEofOne system.') {
+								$("#hieofone_username_div").show();
+							}
+						}
+					}
+				});
+			},
+			Cancel: function() {
+				$("#hieofone_dialog").dialog('close');
+				$("#hieofone_username_div").hide();
+				$("#hieofone_username").val('');
+				$("#hieofone_error").html('');
+			}
+		}
+	});
+	$("#hieofone_sso").click(function(){
+		$("#hieofone_username_div").hide();
+		$("#hieofone_username").val('');
+		$("#hieofone_error").html('');
+		$("#hieofone_dialog").dialog('open');
 	});
 });

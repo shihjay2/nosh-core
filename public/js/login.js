@@ -121,7 +121,7 @@ $(document).ready(function() {
 				url: "ajaxlogin/forgot-password/" + a,
 				dataType: "json",
 				success: function(data){
-					if (data.response == "You are not a registered user." || data == "You need to setup a secret question and answer.  Contact the practice administrator to manually reset your password.") {
+					if (data.response == "You are not a registered user." || data.response == "You need to setup a secret question and answer.  Contact the practice administrator to manually reset your password." || data.response == "Use HIEofOne to reset your password.") {
 						$.jGrowl(data.response);
 					} else {
 						$("#secret_question").html(data.response);

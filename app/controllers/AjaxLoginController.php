@@ -214,12 +214,19 @@ class AjaxLoginController extends BaseController {
 	
 	public function postCheckSecret()
 	{
+		$arr = array(
+			'secret' => '',
+			'setup' => ''
+		);
 		$result = User::find(Session::get('user_id'));
 		if ($result->secret_question == '') {
-			echo "Need secret question and answer!";
-		} else {
-			echo "OK";
+			$arr['secret'] = "Need secret question and answer!";
 		}
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
+		if ($practice->icd == '' && Session::get('patient_centric') == 'yp' && Session::get('group_id') == '2') {
+			$arr['setup'] = 'y';
+		}
+		echo json_encode($arr);
 	}
 	
 	public function apilogin()
@@ -267,5 +274,46 @@ class AjaxLoginController extends BaseController {
 				'message' => 'Login incorrect!'
 			),200);
 		}
+	}
+	
+	public function postHieofone()
+	{
+		$arr['response'] = 'y';
+		$arr['message'] = "Credentials transferred!";
+		$url = 'http://162.243.111.18/nosh-sso/noshadduser';
+		$user = DB::table('users')->where('id', '=', Session::get('user_id'))->first();
+		if (Input::get('username') != '') {
+			$username = Input::get('username');
+		} else {
+			$username = $user->username;
+		}
+		$provider = DB::table('providers')->where('id', '=', Session::get('user_id'))->first();
+		$data = array(
+			'username' => $username,
+			'password' => $user->password,
+			'email' => $user->email,
+			'npi' => $provider->npi,
+			'name' => $user->displayname,
+			'firstname' => $user->firstname,
+			'lastname' => $user->lastname,
+			'middle' => $user->middle
+		);
+		$result = $this->send_api_data($url, $data, '', '');
+		if ($result['url_error'] != '') {
+			$arr['response'] = 'n';
+			$arr['message'] = $result['url_error'];
+		} else {
+			if ($result['error'] == true) {
+				$arr['response'] = 'n';
+				$arr['message'] = $result['message'];
+			} else {
+				$new_data = array(
+					'uid' => $result['uid']
+				);
+				DB::table('users')->where('id', '=', Session::get('user_id'))->update($new_data);
+				$this->audit('Update');
+			}
+		}
+		echo json_encode($arr);
 	}
 }

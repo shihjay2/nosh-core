@@ -8,7 +8,7 @@ class FaxController extends BaseController {
 	
 	public function fax()
 	{
-		$ret = 'Fax module inactive';
+		$ret = 'Fax module inactive<br>';
 		$query1 = DB::table('practiceinfo')->get();
 		foreach ($query1 as $row1) {
 			$fax_type = $row1->fax_type;
@@ -16,7 +16,7 @@ class FaxController extends BaseController {
 			$smtp_pass = $row1->fax_email_password;
 			$smtp_host = $row1->fax_email_hostname;
 			if ($fax_type != "" && $fax_type != "phaxio") {
-				$ret = 'Fax module active<br>';
+				$ret .= 'Fax module active for practice id ' . $row1->practice_id . '<br>';
 				date_default_timezone_set($row1->timezone);
 				if ($fax_type === "efaxsend.com") {
 					$email_sender = "message@inbound.efax.com";
@@ -52,9 +52,9 @@ class FaxController extends BaseController {
 									$from = str_replace("eFax from ", "", $subject[0]);
 									$pages = strstr($subject[1], ' ', true);
 								} elseif ($fax_type === "metrofax.com") {
-									$subject = explode(" ", $info->subject);
-									$from = str_replace('"', '', $subject[4]);
-									$pages = $subject[6];
+									$subject = explode("-", $info->subject);
+									$from = trim(str_replace('"', '', str_replace("MetroFax message from ", '', $subject[0])));
+									$pages = trim(str_replace(" page(s)", "", $subject[1]));
 								} elseif ($fax_type === "rcfax.com") {
 									$subject = str_replace("New Fax Message from ", "", $info->subject);
 									$subject_arr = explode(" on ", $subject);
@@ -76,7 +76,7 @@ class FaxController extends BaseController {
 								$rp = '_' . time() . '.pdf';
 								$file1 = str_replace('.pdf', $rp, $filename);
 								$file2 = str_replace('.PDF', '', $filename);
-								$received_dir = $row->documents_dir . 'received/' . $row1->practice_id;
+								$received_dir = $row1->documents_dir . 'received/' . $row1->practice_id;
 								if (! file_exists($received_dir)) {
 									mkdir($received_dir, 0777);
 								}

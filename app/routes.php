@@ -47,7 +47,7 @@ Route::group(array('before' => 'force.ssl|csrf_header|session_check|acl1'), func
 Route::group(array('before' => 'force.ssl|csrf_header|session_check|acl2'), function() {
 	Route::controller('ajaxencounter', 'AjaxEncounterController');
 });
-Route::group(array('before' => 'force.ssl|csrf_header|session_check|acl5'), function() {
+Route::group(array('before' => 'force.ssl|csrf_header|session_check|acl6'), function() {
 	Route::controller('ajaxsetup', 'AjaxSetupController');
 });
 Route::group(array('before' => 'force.ssl|acl1'), function() {
@@ -262,6 +262,7 @@ Route::filter('session_check', function()
 // Group 3 = Providers
 // Group 4 = Patients
 // Group 5 = Admin
+// Group 6 = Admin + Patient Centric Providers
 
 Route::filter('acl1', function()
 {
@@ -313,10 +314,24 @@ Route::filter('acl5', function()
 	}
 });
 
+Route::filter('acl6', function()
+{
+	if (Session::get('group_id') != '1') {
+		if (Session::get('group_id') != '2' || Session::get('patient_centric') != 'yp') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		}
+	}
+});
+
 Route::filter('force.ssl', function()
 {
-	if (!Request::secure()) {
-		return Redirect::secure(Request::path());
+	if (route('home') != 'http://demo.noshchartingsystem.com:444/nosh' && route('home') != 'http://192.168.1.163/nosh') {
+		if (!Request::secure()) {
+			return Redirect::secure(Request::path());
+		}
 	}
 });
 

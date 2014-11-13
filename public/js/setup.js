@@ -219,7 +219,7 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'top', of: '#maincontent' }
 	});
-	$("#dashboard_setup").click(function(){
+	$(".dashboard_setup").click(function(){
 		$("#setup_dialog").dialog('open');
 	});
 	$("#state").addOption(states, false);

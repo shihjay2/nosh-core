@@ -179,6 +179,9 @@ class HomeController extends BaseController {
 			$this->layout->content .= View::make('billing')->render();
 			$this->layout->content .= View::make('financial')->render();
 			$this->layout->content .= View::make('office')->render();
+			if (Session::get('patient_centric') == 'yp' && Session::get('group_id') == '2') {
+				$this->layout->content .= View::make('setup')->render();
+			}
 		}
 		if(Session::get('group_id') == '100') {
 			$this->layout->content .= View::make('dashboard', $data)->render();

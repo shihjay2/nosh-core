@@ -8,22 +8,6 @@ class ReminderController extends BaseController {
 	
 	public function test()
 	{
-		$client_id = '5b8e4e18-fbfa-4ef2-8e49-074e571be425';
-		$client_secret = 'Pt6PD6xHQFCiWzo0QnfSXJ2XLatVAafXlGlNSw4Td9gVBVjasg7JtcogqgLDdjr6axfFoBV6FhvEoDUA0q1_BQ';
-		$open_id_url = 'http://162.243.111.18:8080/openid-connect-server-webapp/';
-		$url = route('test1');
-		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
-		//$oidc->addScope('npi');
-		//$oidc->addScope('practice_npi');
-		$oidc->setRedirectURL($url);
-		$oidc->authenticate();
-		$firstname = $oidc->requestUserInfo('given_name');
-		$lastname = $oidc->requestUserInfo('family_name');
-		$email = $oidc->requestUserInfo('email');
-		$npi = $oidc->requestUserInfo('npi');
-		$practice_npi = $oidc->requestUserInfo('practice_npi');
-		$user_id = $oidc->requestUserInfo('sub');
-		return $firstname . '<br>' . $lastname . '</br>' . $email . '<br>' . $npi . '<br>' . $practice_npi . '<br>' . $user_id;
 	}
 	
 	public function test0()

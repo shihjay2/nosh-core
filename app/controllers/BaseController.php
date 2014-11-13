@@ -140,6 +140,9 @@ class BaseController extends Controller {
 				'/js/financial.js',
 				'/js/office.js'
 			);
+			if (Session::get('patient_centric') == 'yp' && Session::get('group_id') == '2') {
+				$homejsfiles[] = '/js/setup.js';
+			}
 		}
 		if(Session::get('group_id') == '100') {
 			$homejsfiles = array(

@@ -21,39 +21,54 @@
 <div id="nosh_chart_common_div" style="width:100%">
 	<fieldset class="ui-corner-all">
 		<div class="pure-g">
-			<div class="pure-u-1-5"><?php echo HTML::image('images/chart2.png', 'Encounters', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="encounter_list" title="Past encounters" class="nosh_tooltip">Encounters</a></div>
-			<div class="pure-u-1-5"><?php echo HTML::image('images/newmessage.png', 'Messages', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="messages_list" title="Telephone messages and e-mail encounters" class="nosh_tooltip">Messages</a></div>
-			<div class="pure-u-1-5"><?php echo HTML::image('images/search.png', 'Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="documents_list" title="Lab, imaging, cardiopulmonary, referral, and other associated documents for this patient." class="nosh_tooltip">Documents</a></div>
-			<div class="pure-u-1-5"><?php echo HTML::image('images/billing.png', 'Billing', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="billing_list" title="Past claims, payments, and balances for this patient" class="nosh_tooltip">Billing</a></div>
-			<div class="pure-u-1-5"><?php echo HTML::image('images/printmgr.png', 'Coordination of Care', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="print_list" title="Print, fax, and create C-CDA documents of this patient's records." class="nosh_tooltip">Coordination of Care</a></div>
+			<div class="pure-u-1-5"><i class="fa fa-stethoscope fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="encounter_list" title="Past encounters" class="nosh_tooltip">Encounters</a></div>
+			<div class="pure-u-1-5"><i class="fa fa-phone fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="messages_list" title="Telephone messages and e-mail encounters" class="nosh_tooltip">Messages</a></div>
+			<div class="pure-u-1-5"><i class="fa fa-file-text-o fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="documents_list" title="Lab, imaging, cardiopulmonary, referral, and other associated documents for this patient." class="nosh_tooltip">Documents</a></div>
+			<div class="pure-u-1-5"><i class="fa fa-money fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="billing_list" title="Past claims, payments, and balances for this patient" class="nosh_tooltip">Billing</a></div>
+			<div class="pure-u-1-5"><i class="fa fa-print fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="print_list" title="Print, fax, and create C-CDA documents of this patient's records." class="nosh_tooltip">Coordination of Care</a></div>
 		</div>
 	</fieldset>
 </div>
 <div id="nosh_chart_div" style="width:100%">
 	<br>
-	<div style="height:480px;float:left;">
-		<div class="pure-g">
-		<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
-			<div class="pure-u-1-2"><?php echo HTML::image('images/newmessage.png', 'New Telephone Message', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" class="new_telephone_message">New Telephone Message</a></div>
-			<div class="pure-u-1-2"><?php echo HTML::image('images/newencounter.png', 'New Encounter', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="new_encounter">New Encounter</a></div>
-			<div class="pure-u-1-2"><?php echo HTML::image('images/newletter.png', 'New Letter', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="new_letter">New Letter</a></div>
-			<div class="pure-u-1-2"><?php echo HTML::image('images/science.png', 'New Test Result', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="new_test_result" class="add_result_class">New Test Result</a></div>
-		<?php }?>
-		<div class="pure-u-1-2"><?php echo HTML::image('images/alert.png', 'New Alert', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="new_alert" class="add_alert">New Alert</a></div>
-		<div class="pure-u-1-2"><?php echo HTML::image('images/reminder.png', 'Add/Edit Credit Card Information', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" class="add_creditcard">Add/Edit Credit Card Information</a></div>
-		<div class="pure-u-1-2"><?php echo HTML::image('images/email.png', 'Send Message to Patient', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="create_patient_message">Send Message to Patient</a></div>
-		<div class="pure-u-1-2"><?php echo HTML::image('images/printmgr.png', 'Print Chart', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="print_chart">Print Chart</a></div>
-		<div class="pure-u-1-2"><?php echo HTML::image('images/download.png', 'Import New Documents', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="new_import">Import New Documents</a></div>
-		<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
-			<div class="pure-u-1-2"><?php echo HTML::image('images/users.png', 'Import Continuity of Care Record (XML)', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="import_ccr">Import Continuity of Care Record (XML)</a></div>
-			<div class="pure-u-1-2"><?php echo HTML::image('images/chart1.png', 'Print Continuity of Care Record', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="print_ccr">Print Continuity of Care Record</a></div>
-			<div class="pure-u-1-2"><?php echo HTML::image('images/chart1.png', 'Import C-CDA', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="import_ccda">Import C-CDA (Consolidated Clinical Document Architecture)</a></div>
-		<?php }?>
-		<div class="pure-u-1-2"><?php echo HTML::image('images/download.png', 'Import CSV', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="chart_import_csv">Import CSV File</a></div>
-		<?php if(Session::get('patient_centric') == 'n') {?>
-			<div class="pure-u-1-2"><?php echo HTML::image('images/usersadmin.png', 'Patient Centric NOSH', array('border' => '0', 'height' => '40', 'width' => '40', 'style' => 'vertical-align:middle;')); ?> <a href="#" id="connect_patient_nosh">Connect to Patient Centric NOSH (Status: <span="connect_patient_nosh_status"><?php echo $url;?></span>)</a></div>
-		<?php }?>
-		</div>
+	<div style="height:500px;float:left;">
+		<fieldset class="ui-corner-all">
+			<legend>Create</legend>
+			<div class="pure-g">
+				<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
+					<div class="pure-u-1-2"><i class="fa fa-stethoscope fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="new_encounter">New Encounter</a></div>
+					<div class="pure-u-1-2"><i class="fa fa-phone fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" class="new_telephone_message">New Telephone Message</a></div>
+					<div class="pure-u-1-2"><i class="fa fa-pencil-square-o fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="new_letter">New Letter</a></div>
+					<div class="pure-u-1-2"><i class="fa fa-flask fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="new_test_result" class="add_result_class">New Test Result</a></div>
+				<?php }?>
+				<div class="pure-u-1-2"><i class="fa fa-exclamation-triangle fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="new_alert" class="add_alert">New Alert</a></div>
+				<div class="pure-u-1-2"><i class="fa fa-envelope fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="create_patient_message">New Message to Patient</a></div>
+				<div class="pure-u-1-2"><i class="fa fa-print fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="print_chart">New Coordination of Care Transaction</a></div>
+				<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
+					<div class="pure-u-1-2"><i class="fa fa-cc fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="print_ccr">New Continuity of Care Record</a></div>
+				<?php }?>
+			</div>
+		</fieldset><br>
+		<fieldset class="ui-corner-all">
+			<legend>Actions</legend>
+			<div class="pure-g">
+				<div class="pure-u-1-2"><i class="fa fa-credit-card fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" class="add_creditcard">Add/Edit Credit Card Information</a></div>
+				<?php if(Session::get('patient_centric') == 'n') {?>
+					<div class="pure-u-1-2"><i class="fa fa-exchange fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="connect_patient_nosh">Connect to Patient Centric NOSH (Status: <span="connect_patient_nosh_status"><?php echo $url;?></span>)</a></div>
+				<?php }?>
+			</div>
+		</fieldset><br>
+		<fieldset class="ui-corner-all">
+			<legend>Import</legend>
+			<div class="pure-g">
+				<div class="pure-u-1-2"><i class="fa fa-file-text-o fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="new_import">Import New Documents</a></div>
+				<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
+					<div class="pure-u-1-2"><i class="fa fa-cc fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="import_ccr">Import Continuity of Care Record (XML)</a></div>
+					<div class="pure-u-1-2"><i class="fa fa-medkit fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="import_ccda">Import C-CDA (Consolidated Clinical Document Architecture)</a></div>
+				<?php }?>
+				<div class="pure-u-1-2"><i class="fa fa-user fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="chart_import_csv">Import CSV File</a></div>
+			</div>
+		</fieldset>
 	</div>
 </div>
 <?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>

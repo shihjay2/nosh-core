@@ -24,7 +24,9 @@
 			</span>
 		</div>
 		<div class="innersearchbar" style="float:right;line-height:67px;width:110px;font-size:1.1em;">
-			<?php if ($pt != '' && $patient_centric == 'n') {echo HTML::image('images/cancel.png', 'Cancel', array('border' => '0', 'height' => '30', 'width' => '30', 'style' => 'vertical-align:middle'));}?>
+			<?php if ($pt != '' && $patient_centric == 'n') {?>
+				<i class="fa fa-times fa-fw fa-lg" style="vertical-align:middle;padding:2px"></i>
+			<?php }?>
 			<?php if ($pt != '' && $patient_centric == 'n') {echo HTML::linkRoute('closechart', 'Close Chart');}?>
 		</div>
 	</div>

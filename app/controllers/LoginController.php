@@ -182,7 +182,8 @@ class LoginController extends BaseController {
 				$user = false;
 			}
 		} else {
-			$user = User::where('firstname', '=', $firstname)->where('email', '=', $email)->where('lastname', '=', $lastname)->where('active', '=', '1')->first();
+			$user = User::where('uid', '=', $oidc->requestUserInfo('sub'))->first();
+			//$user = User::where('firstname', '=', $firstname)->where('email', '=', $email)->where('lastname', '=', $lastname)->where('active', '=', '1')->first();
 		}
 		if ($user) {
 			Auth::login($user);
@@ -287,6 +288,7 @@ class LoginController extends BaseController {
 					Session::put('email', $email);
 					Session::put('npi', $npi);
 					Session::put('practice_choose', 'y');
+					Session::put('uid', $oidc->requestUserInfo('sub'));
 					return Redirect::to('practice_choose');
 				}
 			}
@@ -299,7 +301,9 @@ class LoginController extends BaseController {
 				'email' => $email,
 				'group_id' => '2',
 				'active'=> '1',
-				'practice_id' => $practice_id
+				'practice_id' => $practice_id,
+				'secret_question' => 'Use HIEofOne to reset your password!',
+				'uid' => $oidc->requestUserInfo('sub')
 			);
 			$id = DB::table('users')->insertGetId($data);
 			$this->audit('Add');
@@ -402,7 +406,9 @@ class LoginController extends BaseController {
 				'email' => Session::get('email'),
 				'group_id' => '2',
 				'active'=> '1',
-				'practice_id' => $practice_id
+				'practice_id' => $practice_id,
+				'uid' => Session::get('uid'),
+				'secret_question' => 'Use HIEofOne to reset your password!',
 			);
 			$id = DB::table('users')->insertGetId($data);
 			$this->audit('Add');
