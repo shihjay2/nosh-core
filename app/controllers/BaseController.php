@@ -114,7 +114,9 @@ class BaseController extends Controller {
 			'/js/plugins/file/wPaint.menu.main.file.min.js',
 			'/js/jqueryui-editable.min.js',
 			'/js/jquery.touchswipe.min.js',
-			'/js/jquery.ui.touch-punch.min.js'
+			'/js/jquery.ui.touch-punch.min.js',
+			'/js/jquery-textrange.js',
+			'/js/jquery.autosize.min.js'
 		);
 		if(Session::get('group_id') == '1') {
 			$homejsfiles = array(
@@ -8074,5 +8076,455 @@ class BaseController extends Controller {
 				$this->audit('Add');
 			}
 		}
+	}
+	
+	// FHIR base controller functions
+	protected function composite_array($value)
+	{
+		$return_value = array(
+			'value' => $value,
+			'parameter' => ''
+		);
+		$value_composite = explode("\$", $value);
+		if (count($value_composite) == 2) {
+			if (substr($value_composite[0], -1) != "\\") {
+				$return_value['value'] = $value_composite[1];
+				$return_value['parameter'] = $value_composite[0];
+			}
+		}
+		return $return_value;
+	}
+	
+	protected function query_build($query, $table_key, $key1, $comparison, $value1, $or, $resource)
+	{
+		// check if value is a date
+		$unixdate = strtotime($value1);
+		if ($unixdate) {
+			if ($key1 == 'birthDate') {
+				$value1 = date('Y-m-d', $unixdate);
+			}
+		}
+		// check if value is booleen
+		if ($value1 == 'true') {
+			$value1 = '1';
+		}
+		if ($value1 == 'false') {
+			$value1 = '0';
+		}
+		if (is_array($table_key[$key1])) {
+			if ($or == false) {
+				$query->where(function($query_array1) use ($table_key, $key1, $value1) {
+					$a = 0;
+					foreach ($table_key[$key1] as $key_name) {
+						if ($a == 0) {
+							$query_array1->where($key_name, 'LIKE', "%$value1%");
+						} else {
+							$query_array1->orWhere($key_name, 'LIKE', "%$value1%");
+						}
+						$a++;
+					}
+				});
+			} else {
+				$query->orWhere(function($query_array1) use ($table_key, $key1, $value1) {
+					$a = 0;
+					foreach ($table_key[$key1] as $key_name) {
+						if ($a == 0) {
+							$query_array1->where($key_name, 'LIKE', "%$value1%");
+						} else {
+							$query_array1->orWhere($key_name, 'LIKE', "%$value1%");
+						}
+						$a++;
+					}
+				});
+			}
+		} else {
+			if ($key1 == 'subject') {
+				if ($resource == 'Patient') {
+					$key_name = 'pid';
+				} else {
+					$key_name = $table_key[$key1];
+				}
+			} else {
+				$key_name = $table_key[$key1];
+			}
+			if ($or == false) {
+				if ($comparison == '=') {
+					$query->where($key_name, 'LIKE', "%$value1%");
+				} else {
+					$query->where($key_name, $comparison, $value1);
+				}
+			} else {
+				if ($comparison == '=') {
+					$query->orWhere($key_name, 'LIKE', "%$value1%");
+				} else {
+					$query->orWhere($key_name, $comparison, $value1);
+				}
+			}
+		}
+		return $query;
+	}
+	
+	// $data is Input array, $table_key is key translation for associated table, $is_date is boolean
+	protected function resource_translation($data, $table, $table_primary_key, $table_key)
+	{
+		$i = 0;
+		$parameters = array();
+		foreach ($data as $key => $value) {
+			if ($key!='page' && $key !='sort') {
+				$exact = false;
+				$missing = false;
+				$text = false;
+				$resource = '';
+				$comparison = '=';
+				$namespace = '';
+				$unit = '';
+				$either = false;
+				$key_modifier = explode(':', $key);
+				if (count($key_modifier) == 2) {
+					$key1 = $key_modifier[0];
+					if ($key_modifier[1] == 'exact' || $key_modifier[1] == 'missing' || $key_modifier[1] == 'text') {
+						if ($key_modifier[1] == 'exact') {
+							$exact = true;
+						}
+						if ($key_modifier[1] == 'missing') {
+							$missing = true;
+						}
+						if ($key_modifier[1] == 'text') {
+							$text = true;
+						}
+					} else {
+						$resource = $key_modifier[1];
+					}
+				} else {
+					$key1 = $key;
+				}
+				$parameters[$i]['parameter'] = $key1;
+				$parameters[$i]['value'] = $value;
+				$char1 = substr($value, 0, 1);
+				$char2 = substr($value, 0, 2);
+				if ($char1 == '<' || $char1 == '>' || $char1 == '~') {
+					$comparison = $char1;
+					$value = substr($value, 1);
+				}
+				if ($char1 == '~') {
+					$comparison = 'LIKE';
+					$like_value = substr($value, 1);
+					$value = "%$like_value%";
+				}
+				if ($char2 == '<=' || $char2 == '>=') {
+					$comparison = $char2;
+					$value = substr($value, 2);
+				}
+				$value_token = explode('|', $value);
+				if (count($value_token) == 2) {
+					if (substr($value_token[0], -1) == "\\") {
+						$value1 = $value;
+					} else {
+						$value1 = $value_token[1];
+						$namespace = $value_token[0];
+					}
+				} elseif (count($value_token) == 3) {
+					if (substr($value_token[0], -1) == "\\" || substr($value_token[1], -1) == "\\") {
+						if (substr($value_token[0], -1) == "\\" && substr($value_token[1], -1) == "\\") {
+							$value1 = str_replace("\\|", "|", $value);
+						} else {
+							if (substr($value_token[0], -1) == "\\") {
+								$value1 = $value_token[2];
+								$namespace = $value_token[0] . "|" . $value_token[1];
+							} else {
+								$value1 = $value_token[1] . "|" . $value_token[2];
+								$namespace = $value_token[0];
+							}
+						}
+					} else {
+						$value1 = $value_token[0];
+						$namespace = $value_token[1];
+						$unit = $value_token[2];
+					}
+				} else {
+					$value1 = $value;
+				}
+				if ($i == 0) {
+					$query = DB::table($table);
+				} else {
+					$this->query_build($query, $table_key, $key1, $comparison, $value1, false, $resource);
+				}
+				$value_composite1 = explode(",", $value1);
+				if (count($value_composite1) > 1) {
+					$code = array();
+					$temp_value = '';
+					$j = 0;
+					foreach ($value_composite1 as $value2) {
+						if (substr($value2, -1) == "\\") {
+							if ($temp_value != '') {
+								$value3 = $this->composite_array($value2);
+								if ($value3['parameter'] == '') {
+									$temp_value .= ',' . $value2;
+								} else {
+									$temp_value .= ',' . $value3['value'];
+								}
+							} else {
+								$value3 = $this->composite_array($value2);
+								if ($value3['parameter'] == '') {
+									$temp_value = $value2;
+								} else {
+									$temp_value = $value3['value'];
+								}
+							}
+						} else {
+							if ($temp_value == '') {
+								$value3 = $this->composite_array($value2);
+								if ($value3['parameter'] == '') {
+									$code[$j] = [
+										'key' => $key1,
+										'comparison' => $comparison,
+										'value' => $value2
+									];
+									
+								} else {
+									$code[$j] = [
+										'key' => $key1,
+										'comparison' => $comparison,
+										'value' => $value3['value']
+									];
+								}
+							} else {
+								$value3 = $this->composite_array($value2);
+								if ($value3['parameter'] == '') {
+									$temp_value .= ',' . $value2;
+								} else {
+									$temp_value .= ',' . $value3['value'];
+								}
+								$code[$j] = [
+									'key' => $key1,
+									'comparison' => $comparison,
+									'value' => $temp_value
+								];
+								$temp_value = '';
+							}
+							$j++;
+						}
+					}
+					if (isset($code[0])) {
+						$query->where(function($query_array1) use ($code, $table_key, $resource) {
+							$k = 0;
+							foreach ($code as $line) {
+								if ($k == 0) {
+									$this->query_build($query_array1, $table_key, $line['key'], $line['comparison'], $line['value'], false, $resource);
+								} else {
+									$this->query_build($query_array1, $table_key, $line['key'], $line['comparison'], $line['value'], true, $resource);
+								}
+								$k++;
+							}
+						});
+					} else {
+						$this->query_build($query, $table_key, $key1, $comparison, $temp_value, false, $resource);
+					}
+				} else {
+					$this->query_build($query, $table_key, $key1, $comparison, $value1, false, $resource);
+				}
+				$i++;
+			}
+		}
+		$query->select($table_primary_key);
+		$result = $query->get();
+		if ($result) {
+			$return['response'] = true;
+			$url_array = explode('/', Request::url());
+			$return['parameters'][] = [
+				'url' => array_splice($url_array, -1, 1, 'query#_type'),
+				'valueString' => strtolower(end($url_array))
+			];
+			$return['total'] = count($result);
+			foreach ($parameters as $parameter) {
+				$new_url = array_splice($url_array, -1, 1, 'query#' . $parameter['parameter']);
+				$return['parameters'][] = [
+					'url' => $new_url,
+					'valueString' => $parameter['value']
+				];
+			}
+			$return['data'] = array();
+			foreach ($result as $result_row) {
+				$result_row_array = (array) $result_row;
+				$return['data'][] = reset($result_row_array);
+			}
+		} else {
+			$return['response'] = false;
+		}
+		return $return;
+	}
+	
+	protected function resource_detail($row, $resource_type)
+	{
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$response['resourceType'] = $resource_type;
+		$response['text']['status'] = 'generated';
+		$response['text']['div'] = '<div><table><tbody>';
+		
+		// Patient
+		if ($resource_type == 'Patient') {
+			$response['identifier'][] = [
+				'use' => 'usual',
+				'label' => 'MRN',
+				'system' => 'urn:oid:1.2.36.146.595.217.0.1',
+				'value' => $row->pid,
+				'period' => [
+					'start' => date('Y-m-d')
+				],
+				'assigner' => [
+					'display' => $practice->practice_name
+				]
+			];
+			$response['name'][] = [
+				'use' => 'official',
+				'family' => [$row->lastname],
+				'given' => [$row->firstname],
+			];
+			$response['text']['div'] .= '<tr><td><b>Name</b></td><td>' . $row->firstname . ' ' . $row->lastname .'</td></tr>';
+			if ($row->nickname != '') {
+				$response['name'][] = [
+					'use' => 'usual',
+					'given' => [$row->nickname]
+				];
+			}
+			if ($row->phone_home != '') {
+				$response['telecom'][] = [
+					'use' => 'home',
+					'value' => $row->phone_home,
+					'system' => 'phone'
+				];
+				$response['text']['div'] .= '<tr><td><b>Telcom, Home</b></td><td>' . $row->phone_home .'</td></tr>';
+			}
+			if ($row->phone_work != '') {
+				$response['telecom'][] = [
+					'use' => 'work',
+					'value' => $row->phone_work,
+					'system' => 'phone'
+				];
+				$response['text']['div'] .= '<tr><td><b>Telcom, Work</b></td><td>' . $row->phone_work .'</td></tr>';
+			}
+			if ($row->sex == 'f') {
+				$gender = 'F';
+				$gender_full = 'Female';
+			} else {
+				$gender = 'M';
+				$gender_full = 'Male';
+			}
+			$response['gender']['coding'][] = [
+				'system' => "http://hl7.org/fhir/v3/AdministrativeGender",
+				'code' => $gender,
+				'display' => $gender_full
+			];
+			$response['text']['div'] .= '<tr><td><b>Gender</b></td><td>' . $gender_full .'</td></tr>';
+			$birthdate = date('Y-m-d', $this->human_to_unix($row->DOB));
+			$response['birthDate'] = $birthdate;
+			$response['text']['div'] .= '<tr><td><b>Birthdate</b></td><td>' . $birthdate .'</td></tr>';
+			$response['deceasedBoolean'] = false;
+			$response['address'][] = [
+				'use' => 'home',
+				'line' => [$row->address],
+				'city' => $row->city,
+				'state' => $row->state,
+				'zip' => $row->zip
+			];
+			$response['text']['div'] .= '<tr><td><b>Address</b></td><td>' . $row->address . ', ' . $row->city . ', ' . $row->state . ', ' . $row->zip . '</td></tr>';
+			$response['contact'][0]['relationship'][0]['coding'][0] = [
+				'system' => "http://hl7.org/fhir/patient-contact-relationship",
+				'code' => $row->guardian_relationship
+			];
+			$response['contact'][0]['name'] = [
+				'family' => [$row->guardian_lastname],
+				'given' => [$row->guardian_firstname]
+			];
+			$response['contact'][0]['telecom'][] = [
+				'system' => 'phone',
+				'value' => $row->guardian_phone_home
+			];
+			$response['text']['div'] .= '<tr><td><b>Contacts</b></td><td>' . $row->guardian_firstname . ' ' . $row->guardian_lastname . ', Phone: ' . $row->guardian_phone_home . ', Relationship: ' . $row->guardian_relationship . '</td></tr>';
+			$response['managingOrganization'] = [
+				'reference' => 'Organization/1'
+			];
+			if ($row->active == '0') {
+				$response['active'] = false;
+			} else {
+				$response['active'] = true;
+			}
+		}
+		
+		// Condition
+		if ($resource_type == 'Condition') {
+			$patient = DB::table('demographics')->where('pid', '=', $row->pid)->first();
+			$response['subject'] = [
+				'reference' => 'Patient/' . $row->pid,
+				'display' => $patient->firstname . ' ' . $patient->lastname
+			];
+			$response['text']['div'] .= '<tr><td><b>Subject</b></td><td>' . $patient->firstname . ' ' . $patient->lastname .'</td></td></tr>';
+			if (isset($row->eid)) {
+				$response['encounter'] = [
+					'reference' => 'Encounter/' . $row->eid
+				];
+				$response['text']['div'] .= '<tr><td><b>Encounter</b></td><td><a href="' . route('home') . '/fhir/v1/Encounter/' . $row->eid .'">' . $row->eid . '</a></td></td></tr>';
+			}
+			if ($practice->icd == '9') {
+				$condition_system = 'http://hl7.org/fhir/sid/icd-9';
+			} else {
+				$condition_system = 'http://hl7.org/fhir/sid/icd-10';
+			}
+			if (isset($row->eid)) {
+				$provider = DB::table('users')->where('displayname', '=', $row->encounter_provider)->first();
+				$response['dateAsserted'] = date('Y-m-d', $this->human_to_unix($row->assessment_date));
+				$response['text']['div'] .= '<tr><td><b>Date Asserted</b></td><td>' . date('Y-m-d', $this->human_to_unix($row->assessment_date)) .'</td></td></tr>';
+				$i = 1;
+				while ($i <= 12) {
+					$condition_row_array = (array) $row;
+					if ($condition_row_array['assessment_' . $i] != '') {
+						$code_array = explode(' [', $condition_row_array['assessment_' . $i]);
+						$response['code']['coding'][] = [
+							'system' => $condition_system,
+							'code' => str_replace(']', '', $code_array[1]),
+							'display' => $code_array[0]
+						];
+						$response['text']['div'] .= '<tr><td><b>Code</b></td><td>' . $condition_row_array['assessment_' . $i] .'</td></tr>';
+					}
+					$i++;
+				}
+				$response['category']['coding'][] = [
+					'system' => 'http://hl7.org/fhir/condition-category',
+					'code' => 'diagnosis',
+					'display' => 'Diagnosis'
+				];
+				$response['text']['div'] .= '<tr><td><b>Category</b></td><td>Diagnosis</td></tr>';
+			} else {
+				$provider = DB::table('users')->where('displayname', '=', $row->issue_provider)->first();
+				$response['dateAsserted'] = date('Y-m-d', $this->human_to_unix($row->issue_date_active));
+				$code_array = explode(' [', $row->issue);
+				$response['code']['coding'][] = [
+					'system' => $condition_system,
+					'code' => str_replace(']', '', $code_array[1]),
+					'display' => $code_array[0]
+				];
+				$response['text']['div'] .= '<tr><td><b>Code</b></td><td>' . $row->issue .'</td></tr>';
+				$response['category']['coding'][] = [
+					'system' => 'http://snomed.info/sct',
+					'code' => '55607006',
+					'display' => 'Problem'
+				];
+				$response['text']['div'] .= '<tr><td><b>Category</b></td><td>Problem</td></tr>';
+			}
+			$response['asserter'] = [
+				'reference' => 'Practitioner/' . $provider->id,
+				'display' => $provider->displayname
+			];
+			$response['text']['div'] .= '<tr><td><b>Practitioner</b></td><td><a href="' . route('home') . '/fhir/v1/Practitioner/' . $provider->id .'">' . $provider->displayname .'</a></td></td></tr>';
+			$response['status'] = 'confirmed';
+			$response['text']['div'] .= '<tr><td><b>Status</b></td><td>Confirmed</td></tr>';
+			// missing onsetDate
+			// missing severity
+			// missing evidence
+			// missing location
+			// missing relatedItem
+		}
+		$response['text']['div'] .= '</tbody></table></div>';
+		return $response;
 	}
 }

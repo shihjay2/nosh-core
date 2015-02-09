@@ -95,18 +95,38 @@
 			<form id="textdump_group_form" class="pure-form">
 				<input type="text" style="width:95%" name="textdump_group_add" id="textdump_group_add" placeholder="Add template group here"/>
 				<input type="hidden" name="target" id="textdump_group_target"/>
-				<input type="hidden" id="textdump_group_id">
+				<input type="hidden" id="textdump_group_id"/>
 			</form><br>
 			<div id="textdump_group_html" title="Click on a group to open templates."></div>
 		</div>
 		<div id="textdump" title="Template">
 			<input type="hidden" id="textdump_input"/>
 			<form id="textdump_form" class="pure-form">
-				<input type="text" style="width:95%" name="textdump_add" id="textdump_add" placeholder="Add text to template here"/>
+				<textarea style="width:95%" name="textdump_add" id="textdump_add" placeholder="Add text to template here"></textarea>
 				<input type="hidden" name="target" id="textdump_target"/>
-				<input type="hidden" name="group" id="textdump_group_item">
+				<input type="hidden" name="group" id="textdump_group_item"/>
 			</form><br>
 			<div id="textdump_html" title="Click on a text to copy it to the preview."></div>
+		</div>
+		<div id="textdump_specific" title="Template">
+			<form id="textdump_specific_form" class="pure-form">
+				<input type="text" style="width:95%" name="textdump_specific_add" id="textdump_specific_add" placeholder="Add template text here"/>
+				<input type="hidden" name="textdump_specific_target" id="textdump_specific_target"/>
+				<input type="hidden" name="textdump_specific_name" id="textdump_specific_name"/>
+				<input type="hidden" id="textdump_specific_id"/>
+			</form><br>
+			<form id="textdump_specific_dialog_form" class="pure-form">
+				<input type="hidden" id="textdump_specific_start"/>
+				<input type="hidden" id="textdump_specific_length"/>
+				<input type="hidden" id="textdump_specific_origin"/>
+				<label for="textdump_delimiter">Delimiter</label>
+				<select id="textdump_delimiter">
+					<option value=" ">space</option>
+					<option value=", ">,</option>
+					<option value="; ">;</option>
+				</select>
+			</form>
+			<div id="textdump_specific_html" title="Click on a text to select."></div>
 		</div>
 		<div id="allpage" class="allpage">
 			<div id="header" class="header ui-widget">

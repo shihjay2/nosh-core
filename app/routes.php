@@ -175,6 +175,61 @@ Route::group(array('prefix' => 'api/v1', 'before' => 'force.ssl|auth.basic'), fu
 {
 	Route::controller('sync', 'APIv1Controller');
 });
+// FHIR routes
+Route::get('fhir/oidc', array('as' => 'oidc_api', 'uses' => 'LoginController@oidc_api'));
+Route::group(array('prefix' => 'fhir/v1', 'before' => 'auth.token'), function()
+{
+	Route::resource('AdverseReaction', 'AdverseReactionController');
+	Route::resource('Alert', 'AlertController');
+	Route::resource('AllergyIntolerance', 'AllergyIntoleranceController');
+	Route::resource('Binary', 'BinaryController');
+	Route::resource('CarePlan', 'CarePlanController');
+	Route::resource('Composition', 'CompositionController');
+	Route::resource('ConceptMap', 'ConceptMapController');
+	Route::resource('Condition', 'ConditionController');
+	Route::resource('Conformance', 'ConformanceController');
+	Route::resource('Device', 'DeviceController');
+	Route::resource('DeviceObservationReport', 'DeviceObservationReportController');
+	Route::resource('DiagnosticOrder', 'DiagnosticOrderController');
+	Route::resource('DiagnosticReport', 'DiagnosticReportController');
+	Route::resource('DocumentReference', 'DocumentReferenceController');
+	Route::resource('DocumentManifest', 'DocumentManifestController');
+	Route::resource('Encounter', 'EncounterController');
+	Route::resource('FamilyHistory', 'FamilyHistoryController');
+	Route::resource('Group', 'GroupController');
+	Route::resource('ImagingStudy', 'ImagingStudyController');
+	Route::resource('Immunization', 'ImmunizationController');
+	Route::resource('ImmunizationRecommendation', 'ImmunizationRecommendationController');
+	Route::resource('List', 'ListController');
+	Route::resource('Location', 'LocationController');
+	Route::resource('Media', 'MediaController');
+	Route::resource('Medication', 'MedicationController');
+	Route::resource('MedicationAdministration', 'MedicationAdministrationController');
+	Route::resource('MedicationDispense', 'MedicationDispenseController');
+	Route::resource('MedicationPrescription', 'MedicationPrescriptionController');
+	Route::resource('MedicationStatement', 'MedicationStatementController');
+	Route::resource('MessageHeader', 'MessageHeaderController');
+	Route::resource('Observation', 'ObservationController');
+	Route::resource('OperationOutcome', 'OperationOutcomeController');
+	Route::resource('Order', 'OrderController');
+	Route::resource('OrderResponse', 'OrderResponseController');
+	Route::resource('Organization', 'OrganizationController');
+	Route::resource('Other', 'OtherController');
+	Route::resource('Patient', 'PatientController');
+	Route::resource('Practitioner', 'PractitionerController');
+	Route::resource('Procedure', 'ProcedureController');
+	Route::resource('Profile', 'ProfileController');
+	Route::resource('Provenance', 'ProvenanceController');
+	Route::resource('Query', 'QueryController');
+	Route::resource('Questionnaire', 'QuestionnaireController');
+	Route::resource('RelatedPerson', 'RelatedPersonController');
+	Route::resource('SecurityEvent', 'SecurityEventController');
+	Route::resource('Specimen', 'SpecimenController');
+	Route::resource('Substance', 'SubstanceController');
+	Route::resource('Supply', 'SupplyController');
+	Route::resource('ValueSet', 'ValueSetController');
+});
+
 // Filters
 Route::filter('needinstall', function()
 {
@@ -338,6 +393,19 @@ Route::filter('force.ssl', function()
 Route::filter('auth.basic', function()
 {
 	return Auth::onceBasic('username');
+});
+
+Route::filter('auth.token', function()
+{
+	$payload = Request::header('X-Auth-Token');
+	$user =  DB::table('users')->where('oauth_token', '=', $payload)->where('oauth_token_secret', '>', time())->first();
+	if(!$payload || !$user) {
+		$statusCode = 401;
+		$response['error'] = true;
+		$response['message'] = 'Not authenticated';
+		$response['code'] = 401;
+		return Response::json($response, $statusCode);
+	}
 });
 
 //Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));

@@ -2651,6 +2651,20 @@ class AjaxSearchController extends BaseController {
 		echo $arr;
 	}
 	
+	public function postTextdumpSpecific($target)
+	{
+		$arr = '';
+		$query = DB::table('templates')->where('category', '=', 'specific')->where('template_name', '=', $target)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->get();
+		foreach ($query as $row) {
+			if ($row->default == 'default') {
+				$arr .= '<div id="texttemplatespecificdiv_' . $row->template_id . '" style="width:99%" class="pure-g"><div class="textdump_item_specific pure-u-2-3"><span id="edittexttemplatespecific_' . $row->template_id . '_span" class="textdump_item_specific_text" data-type="text" data-pk="' . $row->template_id . '" data-name="array" data-url="ajaxsearch/edit-text-template-specific" data-title="Item">' . $row->array . '</span></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:400px;"></div></div><hr class="ui-state-default"/></div>';
+			} else {
+				$arr .= '<div id="texttemplatespecificdiv_' . $row->template_id . '" style="width:99%" class="pure-g"><div class="textdump_item_specific pure-u-2-3"><span id="edittexttemplatespecific_' . $row->template_id . '_span" class="textdump_item_specific_text" data-type="text" data-pk="' . $row->template_id . '" data-name="array" data-url="ajaxsearch/edit-text-template-specific" data-title="Item">' . $row->array . '</span></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:400px;"><button type="button" id="edittexttemplatespecific_' . $row->template_id . '" class="edittexttemplatespecific">Edit</button><button type="button" id="deletetexttemplatespecific_' . $row->template_id . '" class="deletetexttemplatespecific">Remove</button></div></div><hr class="ui-state-default"/></div>';
+			}
+		}
+		echo $arr;
+	}
+	
 	public function postAddTextTemplate()
 	{
 		$data = array(
@@ -2678,6 +2692,21 @@ class AjaxSearchController extends BaseController {
 		$arr['id'] = DB::table('templates')->insertGetId($data);
 		$this->audit('Add');
 		$arr['message'] = "Group added";
+		echo json_encode($arr);
+	}
+	
+	public function postAddSpecificTemplate()
+	{
+		$data = array(
+			'array' => Input::get('textdump_specific_add'),
+			'category' => 'specific',
+			'template_name' => Input::get('textdump_specific_name'),
+			'practice_id' => Session::get('practice_id'),
+			'group' => ''
+		);
+		$arr['id'] = DB::table('templates')->insertGetId($data);
+		$this->audit('Add');
+		$arr['message'] = "Text added";
 		echo json_encode($arr);
 	}
 	
@@ -2710,6 +2739,33 @@ class AjaxSearchController extends BaseController {
 		echo "Text updated";
 	}
 	
+	public function postEditTextTemplateSpecific()
+	{
+		$data = array(
+			'array' => Input::get('value')
+		);
+		DB::table('templates')->where('template_id', '=', Input::get('pk'))->update($data);
+		$this->audit('Update');
+		echo "Text updated";
+	}
+	
+	public function postEditTextTemplateSpecificName()
+	{
+		$query = DB::table('templates')->where('practice_id', '=', Session::get('practice_id'))->where('category', '=', 'specific')->where('template_name', '=', Input::get('template_name_old'))->get();
+		if ($query) {
+			foreach ($query as $row) {
+				$data = array(
+					'template_name' => Input::get('template_name')
+				);
+				DB::table('templates')->where('template_id', '=', $row->template_id)->update($data);
+			}
+			$message = "Macro name updated!";
+		} else {
+			$message = "No previous macro name " . Input::get('template_name_old') . " found!";
+		}
+		echo $message;
+	}
+	
 	public function postDeletetextdump($id)
 	{
 		$item = DB::table('templates')->where('template_id', '=', $id)->first();
@@ -2729,6 +2785,18 @@ class AjaxSearchController extends BaseController {
 		DB::table('templates')->where('template_id', '=', $id)->delete();
 		$this->audit('Delete');
 		echo 'Group deleted';
+	}
+	
+	public function postDeletetextdumpSpecificGroup($id)
+	{
+		$query = DB::table('templates')->where('practice_id', '=', Session::get('practice_id'))->where('category', '=', 'specific')->where('template_name', '=', $id)->where('default', '=', 'default')->get();
+		if ($query)  {
+			$message = 'Macro not deleted as default values exist!';
+		} else {
+			$query1 = DB::table('templates')->where('practice_id', '=', Session::get('practice_id'))->where('category', '=', 'specific')->where('template_name', '=', $id)->delete();
+			$message = 'Macro deleted';
+		}
+		echo $message;
 	}
 	
 	public function postDefaulttextdump($id)

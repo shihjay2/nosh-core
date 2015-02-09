@@ -332,6 +332,61 @@ class LoginController extends BaseController {
 		}
 	}
 	
+	public function oidc_api()
+	{
+		//$client_id = '5b8e4e18-fbfa-4ef2-8e49-074e571be425';
+		//$client_secret = 'Pt6PD6xHQFCiWzo0QnfSXJ2XLatVAafXlGlNSw4Td9gVBVjasg7JtcogqgLDdjr6axfFoBV6FhvEoDUA0q1_BQ';
+		$open_id_url = 'http://162.243.111.18:8080/openid-connect-server-webapp/';
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $practice->openidconnect_client_id;
+		$client_secret = $practice->openidconnect_client_secret;
+		$url = route('oidc_api');
+		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc->setRedirectURL($url);
+		$oidc->authenticate();
+		$firstname = $oidc->requestUserInfo('given_name');
+		$lastname = $oidc->requestUserInfo('family_name');
+		$email = $oidc->requestUserInfo('email');
+		$npi = $oidc->requestUserInfo('npi');
+		$access_token = substr($oidc->getAccessToken(),0,255);
+		if ($npi != '') {
+			$provider = DB::table('providers')->where('npi', '=', $npi)->first();
+			if ($provider) {
+				$user = User::where('id', '=', $provider->id)->first();
+			} else {
+				$user = false;
+			}
+		} else {
+			$user = User::where('uid', '=', $oidc->requestUserInfo('sub'))->first();
+			//$user = User::where('firstname', '=', $firstname)->where('email', '=', $email)->where('lastname', '=', $lastname)->where('active', '=', '1')->first();
+		}
+		if ($user) {
+			Auth::login($user);
+			$user_data = array(
+				'oauth_token' => $access_token,
+				'oauth_token_secret' => time() + 7200  //2 hour time limit
+			);
+			DB::table('users')->where('id', '=', $user->id)->update($user_data);
+			$this->audit('Update');
+			$response['token'] = $access_token;
+			$response['user'] = array(
+				'uid' => $oidc->requestUserInfo('sub'),
+				'firstname' => $firstname,
+				'lastname' => $lastname,
+				'email' => $email,
+				'npi' => $npi,
+				'api_token' => $access_token
+			);
+			$statusCode = 200;
+		} else {
+			$statusCode = 401;
+			$response['error'] = true;
+			$response['message'] = 'Not an approved user for this system';
+			$response['code'] = 401;
+		}
+		return Response::json($response, $statusCode);
+	}
+	
 	public function practice_choose()
 	{
 		if (Input::server("REQUEST_METHOD") == "POST") {

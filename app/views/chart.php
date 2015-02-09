@@ -25,7 +25,7 @@
 			<div class="pure-u-1-5"><i class="fa fa-phone fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="messages_list" title="Telephone messages and e-mail encounters" class="nosh_tooltip">Messages</a></div>
 			<div class="pure-u-1-5"><i class="fa fa-file-text-o fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="documents_list" title="Lab, imaging, cardiopulmonary, referral, and other associated documents for this patient." class="nosh_tooltip">Documents</a></div>
 			<div class="pure-u-1-5"><i class="fa fa-money fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="billing_list" title="Past claims, payments, and balances for this patient" class="nosh_tooltip">Billing</a></div>
-			<div class="pure-u-1-5"><i class="fa fa-print fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="print_list" title="Print, fax, and create C-CDA documents of this patient's records." class="nosh_tooltip">Coordination of Care</a></div>
+			<div class="pure-u-1-5"><i class="fa fa-print fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="print_list" title="Print, fax, and create C-CDA documents of this patient's records." class="nosh_tooltip">Print</a></div>
 		</div>
 	</fieldset>
 </div>

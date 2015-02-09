@@ -118,6 +118,15 @@
 			<button type="button" id="delete_textdump_group" class="nosh_button_delete">Delete</button>
 			<button type="button" id="export_textdump" class="nosh_button_extlink">Export</button>
 		</div>
+		<h3><a href="#">Text Macros</a></h3>
+		<div>
+			<table id="textdump_specific_list" class="scroll" cellpadding="0" cellspacing="0"></table>
+			<div id="textdump_specific_list_pager" class="scroll" style="text-align:center;"></div><br>
+			<button type="button" id="add_textdump_specific_group" class="nosh_button_add">Add</button>
+			<button type="button" id="edit_textdump_specific_group" class="nosh_button_edit">Edit</button>
+			<button type="button" id="delete_textdump_specific_group" class="nosh_button_delete">Delete</button>
+			<button type="button" id="export_textdump_specific" class="nosh_button_extlink">Export</button>
+		</div>
 		<h3><a href="#">CPT</a></h3>
 		<div>
 			Search: <input type="text" size="50" id="search_all_cpt" class="text ui-widget-content ui-corner-all" onkeydown="doSearch(arguments[0]||event)"/><br><br> 
@@ -364,7 +373,7 @@
 	<form id="configuration_textdump_group_form" class="pure-form pure-form-stacked">
 		<input type="hidden" name="template_id" id="configuration_textdump_group_template_id"/>
 		<div class="pure-control-group"><label for="configuration_textdump_group_template_name">Target Field</label><select id="configuration_textdump_group_template_name" name="template_name" style="width:290px" class="text" required></select></div>
-		<div class="pure-control-group"><label for="configuration_textdump_array">Group</label><input type="text" id="configuration_textdump_group_group" name="group" style="width:290px" class="text" required/></div>
+		<div class="pure-control-group"><label for="configuration_textdump_group_group">Group</label><input type="text" id="configuration_textdump_group_group" name="group" style="width:290px" class="text" required/></div>
 	</form>
 </div>
 <div id="configuration_textdump_dialog" title="">
@@ -375,5 +384,11 @@
 		<input type="hidden" id="configuration_textdump_subgrid_table_id"/>
 		<div class="pure-control-group"><label for="configuration_textdump_array">Template Text</label><input type="text" id="configuration_textdump_array" name="array" style="width:290px" class="text" required/></div>
 		<div class="pure-control-group"><label for="configuration_textdump_default">Default Normal?</label><select id="configuration_textdump_default" name="default"></select></div>
+	</form>
+</div>
+<div id="configuration_textdump_specific_group_dialog" title="">
+	<form id="configuration_textdump_specific_group_form" class="pure-form pure-form-stacked">
+		<input type="hidden" name="template_name_old" id="configuration_textdump_specific_group_template_name_old"/>
+		<div class="pure-control-group"><label for="configuration_textdump_specific_group_template_name">Macro Name</label><input type="text" id="configuration_textdump_specific_group_template_name" name="template_name" style="width:290px" class="text" required/></div>
 	</form>
 </div>

@@ -561,11 +561,11 @@ class OpenIDConnectClient
     public function register() {
 
         $registration_endpoint = $this->getProviderConfigValue('registration_endpoint');
-
+        
         $send_object = (object)array(
-            'redirect_uris' => array($this->getRedirectURL()),
+            'redirect_uris' => array($this->getRedirectURL(), str_replace('oidc', 'fhir/oidc', $this->getRedirectURL())),
             'client_name' => $this->getClientName(),
-            'logo_uri' => 'http://54.200.157.203/wp-content/uploads/2013/12/SAAS-Logo.jpg'
+            'logo_uri' => 'https://www.noshchartingsystem.com/wp-content/uploads/2014/11/SAAS-Logo.jpg'
         );
 
         $response = $this->fetchURL($registration_endpoint, json_encode($send_object));
@@ -624,5 +624,11 @@ class OpenIDConnectClient
         return $this->clientSecret;
     }
 
+	/**
+     * @return string
+     */
+     public function getAccessToken() {
+        return $this->accessToken;
+    }
 
 }

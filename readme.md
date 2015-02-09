@@ -62,14 +62,17 @@ The corresponding javascript files (named the same as the view file, but with a 
 
 If you see the javascript, you will notice that jQuery is used heavily here.  There are numerous plugins for jQuery that are 
 referenced in the header file.  Below is a list of the major jQuery plugins that are used:
-##### Javascript user interface: JQuery UI (dialog, tabs, accordion, autocomplete)
-##### Calendar system: FullCalendar
-##### Tables and grids: jqGrid
-##### Comment tips: BeautyTips
-##### Signature capture: Signature Pad
-##### Growth charts: Highcharts
-##### Form input masking: Masked Input
-##### Date/time input: Time entry
+##### Javascript user interface: [JQuery UI](http://jqueryui.com/)
+##### Calendar system: [FullCalendar](http://fullcalendar.io)
+##### Tables and grids: [jqGrid](http://www.trirand.com/blog)
+##### Dynamic forms: [dForm](https://github.com/daffl/jquery.dform)
+##### Signature capture: [Signature Pad](http://thomasjbradley.ca/lab/signature-pad)
+##### Growth charts: [Highcharts](http://www.highcharts.com)
+##### Form input masking: [Masked Input](https://github.com/digitalBush/jquery.maskedinput)
+##### Date/time input: [jQuery.timepicker](http://jonthornton.github.io/jquery-timepicker)
+##### Image editing: [wPaint](http://wpaint.websanova.com)
+##### Tree: [jsTree](http://www.jstree.com)
+##### Tags: [TagIt](https://github.com/hailwood/jQuery-Tagit)
 
 ## Models
 This is where php code pertaining to MySQL database functions reside.  The controllers frequently point to code in this 

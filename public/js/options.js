@@ -37,6 +37,48 @@ $(document).ready(function() {
 		});
 		return a;
 	}
+	function loadspecifictemplate(currentWord) {
+		$.ajax({
+			type: "POST",
+			url: "ajaxsearch/textdump-specific/" + currentWord,
+			success: function(data){
+				$("#configuration_textdump_specific_group_form").clearForm();
+				$("#configuration_textdump_specific_group_dialog").dialog('close');
+				$("#textdump_specific_html").html('');
+				$("#textdump_specific_html").append(data);
+				$(".edittexttemplatespecific").button({text: false, icons: {primary: "ui-icon-pencil"}});
+				$(".deletetexttemplatespecific").button({text: false, icons: {primary: "ui-icon-trash"}});
+				$(".defaulttexttemplatespecific").button();
+				$('.textdump_item_specific_text').editable('destroy');
+				$('.textdump_item_specific_text').editable({
+					toggle:'manual',
+					ajaxOptions: {
+						headers: {"cache-control":"no-cache"},
+						beforeSend: function(request) {
+							return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
+						},
+						error: function(xhr) {
+							if (xhr.status == "404" ) {
+								alert("Route not found!");
+								//window.location.replace(noshdata.error);
+							} else {
+								if(xhr.responseText){
+									var response1 = $.parseJSON(xhr.responseText);
+									var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
+									alert(error);
+								}
+							}
+						}
+					}
+				});
+				
+				$("#textdump_specific_name").val(currentWord);
+				$("#textdump_specific_origin").val('configure');
+				$("#textdump_specific").dialog("option", "position", { my: 'center', at: 'center', of: '#maincontent' });
+				$("#textdump_specific").dialog('open');
+			}
+		});
+	}
 	$("#configuration_accordion").accordion({
 		heightStyle: "content",
 		active: false,
@@ -426,7 +468,7 @@ $(document).ready(function() {
 			rowNum:10,
 			rowList:[10,20,30],
 			pager: jQuery('#textdump_list_pager'),
-			sortname: 'template_id',
+			sortname: 'template_name',
 			viewrecords: true,
 			sortorder: "asc",
 			caption:"Text Template Groups",
@@ -435,13 +477,14 @@ $(document).ready(function() {
 			jsonReader: { repeatitems : false, id: "0" },
 			subGrid: true,
 			subGridRowExpanded: function(subgrid_id, row_id) {
-				var group_id = row_id;
+				var row_id1 = jQuery("#textdump_list").getCell(row_id,'template_id');
+				var group_id = row_id1;
 				var subgrid_table_id, pager_id;
 				subgrid_table_id = subgrid_id+"_t";
 				pager_id = "p_"+subgrid_table_id;
 				$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table><div id='"+pager_id+"' class='scroll'></div>");
 				jQuery("#"+subgrid_table_id).jqGrid({
-					url: "ajaxdashboard/textdump-list1/"+row_id,
+					url: "ajaxdashboard/textdump-list1/"+row_id1,
 					datatype: "json",
 					mtype: "POST",
 					colNames:['ID','Target Field','Template Text','Group','Default'],
@@ -515,6 +558,25 @@ $(document).ready(function() {
 				});
 			}
 		}).navGrid('#textdump_list_pager',{edit:false,add:false,del:false});
+		jQuery("#textdump_specific_list").jqGrid({
+			url:"ajaxdashboard/textdump-list-specific",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['Macro Name'],
+			colModel:[
+				{name:'template_name',index:'template_name',width:600}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#textdump_specific_list_pager'),
+			sortname: 'template_name',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Text Macros (in text fields, name is surrounded by *)",
+			emptyrecords:"No text macros",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#textdump_specific_list_pager',{edit:false,add:false,del:false});
 		$('#dialog_load').dialog('close');
 		$("#configuration_dialog").dialog('open');
 	});
@@ -1935,6 +1997,104 @@ $(document).ready(function() {
 		if(item){
 			var id = $("#textdump_list").getCell(item,'template_id');
 			window.open("texttemplatedownload/"+id);
+		} else {
+			$.jGrowl("Please select group to export!");
+		}
+	});
+	
+	$("#configuration_textdump_specific_group_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 300, 
+		width: 400, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save and Continue': function() {
+				var bValid = true;
+				$("#configuration_textdump_specific_group_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				if (bValid) {
+					var a = $('#configuration_textdump_specific_group_template_name_old').val();
+					var b = $('#configuration_textdump_specific_group_template_name').val();
+					if (a == '') {
+						loadspecifictemplate(b);
+					} else {
+						if (a == b) {
+							loadspecifictemplate(b);
+						} else {
+							var str = $("#configuration_textdump_specific_group_form").serialize();
+							$.ajax({
+								type: "POST",
+								url: "ajaxsearch/edit-text-template-specific-name",
+								data: str,
+								success: function(data){
+									$.jGrowl(data);
+									reload_grid("textdump_specific_list");
+									loadspecifictemplate(b);
+								}
+							});
+						}
+					}
+				}
+			},
+			Cancel: function() {
+				$("#configuration_textdump_specific_group_form").clearForm();
+				$("#configuration_textdump_specific_group_dialog").dialog('close');
+			}
+		},
+		close: function (event, ui) {
+			$("#configuration_textdump_specific_group_form").clearForm();
+			$('#configuration_textdump_specific_group_dialog').dialog('option', 'title', "");
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#add_textdump_specific_group").click(function(){
+		$("#configuration_textdump_specific_group_form").clearForm();
+		$('#configuration_textdump_specific_group_dialog').dialog('open');
+		$('#configuration_textdump_specific_group_dialog').dialog('option', 'title', "Add Macro Group");
+	});
+	$("#edit_textdump_specific_group").click(function(){
+		var item = jQuery("#textdump_specific_list").getGridParam('selrow');
+		if(item){ 
+			jQuery("#textdump_specific_list").GridToForm(item,"#configuration_textdump_specific_group_form");
+			var a = $('#configuration_textdump_specific_group_template_name').val();
+			$('#configuration_textdump_specific_group_template_name_old').val(a);
+			$('#configuration_textdump_specific_group_dialog').dialog('open');
+			$('#configuration_textdump_specific_group_dialog').dialog('option', 'title', "Edit Macro Group");
+		} else {
+			$.jGrowl("Please select group to edit!");
+		}
+	});
+	$("#delete_textdump_specific_group").click(function(){
+		var item = jQuery("#textdump_specific_list").getGridParam('selrow');
+		if(item){
+			if(confirm('Are you sure you want to delete this macro?')){
+				var id = $("#textdump_specific_list").getCell(item,'template_name');
+				$.ajax({
+					type: "POST",
+					url: "ajaxsearch/deletetextdump-specific-group/" + id,
+					success: function(data){
+						$.jGrowl(data);
+						jQuery("#textdump_specific_list").trigger("reloadGrid");
+					}
+				});
+			}
+		} else {
+			$.jGrowl("Please select group to delete!");
+		}
+	});
+	$("#export_textdump_specific").click(function(){
+		var item = jQuery("#textdump_specific_list").getGridParam('selrow');
+		if(item){
+			var id = $("#textdump_specific_list").getCell(item,'template_name');
+			window.open("texttemplatedownloadspecific/"+id);
 		} else {
 			$.jGrowl("Please select group to export!");
 		}

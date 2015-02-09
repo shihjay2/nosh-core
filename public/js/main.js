@@ -1667,6 +1667,49 @@ $(document).ready(function() {
 			}
 		}
 	});
+	$("#textdump_specific").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 300, 
+		width: 400, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		close: function (event, ui) {
+			$("#textdump_specific_target").val('');
+			$("#textdump_specific_start").val('');
+			$("#textdump_specific_length").val('');
+			$("#textdump_specific_origin").val('');
+			$("#textdump_specific_add").val('');
+			$("#textdump_specific_html").html('');
+		},
+		buttons: {
+			'Save': function() {
+				var origin = $("#textdump_specific_origin").val();
+				if (origin != 'configure') {
+					var id = $("#textdump_specific_target").val();
+					var start = $("#textdump_specific_start").val();
+					var length = $("#textdump_specific_length").val();
+					var delimiter = $("#textdump_delimiter").val();
+					var text = [];
+					$("#textdump_specific_html").find('.textdump_item_specific').each(function() {
+						if ($(this).find(':first-child').hasClass("ui-state-error") == true) {
+							var a = $(this).text();
+							text.push(a);
+						}
+					});
+					var input = text.join(delimiter);
+					$("#"+id).textrange('set', start, length);
+					$("#"+id).textrange('replace', input);
+				}
+				$("#textdump_specific").dialog('close');
+			},
+			Cancel: function() {
+				$("#textdump_specific").dialog('close');
+			}
+		}
+	});
 	$("#textdump_group_html").tooltip();
 	$("#textdump_html").tooltip();
 });
@@ -2893,12 +2936,24 @@ $(document).on('click', '.textdump_item', function() {
 		$(this).find(':first-child').addClass("ui-state-error ui-corner-all");
 	}
 });
+$(document).on('click', '.textdump_item_specific', function() {
+	if ($(this).find(':first-child').hasClass("ui-state-error") == false) {
+		$(this).find(':first-child').addClass("ui-state-error ui-corner-all");
+	} else {
+		$(this).find(':first-child').removeClass("ui-state-error ui-corner-all");
+	}
+});
 $(document).on('click', '.edittextgroup', function(e) {
 	var id = $(this).attr('id');
 	e.stopPropagation();
 	$("#"+id+"_b").editable('show', true);
 });
 $(document).on('click', '.edittexttemplate', function(e) {
+	var id = $(this).attr('id');
+	e.stopPropagation();
+	$("#"+id+"_span").editable('show', true);
+});
+$(document).on('click', '.edittexttemplatespecific', function(e) {
 	var id = $(this).attr('id');
 	e.stopPropagation();
 	$("#"+id+"_span").editable('show', true);
@@ -2922,6 +2977,17 @@ $(document).on('click', '.deletetexttemplate', function() {
 		url: "ajaxsearch/deletetextdump/" + template_id,
 		success: function(data){
 			$("#texttemplatediv_"+template_id).remove();
+		}
+	});
+});
+$(document).on('click', '.deletetexttemplatespecific', function() {
+	var id = $(this).attr('id');
+	var template_id = id.replace('deletetexttemplatespecific_','');
+	$.ajax({
+		type: "POST",
+		url: "ajaxsearch/deletetextdump/" + template_id,
+		success: function(data){
+			$("#texttemplatespecificdiv_"+template_id).remove();
 		}
 	});
 });
@@ -3146,6 +3212,78 @@ $(document).on('keydown', '#textdump_add', function(e){
 		}
 	}
 });
+$(document).on('keydown', '#textdump_specific_add', function(e){
+	if(e.keyCode==13) {
+		e.preventDefault();
+		var a = $("#textdump_specific_add").val();
+		if (a != '') {
+			var str = $("#textdump_specific_form").serialize();
+			if(str){
+				$.ajax({
+					type: "POST",
+					url: "ajaxsearch/add-specific-template",
+					data: str,
+					dataType: 'json',
+					success: function(data){
+						$.jGrowl(data.message);
+						var app = '<div id="texttemplatespecificdiv_' + data.id + '" style="width:99%" class="pure-g"><div class="textdump_item_specific pure-u-2-3"><span id="edittexttemplatespecific_' + data.id + '_span" class="textdump_item_specific_text" data-type="text" data-pk="' + data.id + '" data-name="array" data-url="ajaxsearch/edit-text-template-specific" data-title="Item">' + a + '</span></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:400px;"><button type="button" id="edittexttemplatespecific_' + data.id + '" class="edittexttemplatespecific">Edit</button><button type="button" id="deletetexttemplatespecific_' + data.id + '" class="deletetexttemplatespecific">Remove</button></div></div><hr class="ui-state-default"/></div>';
+						$("#textdump_specific_html").append(app);
+						$(".edittexttemplatespecific").button({text: false, icons: {primary: "ui-icon-pencil"}});
+						$(".deletetexttemplatespecific").button({text: false, icons: {primary: "ui-icon-trash"}});
+						$(".defaulttexttemplatespecific").button();
+						$('.textdump_item_specific_text').editable('destroy');
+						$('.textdump_item_specific_text').editable({
+							toggle:'manual',
+							ajaxOptions: {
+								headers: {"cache-control":"no-cache"},
+								beforeSend: function(request) {
+									return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
+								},
+								error: function(xhr) {
+									if (xhr.status == "404" ) {
+										alert("Route not found!");
+										//window.location.replace(noshdata.error);
+									} else {
+										if(xhr.responseText){
+											var response1 = $.parseJSON(xhr.responseText);
+											var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
+											alert(error);
+										}
+									}
+								}
+							}
+						});
+						var a1 = '';
+						if ($("#textdump_input").val() == '') {
+							a1 += '\n' + $("#textdump_group_item").val() + ": ";
+						}
+						a1 += a;
+						var id = $("#textdump_target").val();
+						var old = $("#"+id).val();
+						if (old != '') {
+							var b = old + '\n' + a1;
+						} else {
+							var b = a1;
+						}
+						$("#"+id).val(b);
+						var old1 = $("#textdump_input").val();
+						if (old1 != '') {
+							var c = old1 + '\n' + a1;
+						} else {
+							var c = a1;
+						}
+						$("#textdump_input").val(c);
+						$("#textdump_add").val('');
+					}
+				});
+			} else {
+				$.jGrowl("Please complete the form");
+			}
+		} else {
+			$.jGrowl("No text to add!");
+		}
+	}
+});
 $(document).on("change", "#hippa_address_id", function () {
 	var a = $(this).find("option:selected").first().text();
 	if (a != 'Select Provider') {
@@ -3300,3 +3438,75 @@ function textdump(elem) {
 		}
 	});
 }
+$(document).on('click', 'textarea', function(e) {
+	var stopCharacters = [' ', '\n', '\r', '\t'];
+	var id = $(this).attr('id');
+	var val = $(this).val();
+	$(this).html(val);
+	var text = $(this).html();
+	var start = $(this)[0].selectionStart;
+	var end = $(this)[0].selectionEnd;
+	while (start > 0) {
+		if (stopCharacters.indexOf(text[start]) == -1) {
+			--start;
+		} else {
+			break;
+		}
+	};
+	++start;
+	while (end < text.length) {
+		if (stopCharacters.indexOf(text[end]) == -1) {
+			++end;
+		} else {
+			break;
+		}
+	}
+	if (start == 1) {
+		start = 0;
+	}
+	var startW = text.substr(start,1);
+	var endW = text.substr(end-1,1);
+	if (startW == '*' && endW == '*') {
+		$(this).textrange('set', start, end - start);
+		var currentWord = text.substr(start + 1, end - start - 2);
+		$.ajax({
+			type: "POST",
+			url: "ajaxsearch/textdump-specific/" + currentWord,
+			success: function(data){
+				$("#textdump_specific_html").html('');
+				$("#textdump_specific_html").append(data);
+				$(".edittexttemplatespecific").button({text: false, icons: {primary: "ui-icon-pencil"}});
+				$(".deletetexttemplatespecific").button({text: false, icons: {primary: "ui-icon-trash"}});
+				$(".defaulttexttemplatespecific").button();
+				$('.textdump_item_specific_text').editable('destroy');
+				$('.textdump_item_specific_text').editable({
+					toggle:'manual',
+					ajaxOptions: {
+						headers: {"cache-control":"no-cache"},
+						beforeSend: function(request) {
+							return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
+						},
+						error: function(xhr) {
+							if (xhr.status == "404" ) {
+								alert("Route not found!");
+								//window.location.replace(noshdata.error);
+							} else {
+								if(xhr.responseText){
+									var response1 = $.parseJSON(xhr.responseText);
+									var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
+									alert(error);
+								}
+							}
+						}
+					}
+				});
+				$("#textdump_specific_target").val(id);
+				$("#textdump_specific_name").val(currentWord);
+				$("#textdump_specific_start").val(start);
+				$("#textdump_specific_length").val(end - start);
+				$("#textdump_specific").dialog("option", "position", { my: 'left top', at: 'right top', of: '#'+id });
+				$("#textdump_specific").dialog('open');
+			}
+		});
+	}
+});

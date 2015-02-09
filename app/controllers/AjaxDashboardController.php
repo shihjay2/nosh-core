@@ -2521,6 +2521,120 @@ class AjaxDashboardController extends BaseController {
 		}
 	}
 	
+	public function postTextdumpListSpecific()
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$page = Input::get('page');
+			$limit = Input::get('rows');
+			$sidx = Input::get('sidx');
+			$sord = Input::get('sord');
+			$practice_id = Session::get('practice_id');
+			$pid = Session::get('pid');
+			$query = DB::table('templates')
+				->where('category', '=', 'specific')
+				->where('practice_id', '=', $practice_id)
+				->groupby('template_name')
+				->distinct()
+				->get();
+			if($query) { 
+				$count = count($query);
+				$total_pages = ceil($count/$limit); 
+			} else { 
+				$count = 0;
+				$total_pages = 0;
+			}
+			if ($page > $total_pages) $page=$total_pages;
+			$start = $limit*$page - $limit;
+			if($start < 0) $start = 0;
+			$query1 = DB::table('templates')
+				->where('category', '=', 'specific')
+				->where('practice_id', '=', $practice_id)
+				->groupby('template_name')
+				->distinct()
+				->orderBy($sidx, $sord)
+				->skip($start)
+				->take($limit)
+				->get();
+			$response['page'] = $page;
+			$response['total'] = $total_pages;
+			$response['records'] = $count;
+			if ($query1) {
+				$records1 = array();
+				$i = 0;
+				foreach ($query1 as $row) {
+					$records1[$i]['template_name'] = $row->template_name;
+					$i++;
+				}
+				$response['rows'] = $records1;
+			} else {
+				$response['rows'] = '';
+			}
+			echo json_encode($response);
+		}
+	}
+	
+	public function postTextdumpList1Specific($id)
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$page = Input::get('page');
+			$limit = Input::get('rows');
+			$sidx = Input::get('sidx');
+			$sord = Input::get('sord');
+			$practice_id = Session::get('practice_id');
+			$pid = Session::get('pid');
+			$query = DB::table('templates')
+				->where('category', '=', 'text')
+				->where('practice_id', '=', $practice_id)
+				->where('template_name', '=', $id)
+				->get();
+			if($query) { 
+				$count = count($query);
+				$total_pages = ceil($count/$limit); 
+			} else { 
+				$count = 0;
+				$total_pages = 0;
+			}
+			if ($page > $total_pages) $page=$total_pages;
+			$start = $limit*$page - $limit;
+			if($start < 0) $start = 0;
+			$query1 = DB::table('templates')
+				->where('category', '=', 'text')
+				->where('practice_id', '=', $practice_id)
+				->where('template_name', '=', $id)
+				->orderBy($sidx, $sord)
+				->skip($start)
+				->take($limit)
+				->get();
+			$response['page'] = $page;
+			$response['total'] = $total_pages;
+			$response['records'] = $count;
+			if ($query1) {
+				$records1 = array();
+				$i = 0;
+				foreach ($query1 as $row) {
+					$records1[$i]['template_id'] = $row->template_id;
+					$records1[$i]['array'] = $row->array;
+					$records1[$i]['default'] = $row->default;
+					$i++;
+				}
+				$response['rows'] = $records1;
+			} else {
+				$response['rows'] = '';
+			}
+			echo json_encode($response);
+		}
+	}
+	
 	public function postSaveTextdumpgroup()
 	{
 		$data = array(
