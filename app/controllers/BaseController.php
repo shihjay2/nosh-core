@@ -2247,7 +2247,6 @@ class BaseController extends Controller {
 				for($i = 0; $i < strlen($value); $i++) { 
 					$hash = (($hash << 5) + $hash) + ord(substr($value, $i));
 				}
-				return $hash;
 				break;
 			case 8:
 				$hash = 5381; 
@@ -2255,9 +2254,9 @@ class BaseController extends Controller {
 				for($i = 0; $i < strlen($value); $i++) { 
 					$hash = ($this->leftShift32($hash, 5) + $hash) + ord(substr($value, $i)); 
 				} 
-				return $hash; 
 				break;
 		}
+		return $hash;
 	}
 	
 	protected function leftShift32($number, $steps)
