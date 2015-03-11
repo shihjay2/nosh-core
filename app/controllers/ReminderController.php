@@ -6,6 +6,29 @@ class ReminderController extends BaseController {
 	* NOSH ChartingSystem Reminder System, to be run as a cron job
 	*/
 	
+	public function test()
+	{
+		$real = 'LQSAHG';
+		$hash = '-1089505563';
+		if ($this->rpHash($real) == $hash) {
+			$a = 'yes';
+		} else {
+			$a = 'no';
+		}
+		return $a;
+		
+		//$html_links = $result->links();
+		//$html = new Htmldom($html_links);
+		//$link1 = array();
+		//foreach ($html->find('li') as $li) {
+			//$a = $li->find('a',0);
+			//if ($a) {
+				//$link1[] = $a->href;
+			//}
+		//}
+		//return $link1;
+	}
+	
 	public function reminder()
 	{
 		$start = time();
