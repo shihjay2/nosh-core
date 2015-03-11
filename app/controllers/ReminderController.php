@@ -9,7 +9,7 @@ class ReminderController extends BaseController {
 	public function test()
 	{
 		$real = 'LQSAHG';
-		$a = PHP_INT_SIZE;
+		$a = $this->leftShift32(5381, 5);
 		return $a;
 		
 		//$html_links = $result->links();
