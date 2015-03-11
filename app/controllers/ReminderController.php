@@ -9,7 +9,13 @@ class ReminderController extends BaseController {
 	public function test()
 	{
 		$real = 'LQSAHG';
-		$a = $this->leftShift32(5381, 5);
+		$hash = '-1089505563';
+		$a = $this->rpHash($real);
+		if ($this->rpHash($real) == $hash) {
+			$a = 'yes';
+		} else {
+			$a = 'no';
+		}
 		return $a;
 		
 		//$html_links = $result->links();
