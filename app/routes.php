@@ -409,4 +409,4 @@ Route::filter('auth.token', function()
 	}
 });
 
-Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));
+//Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));
