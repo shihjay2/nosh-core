@@ -2,6 +2,34 @@
 	<button type="button" id="import_template" class="nosh_button_forward">Import Form or Text Templates</button>
 	<br><br>
 	<div id="configuration_accordion">
+		<h3><a href="#">Text Templates</a></h3>
+		<div>
+			<table id="textdump_list" class="scroll" cellpadding="0" cellspacing="0"></table>
+			<div id="textdump_list_pager" class="scroll" style="text-align:center;"></div><br>
+			<button type="button" id="add_textdump_group" class="nosh_button_add">Add</button>
+			<button type="button" id="edit_textdump_group" class="nosh_button_edit">Edit</button>
+			<button type="button" id="delete_textdump_group" class="nosh_button_delete">Delete</button>
+			<button type="button" id="export_textdump" class="nosh_button_extlink">Export</button>
+		</div>
+		<h3><a href="#">Text Macros</a></h3>
+		<div>
+			<table id="textdump_specific_list" class="scroll" cellpadding="0" cellspacing="0"></table>
+			<div id="textdump_specific_list_pager" class="scroll" style="text-align:center;"></div><br>
+			<button type="button" id="add_textdump_specific_group" class="nosh_button_add">Add</button>
+			<button type="button" id="edit_textdump_specific_group" class="nosh_button_edit">Edit</button>
+			<button type="button" id="delete_textdump_specific_group" class="nosh_button_delete">Delete</button>
+			<button type="button" id="export_textdump_specific" class="nosh_button_extlink">Export</button>
+		</div>
+		<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
+			<h3 class="configuration_encounter_templates"><a href="#">Encounter Templates</a></h3>
+			<div class="configuration_encounter_templates">
+				<table id="encounter_templates_list" class="scroll" cellpadding="0" cellspacing="0"></table>
+				<div id="encounter_templates_list_pager" class="scroll" style="text-align:center;"></div><br>
+				<button type="button" id="add_encounter_templates" class="nosh_button_add">Add</button>
+				<button type="button" id="edit_encounter_templates" class="nosh_button_edit">Edit</button>
+				<button type="button" id="delete_encounter_templates" class="nosh_button_delete">Delete</button>
+			</div>
+		<?php }?>
 		<?php if(Session::get('group_id') == '2') {?>
 			<h3 class="configuration_hpi"><a href="#">HPI Forms</a></h3>
 			<div class="configuration_hpi">
@@ -109,24 +137,6 @@
 				<button type="button" id="export_referral_forms" class="nosh_button_extlink export_template">Export</button>
 			</div>
 		<?php }?>
-		<h3><a href="#">Text Templates</a></h3>
-		<div>
-			<table id="textdump_list" class="scroll" cellpadding="0" cellspacing="0"></table>
-			<div id="textdump_list_pager" class="scroll" style="text-align:center;"></div><br>
-			<button type="button" id="add_textdump_group" class="nosh_button_add">Add</button>
-			<button type="button" id="edit_textdump_group" class="nosh_button_edit">Edit</button>
-			<button type="button" id="delete_textdump_group" class="nosh_button_delete">Delete</button>
-			<button type="button" id="export_textdump" class="nosh_button_extlink">Export</button>
-		</div>
-		<h3><a href="#">Text Macros</a></h3>
-		<div>
-			<table id="textdump_specific_list" class="scroll" cellpadding="0" cellspacing="0"></table>
-			<div id="textdump_specific_list_pager" class="scroll" style="text-align:center;"></div><br>
-			<button type="button" id="add_textdump_specific_group" class="nosh_button_add">Add</button>
-			<button type="button" id="edit_textdump_specific_group" class="nosh_button_edit">Edit</button>
-			<button type="button" id="delete_textdump_specific_group" class="nosh_button_delete">Delete</button>
-			<button type="button" id="export_textdump_specific" class="nosh_button_extlink">Export</button>
-		</div>
 		<h3><a href="#">CPT</a></h3>
 		<div>
 			Search: <input type="text" size="50" id="search_all_cpt" class="text ui-widget-content ui-corner-all" onkeydown="doSearch(arguments[0]||event)"/><br><br> 
@@ -374,6 +384,22 @@
 		<input type="hidden" name="template_id" id="configuration_textdump_group_template_id"/>
 		<div class="pure-control-group"><label for="configuration_textdump_group_template_name">Target Field</label><select id="configuration_textdump_group_template_name" name="template_name" style="width:290px" class="text" required></select></div>
 		<div class="pure-control-group"><label for="configuration_textdump_group_group">Group</label><input type="text" id="configuration_textdump_group_group" name="group" style="width:290px" class="text" required/></div>
+		<div class="pure-control-group">
+			<label for="configuration_textdump_group_age">Age Group</label>
+			<select name="age" id="configuration_textdump_group_age">
+				<option value="">All</option>
+				<option value="adult">Adult</option>
+				<option value="child">Child</option>
+			</select>
+		</div>
+		<div class="pure-control-group">
+			<label for="configuration_textdump_group_sex">Gender Group</label>
+			<select name="sex" id="configuration_textdump_group_sex">
+				<option value="">All</option>
+				<option value="m">Male</option>
+				<option value="f">Female</option>
+			</select>
+		</div>
 	</form>
 </div>
 <div id="configuration_textdump_dialog" title="">

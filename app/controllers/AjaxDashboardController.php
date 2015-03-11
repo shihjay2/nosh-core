@@ -1435,17 +1435,22 @@ class AjaxDashboardController extends BaseController {
 				}
 				$csv = File::get($file_path);
 				$csv_line = explode("\n", $csv);
-				if (count($csv_line) == 2) {
+				if (count($csv_line) >= 2) {
 					$headers = explode("\t", $csv_line[0]);
-					$values = explode("\t", $csv_line[1]);
-					$row = array();
-					for ($j = 0; $j < count($headers); $j++) {
-						$row[$headers[$j]] = $values[$j];
+					$l = 1;
+					for ($k = 0; $k < count($csv_line); $k++) {
+						$values = explode("\t", $csv_line[$l]);
+						$row = array();
+						for ($j = 0; $j < count($headers); $j++) {
+							$row[$headers[$j]] = $values[$j];
+						}
+						$row['practice_id'] = Session::get('practice_id');
+						DB::table('templates')->insert($row);
+						$this->audit('Add');
+						$k++;
+						$l++;
 					}
-					$row['practice_id'] = Session::get('practice_id');
-					DB::table('templates')->insert($row);
-					$this->audit('Add');
-					$i++;
+					$i += $k;
 				} else {
 					$error = "<br>Incorrect format.";
 				}
@@ -1476,6 +1481,28 @@ class AjaxDashboardController extends BaseController {
 			$csv .= "\n" . implode("\t", $array_values1);
 		}
 		$file_path = __DIR__."/../../public/temp/" . time() . "_" . $result->group . "_template.txt";
+		File::put($file_path, $csv);
+		return Response::download($file_path);
+	}
+	
+	public function textmacrodownload($id)
+	{
+		$query = DB::table('templates')->where('category', '=', 'specific')->where('practice_id', '=', Session::get('practice_id'))->where('template_name', '=', $id)->get();
+		$i = 0;
+		$csv = '';
+		foreach ($query as $row) {
+			$array_row1 = (array) $row;
+			unset($array_row1['template_id']);
+			unset($array_row1['practice_id']);
+			if ($i == 0) {
+				$array_key1 = array_keys($array_row1);
+				$csv .= implode("\t", $array_key1);
+			}
+			$array_values1 = array_values($array_row1);
+			$csv .= "\n" . implode("\t", $array_values1);
+			$i++;
+		}
+		$file_path = __DIR__."/../../public/temp/" . time() . "_" . $id . "_template.txt";
 		File::put($file_path, $csv);
 		return Response::download($file_path);
 	}
@@ -2449,6 +2476,8 @@ class AjaxDashboardController extends BaseController {
 					$records1[$i]['template_id'] = $row->template_id;
 					$records1[$i]['template_name'] = $row->template_name;
 					$records1[$i]['group'] = $row->group;
+					$records1[$i]['age'] = $row->age;
+					$records1[$i]['sex'] = $row->sex;
 					$i++;
 				}
 				$response['rows'] = $records1;
@@ -2479,6 +2508,8 @@ class AjaxDashboardController extends BaseController {
 				->where('practice_id', '=', $practice_id)
 				->where('array', '!=', '')
 				->where('group', '=', $group->group)
+				->where('age', '=', $group->age)
+				->where('sex', '=', $group->sex)
 				->get();
 			if($query) { 
 				$count = count($query);
@@ -2495,6 +2526,8 @@ class AjaxDashboardController extends BaseController {
 				->where('practice_id', '=', $practice_id)
 				->where('array', '!=', '')
 				->where('group', '=', $group->group)
+				->where('age', '=', $group->age)
+				->where('sex', '=', $group->sex)
 				->orderBy($sidx, $sord)
 				->skip($start)
 				->take($limit)
@@ -2578,7 +2611,7 @@ class AjaxDashboardController extends BaseController {
 		}
 	}
 	
-	public function postTextdumpList1Specific($id)
+	public function postEncounterTemplates()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
 			Auth::logout();
@@ -2593,9 +2626,11 @@ class AjaxDashboardController extends BaseController {
 			$practice_id = Session::get('practice_id');
 			$pid = Session::get('pid');
 			$query = DB::table('templates')
-				->where('category', '=', 'text')
+				->where('category', '=', 'encounter_templates')
 				->where('practice_id', '=', $practice_id)
-				->where('template_name', '=', $id)
+				->where('array', '=', '')
+				->groupby('template_name')
+				->distinct()
 				->get();
 			if($query) { 
 				$count = count($query);
@@ -2608,9 +2643,11 @@ class AjaxDashboardController extends BaseController {
 			$start = $limit*$page - $limit;
 			if($start < 0) $start = 0;
 			$query1 = DB::table('templates')
-				->where('category', '=', 'text')
+				->where('category', '=', 'encounter_templates')
 				->where('practice_id', '=', $practice_id)
-				->where('template_name', '=', $id)
+				->where('array', '=', '')
+				->groupby('template_name')
+				->distinct()
 				->orderBy($sidx, $sord)
 				->skip($start)
 				->take($limit)
@@ -2622,9 +2659,8 @@ class AjaxDashboardController extends BaseController {
 				$records1 = array();
 				$i = 0;
 				foreach ($query1 as $row) {
-					$records1[$i]['template_id'] = $row->template_id;
-					$records1[$i]['array'] = $row->array;
-					$records1[$i]['default'] = $row->default;
+					$records1[$i]['template_name'] = $row->template_name;
+					$records1[$i]['scoring'] = $row->scoring;
 					$i++;
 				}
 				$response['rows'] = $records1;
@@ -2635,6 +2671,44 @@ class AjaxDashboardController extends BaseController {
 		}
 	}
 	
+	public function postListmacros()
+	{
+		$return = '';
+		$query = DB::table('templates')
+			->where('category', '=', 'specific')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->groupby('template_name')
+			->distinct()
+			->get();
+		if ($query) {
+			$i = 0;
+			foreach ($query as $row) {
+				if ($i != 0) {
+					$return .= '<br>';
+				}
+				$return .= '*' . $row->template_name . '* = ';
+				$query1 = DB::table('templates')
+					->where('category', '=', 'specific')
+					->where('practice_id', '=', Session::get('practice_id'))
+					->where('template_name', '=', $row->template_name)
+					->limit(3)
+					->get();
+				if ($query1) {
+					$j = 0;
+					foreach ($query1 as $row1) {
+						if ($j != 0) {
+							$return .= ', ';
+						}
+						$return .= $row1->array;
+						$j++;
+					}
+				}
+				$i++;
+			}
+		}
+		echo $return;
+	}
+	
 	public function postSaveTextdumpgroup()
 	{
 		$data = array(
@@ -2642,14 +2716,19 @@ class AjaxDashboardController extends BaseController {
 			'category' => 'text',
 			'template_name' => Input::get('template_name'),
 			'practice_id' => Session::get('practice_id'),
-			'group' => Input::get('group')
+			'group' => Input::get('group'),
+			'sex' => Input::get('sex'),
+			'age' => Input::get('age')
 		);
 		if (Input::get('template_id') != '') {
 			$group = DB::table('templates')->where('template_id', '=', Input::get('template_id'))->first();
 			$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $group->template_name)->where('group', '=', $group->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->get();
 			foreach ($query as $row) {
 				$data1 = array(
-					'group' => Input::get('group')
+					'template_name' => Input::get('template_name'),
+					'group' => Input::get('group'),
+					'sex' => Input::get('sex'),
+					'age' => Input::get('age')
 				);
 				DB::table('templates')->where('template_id', '=', $row->template_id)->update($data1);
 				$this->audit('Update');

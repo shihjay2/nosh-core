@@ -2,7 +2,7 @@
 <form id="encounters_pe">
 	<button type="button" id="pe_entire_normal" class="nosh_button">All Normal</button><br><br>
 	<div class="pure-g">
-		<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+		<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardmedical1') {?>
 			<div class="pure-u-1-2">
 				<span id="button_pe_gen_status" class="pe_tooltip"></span>
 				<input type="hidden" id="num_pe_gen" value="1"/><button type="button" id="button_pe_gen" class="nosh_button pe_menu_button">General</button><br><br>
@@ -51,7 +51,7 @@
 		<?php }?>
 	</div>
 </form>
-<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardmedical1') {?>
 	<div id="pe_gen_dialog" class="pe_dialog" title="General">
 		<input type="checkbox" id="pe_gen_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_gen_normal">All Normal</label> 
 		<input type="checkbox" id="pe_gen_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_gen_normal1">All Normal for All Templates</label>
@@ -65,13 +65,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_gen1_template">Choose Template:</label><select id="pe_gen1_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_gen1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gen1_normal">All Normal</label><button type="button" id="pe_gen1_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_gen1_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_gen1_template">Choose Template:</label><select id="pe_gen1_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_gen1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gen1_normal">All Normal</label><button type="button" id="pe_gen1_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_gen1_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 		</div>
@@ -89,13 +91,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_eye1_template">Choose Template:</label><select id="pe_eye1_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_eye1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_eye1_normal">All Normal</label><button type="button" id="pe_eye1_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_eye1_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_eye1_template">Choose Template:</label><select id="pe_eye1_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_eye1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_eye1_normal">All Normal</label><button type="button" id="pe_eye1_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_eye1_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_eye2_h"></span>Pupil and Iris</a></h3>
@@ -106,13 +110,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_eye2_template">Choose Template:</label><select id="pe_eye2_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_eye2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_eye2_normal">All Normal</label><button type="button" id="pe_eye2_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_eye2_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_eye2_template">Choose Template:</label><select id="pe_eye2_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_eye2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_eye2_normal">All Normal</label><button type="button" id="pe_eye2_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_eye2_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_eye3_h"></span>Fundoscopic</a></h3>
@@ -123,13 +129,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_eye3_template">Choose Template:</label><select id="pe_eye3_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_eye3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_eye3_normal">All Normal</label><button type="button" id="pe_eye3_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_eye3_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_eye3_template">Choose Template:</label><select id="pe_eye3_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_eye3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_eye3_normal">All Normal</label><button type="button" id="pe_eye3_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_eye3_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 		</div>
@@ -147,13 +155,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_ent1_template">Choose Template:</label><select id="pe_ent1_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_ent1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ent1_normal">All Normal</label><button type="button" id="pe_ent1_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_ent1_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_ent1_template">Choose Template:</label><select id="pe_ent1_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_ent1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ent1_normal">All Normal</label><button type="button" id="pe_ent1_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_ent1_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_ent2_h"></span>Canals and Tympanic Membrane</a></h3>
@@ -164,13 +174,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_ent2_template">Choose Template:</label><select id="pe_ent2_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_ent2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ent2_normal">All Normal</label><button type="button" id="pe_ent2_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_ent2_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_ent2_template">Choose Template:</label><select id="pe_ent2_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_ent2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ent2_normal">All Normal</label><button type="button" id="pe_ent2_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_ent2_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_ent3_h"></span>Hearing Assessment</a></h3>
@@ -181,13 +193,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_ent3_template">Choose Template:</label><select id="pe_ent3_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_ent3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ent3_normal">All Normal</label><button type="button" id="pe_ent3_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_ent3_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_ent3_template">Choose Template:</label><select id="pe_ent3_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_ent3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ent3_normal">All Normal</label><button type="button" id="pe_ent3_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_ent3_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_ent4_h"></span>Sinuses, Mucosa, Septum, and Turbinates</a></h3>
@@ -198,13 +212,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_ent4_template">Choose Template:</label><select id="pe_ent4_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_ent4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ent4_normal">All Normal</label><button type="button" id="pe_ent4_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_ent4_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_ent4_template">Choose Template:</label><select id="pe_ent4_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_ent4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ent4_normal">All Normal</label><button type="button" id="pe_ent4_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_ent4_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_ent5_h"></span>Lips, Teeth, and Gums</a></h3>
@@ -215,13 +231,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_ent5_template">Choose Template:</label><select id="pe_ent5_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_ent5_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ent5_normal">All Normal</label><button type="button" id="pe_ent5_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_ent5_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_ent5_template">Choose Template:</label><select id="pe_ent5_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_ent5_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ent5_normal">All Normal</label><button type="button" id="pe_ent5_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_ent5_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_ent6_h"></span>Oropharynx</a></h3>
@@ -232,13 +250,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_ent6_template">Choose Template:</label><select id="pe_ent6_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_ent6_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ent6_normal">All Normal</label><button type="button" id="pe_ent6_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_ent6_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_ent6_template">Choose Template:</label><select id="pe_ent6_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_ent6_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ent6_normal">All Normal</label><button type="button" id="pe_ent6_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_ent6_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 		</div>
@@ -256,13 +276,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_neck1_template">Choose Template:</label><select id="pe_neck1_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_neck1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_neck1_normal">All Normal</label><button type="button" id="pe_neck1_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_neck1_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_neck1_template">Choose Template:</label><select id="pe_neck1_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_neck1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_neck1_normal">All Normal</label><button type="button" id="pe_neck1_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_neck1_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_neck2_h"></span>Thyroid</a></h3>
@@ -273,13 +295,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_neck2_template">Choose Template:</label><select id="pe_neck2_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_neck2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_neck2_normal">All Normal</label><button type="button" id="pe_neck2_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_neck2_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_neck2_template">Choose Template:</label><select id="pe_neck2_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_neck2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_neck2_normal">All Normal</label><button type="button" id="pe_neck2_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_neck2_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 		</div>
@@ -297,13 +321,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_resp1_template">Choose Template:</label><select id="pe_resp1_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_resp1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_resp1_normal">All Normal</label><button type="button" id="pe_resp1_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_resp1_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_resp1_template">Choose Template:</label><select id="pe_resp1_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_resp1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_resp1_normal">All Normal</label><button type="button" id="pe_resp1_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_resp1_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_resp2_h"></span>Percussion</a></h3>
@@ -314,13 +340,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_resp2_template">Choose Template:</label><select id="pe_resp2_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_resp2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_resp2_normal">All Normal</label><button type="button" id="pe_resp2_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_resp2_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_resp2_template">Choose Template:</label><select id="pe_resp2_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_resp2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_resp2_normal">All Normal</label><button type="button" id="pe_resp2_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_resp2_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_resp3_h"></span>Palpation</a></h3>
@@ -331,13 +359,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_resp3_template">Choose Template:</label><select id="pe_resp3_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_resp3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_resp3_normal">All Normal</label><button type="button" id="pe_resp3_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_resp3_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_resp3_template">Choose Template:</label><select id="pe_resp3_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_resp3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_resp3_normal">All Normal</label><button type="button" id="pe_resp3_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_resp3_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_resp4_h"></span>Auscultation</a></h3>
@@ -348,13 +378,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_resp4_template">Choose Template:</label><select id="pe_resp4_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_resp4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_resp4_normal">All Normal</label><button type="button" id="pe_resp4_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_resp4_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_resp4_template">Choose Template:</label><select id="pe_resp4_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_resp4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_resp4_normal">All Normal</label><button type="button" id="pe_resp4_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_resp4_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 		</div>
@@ -372,13 +404,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_cv1_template">Choose Template:</label><select id="pe_cv1_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_cv1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_cv1_normal">All Normal</label><button type="button" id="pe_cv1_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_cv1_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_cv1_template">Choose Template:</label><select id="pe_cv1_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_cv1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_cv1_normal">All Normal</label><button type="button" id="pe_cv1_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_cv1_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_cv2_h"></span>Auscultation</a></h3>
@@ -389,13 +423,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_cv2_template">Choose Template:</label><select id="pe_cv2_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_cv2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_cv2_normal">All Normal</label><button type="button" id="pe_cv2_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_cv2_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_cv2_template">Choose Template:</label><select id="pe_cv2_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_cv2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_cv2_normal">All Normal</label><button type="button" id="pe_cv2_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_cv2_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_cv3_h"></span>Carotid Arteries</a></h3>
@@ -406,13 +442,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_cv3_template">Choose Template:</label><select id="pe_cv3_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_cv3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_cv3_normal">All Normal</label><button type="button" id="pe_cv3_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_cv3_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_cv3_template">Choose Template:</label><select id="pe_cv3_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_cv3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_cv3_normal">All Normal</label><button type="button" id="pe_cv3_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_cv3_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_cv4_h"></span>Abdominal Aorta</a></h3>
@@ -423,13 +461,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_cv4_template">Choose Template:</label><select id="pe_cv4_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_cv4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_cv4_normal">All Normal</label><button type="button" id="pe_cv4_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_cv4_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_cv4_template">Choose Template:</label><select id="pe_cv4_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_cv4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_cv4_normal">All Normal</label><button type="button" id="pe_cv4_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_cv4_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_cv5_h"></span>Femoral Arteries</a></h3>
@@ -440,13 +480,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_cv5_template">Choose Template:</label><select id="pe_cv5_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_cv5_normal" class="all_normal_pe nosh_button" value=""><label for="pe_cv5_normal">All Normal</label><button type="button" id="pe_cv5_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_cv5_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_cv5_template">Choose Template:</label><select id="pe_cv5_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_cv5_normal" class="all_normal_pe nosh_button" value=""><label for="pe_cv5_normal">All Normal</label><button type="button" id="pe_cv5_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_cv5_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_cv6_h"></span>Extremities</a></h3>
@@ -457,13 +499,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_cv6_template">Choose Template:</label><select id="pe_cv6_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_cv6_normal" class="all_normal_pe nosh_button" value=""><label for="pe_cv6_normal">All Normal</label><button type="button" id="pe_cv6_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_cv6_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_cv6_template">Choose Template:</label><select id="pe_cv6_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_cv6_normal" class="all_normal_pe nosh_button" value=""><label for="pe_cv6_normal">All Normal</label><button type="button" id="pe_cv6_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_cv6_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 		</div>
@@ -481,13 +525,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_ch1_template">Choose Template:</label><select id="pe_ch1_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_ch1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ch1_normal">All Normal</label><button type="button" id="pe_ch1_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_ch1_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_ch1_template">Choose Template:</label><select id="pe_ch1_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_ch1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ch1_normal">All Normal</label><button type="button" id="pe_ch1_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_ch1_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_ch2_h"></span>Palpation</a></h3>
@@ -498,13 +544,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_ch2_template">Choose Template:</label><select id="pe_ch2_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_ch2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ch2_normal">All Normal</label><button type="button" id="pe_ch2_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_ch2_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_ch2_template">Choose Template:</label><select id="pe_ch2_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_ch2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ch2_normal">All Normal</label><button type="button" id="pe_ch2_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_ch2_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 		</div>
@@ -522,13 +570,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_gi1_template">Choose Template:</label><select id="pe_gi1_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_gi1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gi1_normal">All Normal</label><button type="button" id="pe_gi1_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_gi1_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_gi1_template">Choose Template:</label><select id="pe_gi1_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_gi1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gi1_normal">All Normal</label><button type="button" id="pe_gi1_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_gi1_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_gi2_h"></span>Liver and Spleen</a></h3>
@@ -539,13 +589,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_gi2_template">Choose Template:</label><select id="pe_gi2_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_gi2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gi2_normal">All Normal</label><button type="button" id="pe_gi2_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_gi2_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_gi2_template">Choose Template:</label><select id="pe_gi2_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_gi2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gi2_normal">All Normal</label><button type="button" id="pe_gi2_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_gi2_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_gi3_h"></span>Hernia</a></h3>
@@ -556,13 +608,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_gi3_template">Choose Template:</label><select id="pe_gi3_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_gi3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gi3_normal">All Normal</label><button type="button" id="pe_gi3_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_gi3_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_gi3_template">Choose Template:</label><select id="pe_gi3_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_gi3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gi3_normal">All Normal</label><button type="button" id="pe_gi3_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_gi3_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_gi4_h"></span>Anus, Perineum, and Rectum</a></h3>
@@ -573,13 +627,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_gi4_template">Choose Template:</label><select id="pe_gi4_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_gi4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gi4_normal">All Normal</label><button type="button" id="pe_gi4_reset" class="reset nosh_button">Clear</button>
-					<div class="pe_template_div">
-						<br><form id="pe_gi4_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_gi4_template">Choose Template:</label><select id="pe_gi4_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_gi4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gi4_normal">All Normal</label><button type="button" id="pe_gi4_reset" class="reset nosh_button">Clear</button>
+						<div class="pe_template_div">
+							<br><form id="pe_gi4_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 		</div>
@@ -598,13 +654,15 @@
 						</form>
 					</div>
 					<div class="pure-u-13-24">
-						<form class="pure-form pure-form-stacked">
-							<label for="pe_gu1_template">Choose Template:</label><select id="pe_gu1_template" class="pe_template_choose text"></select><br>
-						</form>
-						<input type="checkbox" id="pe_gu1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu1_normal">All Normal</label><button type="button" id="pe_gu1_reset" class="reset nosh_button">Clear</button><br>
-						<div class="pe_template_div">
-							<br><form id="pe_gu1_form" class="pe_template_form ui-widget pure-form"></form>
-						</div>
+						<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+							<form class="pure-form pure-form-stacked">
+								<label for="pe_gu1_template">Choose Template:</label><select id="pe_gu1_template" class="pe_template_choose text"></select><br>
+							</form>
+							<input type="checkbox" id="pe_gu1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu1_normal">All Normal</label><button type="button" id="pe_gu1_reset" class="reset nosh_button">Clear</button><br>
+							<div class="pe_template_div">
+								<br><form id="pe_gu1_form" class="pe_template_form ui-widget pure-form"></form>
+							</div>
+						<?php }?>
 					</div>
 				</div>
 				<h3><a href="#"><span id="pe_gu2_h"></span>Urethra</a></h3>
@@ -615,13 +673,15 @@
 						</form>
 					</div>
 					<div class="pure-u-13-24">
-						<form class="pure-form pure-form-stacked">
-							<label for="pe_gu2_template">Choose Template:</label><select id="pe_gu2_template" class="pe_template_choose text"></select><br>
-						</form>
-						<input type="checkbox" id="pe_gu2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu2_normal">All Normal</label><button type="button" id="pe_gu2_reset" class="reset nosh_button">Clear</button><br>
-						<div class="pe_template_div">
-							<br><form id="pe_gu2_form" class="pe_template_form ui-widget pure-form"></form>
-						</div>
+						<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+							<form class="pure-form pure-form-stacked">
+								<label for="pe_gu2_template">Choose Template:</label><select id="pe_gu2_template" class="pe_template_choose text"></select><br>
+							</form>
+							<input type="checkbox" id="pe_gu2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu2_normal">All Normal</label><button type="button" id="pe_gu2_reset" class="reset nosh_button">Clear</button><br>
+							<div class="pe_template_div">
+								<br><form id="pe_gu2_form" class="pe_template_form ui-widget pure-form"></form>
+							</div>
+						<?php }?>
 					</div>
 				</div>
 				<h3><a href="#"><span id="pe_gu3_h"></span>Bladder</a></h3>
@@ -632,13 +692,15 @@
 						</form>
 					</div>
 					<div class="pure-u-13-24">
-						<form class="pure-form pure-form-stacked">
-							<label for="pe_gu3_template">Choose Template:</label><select id="pe_gu3_template" class="pe_template_choose text"></select><br>
-						</form>
-						<input type="checkbox" id="pe_gu3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu3_normal">All Normal</label><button type="button" id="pe_gu3_reset" class="reset nosh_button">Clear</button><br>
-						<div class="pe_template_div">
-							<br><form id="pe_gu3_form" class="pe_template_form ui-widget pure-form"></form>
-						</div>
+						<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+							<form class="pure-form pure-form-stacked">
+								<label for="pe_gu3_template">Choose Template:</label><select id="pe_gu3_template" class="pe_template_choose text"></select><br>
+							</form>
+							<input type="checkbox" id="pe_gu3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu3_normal">All Normal</label><button type="button" id="pe_gu3_reset" class="reset nosh_button">Clear</button><br>
+							<div class="pe_template_div">
+								<br><form id="pe_gu3_form" class="pe_template_form ui-widget pure-form"></form>
+							</div>
+						<?php }?>
 					</div>
 				</div>
 				<h3><a href="#"><span id="pe_gu4_h"></span>Cervix</a></h3>
@@ -649,13 +711,15 @@
 						</form>
 					</div>
 					<div class="pure-u-13-24">
-						<form class="pure-form pure-form-stacked">
-							<label for="pe_gu4_template">Choose Template:</label><select id="pe_gu4_template" class="pe_template_choose text"></select><br>
-						</form>
-						<input type="checkbox" id="pe_gu4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu4_normal">All Normal</label><button type="button" id="pe_gu4_reset" class="reset nosh_button">Clear</button><br>
-						<div class="pe_template_div">
-							<br><form id="pe_gu4_form" class="pe_template_form ui-widget pure-form"></form>
-						</div>
+						<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+							<form class="pure-form pure-form-stacked">
+								<label for="pe_gu4_template">Choose Template:</label><select id="pe_gu4_template" class="pe_template_choose text"></select><br>
+							</form>
+							<input type="checkbox" id="pe_gu4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu4_normal">All Normal</label><button type="button" id="pe_gu4_reset" class="reset nosh_button">Clear</button><br>
+							<div class="pe_template_div">
+								<br><form id="pe_gu4_form" class="pe_template_form ui-widget pure-form"></form>
+							</div>
+						<?php }?>
 					</div>
 				</div>
 				<h3><a href="#"><span id="pe_gu5_h"></span>Uterus</a></h3>
@@ -666,13 +730,15 @@
 						</form>
 					</div>
 					<div class="pure-u-13-24">
-						<form class="pure-form pure-form-stacked">
-							<label for="pe_gu5_template">Choose Template:</label><select id="pe_gu5_template" class="pe_template_choose text"></select><br>
-						</form>
-						<input type="checkbox" id="pe_gu5_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu5_normal">All Normal</label><button type="button" id="pe_gu5_reset" class="reset nosh_button">Clear</button><br>
-						<div class="pe_template_div">
-							<br><form id="pe_gu5_form" class="pe_template_form ui-widget pure-form"></form>
-						</div>
+						<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+							<form class="pure-form pure-form-stacked">
+								<label for="pe_gu5_template">Choose Template:</label><select id="pe_gu5_template" class="pe_template_choose text"></select><br>
+							</form>
+							<input type="checkbox" id="pe_gu5_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu5_normal">All Normal</label><button type="button" id="pe_gu5_reset" class="reset nosh_button">Clear</button><br>
+							<div class="pe_template_div">
+								<br><form id="pe_gu5_form" class="pe_template_form ui-widget pure-form"></form>
+							</div>
+						<?php }?>
 					</div>
 				</div>
 				<h3><a href="#"><span id="pe_gu6_h"></span>Adnexa</a></h3>
@@ -683,13 +749,15 @@
 						</form>
 					</div>
 					<div class="pure-u-13-24">
-						<form class="pure-form pure-form-stacked">
-							<label for="pe_gu6_template">Choose Template:</label><select id="pe_gu6_template" class="pe_template_choose text"></select><br>
-						</form>
-						<input type="checkbox" id="pe_gu6_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu6_normal">All Normal</label><button type="button" id="pe_gu6_reset" class="reset nosh_button">Clear</button><br>
-						<div class="pe_template_div">
-							<br><form id="pe_gu6_form" class="pe_template_form ui-widget pure-form"></form>
-						</div>
+						<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+							<form class="pure-form pure-form-stacked">
+								<label for="pe_gu6_template">Choose Template:</label><select id="pe_gu6_template" class="pe_template_choose text"></select><br>
+							</form>
+							<input type="checkbox" id="pe_gu6_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu6_normal">All Normal</label><button type="button" id="pe_gu6_reset" class="reset nosh_button">Clear</button><br>
+							<div class="pe_template_div">
+								<br><form id="pe_gu6_form" class="pe_template_form ui-widget pure-form"></form>
+							</div>
+						<?php }?>
 					</div>
 				</div>
 			<?php } else {?>
@@ -701,13 +769,15 @@
 						</form>
 					</div>
 					<div class="pure-u-13-24">
-						<form class="pure-form pure-form-stacked">
-							<label for="pe_gu7_template">Choose Template:</label><select id="pe_gu7_template" class="pe_template_choose text"></select><br>
-						</form>
-						<input type="checkbox" id="pe_gu7_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu7_normal">All Normal</label><button type="button" id="pe_gu7_reset" class="reset nosh_button">Clear</button><br>
-						<div class="pe_template_div">
-							<br><form id="pe_gu7_form" class="pe_template_form ui-widget pure-form"></form>
-						</div>
+						<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+							<form class="pure-form pure-form-stacked">
+								<label for="pe_gu7_template">Choose Template:</label><select id="pe_gu7_template" class="pe_template_choose text"></select><br>
+							</form>
+							<input type="checkbox" id="pe_gu7_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu7_normal">All Normal</label><button type="button" id="pe_gu7_reset" class="reset nosh_button">Clear</button><br>
+							<div class="pe_template_div">
+								<br><form id="pe_gu7_form" class="pe_template_form ui-widget pure-form"></form>
+							</div>
+						<?php }?>
 					</div>
 				</div>
 				<h3><a href="#"><span id="pe_gu8_h"></span>Penis</a></h3>
@@ -718,13 +788,15 @@
 						</form>
 					</div>
 					<div class="pure-u-13-24">
-						<form class="pure-form pure-form-stacked">
-							<label for="pe_gu8_template">Choose Template:</label><select id="pe_gu8_template" class="pe_template_choose text"></select><br>
-						</form>
-						<input type="checkbox" id="pe_gu8_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu8_normal">All Normal</label><button type="button" id="pe_gu8_reset" class="reset nosh_button">Clear</button><br>
-						<div class="pe_template_div">
-							<br><form id="pe_gu8_form" class="pe_template_form ui-widget pure-form"></form>
-						</div>
+						<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+							<form class="pure-form pure-form-stacked">
+								<label for="pe_gu8_template">Choose Template:</label><select id="pe_gu8_template" class="pe_template_choose text"></select><br>
+							</form>
+							<input type="checkbox" id="pe_gu8_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu8_normal">All Normal</label><button type="button" id="pe_gu8_reset" class="reset nosh_button">Clear</button><br>
+							<div class="pe_template_div">
+								<br><form id="pe_gu8_form" class="pe_template_form ui-widget pure-form"></form>
+							</div>
+						<?php }?>
 					</div>
 				</div>
 				<h3><a href="#"><span id="pe_gu9_h"></span>Prostate</a></h3>
@@ -735,13 +807,15 @@
 						</form>
 					</div>
 					<div class="pure-u-13-24">
-						<form class="pure-form pure-form-stacked">
-							<label for="pe_gu9_template">Choose Template:</label><select id="pe_gu9_template" class="pe_template_choose text"></select><br>
-						</form>
-						<input type="checkbox" id="pe_gu9_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu9_normal">All Normal</label><button type="button" id="pe_gu9_reset" class="reset nosh_button">Clear</button><br>
-						<div class="pe_template_div">
-							<br><form id="pe_gu9_form" class="pe_template_form ui-widget pure-form"></form>
-						</div>
+						<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+							<form class="pure-form pure-form-stacked">
+								<label for="pe_gu9_template">Choose Template:</label><select id="pe_gu9_template" class="pe_template_choose text"></select><br>
+							</form>
+							<input type="checkbox" id="pe_gu9_normal" class="all_normal_pe nosh_button" value=""><label for="pe_gu9_normal">All Normal</label><button type="button" id="pe_gu9_reset" class="reset nosh_button">Clear</button><br>
+							<div class="pe_template_div">
+								<br><form id="pe_gu9_form" class="pe_template_form ui-widget pure-form"></form>
+							</div>
+						<?php }?>
 					</div>
 				</div>
 			<?php }?>
@@ -760,13 +834,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_lymph1_template">Choose Template:</label><select id="pe_lymph1_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_lymph1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_lymph1_normal">All Normal</label><button type="button" id="pe_lymph1_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_lymph1_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_lymph1_template">Choose Template:</label><select id="pe_lymph1_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_lymph1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_lymph1_normal">All Normal</label><button type="button" id="pe_lymph1_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_lymph1_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_lymph2_h"></span>Axillae</a></h3>
@@ -777,13 +853,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_lymph2_template">Choose Template:</label><select id="pe_lymph2_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_lymph2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_lymph2_normal">All Normal</label><button type="button" id="pe_lymph2_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_lymph2_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_lymph2_template">Choose Template:</label><select id="pe_lymph2_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_lymph2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_lymph2_normal">All Normal</label><button type="button" id="pe_lymph2_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_lymph2_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_lymph3_h"></span>Groin</a></h3>
@@ -794,13 +872,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_lymph3_template">Choose Template:</label><select id="pe_lymph3_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_lymph3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_lymph3_normal">All Normal</label><button type="button" id="pe_lymph3_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_lymph3_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_lymph3_template">Choose Template:</label><select id="pe_lymph3_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_lymph3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_lymph3_normal">All Normal</label><button type="button" id="pe_lymph3_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_lymph3_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 		</div>
@@ -819,13 +899,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_ms1_template">Choose Template:</label><select id="pe_ms1_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_ms1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms1_normal">All Normal</label><button type="button" id="pe_ms1_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_ms1_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_ms1_template">Choose Template:</label><select id="pe_ms1_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_ms1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms1_normal">All Normal</label><button type="button" id="pe_ms1_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_ms1_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 		<h3><a href="#"><span id="pe_ms2_h"></span>Digits and Nails</a></h3>
@@ -836,13 +918,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_ms2_template">Choose Template:</label><select id="pe_ms2_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_ms2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms2_normal">All Normal</label><button type="button" id="pe_ms2_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_ms2_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_ms2_template">Choose Template:</label><select id="pe_ms2_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_ms2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms2_normal">All Normal</label><button type="button" id="pe_ms2_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_ms2_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 		<h3><a href="#"><span id="pe_ms3_h"></span>Bones, Joints, and Muscles - Shoulder</a></h3>
@@ -853,13 +937,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_ms3_template">Choose Template:</label><select id="pe_ms3_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_ms3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms3_normal">All Normal</label><input type="checkbox" id="pe_ms3_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the shoulders bilaterally."><label for="pe_ms3_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms3_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_ms3_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_ms3_template">Choose Template:</label><select id="pe_ms3_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_ms3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms3_normal">All Normal</label><input type="checkbox" id="pe_ms3_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the shoulders bilaterally."><label for="pe_ms3_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms3_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_ms3_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 		<h3><a href="#"><span id="pe_ms4_h"></span>Bones, Joints, and Muscles - Elbow</a></h3>
@@ -870,13 +956,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_ms4_template">Choose Template:</label><select id="pe_ms4_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_ms4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms4_normal">All Normal</label><input type="checkbox" id="pe_ms4_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the elbows bilaterally."><label for="pe_ms4_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms4_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_ms4_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_ms4_template">Choose Template:</label><select id="pe_ms4_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_ms4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms4_normal">All Normal</label><input type="checkbox" id="pe_ms4_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the elbows bilaterally."><label for="pe_ms4_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms4_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_ms4_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 		<h3><a href="#"><span id="pe_ms5_h"></span>Bones, Joints, and Muscles - Wrist</a></h3>
@@ -887,13 +975,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_ms5_template">Choose Template:</label><select id="pe_ms5_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_ms5_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms5_normal">All Normal</label><input type="checkbox" id="pe_ms5_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the wrists bilaterally."><label for="pe_ms5_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms5_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_ms5_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_ms5_template">Choose Template:</label><select id="pe_ms5_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_ms5_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms5_normal">All Normal</label><input type="checkbox" id="pe_ms5_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the wrists bilaterally."><label for="pe_ms5_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms5_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_ms5_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 		<h3><a href="#"><span id="pe_ms6_h"></span>Bones, Joints, and Muscles - Hand</a></h3>
@@ -904,13 +994,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_ms6_template">Choose Template:</label><select id="pe_ms6_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_ms6_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms6_normal">All Normal</label><input type="checkbox" id="pe_ms6_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the fingers and hands bilaterally."><label for="pe_ms6_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms6_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_ms6_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_ms6_template">Choose Template:</label><select id="pe_ms6_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_ms6_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms6_normal">All Normal</label><input type="checkbox" id="pe_ms6_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the fingers and hands bilaterally."><label for="pe_ms6_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms6_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_ms6_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 		<h3><a href="#"><span id="pe_ms7_h"></span>Bones, Joints, and Muscles - Hip</a></h3>
@@ -921,13 +1013,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_ms7_template">Choose Template:</label><select id="pe_ms7_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_ms7_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms7_normal">All Normal</label><input type="checkbox" id="pe_ms7_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the hips bilaterally."><label for="pe_ms7_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms7_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_ms7_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_ms7_template">Choose Template:</label><select id="pe_ms7_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_ms7_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms7_normal">All Normal</label><input type="checkbox" id="pe_ms7_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the hips bilaterally."><label for="pe_ms7_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms7_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_ms7_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 		<h3><a href="#"><span id="pe_ms8_h"></span>Bones, Joints, and Muscles - Knee</a></h3>
@@ -938,13 +1032,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_ms8_template">Choose Template:</label><select id="pe_ms8_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_ms8_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms8_normal">All Normal</label><input type="checkbox" id="pe_ms8_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the knees bilaterally."><label for="pe_ms8_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms8_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_ms8_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_ms8_template">Choose Template:</label><select id="pe_ms8_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_ms8_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms8_normal">All Normal</label><input type="checkbox" id="pe_ms8_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the knees bilaterally."><label for="pe_ms8_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms8_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_ms8_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 		<h3><a href="#"><span id="pe_ms9_h"></span>Bones, Joints, and Muscles - Ankle</a></h3>
@@ -955,13 +1051,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_ms9_template">Choose Template:</label><select id="pe_ms9_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_ms9_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms9_normal">All Normal</label><input type="checkbox" id="pe_ms9_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the ankles bilaterally."><label for="pe_ms9_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms9_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_ms9_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_ms9_template">Choose Template:</label><select id="pe_ms9_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_ms9_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms9_normal">All Normal</label><input type="checkbox" id="pe_ms9_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the ankles bilaterally."><label for="pe_ms9_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms9_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_ms9_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 		<h3><a href="#"><span id="pe_ms10_h"></span>Bones, Joints, and Muscles - Foot</a></h3>
@@ -972,13 +1070,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_ms10_template">Choose Template:</label><select id="pe_ms10_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_ms10_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms10_normal">All Normal</label><input type="checkbox" id="pe_ms10_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the toes and feet bilaterally."><label for="pe_ms10_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms10_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_ms10_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_ms10_template">Choose Template:</label><select id="pe_ms10_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_ms10_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms10_normal">All Normal</label><input type="checkbox" id="pe_ms10_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the toes and feet bilaterally."><label for="pe_ms10_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms10_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_ms10_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 		<h3><a href="#"><span id="pe_ms11_h"></span>Bones, Joints, and Muscles - Cervical Spine</a></h3>
@@ -989,13 +1089,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_ms11_template">Choose Template:</label><select id="pe_ms11_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_ms11_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms11_normal">All Normal</label><input type="checkbox" id="pe_ms11_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the cervical spine."><label for="pe_ms11_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms11_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_ms11_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_ms11_template">Choose Template:</label><select id="pe_ms11_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_ms11_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms11_normal">All Normal</label><input type="checkbox" id="pe_ms11_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the cervical spine."><label for="pe_ms11_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms11_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_ms11_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 		<h3><a href="#"><span id="pe_ms12_h"></span>Bones, Joints, and Muscles - Thoracic and Lumbar Spine</a></h3>
@@ -1006,13 +1108,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_ms12_template">Choose Template:</label><select id="pe_ms12_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_ms12_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms12_normal">All Normal</label><input type="checkbox" id="pe_ms12_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the thoracic and lumbar spine."><label for="pe_ms12_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms12_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_ms12_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_ms12_template">Choose Template:</label><select id="pe_ms12_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_ms12_normal" class="all_normal_pe nosh_button" value=""><label for="pe_ms12_normal">All Normal</label><input type="checkbox" id="pe_ms12_normal1" class="all_normal2_pe nosh_button" value="Full range of motion of the thoracic and lumbar spine."><label for="pe_ms12_normal1">All Normal Range of Motion</label><button type="button" id="pe_ms12_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_ms12_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
@@ -1030,13 +1134,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_neuro1_template">Choose Template:</label><select id="pe_neuro1_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_neuro1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_neuro1_normal">All Normal</label><button type="button" id="pe_neuro1_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_neuro1_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_neuro1_template">Choose Template:</label><select id="pe_neuro1_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_neuro1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_neuro1_normal">All Normal</label><button type="button" id="pe_neuro1_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_neuro1_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 		<h3><a href="#"><span id="pe_neuro2_h"></span>Deep Tendon Reflexes</a></h3>
@@ -1047,13 +1153,15 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_neuro2_template">Choose Template:</label><select id="pe_neuro2_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_neuro2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_neuro2_normal">All Normal</label><input type="checkbox" id="pe_neuro2_normal1" class="all_normal2_pe nosh_button" value="Biceps, Patellar, and Achillies deep tendon reflexes are equal bilaterally."><label for="pe_neuro2_normal1">Equal and Bilateral</label><button type="button" id="pe_neuro2_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_neuro2_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_neuro2_template">Choose Template:</label><select id="pe_neuro2_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_neuro2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_neuro2_normal">All Normal</label><input type="checkbox" id="pe_neuro2_normal1" class="all_normal2_pe nosh_button" value="Biceps, Patellar, and Achillies deep tendon reflexes are equal bilaterally."><label for="pe_neuro2_normal1">Equal and Bilateral</label><button type="button" id="pe_neuro2_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_neuro2_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 		<h3><a href="#"><span id="pe_neuro3_h"></span>Sensation and Motor</a></h3>
@@ -1064,18 +1172,20 @@
 				</form>
 			</div>
 			<div class="pure-u-13-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="pe_neuro3_template">Choose Template:</label><select id="pe_neuro3_template" class="pe_template_choose text"></select><br>
-				</form>
-				<input type="checkbox" id="pe_neuro3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_neuro3_normal">All Normal</label><button type="button" id="pe_neuro3_reset" class="reset nosh_button">Clear</button><br>
-				<div class="pe_template_div">
-					<br><form id="pe_neuro3_form" class="pe_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="pe_neuro3_template">Choose Template:</label><select id="pe_neuro3_template" class="pe_template_choose text"></select><br>
+					</form>
+					<input type="checkbox" id="pe_neuro3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_neuro3_normal">All Normal</label><button type="button" id="pe_neuro3_reset" class="reset nosh_button">Clear</button><br>
+					<div class="pe_template_div">
+						<br><form id="pe_neuro3_form" class="pe_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
 </div>
-<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardmedical1') {?>
 	<div id="pe_psych_dialog" class="pe_dialog" title="Psychological">
 		<input type="checkbox" id="pe_psych_normal" class="all_normal1_pe nosh_button" value=""><label for="pe_psych_normal">All Normal</label> 
 		<input type="checkbox" id="pe_psych_normal1" class="all_normal3_pe nosh_button" value=""><label for="pe_psych_normal1">All Normal for All Templates</label>
@@ -1089,13 +1199,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_psych1_template">Choose Template:</label><select id="pe_psych1_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_psych1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_psych1_normal">All Normal</label><button type="button" id="pe_psych1_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_psych1_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_psych1_template">Choose Template:</label><select id="pe_psych1_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_psych1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_psych1_normal">All Normal</label><button type="button" id="pe_psych1_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_psych1_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_psych2_h"></span>Orientation</a></h3>
@@ -1106,13 +1218,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_psych2_template">Choose Template:</label><select id="pe_psych2_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_psych2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_psych2_normal">All Normal</label><button type="button" id="pe_psych2_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_psych2_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_psych2_template">Choose Template:</label><select id="pe_psych2_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_psych2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_psych2_normal">All Normal</label><button type="button" id="pe_psych2_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_psych2_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_psych3_h"></span>Memory</a></h3>
@@ -1123,13 +1237,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_psych3_template">Choose Template:</label><select id="pe_psych3_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_psych3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_psych3_normal">All Normal</label><button type="button" id="pe_psych3_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_psych3_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_psych3_template">Choose Template:</label><select id="pe_psych3_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_psych3_normal" class="all_normal_pe nosh_button" value=""><label for="pe_psych3_normal">All Normal</label><button type="button" id="pe_psych3_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_psych3_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_psych4_h"></span>Mood and Affect</a></h3>
@@ -1140,13 +1256,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_psych4_template">Choose Template:</label><select id="pe_psych4_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_psych4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_psych4_normal">All Normal</label><button type="button" id="pe_psych4_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_psych4_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_psych4_template">Choose Template:</label><select id="pe_psych4_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_psych4_normal" class="all_normal_pe nosh_button" value=""><label for="pe_psych4_normal">All Normal</label><button type="button" id="pe_psych4_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_psych4_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 		</div>
@@ -1164,13 +1282,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_skin1_template">Choose Template:</label><select id="pe_skin1_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_skin1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_skin1_normal">All Normal</label><button type="button" id="pe_skin1_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_skin1_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_skin1_template">Choose Template:</label><select id="pe_skin1_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_skin1_normal" class="all_normal_pe nosh_button" value=""><label for="pe_skin1_normal">All Normal</label><button type="button" id="pe_skin1_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_skin1_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 			<h3><a href="#"><span id="pe_skin2_h"></span>Palpation</a></h3>
@@ -1181,13 +1301,15 @@
 					</form>
 				</div>
 				<div class="pure-u-13-24">
-					<form class="pure-form pure-form-stacked">
-						<label for="pe_skin2_template">Choose Template:</label><select id="pe_skin2_template" class="pe_template_choose text"></select><br>
-					</form>
-					<input type="checkbox" id="pe_skin2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_skin2_normal">All Normal</label><button type="button" id="pe_skin2_reset" class="reset nosh_button">Clear</button><br>
-					<div class="pe_template_div">
-						<br><form id="pe_skin2_form" class="pe_template_form ui-widget pure-form"></form>
-					</div>
+					<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+						<form class="pure-form pure-form-stacked">
+							<label for="pe_skin2_template">Choose Template:</label><select id="pe_skin2_template" class="pe_template_choose text"></select><br>
+						</form>
+						<input type="checkbox" id="pe_skin2_normal" class="all_normal_pe nosh_button" value=""><label for="pe_skin2_normal">All Normal</label><button type="button" id="pe_skin2_reset" class="reset nosh_button">Clear</button><br>
+						<div class="pe_template_div">
+							<br><form id="pe_skin2_form" class="pe_template_form ui-widget pure-form"></form>
+						</div>
+					<?php }?>
 				</div>
 			</div>
 		</div>

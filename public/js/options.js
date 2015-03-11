@@ -74,6 +74,9 @@ $(document).ready(function() {
 				
 				$("#textdump_specific_name").val(currentWord);
 				$("#textdump_specific_origin").val('configure');
+				$("#textdump_specific_save").hide();
+				$("#textdump_specific_cancel").hide();
+				$("#textdump_delimiter_div").hide();
 				$("#textdump_specific").dialog("option", "position", { my: 'center', at: 'center', of: '#maincontent' });
 				$("#textdump_specific").dialog('open');
 			}
@@ -459,11 +462,13 @@ $(document).ready(function() {
 			url:"ajaxdashboard/textdump-list",
 			datatype: "json",
 			mtype: "POST",
-			colNames:['ID','Target Field','Group'],
+			colNames:['ID','Target Field','Group','Age','Gender'],
 			colModel:[
 				{name:'template_id',index:'template_id',width:1,hidden:true},
 				{name:'template_name',index:'template_name',width:200,formatter:targetname,unformat:untargetname},
-				{name:'group',index:'group',width:400}
+				{name:'group',index:'group',width:400},
+				{name:'age',index:'age',width:1,hidden:true},
+				{name:'sex',index:'sex',width:1,hidden:true}
 			],
 			rowNum:10,
 			rowList:[10,20,30],
@@ -577,6 +582,26 @@ $(document).ready(function() {
 			height: "100%",
 			jsonReader: { repeatitems : false, id: "0" }
 		}).navGrid('#textdump_specific_list_pager',{edit:false,add:false,del:false});
+		jQuery("#encounter_templates_list").jqGrid({
+			url:"ajaxdashboard/encounter-templates",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['Template Name','Encounter Type'],
+			colModel:[
+				{name:'template_name',index:'template_name',width:300},
+				{name:'scoring',index:'scoring',width:300,formatter:typelabel}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#encounter_templates_list_pager'),
+			sortname: 'template_name',
+			viewrecords: true,
+			sortorder: "asc",
+			caption:"Encounter Templates",
+			emptyrecords:"No encounter templates",
+			height: "100%",
+			jsonReader: { repeatitems : false, id: "0" }
+		}).navGrid('#encounter_templates_list_pager',{edit:false,add:false,del:false});
 		$('#dialog_load').dialog('close');
 		$("#configuration_dialog").dialog('open');
 	});
@@ -1866,6 +1891,10 @@ $(document).ready(function() {
 			reload_grid("hpi_forms_list");
 			reload_grid("ros_forms_list");
 			reload_grid("pe_forms_list");
+			reload_grid("patient_forms_list");
+			reload_grid("situation_forms_list");
+			reload_grid("textdump_list");
+			reload_grid("textdump_specific_list");
 		}
 	});
 	$("#configuration_textdump_group_dialog").dialog({ 
@@ -1984,7 +2013,7 @@ $(document).ready(function() {
 					url: "ajaxsearch/deletetextdump/" + id,
 					success: function(data){
 						$.jGrowl(data);
-						jQuery("#textdump_list").trigger("reloadGrid");
+						reload_grid("textdump_list");
 					}
 				});
 			}
@@ -2082,7 +2111,7 @@ $(document).ready(function() {
 					url: "ajaxsearch/deletetextdump-specific-group/" + id,
 					success: function(data){
 						$.jGrowl(data);
-						jQuery("#textdump_specific_list").trigger("reloadGrid");
+						reload_grid("textdump_specific_list");
 					}
 				});
 			}
@@ -2094,9 +2123,60 @@ $(document).ready(function() {
 		var item = jQuery("#textdump_specific_list").getGridParam('selrow');
 		if(item){
 			var id = $("#textdump_specific_list").getCell(item,'template_name');
-			window.open("texttemplatedownloadspecific/"+id);
+			window.open("textmacrodownload/"+id);
 		} else {
 			$.jGrowl("Please select group to export!");
+		}
+	});
+	$("#add_encounter_templates").click(function(){
+		$.ajax({
+			type: "POST",
+			url: "ajaxsearch/add-encounter-templates-details",
+			dataType: "json",
+			success: function(data){
+				$("#template_encounter_edit_div").html(data.html);
+				loadbuttons();
+				$("#template_encounter_edit_dialog").dialog("option", "title", "Add Encounter Template");
+				$("#template_encounter_edit_dialog").dialog('open');
+			}
+		});
+	});
+	$("#edit_encounter_templates").click(function(){
+		var item = jQuery("#encounter_templates_list").getGridParam('selrow');
+		if(item){ 
+			var a = jQuery("#encounter_templates_list").getCell(item,"template_name");
+			$.ajax({
+				type: "POST",
+				url: "ajaxsearch/get-encounter-templates-details",
+				data: 'template_name='+a,
+				dataType: "json",
+				success: function(data){
+					$("#template_encounter_edit_div").html(data.html);
+					loadbuttons();
+					$("#template_encounter_edit_dialog").dialog("option", "title", "Edit Encounter Template");
+					$("#template_encounter_edit_dialog").dialog('open');
+				}
+			});
+		} else {
+			$.jGrowl("Please select group to edit!");
+		}
+	});
+	$("#delete_encounter_templates").click(function(){
+		var item = jQuery("#encounter_templates_list").getGridParam('selrow');
+		if(item){
+			if(confirm('Are you sure you want to delete this macro?')){
+				var id = $("#encounter_templates_list").getCell(item,'template_name');
+				$.ajax({
+					type: "POST",
+					url: "ajaxsearch/delete-encounter-template/" + id,
+					success: function(data){
+						$.jGrowl(data);
+						reload_grid("encounter_templates_list");
+					}
+				});
+			}
+		} else {
+			$.jGrowl("Please select group to delete!");
 		}
 	});
 });

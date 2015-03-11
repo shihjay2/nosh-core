@@ -1,21 +1,4 @@
 $(document).ready(function() {
-	function typelabel (cellvalue, options, rowObject){
-		if (cellvalue == 'standardmedical') {
-			return 'Standard Medical Visit';
-		}
-		if (cellvalue == 'clinicalsupport') {
-			return 'Clinical Support Visit';
-		}
-		if (cellvalue == 'standardpsych') {
-			return 'Annual Psychiatric Evaluation';
-		}
-		if (cellvalue == 'standardpsych1') {
-			return 'Psychiatric Encounter';
-		}
-		if (cellvalue == 'standardmtm') {
-			return 'MTM Encounter';
-		}
-	}
 	$("#encounter_view_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 

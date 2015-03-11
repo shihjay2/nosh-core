@@ -2614,11 +2614,72 @@ class AjaxSearchController extends BaseController {
 		echo json_encode($data);
 	}
 	
+	public function postRestricttextgroupGet($template_id)
+	{
+		$query = DB::table('templates')->where('template_id', '=', $template_id)->first();
+		$data = array(
+			'age' => $query->age,
+			'sex' => $query->sex
+		);
+		echo json_encode($data);
+	}
+	
+	public function postRestricttextgroupSave()
+	{
+		$row = DB::table('templates')->where('template_id', '=', Input::get('template_id'))->first();
+		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $row->template_name)->where('group', '=', $row->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->get();
+		$data = array(
+			'age' => Input::get('age'),
+			'sex' => Input::get('sex')
+		);
+		if ($query) {
+			foreach ($query as $row1) {
+				DB::table('templates')->where('template_id', '=', $row1->template_id)->update($data);
+				$this->audit('Update');
+			}
+		}
+		DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($data);
+		$this->audit('Update');
+		echo "Group updated!";
+	}
+	
 	public function postTextdumpGroup($target)
 	{
 		$arr = '';
-		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('practice_id', '=', Session::get('practice_id'))->where('array', '=', '')->get();
-		foreach ($query as $row) {
+		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('practice_id', '=', Session::get('practice_id'))->where('array', '=', '');
+		if (Session::has('gender')) {
+			if (Session::get('gender') == 'male') {
+				$query->where(function($query_array1) {
+					$query_array1->where('sex', '=', 'm')
+						->orWhere('sex', '=', '')
+						->orWhereNull('sex');
+				});
+			} else {
+				$query->where(function($query_array1) {
+					$query_array1->where('sex', '=', 'f')
+						->orWhere('sex', '=', '')
+						->orWhereNull('sex');
+				});
+			}
+		}
+		if (Session::has('agealldays')) {
+			$age = Session::get('agealldays');
+			if ($age <= 6574.5) {
+				$query->where(function($query_array1) {
+					$query_array1->where('age', '=', 'child')
+						->orWhere('age', '=', '')
+						->orWhereNull('age');
+				});
+			} else {
+				$query->where(function($query_array1) {
+					$query_array1->where('age', '=', 'adult')
+						->orWhere('age', '=', '')
+						->orWhereNull('age');
+				});
+			}
+		}
+		$result = $query->get();
+		foreach ($result as $row) {
 			$norm = 'No normal values set.';
 			$query1 = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('group', '=', $row->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->where('default', '=', 'normal')->get();
 			if ($query1) {
@@ -2632,7 +2693,7 @@ class AjaxSearchController extends BaseController {
 					$i++;
 				}
 			}
-			$arr .= '<div id="textgroupdiv_' . $row->template_id . '" style="width:99%" class="pure-g"><div class="pure-u-3-4"><input type="checkbox" id="normaltextgroup_' . $row->template_id . '" class="normaltextgroup" value="' . $norm . '"/><label for="normaltextgroup_' . $row->template_id . '">Normal</label> <b id="edittextgroup_' . $row->template_id . '_b" class="textdump_group_item textdump_group_item_text" data-type="text" data-pk="' . $row->template_id . '" data-name="group" data-url="ajaxsearch/edit-text-template-group" data-title="Group">' . $row->group . '</b></div><div class="pure-u-1-4" style="overflow:hidden"><div style="width:200px;"><button type="button" id="edittextgroup_' . $row->template_id . '" class="edittextgroup">Edit</button><button type="button" id="deletetextgroup_' . $row->template_id . '" class="deletetextgroup">Remove</button></div></div><hr class="ui-state-default"/></div>';
+			$arr .= '<div id="textgroupdiv_' . $row->template_id . '" style="width:99%" class="pure-g"><div class="pure-u-2-3"><input type="checkbox" id="normaltextgroup_' . $row->template_id . '" class="normaltextgroup" value="' . $norm . '"/><label for="normaltextgroup_' . $row->template_id . '">Normal</label> <b id="edittextgroup_' . $row->template_id . '_b" class="textdump_group_item textdump_group_item_text" data-type="text" data-pk="' . $row->template_id . '" data-name="group" data-url="ajaxsearch/edit-text-template-group" data-title="Group">' . $row->group . '</b></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:200px;"><button type="button" id="edittextgroup_' . $row->template_id . '" class="edittextgroup">Edit</button><button type="button" id="deletetextgroup_' . $row->template_id . '" class="deletetextgroup">Remove</button><button type="button" id="restricttextgroup_' . $row->template_id . '" class="restricttextgroup">Restrictions</button></div></div><hr class="ui-state-default"/></div>';
 		}
 		echo $arr;
 	}
@@ -2640,7 +2701,7 @@ class AjaxSearchController extends BaseController {
 	public function postTextdump($target)
 	{
 		$arr = '';
-		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('group', '=', Input::get('group'))->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->get();
+		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('group', '=', Input::get('group'))->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->orderBy('array', 'asc')->get();
 		foreach ($query as $row) {
 			if ($row->default == 'normal') {
 				$arr .= '<div id="texttemplatediv_' . $row->template_id . '" style="width:99%" class="pure-g"><div class="textdump_item pure-u-2-3"><span id="edittexttemplate_' . $row->template_id . '_span" class="textdump_item_text" data-type="text" data-pk="' . $row->template_id . '" data-name="array" data-url="ajaxsearch/edit-text-template" data-title="Item">' . $row->array . '</span></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:400px;"><input type="checkbox" id="normaltexttemplate_' . $row->template_id . '" class="normaltexttemplate" value="normal" checked><label for="normaltexttemplate_' . $row->template_id . '">Mark as Default Normal</label><button type="button" id="edittexttemplate_' . $row->template_id . '" class="edittexttemplate">Edit</button><button type="button" id="deletetexttemplate_' . $row->template_id . '" class="deletetexttemplate">Remove</button></div></div><hr class="ui-state-default"/></div>';
@@ -2654,7 +2715,7 @@ class AjaxSearchController extends BaseController {
 	public function postTextdumpSpecific($target)
 	{
 		$arr = '';
-		$query = DB::table('templates')->where('category', '=', 'specific')->where('template_name', '=', $target)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->get();
+		$query = DB::table('templates')->where('category', '=', 'specific')->where('template_name', '=', $target)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->orderBy('array', 'asc')->get();
 		foreach ($query as $row) {
 			if ($row->default == 'default') {
 				$arr .= '<div id="texttemplatespecificdiv_' . $row->template_id . '" style="width:99%" class="pure-g"><div class="textdump_item_specific pure-u-2-3"><span id="edittexttemplatespecific_' . $row->template_id . '_span" class="textdump_item_specific_text" data-type="text" data-pk="' . $row->template_id . '" data-name="array" data-url="ajaxsearch/edit-text-template-specific" data-title="Item">' . $row->array . '</span></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:400px;"></div></div><hr class="ui-state-default"/></div>';
@@ -2995,5 +3056,189 @@ class AjaxSearchController extends BaseController {
 			}
 		}
 		echo json_encode($data);
+	}
+	
+	public function postAddEncounterTemplatesDetails()
+	{
+		$template1 = $this->encounter_template_names_array();
+		if (Session::has('encounter_template')) {
+			$template_value = Session::get('encounter_template');
+		} else {
+			$template_value = null;
+		}
+		$data['html'] = '<input type="hidden" name="old_template_name" value="">';
+		$data['html'] .= '<div class="pure-u-1"><label for="encounter_template_value">Encounter Template</label>';
+		$data['html'] .= Form::select('encounter_template', $template1, $template_value, array('id'=>'template_encounter_edit_dialog_encounter_template','class'=>'text'));
+		$data['html'] .= '</div>';
+		$data['html'] .= '<div class="pure-u-2-3"><label for="encounter_template_name_text">Template Name</label><input type="text" id="encounter_template_name_text" name="template_name" style="width:95%" value="" required/></div>';
+		$data['html'] .= '<div class="pure-u-1-3"><br><button type="button" id="add_encounter_template_field" class="nosh_button_add">Add Field</button></div>';
+		$data['html'] .= '<div class="pure-u-1"><br></div>';
+		$data['html'] .= '<div class="pure-u-1-3"><strong>Encounter Field</strong></div><div class="pure-u-1-3"><strong>Text Template Normal Group</strong></div><div id="encounter_template_grid_label" class="pure-u-1-3"></div>';
+		echo json_encode($data);
+	}
+	
+	public function postGetEncounterTemplatesDetails()
+	{
+		$title = DB::table('templates')
+			->where('category', '=', 'encounter_templates')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->where('array', '=', '')
+			->where('template_name', '=', Input::get('template_name'))
+			->first();
+		$query = DB::table('templates')
+			->where('category', '=', 'encounter_templates')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->where('array', '!=', '')
+			->where('template_name', '=', Input::get('template_name'))
+			->get();
+		$data = array();
+		$data['response'] = false;
+		$template = $this->encounter_template_array();
+		$template1 = $this->encounter_template_names_array();
+		if ($query) {
+			$i = 0;
+			$data['response'] = true;
+			$data['html'] = '<input type="hidden" name="old_template_name" value="' . Input::get('template_name') . '">';
+			$data['html'] .= '<div class="pure-u-1"><label for="encounter_template_value">Encounter Template</label>';
+			$data['html'] .= Form::select('encounter_template', $template1, $title->scoring, array('id'=>'template_encounter_edit_dialog_encounter_template','class'=>'text'));
+			$data['html'] .= '</div>';
+			$data['html'] .= '<div class="pure-u-2-3"><label for="encounter_template_name_text">Template Name</label><input type="text" id="encounter_template_name_text" name="template_name" value="' . Input::get('template_name') .'" style="width:95%" required/></div>';
+			$data['html'] .= '<div class="pure-u-1-3"><br><button type="button" id="add_encounter_template_field" class="nosh_button_add">Add Field</button></div>';
+			$data['html'] .= '<div class="pure-u-1"><br></div>';
+			$data['html'] .= '<div class="pure-u-1-3"><strong>Encounter Field</strong></div><div class="pure-u-1-3"><strong>Text Template Normal Group</strong></div><div id="encounter_template_grid_label" class="pure-u-1-3"></div>';
+			foreach ($query as $row) {
+				$id = 'encounter_template_group_id_' . $i;
+				$id1 = 'encounter_template_array_id_' . $i;
+				$template_array = array();
+				$encounter_template = $row->scoring;
+				$query1 = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $row->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '=', '')->get();
+				foreach ($query1 as $row1) {
+					$query2 = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $row->group)->where('group', '=', $row1->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->where('default', '=', 'normal')->get();
+					if ($query2) {
+						$key = $row1->group;
+						$template_array[$key] = $key;
+					}
+				}
+				$data['html'] .= '<div id="group_encounter_template_div_' . $id . '" class="pure-u-1-3">';
+				$data['html'] .= Form::select('group[]', $template[$encounter_template], $row->group, array('id'=>$id,'class'=>'text encounter_template_group_group','style'=>'width:95%'));
+				$data['html'] .= '</div><div id="array_encounter_template_div_' . $id . '" class="pure-u-1-3">';
+				$data['html'] .= Form::select('array[]', $template_array, $row->array, array('id'=>$id1,'class'=>'text','style'=>'width:95%'));
+				$data['html'] .= '</div><div id="remove_encounter_template_div_' . $id . '"class="pure-u-1-3"><button type="button" id="remove_encounter_template_field_"' . $id . '" class="remove_encounter_template_field nosh_button_cancel">Remove Field</button></div>';
+				$i++;
+			}
+		}
+		echo json_encode($data);
+	}
+	
+	public function postGetTemplateNormalOptions($target)
+	{
+		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->where('default', '=', 'normal')->select('group')->distinct()->get();
+		$data = array();
+		if ($query) {
+			foreach ($query as $row) {
+				$group = $row->group;
+				$data[$group] = $group;
+			}
+		}
+		echo json_encode($data);
+	}
+	
+	public function postGetTemplateFields($encounter_template)
+	{
+		$template = $this->encounter_template_array();
+		echo json_encode($template[$encounter_template]);
+	}
+	
+	public function postSaveEncounterTemplates()
+	{
+		$query_check = DB::table('templates')
+			->where('template_name', '=', Input::get('template_name'))
+			->where('category', '=', 'encounter_templates')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->where('array', '=', '')
+			->first();
+		if (Input::get('old_template_name') == '' && $query_check) {
+			echo 'There is already a template with the same name!';
+		} else { 
+			$group = Input::get('group');
+			$array = Input::get('array');
+			$data = array(
+				'template_name' => Input::get('template_name')
+			);
+			$query = DB::table('templates')
+				->where('template_name', '=', Input::get('old_template_name'))
+				->where('category', '=', 'encounter_templates')
+				->where('practice_id', '=', Session::get('practice_id'))
+				->where('array', '=', '')
+				->first();
+			if ($query) {
+				DB::table('templates')
+					->where('template_name', '=', Input::get('old_template_name'))
+					->where('category', '=', 'encounter_templates')
+					->where('practice_id', '=', Session::get('practice_id'))
+					->where('array', '!=', '')
+					->delete();
+				$this->audit('Delete');
+				DB::table('templates')
+					->where('template_name', '=', Input::get('old_template_name'))
+					->where('category', '=', 'encounter_templates')
+					->where('practice_id', '=', Session::get('practice_id'))
+					->where('array', '=', '')
+					->update($data);
+				$this->audit('Update');
+			} else {
+				$data1 = array(
+					'template_name' => Input::get('template_name'),
+					'category' => 'encounter_templates',
+					'practice_id' => Session::get('practice_id'),
+					'scoring' => Input::get('encounter_template'),
+					'array' => ''
+				);
+				DB::table('templates')->insert($data1);
+				$this->audit('Add');
+			}
+			for($i = 0; $i<count($group); $i++) {
+				$data2 = array(
+					'template_name' => Input::get('template_name'),
+					'category' => 'encounter_templates',
+					'group' => $group[$i],
+					'array' => $array[$i],
+					'practice_id' => Session::get('practice_id'),
+					'scoring' => Input::get('encounter_template')
+				);
+				DB::table('templates')->insert($data2);
+				$this->audit('Add');
+			}
+			echo "Normal Encounter Template Saved!";
+		}
+	}
+	
+	public function postDeleteEncounterTemplate($template_name)
+	{
+		$query = DB::table('templates')
+			->where('template_name', '=', $template_name)
+			->where('category', '=', 'encounter_templates')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->where('array', '=', '')
+			->first();
+		if ($query) {
+			if ($query) {
+				DB::table('templates')
+					->where('template_name', '=', $template_name)
+					->where('category', '=', 'encounter_templates')
+					->where('practice_id', '=', Session::get('practice_id'))
+					->where('array', '!=', '')
+					->delete();
+				$this->audit('Delete');
+				DB::table('templates')
+					->where('template_name', '=', $template_name)
+					->where('category', '=', 'encounter_templates')
+					->where('practice_id', '=', Session::get('practice_id'))
+					->where('array', '=', '')
+					->delete();
+				$this->audit('Delete');
+			}
+		}
+		echo 'Encounter template ' . $template_name . ' deleted!';
 	}
 }

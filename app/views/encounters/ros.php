@@ -2,7 +2,7 @@
 <form id="encounters_ros">
 	<button type="button" id="ros_entire_normal" class="nosh_button">All Normal</button><br><br>
 	<div class="pure-g">
-		<?php if (Session::get('encounter_template') == 'standardmedical') {?>
+		<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardmedical1') {?>
 			<div class="pure-u-1-2">
 				<span id="button_ros_gen_status" class="ros_tooltip"></span>
 				<button type="button" id="button_ros_gen" class="nosh_button ros_menu_button">General</button><br><br>
@@ -97,7 +97,7 @@
 		<?php }?>
 	</div>
 </form>
-<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardmedical1' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
 	<div id="ros_gen_dialog" title="General" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
@@ -107,13 +107,15 @@
 				<br><button type="button" id="ros_gen_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_gen_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_gen_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_gen_template">Choose Template:</label><select id="ros_gen_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_gen_normal" class="all_normal nosh_button" value=""><label for="ros_gen_normal">All Normal</label> <input type="checkbox" id="ros_gen_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_gen_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_gen_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_gen_template">Choose Template:</label><select id="ros_gen_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_gen_normal" class="all_normal nosh_button" value=""><label for="ros_gen_normal">All Normal</label> <input type="checkbox" id="ros_gen_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_gen_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_gen_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
@@ -126,13 +128,15 @@
 				<br><button type="button" id="ros_eye_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_eye_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_eye_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_eye_template">Choose Template:</label><select id="ros_eye_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_eye_normal" class="all_normal nosh_button" value=""><label for="ros_eye_normal">All Normal</label> <input type="checkbox" id="ros_eye_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_eye_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_eye_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_eye_template">Choose Template:</label><select id="ros_eye_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_eye_normal" class="all_normal nosh_button" value=""><label for="ros_eye_normal">All Normal</label> <input type="checkbox" id="ros_eye_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_eye_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_eye_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
@@ -145,13 +149,15 @@
 				<br><button type="button" id="ros_ent_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_ent_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_ent_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_ent_template">Choose Template:</label><select id="ros_ent_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_ent_normal" class="all_normal nosh_button" value=""><label for="ros_ent_normal">All Normal</label> <input type="checkbox" id="ros_ent_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_ent_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_ent_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_ent_template">Choose Template:</label><select id="ros_ent_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_ent_normal" class="all_normal nosh_button" value=""><label for="ros_ent_normal">All Normal</label> <input type="checkbox" id="ros_ent_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_ent_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_ent_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
@@ -164,13 +170,15 @@
 				<br><button type="button" id="ros_resp_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_resp_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_resp_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_resp_template">Choose Template:</label><select id="ros_resp_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_resp_normal" class="all_normal nosh_button" value=""><label for="ros_resp_normal">All Normal</label> <input type="checkbox" id="ros_resp_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_resp_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_resp_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_resp_template">Choose Template:</label><select id="ros_resp_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_resp_normal" class="all_normal nosh_button" value=""><label for="ros_resp_normal">All Normal</label> <input type="checkbox" id="ros_resp_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_resp_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_resp_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
@@ -183,13 +191,15 @@
 				<br><button type="button" id="ros_cv_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_cv_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_cv_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_cv_template">Choose Template:</label><select id="ros_cv_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_cv_normal" class="all_normal nosh_button" value=""><label for="ros_cv_normal">All Normal</label> <input type="checkbox" id="ros_cv_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_cv_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_cv_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_cv_template">Choose Template:</label><select id="ros_cv_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_cv_normal" class="all_normal nosh_button" value=""><label for="ros_cv_normal">All Normal</label> <input type="checkbox" id="ros_cv_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_cv_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_cv_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 			
 		</div>
@@ -203,13 +213,15 @@
 				<br><button type="button" id="ros_gi_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_gi_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_gi_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_gi_template">Choose Template:</label><select id="ros_gi_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_gi_normal" class="all_normal nosh_button" value=""><label for="ros_gi_normal">All Normal</label> <input type="checkbox" id="ros_gi_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_gi_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_gi_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_gi_template">Choose Template:</label><select id="ros_gi_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_gi_normal" class="all_normal nosh_button" value=""><label for="ros_gi_normal">All Normal</label> <input type="checkbox" id="ros_gi_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_gi_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_gi_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
@@ -222,13 +234,15 @@
 				<br><button type="button" id="ros_gu_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_gu_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_gu_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_gu_template">Choose Template:</label><select id="ros_gu_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_gu_normal" class="all_normal nosh_button" value=""><label for="ros_gu_normal">All Normal</label> <input type="checkbox" id="ros_gu_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_gu_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_gu_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_gu_template">Choose Template:</label><select id="ros_gu_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_gu_normal" class="all_normal nosh_button" value=""><label for="ros_gu_normal">All Normal</label> <input type="checkbox" id="ros_gu_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_gu_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_gu_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
@@ -241,13 +255,15 @@
 				<br><button type="button" id="ros_mus_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_mus_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_mus_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_mus_template">Choose Template:</label><select id="ros_mus_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_mus_normal" class="all_normal nosh_button" value=""><label for="ros_mus_normal">All Normal</label> <input type="checkbox" id="ros_mus_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_mus_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_mus_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_mus_template">Choose Template:</label><select id="ros_mus_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_mus_normal" class="all_normal nosh_button" value=""><label for="ros_mus_normal">All Normal</label> <input type="checkbox" id="ros_mus_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_mus_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_mus_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
@@ -260,13 +276,15 @@
 				<br><button type="button" id="ros_neuro_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_neuro_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_neuro_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_neuro_template">Choose Template:</label><select id="ros_neuro_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_neuro_normal" class="all_normal nosh_button" value=""><label for="ros_neuro_normal">All Normal</label> <input type="checkbox" id="ros_neuro_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_neuro_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_neuro_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_neuro_template">Choose Template:</label><select id="ros_neuro_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_neuro_normal" class="all_normal nosh_button" value=""><label for="ros_neuro_normal">All Normal</label> <input type="checkbox" id="ros_neuro_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_neuro_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_neuro_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
@@ -279,13 +297,15 @@
 				<br><button type="button" id="ros_psych_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_psych_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_psych_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_psych_template">Choose Template:</label><select id="ros_psych_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_psych_normal" class="all_normal nosh_button" value=""><label for="ros_psych_normal">All Normal</label> <input type="checkbox" id="ros_psych_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_psych_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_psych_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_psych_template">Choose Template:</label><select id="ros_psych_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_psych_normal" class="all_normal nosh_button" value=""><label for="ros_psych_normal">All Normal</label> <input type="checkbox" id="ros_psych_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_psych_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_psych_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
@@ -298,13 +318,15 @@
 				<br><button type="button" id="ros_heme_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_heme_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_heme_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_heme_template">Choose Template:</label><select id="ros_heme_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_heme_normal" class="all_normal nosh_button" value=""><label for="ros_heme_normal">All Normal</label> <input type="checkbox" id="ros_heme_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_heme_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_heme_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_heme_template">Choose Template:</label><select id="ros_heme_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_heme_normal" class="all_normal nosh_button" value=""><label for="ros_heme_normal">All Normal</label> <input type="checkbox" id="ros_heme_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_heme_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_heme_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
@@ -317,13 +339,15 @@
 				<br><button type="button" id="ros_endocrine_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_endocrine_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_endocrine_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_endocrine_template">Choose Template:</label><select id="ros_endocrine_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_endocrine_normal" class="all_normal nosh_button" value=""><label for="ros_endocrine_normal">All Normal</label> <input type="checkbox" id="ros_endocrine_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_endocrine_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_endocrine_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_endocrine_template">Choose Template:</label><select id="ros_endocrine_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_endocrine_normal" class="all_normal nosh_button" value=""><label for="ros_endocrine_normal">All Normal</label> <input type="checkbox" id="ros_endocrine_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_endocrine_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_endocrine_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
@@ -336,13 +360,15 @@
 				<br><button type="button" id="ros_skin_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_skin_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_skin_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_skin_template">Choose Template:</label><select id="ros_skin_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_skin_normal" class="all_normal nosh_button" value=""><label for="ros_skin_normal">All Normal</label> <input type="checkbox" id="ros_skin_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_skin_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_skin_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_skin_template">Choose Template:</label><select id="ros_skin_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_skin_normal" class="all_normal nosh_button" value=""><label for="ros_skin_normal">All Normal</label> <input type="checkbox" id="ros_skin_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_skin_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_skin_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>
@@ -355,14 +381,16 @@
 				<br><button type="button" id="ros_wcc_hpi" class="per_hpi nosh_button">Per HPI</button><button type="button" id="ros_wcc_nc" class="nc nosh_button">Noncontributory</button><button type="button" id="ros_wcc_reset" class="reset nosh_button">Clear</button>
 			</div>
 			<div class="pure-u-11-24">
-				<form class="pure-form pure-form-stacked">
-					<label for="ros_wcc_template">Choose Template:</label><select id="ros_wcc_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
-				</form>
-				<input type="checkbox" id="ros_wcc_normal" class="all_normal nosh_button" value=""><label for="ros_wcc_normal">All Normal</label> <input type="checkbox" id="ros_wcc_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_wcc_normal1">All Normal for All Templates</label><br>
-				<div class="ros_template_div">
-					<br><form id="ros_wcc_form" class="ros_template_form ui-widget pure-form"></form>
-					<br><form id="ros_wcc_age_form" class="ros_template_form ui-widget pure-form"></form>
-				</div>
+				<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
+					<form class="pure-form pure-form-stacked">
+						<label for="ros_wcc_template">Choose Template:</label><select id="ros_wcc_template" class="ros_template_choose text ui-widget-content ui-corner-all"></select><br>
+					</form>
+					<input type="checkbox" id="ros_wcc_normal" class="all_normal nosh_button" value=""><label for="ros_wcc_normal">All Normal</label> <input type="checkbox" id="ros_wcc_normal1" class="all_normal1_ros nosh_button" value=""><label for="ros_wcc_normal1">All Normal for All Templates</label><br>
+					<div class="ros_template_div">
+						<br><form id="ros_wcc_form" class="ros_template_form ui-widget pure-form"></form>
+						<br><form id="ros_wcc_age_form" class="ros_template_form ui-widget pure-form"></form>
+					</div>
+				<?php }?>
 			</div>
 		</div>
 	</div>

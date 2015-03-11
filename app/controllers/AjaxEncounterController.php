@@ -137,7 +137,7 @@ class AjaxEncounterController extends BaseController {
 	{
 		$eid = Session::get('eid');
 		$encounter = Encounters::find($eid);
-		if ($encounter->encounter_template == 'standardmedical' && Session::get('group_id') == '3') {
+		if (($encounter->encounter_template == 'standardmedical' || $encounter->encounter_template == 'standardmedical1') && Session::get('group_id') == '3') {
 			echo 'You are not allowed to sign this type of encounter!';
 		} else {
 			$data = array(
@@ -263,7 +263,7 @@ class AjaxEncounterController extends BaseController {
 				$data['preg'] = '<button type="button" id="hpi_preg" class="nosh_button">Pregnancy Status</button>';
 			}
 		}
-		if ($row->encounter_template == 'standardmedical') {
+		if ($row->encounter_template == 'standardmedical' || $row->encounter_template == 'standardmedical1') {
 			$data['ros'] = View::make('encounters.ros')->render();
 			$data['oh'] = View::make('encounters.oh')->render();
 			$data1['practiceInfo'] = $result;
@@ -2389,7 +2389,7 @@ class AjaxEncounterController extends BaseController {
 		);
 		DB::table('encounters')->where('eid', '=', $eid)->update($data1);
 		$this->audit('Update');
-		if ($encounter->encounter_template == 'standardmedical') {
+		if ($encounter->encounter_template == 'standardmedical' || $encounter->encounter_template == 'standardmedical1') {
 			$table_array1 = array("hpi", "ros", "vitals", "pe", "labs", "procedure", "rx", "assessment", "plan");
 			$table_array2 = array("other_history", "orders", "billing", "billing_core", "image");
 		}
@@ -2937,5 +2937,100 @@ class AjaxEncounterController extends BaseController {
 		$response['total'] = $total_pages;
 		$response['records'] = $count;
 		echo json_encode($response);
+	}
+	
+	public function postGetEncounterTemplates()
+	{
+		$query = DB::table('templates')
+			->where('category', '=', 'encounter_templates')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->where('array', '=', '')
+			->where('scoring', '=', Session::get('encounter_template'))
+			->select('template_name')
+			->distinct()
+			->get();
+		$data = array();
+		$data['response'] = false;
+		if ($query) {
+			$data['response'] = true;
+			foreach ($query as $row) {
+				$data['message'][$row->template_name] = $row->template_name;
+			}
+		}
+		echo json_encode($data);
+	}
+	
+	public function postGetEncounterTemplateDump()
+	{
+		$query = DB::table('templates')
+			->where('template_name', '=', Input::get('template_name'))
+			->where('category', '=', 'encounter_templates')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->where('array', '!=', '')
+			->get();
+		if ($query) {
+			foreach ($query as $row) {
+				$template_name = $row->group;
+				$group = $row->array;
+				$query1 = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $template_name)->where('group', '=', $group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->where('default', '=', 'normal')->get();
+				if ($query1) {
+					$norm = $group . ': ';
+					$i = 0;
+					foreach ($query1 as $row1) {
+						if ($i > 0) {
+							$norm .= Input::get('delimiter');
+						}
+						$norm .= $row1->array;
+						$i++;
+					}
+				}
+				$template_name_array = explode('_', $template_name);
+				if ($template_name_array[0] == 'hpi' ||  $template_name_array[0] == 'situation') {
+					$table = 'hpi';
+					$field = $template_name;
+				} elseif ($template_name_array[0] == 'proc') {
+					$table = 'procedure';
+					$field = $template_name;
+				} elseif ($template_name_array[0] == 'oh') {
+					$table = 'other_history';
+					$field = $template_name;
+				} elseif ($template_name_array[0] == 'messages') {
+					$table = 'orders';
+					$field = 'orders_referrals';
+				} elseif ($template_name_array[0] == 'orders') {
+					$table = 'plan';
+					$field = $template_name_array[1];
+				} elseif ($template_name_array[0] == 'followup') {
+					$table = 'plan';
+					$field = $template_name;
+				} else {
+					$table = $template_name_array[0];
+					$field = $template_name;
+				}
+				$count = DB::table($table)->where('eid', '=', Session::get('eid'))->first();
+				$data = array(
+					'eid' => Session::get('eid'),
+					'pid' => Session::get('pid'),
+					'encounter_provider' => Session::get('displayname'),
+					$field => $norm
+				);
+				if ($count) {
+					if ($count->$field != '') {
+						$data[$field] = $count->$field . "\n\n" . $norm;
+					} else {
+						$data[$field] = $norm;
+					}
+					DB::table($table)->where('eid', '=', Session::get('eid'))->update($data);
+					$this->audit('Update');
+					$this->api_data('update', $table, 'eid', Session::get('eid'));
+				} else {
+					$data[$field] = $norm;
+					DB::table($table)->insert($data);
+					$this->audit('Add');
+					$this->api_data('add', $table, 'eid', Session::get('eid'));
+				}
+			}
+		}
+		echo "Template merged to the encounter!";
 	}
 }

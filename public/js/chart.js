@@ -69,7 +69,7 @@ $(document).ready(function() {
 			}
 		});
 	});
-	$("#encounter_template").addOption({'standardmedical':'Standard Medical Visit','standardpsych':'Annual Psychiatric Evaluation','standardpsych1':'Psychiatric Encounter','clinicalsupport':'Clinical Support Visit','standardmtm':'MTM Encounter'}, false).tooltip();
+	$("#encounter_template").addOption({'standardmedical1':'Standard Medical Visit V2','standardmedical':'Standard Medical Visit V1','standardpsych':'Annual Psychiatric Evaluation','standardpsych1':'Psychiatric Encounter','clinicalsupport':'Clinical Support Visit','standardmtm':'MTM Encounter'}, false).tooltip();
 	$("#encounter_location").val(noshdata.default_pos);
 	$("#encounter_date").mask("99/99/9999").datepicker();
 	$("#encounter_time").timepicker({
@@ -972,6 +972,116 @@ $(document).ready(function() {
 	});
 
 	//Encounters section
+	$("#template_encounter_dialog").dialog({
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 230, 
+		width: 500,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: [{
+			text: 'Merge Template',
+			id: 'template_encounter_dialog_merge',
+			class: 'nosh_button_copy',
+			click: function() {
+				var bValid = true;
+				$("#template_encounter_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				if (bValid) {
+					var str = $("#template_encounter_form").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxencounter/get-encounter-template-dump",
+							data: str,
+							success: function(data){
+								$.jGrowl(data);
+								$("#template_encounter_dialog").dialog('close');
+								openencounter();
+							}
+						});
+					} else {
+						$.jGrowl("Please complete the form");
+					}
+				}
+			}
+		},{
+			text: 'Add',
+			id: 'template_encounter_dialog_add',
+			class: 'nosh_button_add',
+			click: function() {
+				$.ajax({
+					type: "POST",
+					url: "ajaxsearch/add-encounter-templates-details",
+					dataType: "json",
+					success: function(data){
+						$("#template_encounter_edit_div").html(data.html);
+						loadbuttons();
+						$("#template_encounter_edit_dialog").dialog("option", "title", "Add Encounter Template");
+						$("#template_encounter_edit_dialog").dialog('open');
+					}
+				});
+			}
+		},{
+			text: 'Edit',
+			id: 'template_encounter_dialog_edit',
+			class: 'nosh_button_edit',
+			click: function() {
+				var bValid = true;
+				$("#template_encounter_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				if (bValid) {
+					var str = $("#template_encounter_form").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxsearch/get-encounter-templates-details",
+							data: str,
+							dataType: "json",
+							success: function(data){
+								$("#template_encounter_edit_div").html(data.html);
+								loadbuttons();
+								$("#template_encounter_edit_dialog").dialog("option", "title", "Edit Encounter Template");
+								$("#template_encounter_edit_dialog").dialog('open');
+							}
+						});
+					} else {
+						$.jGrowl("Please complete the form");
+					}
+				}
+			}
+		},{
+			text: 'Cancel',
+			id: 'template_encounter_dialog_cancel',
+			class: 'nosh_button_cancel',
+			click: function() {
+				$("#template_encounter_dialog").dialog('close');
+			}
+		}]
+	});
+	$("#template_encounter").click(function() {
+		$.ajax({
+			type: "POST",
+			url: "ajaxencounter/get-encounter-templates",
+			dataType: "json",
+			success: function(data){
+				if(data.response == true){
+					$("#template_encounter_choose").addOption(data.message, false);
+				} else {
+					$("#template_encounter_choose").addOption({"":"No encounter templates"}, false);
+				}
+				$("#template_encounter_dialog").dialog('open');
+			}
+		});
+	});
 	$("#preview_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
@@ -1032,7 +1142,6 @@ $(document).ready(function() {
 				$("#new_encounter_dialog").dialog('open');
 			}
 		});
-		
 	});
 	$("#billing_encounter").click(function(){
 		$("#billing_eid_1").val(noshdata.eid);

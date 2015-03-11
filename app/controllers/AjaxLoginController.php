@@ -40,7 +40,7 @@ class AjaxLoginController extends BaseController {
 					exit (0);
 				}
 				$dob = date('Y-m-d', strtotime(Input::get('dob')));
-				$result = Demographics::where('registration_code', '=', $registration_code)
+				$result = DB::table('demographics')->where('registration_code', '=', $registration_code)
 					->where('firstname', '=', Input::get('firstname'))
 					->where('lastname', '=', Input::get('lastname'))
 					->where('DOB', '=', $dob)
@@ -48,9 +48,9 @@ class AjaxLoginController extends BaseController {
 				if ($result) {
 					$arr['response'] = "1";
 					$displayname = Input::get('firstname') . " " . Input::get('lastname');
-					$demographics_relate = Demographics_relate::where('pid', '=', $result->pid)->get();
+					$demographics_relate = DB::table('demographics_relate')->where('pid', '=', $result->pid)->get();
 					foreach ($demographics_relate as $demographics_relate_row) {
-						$row1 = Practiceinfo::where('practice_id', '=', $demographics_relate_row->practice_id)->first();
+						$row1 = DB::table('practiceinfo')->where('practice_id', '=', $demographics_relate_row->practice_id)->first();
 						if ($demographics_relate_row->id != "" && $demographics_relate_row->id != "0") {
 							$arr['response'] = "5";
 							$row2 = User::where('id', '=', $demographics_relate_row->id)->first();

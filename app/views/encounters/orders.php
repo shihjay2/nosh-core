@@ -19,7 +19,7 @@
 					<?php }?>
 				</div>
 				<div class="pure-u-3-4">
-					<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'clinicalsupport' || Session::get('encounter_template') == 'standardmtm') {?>
+					<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardmedical1' || Session::get('encounter_template') == 'clinicalsupport' || Session::get('encounter_template') == 'standardmtm') {?>
 						<label for="orders_plan">Recommendations: <span class="textdump_text"></span> for templates.</label>
 						<textarea style="width:95%" rows="10" name="plan" id="orders_plan" class="text textdump"></textarea>
 					<?php } if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
@@ -31,9 +31,9 @@
 					<br><button type="button" id="orders_schedule" class="nosh_button_calendar" style="width:105px">Schedule</button>
 				</div>
 				<div class="pure-u-3-4">
-					<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'clinicalsupport' || Session::get('encounter_template') == 'standardmtm') {?>
-						<label for="orders_followup">Follow Up:</label>
-						<textarea style="width:95%" rows="10" name="followup" id="orders_followup" class="text"></textarea>
+					<?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardmedical1' || Session::get('encounter_template') == 'clinicalsupport' || Session::get('encounter_template') == 'standardmtm') {?>
+						<label for="orders_followup">Follow Up: <span class="textdump_text"></span> for templates.</label>
+						<textarea style="width:95%" rows="10" name="followup" id="orders_followup" class="text textdump"></textarea>
 					<?php } if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
 						<label for="orders_plan">Treatment Plan: <span class="textdump_text"></span> for templates.</label>
 						<textarea style="width:95%" rows="10" name="tp" id="orders_tp" class="text textdump"></textarea>
@@ -54,7 +54,7 @@
 			<span id="button_orders_cp_status" class="orders_tooltip"></span><button type="button" id="button_orders_cp" class="nosh_button" style="width:140px">Cardiopulmonary</button><br><br>
 			<span id="button_orders_ref_status" class="orders_tooltip"></span><button type="button" id="button_orders_ref" class="nosh_button" style="width:140px"><?php if(Session::get('encounter_template') == 'standardmtm') {?>MTM <?php }?>Referrals</button><br><br>
 			<span id="button_orders_rx_status" class="orders_tooltip"></span><button type="button" id="button_orders_rx" class="nosh_button" style="width:140px">RX</button><br><br>
-			<?php if (Session::get('encounter_template') == 'standardmedical'|| Session::get('encounter_template') == 'clinicalsupport' || Session::get('encounter_template') == 'standardmtm') {?>
+			<?php if (Session::get('encounter_template') == 'standardmedical'|| Session::get('encounter_template') == 'standardmedical1' || Session::get('encounter_template') == 'clinicalsupport' || Session::get('encounter_template') == 'standardmtm') {?>
 				<span id="button_orders_sup_status" class="orders_tooltip"></span><button type="button" id="button_orders_supplements" class="nosh_button" style="width:140px">Supplements</button><br><br>
 				<span id="button_orders_imm_status" class="orders_tooltip"></span><button type="button" id="button_orders_imm" class="nosh_button" style="width:140px">Immunizations</button><br><br>
 			<?php }?>

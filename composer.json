@@ -12,6 +12,7 @@
 		}
 	],
 	"require": {
+		"php" : ">=5.4.0",
 		"laravel/framework": "4.1.*",
 		"raahul/larryfour": "1.*",
 		"soapbox/laravel-formatter": "dev-master",

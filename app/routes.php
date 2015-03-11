@@ -112,6 +112,7 @@ Route::group(array('before' => 'force.ssl|acl2'), function() {
 	Route::post('photoupload', array('as' => 'photoupload', 'uses' => 'AjaxChartController@photoupload'));
 	Route::get('templatedownload/{template_id}', array('as' => 'templatedownload', 'uses' => 'AjaxDashboardController@templatedownload'));
 	Route::get('texttemplatedownload/{template_id}', array('as' => 'texttemplatedownload', 'uses' => 'AjaxDashboardController@texttemplatedownload'));
+	Route::get('textmacrodownload/{template_id}', array('as' => 'textmacrodownload', 'uses' => 'AjaxDashboardController@textmacrodownload'));
 	Route::post('templateupload', array('as' => 'templateupload', 'uses' => 'AjaxDashboardController@templateupload'));
 });
 Route::group(array('before' => 'force.ssl|acl3'), function() {

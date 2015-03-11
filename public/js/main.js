@@ -538,6 +538,8 @@ function loadbuttons() {
 	$(".nosh_button_calendar").button({icons: {primary: "ui-icon-calendar"}});
 	$(".nosh_button_cart").button({icons: {primary: "ui-icon-cart"}});
 	$(".nosh_button_image").button({icons: {primary: "ui-icon-image"}});
+	$(".nosh_button_star").button({icons: {primary: "ui-icon-star"}});
+	$(".nosh_button_script").button({icons: {primary: "ui-icon-script"}});
 	$(".nosh_button_next").button({text: false, icons: {primary: "ui-icon-seek-next"}});
 	$(".nosh_button_prev").button({text: false, icons: {primary: "ui-icon-seek-prev"}});
 }
@@ -1359,6 +1361,26 @@ function pe_dialog_open() {
 	}
 	pe_get_data();
 }
+function pe_dialog_open1() {
+	$('.pe_dialog').each(function() {
+		var dialog_id = $(this).attr('id');
+		var accordion_id = dialog_id.replace('_dialog', '_accordion');
+		if (!$("#"+accordion_id).hasClass('ui-accordion')) {
+			$("#"+accordion_id).accordion({
+				create: function(event, ui) {
+					var id = ui.panel[0].id;
+					pe_accordion_action(id, dialog_id);
+				},
+				activate: function(event, ui) {
+					var id = ui.newPanel[0].id;
+					pe_accordion_action(id, dialog_id);
+				},
+				heightStyle: "content"
+			});
+		}
+	});
+	pe_get_data();
+}
 function parse_date(string) {
 	var date = new Date();
 	var parts = String(string).split(/[- :]/);
@@ -1503,6 +1525,26 @@ function getCurrentTime() {
 	var time = hour + ":" + minute + ' ' + pm;
 	return time;
 }
+function typelabel (cellvalue, options, rowObject){
+	if (cellvalue == 'standardmedical') {
+		return 'Standard Medical Visit V1';
+	}
+	if (cellvalue == 'standardmedical1') {
+		return 'Standard Medical Visit V2';
+	}
+	if (cellvalue == 'clinicalsupport') {
+		return 'Clinical Support Visit';
+	}
+	if (cellvalue == 'standardpsych') {
+		return 'Annual Psychiatric Evaluation';
+	}
+	if (cellvalue == 'standardpsych1') {
+		return 'Psychiatric Encounter';
+	}
+	if (cellvalue == 'standardmtm') {
+		return 'MTM Encounter';
+	}
+}
 $.fn.clearForm = function() {
 	return this.each(function() {
 		var type = this.type, tag = this.tagName.toLowerCase();
@@ -1601,6 +1643,7 @@ $(document).idleTimeout({
 	sessionAlive: false
 });
 $(document).ready(function() {
+	$('.js').show();
 	loadbuttons();
 	$(".nosh_tooltip").tooltip();
 	$(".phonemask").mask("(999) 999-9999");
@@ -1642,6 +1685,36 @@ $(document).ready(function() {
 			$("#textdump_group_html").html('');
 		}
 	});
+	$("#restricttextgroup_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 200, 
+		width: 400, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		close: function (event, ui) {
+			$("#restricttextgroup_form").clearForm();
+		},
+		buttons: {
+			'Save': function() {
+				var str = $("#restricttextgroup_form").serialize();
+				$.ajax({
+					type: "POST",
+					url: "ajaxsearch/restricttextgroup-save",
+					data: str,
+					success: function(data){
+						$.jGrowl(data);
+						$("#restricttextgroup_dialog").dialog('close');
+					}
+				});
+			},
+			Cancel: function() {
+				$("#restricttextgroup_dialog").dialog('close');
+			}
+		}
+	});
 	$("#textdump").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
@@ -1649,6 +1722,8 @@ $(document).ready(function() {
 		width: 400, 
 		draggable: false,
 		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
 		close: function (event, ui) {
 			$("#textdump_target").val('');
 			$("#textdump_input").val('');
@@ -1656,16 +1731,39 @@ $(document).ready(function() {
 			$("#textdump_group_item").val('');
 			$("#textdump_html").html('');
 		},
-		buttons: {
-			Cancel: function() {
+		buttons: [{
+			text: 'Save',
+			id: 'textdump_dialog_save',
+			class: 'nosh_button_save',
+			click: function() {
 				var id = $("#textdump_target").val();
-				var a = $("#textdump_input").val();
-				var b = $("#"+id).val();
-				var c = b.replace(a, "");
-				$("#"+id).val(c);
+				var old = $("#"+id).val();
+				var delimiter = $("#textdump_delimiter1").val();
+				var input = '';
+				var text = [];
+				$("#textdump_html").find('.textdump_item').each(function() {
+					if ($(this).find(':first-child').hasClass("ui-state-error") == true) {
+						var a = $(this).text();
+						text.push(a);
+					}
+				});
+				if (old != '') {
+					input += old + '\n' + $("#textdump_group_item").val() + ": ";
+				} else {
+					input += $("#textdump_group_item").val() + ": ";
+				}
+				input += text.join(delimiter);
+				$("#"+id).val(input);
 				$("#textdump").dialog('close');
 			}
-		}
+		},{
+			text: 'Cancel',
+			id: 'textdump_dialog_cancel',
+			class: 'nosh_button_cancel',
+			click: function() {
+				$("#textdump").dialog('close');
+			}
+		}]
 	});
 	$("#textdump_specific").dialog({ 
 		bgiframe: true, 
@@ -1683,9 +1781,16 @@ $(document).ready(function() {
 			$("#textdump_specific_origin").val('');
 			$("#textdump_specific_add").val('');
 			$("#textdump_specific_html").html('');
+			$("#textdump_specific_save").show();
+			$("#textdump_specific_cancel").show();
+			$("#textdump_specific_done").show();
+			$("#textdump_delimiter_div").show();
 		},
-		buttons: {
-			'Save': function() {
+		buttons: [{
+			text: 'Save',
+			id: 'textdump_specific_save',
+			class: 'nosh_button_save',
+			click: function() {
 				var origin = $("#textdump_specific_origin").val();
 				if (origin != 'configure') {
 					var id = $("#textdump_specific_target").val();
@@ -1704,14 +1809,100 @@ $(document).ready(function() {
 					$("#"+id).textrange('replace', input);
 				}
 				$("#textdump_specific").dialog('close');
-			},
-			Cancel: function() {
+			}
+		},{
+			text: 'Cancel',
+			id: 'textdump_specific_cancel',
+			class: 'nosh_button_cancel',
+			click: function() {
 				$("#textdump_specific").dialog('close');
 			}
-		}
+		},{
+			text: 'Done',
+			id: 'textdump_specific_done',
+			class: 'nosh_button_check',
+			click: function() {
+				$("#textdump_specific").dialog('close');
+			}
+		}]
 	});
 	$("#textdump_group_html").tooltip();
 	$("#textdump_html").tooltip();
+	$("#textdump_hint").tooltip({
+		content: function(callback) {
+			var ret = '';
+			$.ajax({
+				type: "POST",
+				url: "ajaxdashboard/listmacros",
+				success: function(data){
+					callback(data);
+				}
+			});
+		}
+	});
+	$("#template_encounter_edit_dialog").dialog({
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 400, 
+		width: 600,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		close: function(event, ui) {
+			$('#template_encounter_edit_form').clearForm();
+			$('#template_encounter_edit_div').empty();
+			reload_grid("encounter_templates_list");
+			if ($("#template_encounter_dialog").dialog("isOpen")) {
+				$.ajax({
+					type: "POST",
+					url: "ajaxencounter/get-encounter-templates",
+					dataType: "json",
+					success: function(data){
+						$("#template_encounter_choose").removeOption(/./);
+						if(data.response == true){
+							$("#template_encounter_choose").addOption(data.message, false);
+						} else {
+							$("#template_encounter_choose").addOption({"":"No encounter templates"}, false);
+						}
+					}
+				});
+			}
+		},
+		buttons: {
+			'Save': function() {
+				var bValid = true;
+				$("#template_encounter_edit_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				if (bValid) {
+					var str = $("#template_encounter_edit_form").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxsearch/save-encounter-templates",
+							data: str,
+							success: function(data){
+								if (data == 'There is already a template with the same name!') {
+									$.jGrowl(data);
+									$("#encounter_template_name_text").addClass("ui-state-error");
+								} else {
+									$.jGrowl(data);
+									$('#template_encounter_edit_dialog').dialog('close');
+								}
+							}
+						});
+					} else {
+						$.jGrowl("Please complete the form");
+					}
+				}
+			},
+			Cancel: function() {
+				$('#template_encounter_edit_dialog').dialog('close');
+			}
+		}
+	});
 });
 $(document).on("click", "#encounter_panel", function() {
 	noshdata.encounter_active = 'y';
@@ -2833,6 +3024,7 @@ $(document).on('keydown', '.textdump', function(e){
 					$(".edittextgroup").button({text: false, icons: {primary: "ui-icon-pencil"}});
 					$(".deletetextgroup").button({text: false, icons: {primary: "ui-icon-trash"}});
 					$(".normaltextgroup").button({text: false, icons: {primary: "ui-icon-check"}});
+					$(".restricttextgroup").button({text: false, icons: {primary: "ui-icon-close"}});
 					$('.textdump_group_item_text').editable('destroy');
 					$('.textdump_group_item_text').editable({
 						toggle:'manual',
@@ -2909,31 +3101,9 @@ $(document).on('click', '.textdump_group_item', function(){
 });
 $(document).on('click', '.textdump_item', function() {
 	if ($(this).find(':first-child').hasClass("ui-state-error") == false) {
-		var a = '';
-		var id = $("#textdump_target").val();
-		var old = $("#"+id).val();
-		if ($("#textdump_input").val() == '') {
-			if (old != '') {
-				a += '\n' + $("#textdump_group_item").val() + ": ";
-			} else {
-				a += $("#textdump_group_item").val() + ": ";
-			}
-		}
-		a += $(this).text();
-		if (old != '') {
-			var b = old + '\n' + a;
-		} else {
-			var b = a;
-		}
-		$("#"+id).val(b);
-		var old1 = $("#textdump_input").val();
-		if (old1 != '') {
-			var c = old1 + '\n' + a;
-		} else {
-			var c = a;
-		}
-		$("#textdump_input").val(c);
 		$(this).find(':first-child').addClass("ui-state-error ui-corner-all");
+	} else {
+		$(this).find(':first-child').removeClass("ui-state-error ui-corner-all");
 	}
 });
 $(document).on('click', '.textdump_item_specific', function() {
@@ -2969,6 +3139,22 @@ $(document).on('click', '.deletetextgroup', function() {
 		}
 	});
 });
+$(document).on('click', '.restricttextgroup', function() {
+	var id = $(this).attr('id');
+	var template_id = id.replace('restricttextgroup_','');
+	$("#restricttextgroup_template_id").val(template_id);
+	$.ajax({
+		type: "POST",
+		url: "ajaxsearch/restricttextgroup-get/" + template_id,
+		dataType: 'json',
+		success: function(data){
+			$.each(data, function(key, value){
+				$("#restricttextgroup_form :input[name='" + key + "']").val(value);
+			});
+		}
+	});
+	$("#restricttextgroup_dialog").dialog('open');
+});
 $(document).on('click', '.deletetexttemplate', function() {
 	var id = $(this).attr('id');
 	var template_id = id.replace('deletetexttemplate_','');
@@ -2995,18 +3181,21 @@ $(document).on('click', '.normaltextgroup', function() {
 	var id = $("#textdump_group_target").val();
 	var a = $(this).val();
 	var old = $("#"+id).val();
+	var delimiter = $("#textdump_delimiter2").val();
 	if (a != 'No normal values set.') {
+		var a_arr = a.split("\n");
+		var d = a_arr.join(delimiter);
 		if ($(this).prop('checked')) {
 			if (old != '') {
-				var b = old + '\n' + a;
+				var b = old + '\n' + d;
 			} else {
-				var b = a;
+				var b = d;
 			}
 			$("#"+id).val(b);
 		} else {
-			var a1 = a + '  ';
+			var a1 = d + '  ';
 			var c = old.replace(a1,'');
-			c = c.replace(a, '');
+			c = c.replace(d, '');
 			$("#" +id).val(c); 
 		}
 	} else {
@@ -3027,6 +3216,7 @@ $(document).on('click', '.normaltexttemplate', function() {
 				$(".edittextgroup").button({text: false, icons: {primary: "ui-icon-pencil"}});
 				$(".deletetextgroup").button({text: false, icons: {primary: "ui-icon-trash"}});
 				$(".normaltextgroup").button({text: false, icons: {primary: "ui-icon-check"}});
+				$(".restricttextgroup").button({text: false, icons: {primary: "ui-icon-close"}});
 				$('.textdump_group_item_text').editable('destroy');
 				$('.textdump_group_item_text').editable({
 					toggle:'manual',
@@ -3062,6 +3252,7 @@ $(document).on('click', '.normaltexttemplate', function() {
 				$(".edittextgroup").button({text: false, icons: {primary: "ui-icon-pencil"}});
 				$(".deletetextgroup").button({text: false, icons: {primary: "ui-icon-trash"}});
 				$(".normaltextgroup").button({text: false, icons: {primary: "ui-icon-check"}});
+				$(".restricttextgroup").button({text: false, icons: {primary: "ui-icon-close"}});
 				$('.textdump_group_item_text').editable('destroy');
 				$('.textdump_group_item_text').editable({
 					toggle:'manual',
@@ -3102,11 +3293,12 @@ $(document).on('keydown', '#textdump_group_add', function(e){
 					dataType: 'json',
 					success: function(data){
 						$.jGrowl(data.message);
-						var app = '<div id="textgroupdiv_' + data.id + '" style="width:99%" class="pure-g"><div class="pure-u-3-4"><input type="checkbox" id="normaltextgroup_' + data.id + '" class="normaltextgroup" value="No normal values set."><label for="normaltextgroup_' + data.id + '">Normal</label> <b id="edittextgroup_' + data.id + '_b" class="textdump_group_item textdump_group_item_text" data-type="text" data-pk="' + data.id + '" data-name="group" data-url="ajaxsearch/edit-text-template-group" data-title="Group">' + a + '</b></div><div class="pure-u-1-4" style="overflow:hidden"><div style="width:200px;"><button type="button" id="edittextgroup_' + data.id + '" class="edittextgroup">Edit</button><button type="button" id="deletetextgroup_' + data.id + '" class="deletetextgroup">Remove</button></div></div><hr class="ui-state-default"/></div>';
+						var app = '<div id="textgroupdiv_' + data.id + '" style="width:99%" class="pure-g"><div class="pure-u-2-3"><input type="checkbox" id="normaltextgroup_' + data.id + '" class="normaltextgroup" value="No normal values set."><label for="normaltextgroup_' + data.id + '">Normal</label> <b id="edittextgroup_' + data.id + '_b" class="textdump_group_item textdump_group_item_text" data-type="text" data-pk="' + data.id + '" data-name="group" data-url="ajaxsearch/edit-text-template-group" data-title="Group">' + a + '</b></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:200px;"><button type="button" id="edittextgroup_' + data.id + '" class="edittextgroup">Edit</button><button type="button" id="deletetextgroup_' + data.id + '" class="deletetextgroup">Remove</button><button type="button" id="restricttextgroup_' + data.id + '" class="restricttextgroup">Restrictions</button></div></div><hr class="ui-state-default"/></div>';
 						$("#textdump_group_html").append(app);
 						$(".edittextgroup").button({text: false, icons: {primary: "ui-icon-pencil"}});
 						$(".deletetextgroup").button({text: false, icons: {primary: "ui-icon-trash"}});
 						$(".normaltextgroup").button({text: false, icons: {primary: "ui-icon-check"}});
+						$(".restricttextgroup").button({text: false, icons: {primary: "ui-icon-close"}});
 						$('.textdump_group_item_text').editable('destroy');
 						$('.textdump_group_item_text').editable({
 							toggle:'manual',
@@ -3154,7 +3346,7 @@ $(document).on('keydown', '#textdump_add', function(e){
 					dataType: 'json',
 					success: function(data){
 						$.jGrowl(data.message);
-						var app = '<div id="texttemplatediv_' + data.id + '" style="width:99%" class="pure-g"><div class="textdump_item pure-u-2-3"><span id="edittexttemplate_' + data.id + '_span" class="textdump_item_text ui-state-error" data-type="text" data-pk="' + data.id + '" data-name="array" data-url="ajaxsearch/edit-text-template" data-title="Item">' + a + '</span></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:400px;"><input type="checkbox" id="normaltexttemplate_' + data.id + '" class="normaltexttemplate" value="normal"><label for="normaltexttemplate_' + data.id + '">Mark as Default Normal</label><button type="button" id="edittexttemplate_' + data.id + '" class="edittexttemplate">Edit</button><button type="button" id="deletetexttemplate_' + data.id + '" class="deletetexttemplate">Remove</button></div></div><hr class="ui-state-default"/></div>';
+						var app = '<div id="texttemplatediv_' + data.id + '" style="width:99%" class="pure-g"><div class="textdump_item pure-u-2-3"><span id="edittexttemplate_' + data.id + '_span" class="textdump_item_text ui-state-error ui-corner-all" data-type="text" data-pk="' + data.id + '" data-name="array" data-url="ajaxsearch/edit-text-template" data-title="Item">' + a + '</span></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:400px;"><input type="checkbox" id="normaltexttemplate_' + data.id + '" class="normaltexttemplate" value="normal"><label for="normaltexttemplate_' + data.id + '">Mark as Default Normal</label><button type="button" id="edittexttemplate_' + data.id + '" class="edittexttemplate">Edit</button><button type="button" id="deletetexttemplate_' + data.id + '" class="deletetexttemplate">Remove</button></div></div><hr class="ui-state-default"/></div>';
 						$("#textdump_html").append(app);
 						$(".edittexttemplate").button({text: false, icons: {primary: "ui-icon-pencil"}});
 						$(".deletetexttemplate").button({text: false, icons: {primary: "ui-icon-trash"}});
@@ -3181,26 +3373,6 @@ $(document).on('keydown', '#textdump_add', function(e){
 								}
 							}
 						});
-						var a1 = '';
-						if ($("#textdump_input").val() == '') {
-							a1 += '\n' + $("#textdump_group_item").val() + ": ";
-						}
-						a1 += a;
-						var id = $("#textdump_target").val();
-						var old = $("#"+id).val();
-						if (old != '') {
-							var b = old + '\n' + a1;
-						} else {
-							var b = a1;
-						}
-						$("#"+id).val(b);
-						var old1 = $("#textdump_input").val();
-						if (old1 != '') {
-							var c = old1 + '\n' + a1;
-						} else {
-							var c = a1;
-						}
-						$("#textdump_input").val(c);
 						$("#textdump_add").val('');
 					}
 				});
@@ -3217,67 +3389,57 @@ $(document).on('keydown', '#textdump_specific_add', function(e){
 		e.preventDefault();
 		var a = $("#textdump_specific_add").val();
 		if (a != '') {
-			var str = $("#textdump_specific_form").serialize();
-			if(str){
-				$.ajax({
-					type: "POST",
-					url: "ajaxsearch/add-specific-template",
-					data: str,
-					dataType: 'json',
-					success: function(data){
-						$.jGrowl(data.message);
-						var app = '<div id="texttemplatespecificdiv_' + data.id + '" style="width:99%" class="pure-g"><div class="textdump_item_specific pure-u-2-3"><span id="edittexttemplatespecific_' + data.id + '_span" class="textdump_item_specific_text" data-type="text" data-pk="' + data.id + '" data-name="array" data-url="ajaxsearch/edit-text-template-specific" data-title="Item">' + a + '</span></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:400px;"><button type="button" id="edittexttemplatespecific_' + data.id + '" class="edittexttemplatespecific">Edit</button><button type="button" id="deletetexttemplatespecific_' + data.id + '" class="deletetexttemplatespecific">Remove</button></div></div><hr class="ui-state-default"/></div>';
-						$("#textdump_specific_html").append(app);
-						$(".edittexttemplatespecific").button({text: false, icons: {primary: "ui-icon-pencil"}});
-						$(".deletetexttemplatespecific").button({text: false, icons: {primary: "ui-icon-trash"}});
-						$(".defaulttexttemplatespecific").button();
-						$('.textdump_item_specific_text').editable('destroy');
-						$('.textdump_item_specific_text').editable({
-							toggle:'manual',
-							ajaxOptions: {
-								headers: {"cache-control":"no-cache"},
-								beforeSend: function(request) {
-									return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
-								},
-								error: function(xhr) {
-									if (xhr.status == "404" ) {
-										alert("Route not found!");
-										//window.location.replace(noshdata.error);
-									} else {
-										if(xhr.responseText){
-											var response1 = $.parseJSON(xhr.responseText);
-											var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
-											alert(error);
+			var specific_name = $("#textdump_specific_name").val();
+			if (specific_name == '') {
+				var id = $("#textdump_specific_target").val();
+				var start = $("#textdump_specific_start").val();
+				var length = $("#textdump_specific_length").val();
+				$("#"+id).textrange('set', start, length);
+				$("#"+id).textrange('replace', a);
+				$("#textdump_specific").dialog('close');
+			} else {
+				var str = $("#textdump_specific_form").serialize();
+				if(str){
+					$.ajax({
+						type: "POST",
+						url: "ajaxsearch/add-specific-template",
+						data: str,
+						dataType: 'json',
+						success: function(data){
+							$.jGrowl(data.message);
+							var app = '<div id="texttemplatespecificdiv_' + data.id + '" style="width:99%" class="pure-g"><div class="textdump_item_specific pure-u-2-3"><span id="edittexttemplatespecific_' + data.id + '_span" class="textdump_item_specific_text ui-state-error ui-corner-all" data-type="text" data-pk="' + data.id + '" data-name="array" data-url="ajaxsearch/edit-text-template-specific" data-title="Item">' + a + '</span></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:400px;"><button type="button" id="edittexttemplatespecific_' + data.id + '" class="edittexttemplatespecific">Edit</button><button type="button" id="deletetexttemplatespecific_' + data.id + '" class="deletetexttemplatespecific">Remove</button></div></div><hr class="ui-state-default"/></div>';
+							$("#textdump_specific_html").append(app);
+							$(".edittexttemplatespecific").button({text: false, icons: {primary: "ui-icon-pencil"}});
+							$(".deletetexttemplatespecific").button({text: false, icons: {primary: "ui-icon-trash"}});
+							$(".defaulttexttemplatespecific").button();
+							$('.textdump_item_specific_text').editable('destroy');
+							$('.textdump_item_specific_text').editable({
+								toggle:'manual',
+								ajaxOptions: {
+									headers: {"cache-control":"no-cache"},
+									beforeSend: function(request) {
+										return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
+									},
+									error: function(xhr) {
+										if (xhr.status == "404" ) {
+											alert("Route not found!");
+											//window.location.replace(noshdata.error);
+										} else {
+											if(xhr.responseText){
+												var response1 = $.parseJSON(xhr.responseText);
+												var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
+												alert(error);
+											}
 										}
 									}
 								}
-							}
-						});
-						var a1 = '';
-						if ($("#textdump_input").val() == '') {
-							a1 += '\n' + $("#textdump_group_item").val() + ": ";
+							});
+							$("#textdump_specific_add").val('');
 						}
-						a1 += a;
-						var id = $("#textdump_target").val();
-						var old = $("#"+id).val();
-						if (old != '') {
-							var b = old + '\n' + a1;
-						} else {
-							var b = a1;
-						}
-						$("#"+id).val(b);
-						var old1 = $("#textdump_input").val();
-						if (old1 != '') {
-							var c = old1 + '\n' + a1;
-						} else {
-							var c = a1;
-						}
-						$("#textdump_input").val(c);
-						$("#textdump_add").val('');
-					}
-				});
-			} else {
-				$.jGrowl("Please complete the form");
+					});
+				} else {
+					$.jGrowl("Please complete the form");
+				}
 			}
 		} else {
 			$.jGrowl("No text to add!");
@@ -3410,6 +3572,7 @@ function textdump(elem) {
 			$(".edittextgroup").button({text: false, icons: {primary: "ui-icon-pencil"}});
 			$(".deletetextgroup").button({text: false, icons: {primary: "ui-icon-trash"}});
 			$(".normaltextgroup").button({text: false, icons: {primary: "ui-icon-check"}});
+			$(".restricttextgroup").button({text: false, icons: {primary: "ui-icon-close"}});
 			$('.textdump_group_item_text').editable('destroy');
 			$('.textdump_group_item_text').editable({
 				toggle:'manual',
@@ -3469,44 +3632,110 @@ $(document).on('click', 'textarea', function(e) {
 	if (startW == '*' && endW == '*') {
 		$(this).textrange('set', start, end - start);
 		var currentWord = text.substr(start + 1, end - start - 2);
-		$.ajax({
-			type: "POST",
-			url: "ajaxsearch/textdump-specific/" + currentWord,
-			success: function(data){
-				$("#textdump_specific_html").html('');
-				$("#textdump_specific_html").append(data);
-				$(".edittexttemplatespecific").button({text: false, icons: {primary: "ui-icon-pencil"}});
-				$(".deletetexttemplatespecific").button({text: false, icons: {primary: "ui-icon-trash"}});
-				$(".defaulttexttemplatespecific").button();
-				$('.textdump_item_specific_text').editable('destroy');
-				$('.textdump_item_specific_text').editable({
-					toggle:'manual',
-					ajaxOptions: {
-						headers: {"cache-control":"no-cache"},
-						beforeSend: function(request) {
-							return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
-						},
-						error: function(xhr) {
-							if (xhr.status == "404" ) {
-								alert("Route not found!");
-								//window.location.replace(noshdata.error);
-							} else {
-								if(xhr.responseText){
-									var response1 = $.parseJSON(xhr.responseText);
-									var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
-									alert(error);
-								}
-							}
-						}
-					}
-				});
+		if (currentWord != '') {
+			if (currentWord == '~') {
 				$("#textdump_specific_target").val(id);
-				$("#textdump_specific_name").val(currentWord);
+				$("#textdump_specific_name").val('');
 				$("#textdump_specific_start").val(start);
 				$("#textdump_specific_length").val(end - start);
+				$("#textdump_delimiter_div").hide();
+				$("#textdump_specific_save").hide();
+				$("#textdump_specific_done").hide();
 				$("#textdump_specific").dialog("option", "position", { my: 'left top', at: 'right top', of: '#'+id });
 				$("#textdump_specific").dialog('open');
+			} else {
+				$.ajax({
+					type: "POST",
+					url: "ajaxsearch/textdump-specific/" + currentWord,
+					success: function(data){
+						$("#textdump_specific_html").html('');
+						$("#textdump_specific_html").append(data);
+						$(".edittexttemplatespecific").button({text: false, icons: {primary: "ui-icon-pencil"}});
+						$(".deletetexttemplatespecific").button({text: false, icons: {primary: "ui-icon-trash"}});
+						$(".defaulttexttemplatespecific").button();
+						$('.textdump_item_specific_text').editable('destroy');
+						$('.textdump_item_specific_text').editable({
+							toggle:'manual',
+							ajaxOptions: {
+								headers: {"cache-control":"no-cache"},
+								beforeSend: function(request) {
+									return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
+								},
+								error: function(xhr) {
+									if (xhr.status == "404" ) {
+										alert("Route not found!");
+										//window.location.replace(noshdata.error);
+									} else {
+										if(xhr.responseText){
+											var response1 = $.parseJSON(xhr.responseText);
+											var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
+											alert(error);
+										}
+									}
+								}
+							}
+						});
+						$("#textdump_specific_target").val(id);
+						$("#textdump_specific_name").val(currentWord);
+						$("#textdump_specific_start").val(start);
+						$("#textdump_specific_length").val(end - start);
+						$("#textdump_specific_done").hide();
+						$("#textdump_specific").dialog("option", "position", { my: 'left top', at: 'right top', of: '#'+id });
+						$("#textdump_specific").dialog('open');
+					}
+				});
+			}
+		}
+	}
+});
+$(document).on('change', '.encounter_template_group_group', function() {
+	var id = $(this).attr('id');
+	var a1 = id.split("_");
+	var count = a1[4];
+	var a = $("#"+id).val();
+	$.ajax({
+		type: "POST",
+		url: "ajaxsearch/get-template-normal-options/" + a,
+		dataType: "json",
+		success: function(data){
+			$("#encounter_template_array_id_"+count).removeOption(/./);
+			$("#encounter_template_array_id_"+count).addOption({'':'Choose Group'}, false);
+			$("#encounter_template_array_id_"+count).addOption(data, false);
+		}
+	});
+});
+$(document).on('click', '#add_encounter_template_field', function() {
+	var a = $("#template_encounter_edit_div > :last-child").attr("id");
+	if (a == 'encounter_template_grid_label') {
+		var count = 0;
+	} else {
+		var a1 = a.split("_");
+		var count = parseInt(a1[4]) + 1;
+	}
+	$("#template_encounter_edit_div").append('<div id="group_encounter_template_div_'+count+'" class="pure-u-1-3"><select name="group[]" id="encounter_template_group_id_'+count+'" class="text encounter_template_group_group" style="width:95%"></select></div><div id="array_encounter_template_div_'+count+'" class="pure-u-1-3"><select name="array[]" id="encounter_template_array_id_'+count+'" class="text" style="width:95%"></select></div><div id="remove_encounter_template_div_'+count+'" class="pure-u-1-3"><button type="button" id="remove_encounter_template_field_'+count+'" class="remove_encounter_template_field nosh_button_cancel">Remove Field</button></div>');
+	if (a == 'encounter_template_grid_label') {
+		var b = $("#template_encounter_edit_dialog_encounter_template").val();
+		$.ajax({
+			type: "POST",
+			url: "ajaxsearch/get-template-fields/" + b,
+			dataType: "json",
+			success: function(data){
+				$("#encounter_template_group_id_"+count).addOption({'':'Choose Field'}, false);
+				$("#encounter_template_group_id_"+count).addOption(data, false);
+				loadbuttons();
 			}
 		});
+	} else {
+		$("#encounter_template_group_id_0").copyOptions("#encounter_template_group_id_"+count, "all");
+		$("#encounter_template_group_id_"+count).val($("#encounter_template_group_id_"+count+" option:first").val())
+		loadbuttons();
 	}
+});
+$(document).on('click', '.remove_encounter_template_field', function() {
+	var id = $(this).attr('id');
+	var a1 = id.split("_");
+	var count = a1[4];
+	$("#group_encounter_template_div_"+count).remove();
+	$("#array_encounter_template_div_"+count).remove();
+	$("#remove_encounter_template_div_"+count).remove();
 });

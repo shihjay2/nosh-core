@@ -74,6 +74,7 @@
 <?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') {?>
 	<div id="nosh_encounter_div" style="width:100%">
 		<ul id="encounter_tags"></ul>
+		<button type="button" id="template_encounter" class="nosh_button_script">Template</button>
 		<button type="button" id="preview_encounter" class="nosh_button_preview">Preview</button>
 		<button type="button" id="detail_encounter" class="nosh_button_edit">Details</button>
 		<button type="button" id="billing_encounter" class="nosh_button_cart">Billing</button>
@@ -232,5 +233,17 @@
 	<form id="connect_patient_centric_form" class="pure-form pure-form-stacked">
 		<label for="connect_patient_centric_url">Enter the URL in your email that you recevied:</label>
 		<input type="text" style="width:95%" name="url" id="connect_patient_centric_url" class="text" required/>
+	</form>
+</div>
+<div id="template_encounter_dialog" title="Encounter Templates">
+	<form id="template_encounter_form" class="pure-form pure-form-stacked">
+		<label for="template_encounter_choose">Choose template to use for encounter</label>
+		<select id="template_encounter_choose" name="template_name" style="width:95%" required></select>
+		<label for="textdump_delimiter3">Delimiter for normal values</label>
+		<select id="textdump_delimiter3" name="delimiter" required>
+			<option value=" ">space</option>
+			<option value=", ">,</option>
+			<option value="; ">;</option>
+		</select>
 	</form>
 </div>
