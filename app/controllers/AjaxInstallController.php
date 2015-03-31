@@ -617,6 +617,7 @@ class AjaxInstallController extends BaseController {
 				DB::table('orderslist1')->where('orderslist1_id', '=', $row2->orderslist1_id)->update($orders_data);
 			}
 		}
+		$this->default_template('1');
 		Auth::attempt(array('username' => $username, 'password' => Input::get('password'), 'active' => '1', 'practice_id' => '1'));
 		Session::put('user_id', $user_id);
 		Session::put('group_id', '1');
@@ -674,10 +675,11 @@ class AjaxInstallController extends BaseController {
 			'practice_id' => $practice_id
 		);
 		DB::table('calendar')->insert($data8);
+		$this->default_template($practice_id);
 		Auth::attempt(array('username' => $username, 'password' => Input::get('password'), 'active' => '1', 'practice_id' => '1'));
 		Session::put('user_id', $user_id);
 		Session::put('group_id', '1');
-		Session::put('practice_id', '1');
+		Session::put('practice_id', $practice_id);
 		Session::put('version', $data3->version);
 		Session::put('practice_active', $data3->active);
 		Session::put('displayname', 'Administrator');
@@ -769,6 +771,23 @@ class AjaxInstallController extends BaseController {
 		return Redirect::to('/');
 	}
 	
+	public function default_template($practice_id)
+	{
+		$directory = __DIR__.'/../../import/templates';
+		$i = 0;
+		$error = '';
+		$file_path = $directory . '/Default.txt';
+		$csv = File::get($file_path);
+		$return = $this->install_template($csv, $practice_id);
+		if (isset($return['count'])) {
+			$i += $return['count'];
+		}
+		if (isset($return['error'])) {
+			$error .= $return['error'];
+		}
+		return "Imported " . $i . " templates." . $error;
+	}
+	
 	public function update()
 	{
 		$practice = Practiceinfo::find(1);
@@ -783,6 +802,9 @@ class AjaxInstallController extends BaseController {
 		}
 		if ($practice->version < "1.8.3") {
 			$this->update183();
+		}
+		if ($practice->version < "1.8.4") {
+			$this->update184();
 		}
 		return Redirect::to('/');
 	}
@@ -1141,6 +1163,24 @@ class AjaxInstallController extends BaseController {
 		system($icd9_command);
 		$practiceinfo_data = array(
 			'version' => '1.8.3'
+		);
+		// Update version
+		DB::table('practiceinfo')->update($practiceinfo_data);
+	}
+	
+	public function update184()
+	{
+		set_time_limit(0);
+		ini_set('memory_limit','384M');
+		// Install Default Templates
+		$practices = DB::table('practiceinfo')->get();
+		if ($practices) {
+			foreach ($practices as $practice) {
+				$this->default_template($practice->practice_id);
+			}
+		}
+		$practiceinfo_data = array(
+			'version' => '1.8.4'
 		);
 		// Update version
 		DB::table('practiceinfo')->update($practiceinfo_data);

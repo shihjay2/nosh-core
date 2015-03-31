@@ -1041,12 +1041,14 @@ $(document).ready(function() {
 				if (bValid) {
 					var str = $("#template_encounter_form").serialize();
 					if(str){
+						$('#dialog_load').dialog('option', 'title', "Loading template...").dialog('open');
 						$.ajax({
 							type: "POST",
 							url: "ajaxsearch/get-encounter-templates-details",
 							data: str,
 							dataType: "json",
 							success: function(data){
+								$('#dialog_load').dialog('close');
 								$("#template_encounter_edit_div").html(data.html);
 								loadbuttons();
 								$("#template_encounter_edit_dialog").dialog("option", "title", "Edit Encounter Template");

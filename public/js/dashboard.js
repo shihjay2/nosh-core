@@ -314,6 +314,17 @@ $(document).ready(function() {
 			if (data.setup == 'y') {
 				$("#setup_dialog").dialog('open');
 			}
+			if (data.template == 'y') {
+				$('#dialog_load').dialog('option', 'title', "Installing default templates...").dialog('open');
+				$.ajax({
+					type: "POST",
+					url: "ajaxdashboard/reset-default-templates",
+					success: function(data){
+						$('#dialog_load').dialog('close');
+						$.jGrowl(data);
+					}
+				});
+			}
 		}
 	});
 	$("#change_secret_answer_dialog").dialog({ 

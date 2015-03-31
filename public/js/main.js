@@ -452,6 +452,13 @@ function chart_notification() {
 }
 function openencounter() {
 	$("#encounter_body").html('');
+	$("#encounter_body").empty();
+	if ($(".ros_dialog").hasClass('ui-dialog-content')) {
+		$(".ros_dialog").dialog('destroy');
+	}
+	if ($(".pe_dialog").hasClass('ui-dialog-content')) {
+		$(".pe_dialog").dialog('destroy');
+	}
 	$("#encounter_body").load('ajaxencounter/loadtemplate');
 	$('#dialog_load').dialog('option', 'title', "Loading encounter...").dialog('open');
 	$("#encounter_link_span").html('<a href="#" id="encounter_panel">[Active Encounter #: ' + noshdata.eid + ']</a>');
@@ -1838,7 +1845,8 @@ $(document).ready(function() {
 					callback(data);
 				}
 			});
-		}
+		},
+		position: { my: "left bottom+15", at: "left top", collision: "flipfit" }
 	});
 	$("#template_encounter_edit_dialog").dialog({
 		bgiframe: true, 
@@ -1868,6 +1876,35 @@ $(document).ready(function() {
 			}
 		},
 		buttons: {
+			'Add Field': function() {
+				var a = $("#template_encounter_edit_div > :last-child").attr("id");
+				if (a == 'encounter_template_grid_label') {
+					var count = 0;
+				} else {
+					var a1 = a.split("_");
+					var count = parseInt(a1[4]) + 1;
+				}
+				$("#template_encounter_edit_div").append('<div id="group_encounter_template_div_'+count+'" class="pure-u-1-3"><select name="group[]" id="encounter_template_group_id_'+count+'" class="text encounter_template_group_group" style="width:95%"></select></div><div id="array_encounter_template_div_'+count+'" class="pure-u-1-3"><select name="array[]" id="encounter_template_array_id_'+count+'" class="text" style="width:95%"></select></div><div id="remove_encounter_template_div_'+count+'" class="pure-u-1-3"><button type="button" id="remove_encounter_template_field_'+count+'" class="remove_encounter_template_field nosh_button_cancel">Remove Field</button></div>');
+				if (a == 'encounter_template_grid_label') {
+					var b = $("#template_encounter_edit_dialog_encounter_template").val();
+					$.ajax({
+						type: "POST",
+						url: "ajaxsearch/get-template-fields/" + b,
+						dataType: "json",
+						success: function(data){
+							$("#encounter_template_group_id_"+count).addOption({'':'Choose Field'}, false);
+							$("#encounter_template_group_id_"+count).addOption(data, false);
+							$("#encounter_template_group_id_"+count).focus();
+							loadbuttons();
+						}
+					});
+				} else {
+					$("#encounter_template_group_id_0").copyOptions("#encounter_template_group_id_"+count, "all");
+					$("#encounter_template_group_id_"+count).val($("#encounter_template_group_id_"+count+" option:first").val())
+					$("#encounter_template_group_id_"+count).focus();
+					loadbuttons();
+				}
+			},
 			'Save': function() {
 				var bValid = true;
 				$("#template_encounter_edit_form").find("[required]").each(function() {
@@ -1879,11 +1916,13 @@ $(document).ready(function() {
 				if (bValid) {
 					var str = $("#template_encounter_edit_form").serialize();
 					if(str){
+						$('#dialog_load').dialog('option', 'title', "Saving template...").dialog('open');
 						$.ajax({
 							type: "POST",
 							url: "ajaxsearch/save-encounter-templates",
 							data: str,
 							success: function(data){
+								$('#dialog_load').dialog('close');
 								if (data == 'There is already a template with the same name!') {
 									$.jGrowl(data);
 									$("#encounter_template_name_text").addClass("ui-state-error");
@@ -3602,7 +3641,7 @@ function textdump(elem) {
 	});
 }
 $(document).on('click', 'textarea', function(e) {
-	var stopCharacters = [' ', '\n', '\r', '\t'];
+	var stopCharacters = [' ', '\n', '\r', '\t', ','];
 	var id = $(this).attr('id');
 	var val = $(this).val();
 	$(this).html(val);
@@ -3704,31 +3743,37 @@ $(document).on('change', '.encounter_template_group_group', function() {
 		}
 	});
 });
-$(document).on('click', '#add_encounter_template_field', function() {
-	var a = $("#template_encounter_edit_div > :last-child").attr("id");
-	if (a == 'encounter_template_grid_label') {
-		var count = 0;
-	} else {
-		var a1 = a.split("_");
-		var count = parseInt(a1[4]) + 1;
-	}
-	$("#template_encounter_edit_div").append('<div id="group_encounter_template_div_'+count+'" class="pure-u-1-3"><select name="group[]" id="encounter_template_group_id_'+count+'" class="text encounter_template_group_group" style="width:95%"></select></div><div id="array_encounter_template_div_'+count+'" class="pure-u-1-3"><select name="array[]" id="encounter_template_array_id_'+count+'" class="text" style="width:95%"></select></div><div id="remove_encounter_template_div_'+count+'" class="pure-u-1-3"><button type="button" id="remove_encounter_template_field_'+count+'" class="remove_encounter_template_field nosh_button_cancel">Remove Field</button></div>');
-	if (a == 'encounter_template_grid_label') {
-		var b = $("#template_encounter_edit_dialog_encounter_template").val();
+$(document).on('click', '#autogenerate_encounter_template', function() {
+	$('#dialog_load').dialog('option', 'title', "Autogenerating template...").dialog('open');
+	var str = $("#template_encounter_edit_form").serialize();
+	if(str){
 		$.ajax({
 			type: "POST",
-			url: "ajaxsearch/get-template-fields/" + b,
+			url: "ajaxsearch/autogenerate-encounter-template",
+			data: str,
 			dataType: "json",
 			success: function(data){
-				$("#encounter_template_group_id_"+count).addOption({'':'Choose Field'}, false);
-				$("#encounter_template_group_id_"+count).addOption(data, false);
-				loadbuttons();
+				$.jGrowl(data.message);
+				if (data.name != '') {
+					$("#template_encounter_edit_dialog").dialog('close');
+					$('#dialog_load').dialog('close');
+					$('#dialog_load').dialog('option', 'title', "Loading template...").dialog('open');
+					$.ajax({
+						type: "POST",
+						url: "ajaxsearch/get-encounter-templates-details",
+						data: 'template_name='+data.name,
+						dataType: "json",
+						success: function(data){
+							$('#dialog_load').dialog('close');
+							$("#template_encounter_edit_div").html(data.html);
+							loadbuttons();
+							$("#template_encounter_edit_dialog").dialog("option", "title", "Edit Encounter Template");
+							$("#template_encounter_edit_dialog").dialog('open');
+						}
+					});
+				}
 			}
 		});
-	} else {
-		$("#encounter_template_group_id_0").copyOptions("#encounter_template_group_id_"+count, "all");
-		$("#encounter_template_group_id_"+count).val($("#encounter_template_group_id_"+count+" option:first").val())
-		loadbuttons();
 	}
 });
 $(document).on('click', '.remove_encounter_template_field', function() {

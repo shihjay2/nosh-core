@@ -2585,21 +2585,47 @@ class AjaxSearchController extends BaseController {
 		$gender = Session::get('gender');
 		if ($gender == 'male') {
 			$sex = 'm';
-		} else {
+		} elseif ($gender == 'female') {
 			$sex = 'f';
+		} else {
+			$sex = 'u';
 		}
-		$dir = "images/illustrations/" . $sex;
-		$full_dir = __DIR__."/../../public/" . $dir;
-		$files = scandir($full_dir);
-		$count = count($files);
-		$full_count=0;
 		$arr = array();
-		for ($i = 2; $i < $count; $i++) {
-			$line = $files[$i];
-			$file = $dir . "/" . $line;
-			$line1 = str_replace("_", " ", $line);
-			$name = str_replace(".jpg", "", $line1);
-			$arr[$file] = $name;
+		if ($sex == 'm' || $sex == 'f') {
+			$dir = "images/illustrations/" . $sex;
+			$full_dir = __DIR__."/../../public/" . $dir;
+			$files = scandir($full_dir);
+			$count = count($files);
+			for ($i = 2; $i < $count; $i++) {
+				$line = $files[$i];
+				$file = $dir . "/" . $line;
+				$line1 = str_replace("_", " ", $line);
+				$name = str_replace(".jpg", "", $line1);
+				$arr[$file] = $name;
+			}
+		} else {
+			$dir = "images/illustrations/m";
+			$full_dir = __DIR__."/../../public/" . $dir;
+			$files = scandir($full_dir);
+			$count = count($files);
+			for ($i = 2; $i < $count; $i++) {
+				$line = $files[$i];
+				$file = $dir . "/" . $line;
+				$line1 = str_replace("_", " ", $line);
+				$name = str_replace(".jpg", " - Male", $line1);
+				$arr[$file] = $name;
+			}
+			$dir1 = "images/illustrations/f";
+			$full_dir1 = __DIR__."/../../public/" . $dir;
+			$files1 = scandir($full_dir);
+			$count1 = count($files);
+			for ($j = 2; $j < $count1; $j++) {
+				$line2 = $files1[$j];
+				$file1 = $dir1 . "/" . $line2;
+				$line3 = str_replace("_", " ", $line2);
+				$name1 = str_replace(".jpg", " - Female", $line3);
+				$arr[$file1] = $name1;
+			}
 		}
 		echo json_encode($arr);
 	}
@@ -2654,9 +2680,15 @@ class AjaxSearchController extends BaseController {
 						->orWhere('sex', '=', '')
 						->orWhereNull('sex');
 				});
-			} else {
+			} elseif (Session::get('gender') == 'female') {
 				$query->where(function($query_array1) {
 					$query_array1->where('sex', '=', 'f')
+						->orWhere('sex', '=', '')
+						->orWhereNull('sex');
+				});
+			} else {
+				$query->where(function($query_array1) {
+					$query_array1->where('sex', '=', 'u')
 						->orWhere('sex', '=', '')
 						->orWhereNull('sex');
 				});
@@ -2681,11 +2713,49 @@ class AjaxSearchController extends BaseController {
 		$result = $query->get();
 		foreach ($result as $row) {
 			$norm = 'No normal values set.';
-			$query1 = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('group', '=', $row->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->where('default', '=', 'normal')->get();
-			if ($query1) {
+			$query1 = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('group', '=', $row->group)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->where('default', '=', 'normal');
+			if (Session::has('gender')) {
+				if (Session::get('gender') == 'male') {
+					$query1->where(function($query_array2) {
+						$query_array2->where('sex', '=', 'm')
+							->orWhere('sex', '=', '')
+							->orWhereNull('sex');
+					});
+				} elseif (Session::get('gender') == 'female') {
+					$query1->where(function($query_array2) {
+						$query_array2->where('sex', '=', 'f')
+							->orWhere('sex', '=', '')
+							->orWhereNull('sex');
+					});
+				} else {
+					$query1->where(function($query_array2) {
+						$query_array2->where('sex', '=', 'u')
+							->orWhere('sex', '=', '')
+							->orWhereNull('sex');
+					});
+				}
+			}
+			if (Session::has('agealldays')) {
+				$age1 = Session::get('agealldays');
+				if ($age1 <= 6574.5) {
+					$query1->where(function($query_array2) {
+						$query_array2->where('age', '=', 'child')
+							->orWhere('age', '=', '')
+							->orWhereNull('age');
+					});
+				} else {
+					$query1->where(function($query_array2) {
+						$query_array2->where('age', '=', 'adult')
+							->orWhere('age', '=', '')
+							->orWhereNull('age');
+					});
+				}
+			}
+			$result1 = $query1->get();
+			if ($result1) {
 				$norm = $row->group . ': ';
 				$i = 0;
-				foreach ($query1 as $row1) {
+				foreach ($result1 as $row1) {
 					if ($i > 0) {
 						$norm .= "\n";
 					}
@@ -2701,8 +2771,46 @@ class AjaxSearchController extends BaseController {
 	public function postTextdump($target)
 	{
 		$arr = '';
-		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('group', '=', Input::get('group'))->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->orderBy('array', 'asc')->get();
-		foreach ($query as $row) {
+		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('group', '=', Input::get('group'))->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->orderBy('array', 'asc');
+		if (Session::has('gender')) {
+			if (Session::get('gender') == 'male') {
+				$query->where(function($query_array1) {
+					$query_array1->where('sex', '=', 'm')
+						->orWhere('sex', '=', '')
+						->orWhereNull('sex');
+				});
+			} elseif (Session::get('gender') == 'female') {
+				$query->where(function($query_array1) {
+					$query_array1->where('sex', '=', 'f')
+						->orWhere('sex', '=', '')
+						->orWhereNull('sex');
+				});
+			} else {
+				$query->where(function($query_array1) {
+					$query_array1->where('sex', '=', 'u')
+						->orWhere('sex', '=', '')
+						->orWhereNull('sex');
+				});
+			}
+		}
+		if (Session::has('agealldays')) {
+			$age = Session::get('agealldays');
+			if ($age <= 6574.5) {
+				$query->where(function($query_array1) {
+					$query_array1->where('age', '=', 'child')
+						->orWhere('age', '=', '')
+						->orWhereNull('age');
+				});
+			} else {
+				$query->where(function($query_array1) {
+					$query_array1->where('age', '=', 'adult')
+						->orWhere('age', '=', '')
+						->orWhereNull('age');
+				});
+			}
+		}
+		$result = $query->get();
+		foreach ($result as $row) {
 			if ($row->default == 'normal') {
 				$arr .= '<div id="texttemplatediv_' . $row->template_id . '" style="width:99%" class="pure-g"><div class="textdump_item pure-u-2-3"><span id="edittexttemplate_' . $row->template_id . '_span" class="textdump_item_text" data-type="text" data-pk="' . $row->template_id . '" data-name="array" data-url="ajaxsearch/edit-text-template" data-title="Item">' . $row->array . '</span></div><div class="pure-u-1-3" style="overflow:hidden"><div style="width:400px;"><input type="checkbox" id="normaltexttemplate_' . $row->template_id . '" class="normaltexttemplate" value="normal" checked><label for="normaltexttemplate_' . $row->template_id . '">Mark as Default Normal</label><button type="button" id="edittexttemplate_' . $row->template_id . '" class="edittexttemplate">Edit</button><button type="button" id="deletetexttemplate_' . $row->template_id . '" class="deletetexttemplate">Remove</button></div></div><hr class="ui-state-default"/></div>';
 			} else {
@@ -3066,12 +3174,29 @@ class AjaxSearchController extends BaseController {
 		} else {
 			$template_value = null;
 		}
+		$gender = array(
+			'' => 'Both',
+			'm' => 'Male',
+			'f' => 'Female',
+			'u' => 'Undifferentiated'
+		);
+		$age = array(
+			'' => 'Both',
+			'adult' => 'Adult',
+			'child' => 'Child'
+		);
 		$data['html'] = '<input type="hidden" name="old_template_name" value="">';
-		$data['html'] .= '<div class="pure-u-1"><label for="encounter_template_value">Encounter Template</label>';
+		$data['html'] .= '<div class="pure-u-1-2"><label for="encounter_template_value">Encounter Template</label>';
 		$data['html'] .= Form::select('encounter_template', $template1, $template_value, array('id'=>'template_encounter_edit_dialog_encounter_template','class'=>'text'));
 		$data['html'] .= '</div>';
+		$data['html'] .= '<div class="pure-u-1-4"><label for="encounter_template_gender">Gender</label>';
+		$data['html'] .= Form::select('gender', $gender, null, array('id'=>'encounter_template_gender','class'=>'text'));
+		$data['html'] .= '</div>';
+		$data['html'] .= '<div class="pure-u-1-4"><label for="encounter_template_age">Age Group</label>';
+		$data['html'] .= Form::select('age', $age, null, array('id'=>'encounter_template_age','class'=>'text'));
+		$data['html'] .= '</div>';
 		$data['html'] .= '<div class="pure-u-2-3"><label for="encounter_template_name_text">Template Name</label><input type="text" id="encounter_template_name_text" name="template_name" style="width:95%" value="" required/></div>';
-		$data['html'] .= '<div class="pure-u-1-3"><br><button type="button" id="add_encounter_template_field" class="nosh_button_add">Add Field</button></div>';
+		$data['html'] .= '<div class="pure-u-1-3"><br><button type="button" id="autogenerate_encounter_template" class="nosh_button_star">Auto Generate</button></div>';
 		$data['html'] .= '<div class="pure-u-1"><br></div>';
 		$data['html'] .= '<div class="pure-u-1-3"><strong>Encounter Field</strong></div><div class="pure-u-1-3"><strong>Text Template Normal Group</strong></div><div id="encounter_template_grid_label" class="pure-u-1-3"></div>';
 		echo json_encode($data);
@@ -3095,15 +3220,32 @@ class AjaxSearchController extends BaseController {
 		$data['response'] = false;
 		$template = $this->encounter_template_array();
 		$template1 = $this->encounter_template_names_array();
+		$gender = array(
+			'' => 'Both',
+			'm' => 'Male',
+			'f' => 'Female',
+			'u' => 'Undifferentiated'
+		);
+		$age = array(
+			'' => 'Both',
+			'adult' => 'Adult',
+			'child' => 'Child'
+		);
 		if ($query) {
 			$i = 0;
 			$data['response'] = true;
 			$data['html'] = '<input type="hidden" name="old_template_name" value="' . Input::get('template_name') . '">';
-			$data['html'] .= '<div class="pure-u-1"><label for="encounter_template_value">Encounter Template</label>';
-			$data['html'] .= Form::select('encounter_template', $template1, $title->scoring, array('id'=>'template_encounter_edit_dialog_encounter_template','class'=>'text'));
+			$data['html'] .= '<div class="pure-u-1-2"><label for="encounter_template_value">Encounter Template</label>';
+			$data['html'] .= Form::select('encounter_template', $template1, $title->scoring, array('id'=>'encounter_template_value','class'=>'text'));
+			$data['html'] .= '</div>';
+			$data['html'] .= '<div class="pure-u-1-4"><label for="encounter_template_gender">Gender</label>';
+			$data['html'] .= Form::select('gender', $gender, $title->sex, array('id'=>'encounter_template_gender','class'=>'text'));
+			$data['html'] .= '</div>';
+			$data['html'] .= '<div class="pure-u-1-4"><label for="encounter_template_age">Age Group</label>';
+			$data['html'] .= Form::select('age', $age, $title->age, array('id'=>'encounter_template_age','class'=>'text'));
 			$data['html'] .= '</div>';
 			$data['html'] .= '<div class="pure-u-2-3"><label for="encounter_template_name_text">Template Name</label><input type="text" id="encounter_template_name_text" name="template_name" value="' . Input::get('template_name') .'" style="width:95%" required/></div>';
-			$data['html'] .= '<div class="pure-u-1-3"><br><button type="button" id="add_encounter_template_field" class="nosh_button_add">Add Field</button></div>';
+			$data['html'] .= '<div class="pure-u-1-3"><br><button type="button" id="autogenerate_encounter_template" class="nosh_button_star">Auto Generate</button></div>';
 			$data['html'] .= '<div class="pure-u-1"><br></div>';
 			$data['html'] .= '<div class="pure-u-1-3"><strong>Encounter Field</strong></div><div class="pure-u-1-3"><strong>Text Template Normal Group</strong></div><div id="encounter_template_grid_label" class="pure-u-1-3"></div>';
 			foreach ($query as $row) {
@@ -3119,11 +3261,11 @@ class AjaxSearchController extends BaseController {
 						$template_array[$key] = $key;
 					}
 				}
-				$data['html'] .= '<div id="group_encounter_template_div_' . $id . '" class="pure-u-1-3">';
+				$data['html'] .= '<div id="group_encounter_template_div_' . $i . '" class="pure-u-1-3">';
 				$data['html'] .= Form::select('group[]', $template[$encounter_template], $row->group, array('id'=>$id,'class'=>'text encounter_template_group_group','style'=>'width:95%'));
-				$data['html'] .= '</div><div id="array_encounter_template_div_' . $id . '" class="pure-u-1-3">';
+				$data['html'] .= '</div><div id="array_encounter_template_div_' . $i . '" class="pure-u-1-3">';
 				$data['html'] .= Form::select('array[]', $template_array, $row->array, array('id'=>$id1,'class'=>'text','style'=>'width:95%'));
-				$data['html'] .= '</div><div id="remove_encounter_template_div_' . $id . '"class="pure-u-1-3"><button type="button" id="remove_encounter_template_field_"' . $id . '" class="remove_encounter_template_field nosh_button_cancel">Remove Field</button></div>';
+				$data['html'] .= '</div><div id="remove_encounter_template_div_' . $i . '"class="pure-u-1-3"><button type="button" id="remove_encounter_template_field_"' . $i . '" class="remove_encounter_template_field nosh_button_cancel">Remove Field</button></div>';
 				$i++;
 			}
 		}
@@ -3149,6 +3291,84 @@ class AjaxSearchController extends BaseController {
 		echo json_encode($template[$encounter_template]);
 	}
 	
+	public function postAutogenerateEncounterTemplate()
+	{
+		$arr = array(
+			'message' => '',
+			'name' => ''
+		);
+		$query_check = DB::table('templates')
+			->where('template_name', '=', Input::get('template_name'))
+			->where('category', '=', 'encounter_templates')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->where('array', '=', '')
+			->first();
+		if (Input::get('old_template_name') == '' && $query_check) {
+			$arr['message'] = 'There is already a template with the same name!';
+		} else { 
+			$encounter_template_array = $this->encounter_template_array();
+			$fields = $encounter_template_array[Input::get('encounter_template')];
+			if (isset($fields)) {
+				$data1 = array(
+					'template_name' => Input::get('template_name'),
+					'category' => 'encounter_templates',
+					'practice_id' => Session::get('practice_id'),
+					'scoring' => Input::get('encounter_template'),
+					'sex' => Input::get('gender'),
+					'age' => Input::get('age'),
+					'array' => ''
+				);
+				DB::table('templates')->insert($data1);
+				$this->audit('Add');
+				$i = 0;
+				$exclude_f_standardmedical = array(
+					'pe_gu7',
+					'pe_gu8',
+					'pe_gu9'
+				);
+				$exclude_m_standardmedical = array(
+					'pe_gu1',
+					'pe_gu2',
+					'pe_gu3',
+					'pe_gu4',
+					'pe_gu5',
+					'pe_gu6'
+				);
+				foreach ($fields as $key => $field) {
+					if (Input::get('gender') == 'f' && (Input::get('encounter_template') == 'standardmedical' || Input::get('encounter_template') == 'standardmedical1') && in_array($key, $exclude_f_standardmedical)) {
+						continue;
+					}
+					if (Input::get('gender') == 'm' && (Input::get('encounter_template') == 'standardmedical' || Input::get('encounter_template') == 'standardmedical1') && in_array($key, $exclude_m_standardmedical)) {
+						continue;
+					}
+					$query1 = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $key)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->where('default', '=', 'normal')->select('group')->distinct()->get();
+					if ($query1) {
+						foreach ($query1 as $row1) {
+							$data2 = array(
+								'template_name' => Input::get('template_name'),
+								'category' => 'encounter_templates',
+								'practice_id' => Session::get('practice_id'),
+								'scoring' => Input::get('encounter_template'),
+								'sex' => Input::get('gender'),
+								'age' => Input::get('age'),
+								'group' => $key,
+								'array' => $row1->group
+							);
+							DB::table('templates')->insert($data2);
+							$this->audit('Add');
+							$i++;
+						}
+					}
+				}
+				$arr['name'] = Input::get('template_name');
+				$arr['message'] = 'Encounter template named ' . Input::get('template_name') . ' automatically generated with ' . $i . 'fields!';
+			} else {
+				$arr['message'] = 'There is no encounter template of that name!';
+			}
+		}
+		echo json_encode($arr);
+	}
+	
 	public function postSaveEncounterTemplates()
 	{
 		$query_check = DB::table('templates')
@@ -3163,7 +3383,10 @@ class AjaxSearchController extends BaseController {
 			$group = Input::get('group');
 			$array = Input::get('array');
 			$data = array(
-				'template_name' => Input::get('template_name')
+				'template_name' => Input::get('template_name'),
+				'scoring' => Input::get('encounter_template'),
+				'sex' => Input::get('gender'),
+				'age' => Input::get('age')
 			);
 			$query = DB::table('templates')
 				->where('template_name', '=', Input::get('old_template_name'))
@@ -3180,10 +3403,7 @@ class AjaxSearchController extends BaseController {
 					->delete();
 				$this->audit('Delete');
 				DB::table('templates')
-					->where('template_name', '=', Input::get('old_template_name'))
-					->where('category', '=', 'encounter_templates')
-					->where('practice_id', '=', Session::get('practice_id'))
-					->where('array', '=', '')
+					->where('template_id', '=', $query->template_id)
 					->update($data);
 				$this->audit('Update');
 			} else {
@@ -3192,22 +3412,28 @@ class AjaxSearchController extends BaseController {
 					'category' => 'encounter_templates',
 					'practice_id' => Session::get('practice_id'),
 					'scoring' => Input::get('encounter_template'),
-					'array' => ''
+					'array' => '',
+					'sex' => Input::get('gender'),
+					'age' => Input::get('age')
 				);
 				DB::table('templates')->insert($data1);
 				$this->audit('Add');
 			}
 			for($i = 0; $i<count($group); $i++) {
-				$data2 = array(
-					'template_name' => Input::get('template_name'),
-					'category' => 'encounter_templates',
-					'group' => $group[$i],
-					'array' => $array[$i],
-					'practice_id' => Session::get('practice_id'),
-					'scoring' => Input::get('encounter_template')
-				);
-				DB::table('templates')->insert($data2);
-				$this->audit('Add');
+				if (isset($group[$i]) && isset($array[$i])) {
+					$data2 = array(
+						'template_name' => Input::get('template_name'),
+						'category' => 'encounter_templates',
+						'group' => $group[$i],
+						'array' => $array[$i],
+						'practice_id' => Session::get('practice_id'),
+						'scoring' => Input::get('encounter_template'),
+						'sex' => Input::get('gender'),
+						'age' => Input::get('age')
+					);
+					DB::table('templates')->insert($data2);
+					$this->audit('Add');
+				}
 			}
 			echo "Normal Encounter Template Saved!";
 		}

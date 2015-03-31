@@ -98,7 +98,7 @@
 	</div>
 </form>
 <?php if (Session::get('encounter_template') == 'standardmedical' || Session::get('encounter_template') == 'standardmedical1' || Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
-	<div id="ros_gen_dialog" title="General" style="overflow:hidden;">
+	<div id="ros_gen_dialog" class="ros_dialog" title="General" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_gen_dialog_form" class="pure-form pure-form-stacked">
@@ -119,7 +119,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_eye_dialog" title="Eye" style="overflow:hidden;">
+	<div id="ros_eye_dialog" class="ros_dialog" title="Eye" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_eye_dialog_form" class="pure-form pure-form-stacked">
@@ -140,7 +140,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_ent_dialog" title="Ear, Nose, and Throat" style="overflow:hidden;">
+	<div id="ros_ent_dialog" class="ros_dialog" title="Ear, Nose, and Throat" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_ent_dialog_form" class="pure-form pure-form-stacked">
@@ -161,7 +161,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_resp_dialog" title="Respiratory" style="overflow:hidden;">
+	<div id="ros_resp_dialog" class="ros_dialog" title="Respiratory" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_resp_dialog_form" class="pure-form pure-form-stacked">
@@ -182,7 +182,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_cv_dialog" title="Cardiovascular" style="overflow:hidden;">
+	<div id="ros_cv_dialog" class="ros_dialog" title="Cardiovascular" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_cv_dialog_form" class="pure-form pure-form-stacked">
@@ -204,7 +204,7 @@
 			
 		</div>
 	</div>
-	<div id="ros_gi_dialog" title="Gastrointestinal" style="overflow:hidden;">
+	<div id="ros_gi_dialog" class="ros_dialog" title="Gastrointestinal" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_gi_dialog_form" class="pure-form pure-form-stacked">
@@ -225,7 +225,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_gu_dialog" title="Genitourinary" style="overflow:hidden;">
+	<div id="ros_gu_dialog" class="ros_dialog" title="Genitourinary" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_gu_dialog_form" class="pure-form pure-form-stacked">
@@ -246,7 +246,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_mus_dialog" title="Musculoskeletal" style="overflow:hidden;">
+	<div id="ros_mus_dialog" class="ros_dialog" title="Musculoskeletal" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_mus_dialog_form" class="pure-form pure-form-stacked">
@@ -267,7 +267,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_neuro_dialog" title="Neurological" style="overflow:hidden;">
+	<div id="ros_neuro_dialog" class="ros_dialog" title="Neurological" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_neuro_dialog_form" class="pure-form pure-form-stacked">
@@ -288,7 +288,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_psych_dialog" title="Psychological" style="overflow:hidden;">
+	<div id="ros_psych_dialog" class="ros_dialog" title="Psychological" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_psych_dialog_form" class="pure-form pure-form-stacked">
@@ -309,7 +309,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_heme_dialog" title="Hematological/Lymphatic" style="overflow:hidden;">
+	<div id="ros_heme_dialog" class="ros_dialog" title="Hematological/Lymphatic" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_heme_dialog_form" class="pure-form pure-form-stacked">
@@ -330,7 +330,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_endocrine_dialog" title="Endocrine" style="overflow:hidden;">
+	<div id="ros_endocrine_dialog" class="ros_dialog" title="Endocrine" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_endocrine_dialog_form" class="pure-form pure-form-stacked">
@@ -351,7 +351,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_skin_dialog" title="Skin" style="overflow:hidden;">
+	<div id="ros_skin_dialog" class="ros_dialog" title="Skin" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_skin_dialog_form" class="pure-form pure-form-stacked">
@@ -372,7 +372,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_wcc_dialog" title="Well Child Check" style="overflow:hidden;">
+	<div id="ros_wcc_dialog" class="ros_dialog" title="Well Child Check" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_wcc_dialog_form" class="pure-form pure-form-stacked">
@@ -395,7 +395,7 @@
 		</div>
 	</div>
 <?php } if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych1') {?>
-	<div id="ros_psych1_dialog" title="Depression" style="overflow:hidden;">
+	<div id="ros_psych1_dialog" class="ros_dialog" title="Depression" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_psych1_dialog_form" class="pure-form pure-form-stacked">
@@ -414,7 +414,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_psych2_dialog" title="Anxiety" style="overflow:hidden;">
+	<div id="ros_psych2_dialog" class="ros_dialog" title="Anxiety" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_psych2_dialog_form" class="pure-form pure-form-stacked">
@@ -433,7 +433,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_psych3_dialog" title="Bipolar" style="overflow:hidden;">
+	<div id="ros_psych3_dialog" class="ros_dialog" title="Bipolar" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_psych3_dialog_form" class="pure-form pure-form-stacked">
@@ -452,7 +452,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_psych4_dialog" title="Mood Disorders" style="overflow:hidden;">
+	<div id="ros_psych4_dialog" class="ros_dialog" title="Mood Disorders" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_psych4_dialog_form" class="pure-form pure-form-stacked">
@@ -471,7 +471,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_psych5_dialog" title="ADHD" style="overflow:hidden;">
+	<div id="ros_psych5_dialog" class="ros_dialog" title="ADHD" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_psych5_dialog_form" class="pure-form pure-form-stacked">
@@ -490,7 +490,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_psych6_dialog" title="PTSD" style="overflow:hidden;">
+	<div id="ros_psych6_dialog" class="ros_dialog" title="PTSD" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_psych6_dialog_form" class="pure-form pure-form-stacked">
@@ -509,7 +509,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_psych7_dialog" title="Substance Related Disorder" style="overflow:hidden;">
+	<div id="ros_psych7_dialog" class="ros_dialog" title="Substance Related Disorder" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_psych7_dialog_form" class="pure-form pure-form-stacked">
@@ -528,7 +528,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_psych8_dialog" title="Obsessive Compulsive Disorder" style="overflow:hidden;">
+	<div id="ros_psych8_dialog" class="ros_dialog" title="Obsessive Compulsive Disorder" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_psych8_dialog_form" class="pure-form pure-form-stacked">
@@ -547,7 +547,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_psych9_dialog" title="Social Anxiety Disorder" style="overflow:hidden;">
+	<div id="ros_psych9_dialog" class="ros_dialog" title="Social Anxiety Disorder" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_psych9_dialog_form" class="pure-form pure-form-stacked">
@@ -566,7 +566,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_psych10_dialog" title="Autistic Disorder" style="overflow:hidden;">
+	<div id="ros_psych10_dialog" class="ros_dialog" title="Autistic Disorder" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_psych10_dialog_form" class="pure-form pure-form-stacked">
@@ -585,7 +585,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="ros_psych11_dialog" title="Asperger's Disorder" style="overflow:hidden;">
+	<div id="ros_psych11_dialog" class="ros_dialog" title="Asperger's Disorder" style="overflow:hidden;">
 		<div class="pure-g">
 			<div class="pure-u-13-24">
 				<form id="ros_psych11_dialog_form" class="pure-form pure-form-stacked">

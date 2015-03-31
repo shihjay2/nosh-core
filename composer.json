@@ -21,7 +21,7 @@
 		"h4cc/wkhtmltopdf-i386": "*",
 		"jenssegers/date": "*",
 		"yangqi/htmldom": "dev-master",
-		"Chumper/Zipper": "dev-master",
+		"Chumper/Zipper": "0.5.x",
 		"knplabs/github-api": "*"
 	},
 	"autoload": {

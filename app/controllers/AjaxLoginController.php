@@ -216,7 +216,8 @@ class AjaxLoginController extends BaseController {
 	{
 		$arr = array(
 			'secret' => '',
-			'setup' => ''
+			'setup' => '',
+			'template' => ''
 		);
 		$result = User::find(Session::get('user_id'));
 		if ($result->secret_question == '') {
@@ -225,6 +226,11 @@ class AjaxLoginController extends BaseController {
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
 		if ($practice->icd == '' && Session::get('patient_centric') == 'yp' && Session::get('group_id') == '2') {
 			$arr['setup'] = 'y';
+			$arr['template'] = 'y';
+		}
+		$template = DB::table('templates')->where('practice_id', '=', Session::get('practice_id'))->where('template_core_id', '=', '1')->first();
+		if (!$template && Session::get('group_id') == '1') {
+			$arr['template'] = 'y';
 		}
 		echo json_encode($arr);
 	}

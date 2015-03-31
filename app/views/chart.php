@@ -241,8 +241,9 @@
 		<select id="template_encounter_choose" name="template_name" style="width:95%" required></select>
 		<label for="textdump_delimiter3">Delimiter for normal values</label>
 		<select id="textdump_delimiter3" name="delimiter" required>
-			<option value=" ">space</option>
 			<option value=", ">,</option>
+			<option value=" ">space</option>
+			<option value="&#13;&#10;">new line</option>
 			<option value="; ">;</option>
 		</select>
 	</form>

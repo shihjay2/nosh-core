@@ -780,7 +780,7 @@ class AjaxOfficeController extends BaseController {
 		if($search_no_insurance_only == "Yes") {
 			$query_text1->leftJoin('insurance', 'insurance.pid', '=', 'demographics.pid')->whereNull('insurance.pid');
 		}
-		if($search_gender == "m" || $search_gender == "f") {
+		if($search_gender == "m" || $search_gender == "f" || $search_gender == "u") {
 			$query_text1->where('demographics.sex', '=', $search_gender);
 		}
 		$page = Input::get('page');

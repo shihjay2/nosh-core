@@ -10,6 +10,7 @@
 			<button type="button" id="edit_textdump_group" class="nosh_button_edit">Edit</button>
 			<button type="button" id="delete_textdump_group" class="nosh_button_delete">Delete</button>
 			<button type="button" id="export_textdump" class="nosh_button_extlink">Export</button>
+			<button type="button" id="reset_default_templates" class="nosh_button_star">Reset Default Templates</button>
 		</div>
 		<h3><a href="#">Text Macros</a></h3>
 		<div>

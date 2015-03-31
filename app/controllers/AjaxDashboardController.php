@@ -1421,6 +1421,46 @@ class AjaxDashboardController extends BaseController {
 		return Response::download($file_path);
 	}
 	
+	public function postResetDefaultTemplates()
+	{
+		$directory = __DIR__.'/../../import/templates';
+		$i = 0;
+		$error = '';
+		$file_path = $directory . '/Default.txt';
+		$csv = File::get($file_path);
+		$return = $this->install_template($csv, Session::get('practice_id'));
+		if (isset($return['count'])) {
+			$i += $return['count'];
+		}
+		if (isset($return['error'])) {
+			$error .= $return['error'];
+		}
+		echo "Imported " . $i . " templates." . $error;
+	}
+	
+	public function postTemplateInstall()
+	{
+		$directory = __DIR__.'/../../import/templates';
+		$i = 0;
+		$error = '';
+		foreach (Input::get('template_file') as $file) {
+			if ($file) {
+				$file_path = $directory . '/' . $file . '.txt';
+				$csv = File::get($file_path);
+				$return = $this->install_template($csv, Session::get('practice_id'));
+				if (isset($return['count'])) {
+					$i += $return['count'];
+				}
+				if (isset($return['error'])) {
+					$error .= $return['error'];
+				}
+			} else {
+				$error .= '<br>' . $file . 'is an invalid file!';
+			}
+		}
+		return "Imported " . $i . " templates." . $error;
+	}
+	
 	public function templateupload()
 	{
 		$directory = __DIR__.'/../../public/temp';
@@ -1434,29 +1474,16 @@ class AjaxDashboardController extends BaseController {
 					sleep(2);
 				}
 				$csv = File::get($file_path);
-				$csv_line = explode("\n", $csv);
-				if (count($csv_line) >= 2) {
-					$headers = explode("\t", $csv_line[0]);
-					$l = 1;
-					for ($k = 0; $k < count($csv_line); $k++) {
-						$values = explode("\t", $csv_line[$l]);
-						$row = array();
-						for ($j = 0; $j < count($headers); $j++) {
-							$row[$headers[$j]] = $values[$j];
-						}
-						$row['practice_id'] = Session::get('practice_id');
-						DB::table('templates')->insert($row);
-						$this->audit('Add');
-						$k++;
-						$l++;
-					}
-					$i += $k;
-				} else {
-					$error = "<br>Incorrect format.";
+				$return = $this->install_template($csv, Session::get('practice_id'));
+				if (isset($return['count'])) {
+					$i += $return['count'];
+				}
+				if (isset($return['error'])) {
+					$error .= $return['error'];
 				}
 				unlink($file_path);
 			} else {
-				$error = '<br>Invalid file!';
+				$error = '<br>' . $file . 'is an invalid file!';
 			}
 		}
 		return "Imported " . $i . " templates." . $error;
@@ -1599,45 +1626,76 @@ class AjaxDashboardController extends BaseController {
 				'practice_id' => Session::get('practice_id'),
 				'scoring' => Input::get('scoring')
 			);
+			$template_data3 = array(
+				'user_id' => $user_id,
+				'default' => 'default',
+				'template_name' => Input::get('template_name'),
+				'age' => Input::get('age'),
+				'category' => 'forms',
+				'sex' => 'u',
+				'group' => $group,
+				'array' => $array,
+				'practice_id' => Session::get('practice_id'),
+				'scoring' => Input::get('scoring')
+			);
 			if (Input::get('template_id') == '') {
 				DB::table('templates')->insert($template_data1);
 				$this->audit('Add');
 				DB::table('templates')->insert($template_data2);
+				$this->audit('Add');
+				DB::table('templates')->insert($template_data3);
 				$this->audit('Add');
 				$message = "Form added as a template!";
 			} else {
 				$template_row = Templates::find(Input::get('template_id'));
 				if ($template_row->sex == 'm') {
 					$template_id1 = Input::get('template_id');
-				} else {
+				} elseif ($template_row->sex == 'f') {
 					$template_id2 = Input::get('template_id');
+				} else {
+					$template_id3 = Input::get('template_id');
 				}
 				$template_row1 = Templates::where('group', '=', $template_row->group)
 					->where('template_id', '!=', Input::get('template_id'))
-					->first();
+					->get();
 				if ($template_row1) {
-					if ($template_row1->sex == 'm') {
-						$template_id1 = $template_row1->template_id;
-					} else {
-						$template_id2 = $template_row1->template_id;
+					foreach ($template_row1 as $template_row1_row) {
+						if ($template_row1_row->sex == 'm') {
+							$template_id1 = $template_row1_row->template_id;
+						} elseif ($template_row1_row->sex == 'f') {
+							$template_id2 = $template_row1_row->template_id;
+						} else {
+							$template_id3 = $template_row1_row->template_id;
+						}
 					}
 					DB::table('templates')->where('template_id', '=', $template_id1)->update($template_data1);
 					$this->audit('Update');
 					DB::table('templates')->where('template_id', '=', $template_id2)->update($template_data2);
 					$this->audit('Update');
+					DB::table('templates')->where('template_id', '=', $template_id3)->update($template_data3);
+					$this->audit('Update');
 				} else {
 					if ($template_row->sex == 'm') {
 						DB::table('templates')->insert($template_data2);
 						$this->audit('Add');
+						DB::table('templates')->insert($template_data3);
+						$this->audit('Add');
+					} elseif ($template_row->sex == 'f') {
+						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+						DB::table('templates')->insert($template_data3);
+						$this->audit('Add');
 					} else {
 						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+						DB::table('templates')->insert($template_data2);
 						$this->audit('Add');
 					}
 				}
 				$message = "Form updated as a template!";
 			}
 		} else {
-			$template_data3 = array(
+			$template_data4 = array(
 				'user_id' => $user_id,
 				'default' => 'default',
 				'template_name' => Input::get('template_name'),
@@ -1650,11 +1708,11 @@ class AjaxDashboardController extends BaseController {
 				'scoring' => Input::get('scoring')
 			);
 			if (Input::get('template_id') == '') {
-				DB::table('templates')->insert($template_data3);
+				DB::table('templates')->insert($template_data4);
 				$this->audit('Add');
 				$message = "Form added as a template!";
 			} else {
-				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data3);
+				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data4);
 				$this->audit('Update');
 				$message = "Form updated as a template!";
 			}
@@ -1753,45 +1811,75 @@ class AjaxDashboardController extends BaseController {
 				'array' => $array,
 				'practice_id' => Session::get('practice_id')
 			);
+			$template_data3 = array(
+				'user_id' => $user_id,
+				'default' => 'default',
+				'template_name' => Input::get('template_name'),
+				'age' => Input::get('age'),
+				'category' => 'hpi',
+				'sex' => 'u',
+				'group' => $group,
+				'array' => $array,
+				'practice_id' => Session::get('practice_id')
+			);
 			if (Input::get('template_id') == '') {
 				DB::table('templates')->insert($template_data1);
 				$this->audit('Add');
 				DB::table('templates')->insert($template_data2);
+				$this->audit('Add');
+				DB::table('templates')->insert($template_data3);
 				$this->audit('Add');
 				$message = "Form added as a template!";
 			} else {
 				$template_row = Templates::find(Input::get('template_id'));
 				if ($template_row->sex == 'm') {
 					$template_id1 = Input::get('template_id');
-				} else {
+				} elseif ($template_row->sex == 'f') {
 					$template_id2 = Input::get('template_id');
+				} else {
+					$template_id3 = Input::get('template_id');
 				}
 				$template_row1 = Templates::where('group', '=', $template_row->group)
 					->where('template_id', '!=', Input::get('template_id'))
-					->first();
+					->get();
 				if ($template_row1) {
-					if ($template_row1->sex == 'm') {
-						$template_id1 = $template_row1->template_id;
-					} else {
-						$template_id2 = $template_row1->template_id;
+					foreach ($template_row1 as $template_row1_row) {
+						if ($template_row1_row->sex == 'm') {
+							$template_id1 = $template_row1_row->template_id;
+						} elseif ($template_row1_row->sex == 'f') {
+							$template_id2 = $template_row1_row->template_id;
+						} else {
+							$template_id3 = $template_row1_row->template_id;
+						}
 					}
 					DB::table('templates')->where('template_id', '=', $template_id1)->update($template_data1);
 					$this->audit('Update');
 					DB::table('templates')->where('template_id', '=', $template_id2)->update($template_data2);
 					$this->audit('Update');
+					DB::table('templates')->where('template_id', '=', $template_id3)->update($template_data3);
+					$this->audit('Update');
 				} else {
 					if ($template_row->sex == 'm') {
 						DB::table('templates')->insert($template_data2);
 						$this->audit('Add');
+						DB::table('templates')->insert($template_data3);
+						$this->audit('Add');
+					} elseif ($template_row->sex == 'f') {
+						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+						DB::table('templates')->insert($template_data3);
+						$this->audit('Add');
 					} else {
 						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+						DB::table('templates')->insert($template_data2);
 						$this->audit('Add');
 					}
 				}
 				$message = "Form updated as a template!";
 			}
 		} else {
-			$template_data3 = array(
+			$template_data4 = array(
 				'user_id' => $user_id,
 				'default' => 'default',
 				'template_name' => Input::get('template_name'),
@@ -1803,11 +1891,11 @@ class AjaxDashboardController extends BaseController {
 				'practice_id' => Session::get('practice_id')
 			);
 			if (Input::get('template_id') == '') {
-				DB::table('templates')->insert($template_data3);
+				DB::table('templates')->insert($template_data4);
 				$this->audit('Add');
 				$message = "Form added as a template!";
 			} else {
-				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data3);
+				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data4);
 				$this->audit('Update');
 				$message = "Form updated as a template!";
 			}
@@ -1904,6 +1992,16 @@ class AjaxDashboardController extends BaseController {
 				'array' => $array,
 				'practice_id' => Session::get('practice_id')
 			);
+			$template_data3 = array(
+				'user_id' => $user_id,
+				'template_name' => Input::get('template_name'),
+				'age' => Input::get('age'),
+				'category' => 'ros',
+				'sex' => 'u',
+				'group' => Input::get('group'),
+				'array' => $array,
+				'practice_id' => Session::get('practice_id')
+			);
 			if (Input::get('template_id') == '') {
 				$template_data1['default'] = 'n';
 				$template_data2['default'] = 'n';
@@ -1911,41 +2009,60 @@ class AjaxDashboardController extends BaseController {
 				$this->audit('Add');
 				DB::table('templates')->insert($template_data2);
 				$this->audit('Add');
+				DB::table('templates')->insert($template_data3);
+				$this->audit('Add');
 				$message = "Form added as a template!";
 			} else {
 				$template_row = Templates::find(Input::get('template_id'));
 				if ($template_row->sex == 'm') {
 					$template_id1 = Input::get('template_id');
-				} else {
+				} elseif ($template_row->sex == 'f') {
 					$template_id2 = Input::get('template_id');
+				} else {
+					$template_id3 = Input::get('template_id');
 				}
 				$template_row1 = Templates::where('template_name', '=', $template_row->template_name)
 					->where('group', '=', $template_row->group)
 					->where('template_id', '!=', Input::get('template_id'))
-					->first();
+					->get();
 				if ($template_row1) {
-					if ($template_row1->sex == 'm') {
-						$template_id1 = $template_row1->template_id;
-					} else {
-						$template_id2 = $template_row1->template_id;
+					foreach ($template_row1 as $template_row1_row) {
+						if ($template_row1_row->sex == 'm') {
+							$template_id1 = $template_row1_row->template_id;
+						} elseif ($template_row1_row->sex == 'f') {
+							$template_id2 = $template_row1_row->template_id;
+						} else {
+							$template_id3 = $template_row1_row->template_id;
+						}
 					}
 					DB::table('templates')->where('template_id', '=', $template_id1)->update($template_data1);
 					$this->audit('Update');
 					DB::table('templates')->where('template_id', '=', $template_id2)->update($template_data2);
 					$this->audit('Update');
+					DB::table('templates')->where('template_id', '=', $template_id3)->update($template_data3);
+					$this->audit('Update');
 				} else {
 					if ($template_row->sex == 'm') {
 						DB::table('templates')->insert($template_data2);
 						$this->audit('Add');
+						DB::table('templates')->insert($template_data3);
+						$this->audit('Add');
+					} elseif ($template_row->sex == 'f') {
+						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+						DB::table('templates')->insert($template_data3);
+						$this->audit('Add');
 					} else {
 						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+						DB::table('templates')->insert($template_data2);
 						$this->audit('Add');
 					}
 				}
 				$message = "Form updated as a template!";
 			}
 		} else {
-			$template_data3 = array(
+			$template_data4 = array(
 				'user_id' => $user_id,
 				'default' => 'n',
 				'template_name' => Input::get('template_name'),
@@ -1957,11 +2074,11 @@ class AjaxDashboardController extends BaseController {
 				'practice_id' => Session::get('practice_id')
 			);
 			if (Input::get('template_id') == '') {
-				DB::table('templates')->insert($template_data3);
+				DB::table('templates')->insert($template_data4);
 				$this->audit('Add');
 				$message = "Form added as a template!";
 			} else {
-				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data3);
+				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data4);
 				$this->audit('Update');
 				$message = "Form updated as a template!";
 			}
@@ -2058,6 +2175,16 @@ class AjaxDashboardController extends BaseController {
 				'array' => $array,
 				'practice_id' => Session::get('practice_id')
 			);
+			$template_data3 = array(
+				'user_id' => $user_id,
+				'template_name' => Input::get('template_name'),
+				'age' => Input::get('age'),
+				'category' => 'pe',
+				'sex' => 'u',
+				'group' => Input::get('group'),
+				'array' => $array,
+				'practice_id' => Session::get('practice_id')
+			);
 			if (Input::get('template_id') == '') {
 				$template_data1['default'] = 'n';
 				$template_data2['default'] = 'n';
@@ -2065,41 +2192,60 @@ class AjaxDashboardController extends BaseController {
 				$this->audit('Add');
 				DB::table('templates')->insert($template_data2);
 				$this->audit('Add');
+				DB::table('templates')->insert($template_data3);
+				$this->audit('Add');
 				$message = "Form added as a template!";
 			} else {
 				$template_row = Templates::find(Input::get('template_id'));
 				if ($template_row->sex == 'm') {
 					$template_id1 = Input::get('template_id');
-				} else {
+				} elseif ($template_row->sex == 'f') {
 					$template_id2 = Input::get('template_id');
+				} else {
+					$template_id3 = Input::get('template_id');
 				}
 				$template_row1 = Templates::where('template_name', '=', $template_row->template_name)
 					->where('group', '=', $template_row->group)
 					->where('template_id', '!=', Input::get('template_id'))
-					->first();
+					->get();
 				if ($template_row1) {
-					if ($template_row1->sex == 'm') {
-						$template_id1 = $template_row1->template_id;
-					} else {
-						$template_id2 = $template_row1->template_id;
+					foreach ($template_row1 as $template_row1_row) {
+						if ($template_row1_row->sex == 'm') {
+							$template_id1 = $template_row1_row->template_id;
+						} elseif ($template_row1_row->sex == 'f') {
+							$template_id2 = $template_row1_row->template_id;
+						} else {
+							$template_id3 = $template_row1_row->template_id;
+						}
 					}
 					DB::table('templates')->where('template_id', '=', $template_id1)->update($template_data1);
 					$this->audit('Update');
 					DB::table('templates')->where('template_id', '=', $template_id2)->update($template_data2);
 					$this->audit('Update');
+					DB::table('templates')->where('template_id', '=', $template_id3)->update($template_data3);
+					$this->audit('Update');
 				} else {
 					if ($template_row->sex == 'm') {
 						DB::table('templates')->insert($template_data2);
 						$this->audit('Add');
+						DB::table('templates')->insert($template_data3);
+						$this->audit('Add');
+					} elseif ($template_row->sex == 'f') {
+						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+						DB::table('templates')->insert($template_data3);
+						$this->audit('Add');
 					} else {
 						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+						DB::table('templates')->insert($template_data2);
 						$this->audit('Add');
 					}
 				}
 				$message = "Form updated as a template!";
 			}
 		} else {
-			$template_data3 = array(
+			$template_data4 = array(
 				'user_id' => $user_id,
 				'default' => 'n',
 				'template_name' => Input::get('template_name'),
@@ -2111,11 +2257,11 @@ class AjaxDashboardController extends BaseController {
 				'practice_id' => Session::get('practice_id')
 			);
 			if (Input::get('template_id') == '') {
-				DB::table('templates')->insert($template_data3);
+				DB::table('templates')->insert($template_data4);
 				$this->audit('Add');
 				$message = "Form added as a template!";
 			} else {
-				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data3);
+				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data4);
 				$this->audit('Update');
 				$message = "Form updated as a template!";
 			}
@@ -2214,45 +2360,75 @@ class AjaxDashboardController extends BaseController {
 				'array' => $array,
 				'practice_id' => Session::get('practice_id')
 			);
+			$template_data3 = array(
+				'user_id' => $user_id,
+				'default' => 'default',
+				'template_name' => Input::get('template_name'),
+				'age' => Input::get('age'),
+				'category' => 'situation',
+				'sex' => 'u',
+				'group' => $group,
+				'array' => $array,
+				'practice_id' => Session::get('practice_id')
+			);
 			if (Input::get('template_id') == '') {
 				DB::table('templates')->insert($template_data1);
 				$this->audit('Add');
 				DB::table('templates')->insert($template_data2);
+				$this->audit('Add');
+				DB::table('templates')->insert($template_data3);
 				$this->audit('Add');
 				$message = "Form added as a template!";
 			} else {
 				$template_row = Templates::find(Input::get('template_id'));
 				if ($template_row->sex == 'm') {
 					$template_id1 = Input::get('template_id');
-				} else {
+				} elseif ($template_row->sex == 'f') {
 					$template_id2 = Input::get('template_id');
+				} else {
+					$template_id3 = Input::get('template_id');
 				}
 				$template_row1 = Templates::where('group', '=', $template_row->group)
 					->where('template_id', '!=', Input::get('template_id'))
-					->first();
+					->get();
 				if ($template_row1) {
-					if ($template_row1->sex == 'm') {
-						$template_id1 = $template_row1->template_id;
-					} else {
-						$template_id2 = $template_row1->template_id;
+					foreach ($template_row1 as $template_row1_row) {
+						if ($template_row1_row->sex == 'm') {
+							$template_id1 = $template_row1_row->template_id;
+						} elseif ($template_row1_row->sex == 'f') {
+							$template_id2 = $template_row1_row->template_id;
+						} else {
+							$template_id3 = $template_row1_row->template_id;
+						}
 					}
 					DB::table('templates')->where('template_id', '=', $template_id1)->update($template_data1);
 					$this->audit('Update');
 					DB::table('templates')->where('template_id', '=', $template_id2)->update($template_data2);
 					$this->audit('Update');
+					DB::table('templates')->where('template_id', '=', $template_id3)->update($template_data3);
+					$this->audit('Update');
 				} else {
 					if ($template_row->sex == 'm') {
 						DB::table('templates')->insert($template_data2);
 						$this->audit('Add');
+						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+					} elseif ($template_row->sex == 'f') {
+						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+						DB::table('templates')->insert($template_data3);
+						$this->audit('Add');
 					} else {
 						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+						DB::table('templates')->insert($template_data2);
 						$this->audit('Add');
 					}
 				}
 				$message = "Form updated as a template!";
 			}
 		} else {
-			$template_data3 = array(
+			$template_data4 = array(
 				'user_id' => $user_id,
 				'default' => 'default',
 				'template_name' => Input::get('template_name'),
@@ -2264,11 +2440,11 @@ class AjaxDashboardController extends BaseController {
 				'practice_id' => Session::get('practice_id')
 			);
 			if (Input::get('template_id') == '') {
-				DB::table('templates')->insert($template_data3);
+				DB::table('templates')->insert($template_data4);
 				$this->audit('Add');
 				$message = "Form added as a template!";
 			} else {
-				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data3);
+				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data4);
 				$this->audit('Update');
 				$message = "Form updated as a template!";
 			}
@@ -2367,45 +2543,75 @@ class AjaxDashboardController extends BaseController {
 				'array' => $array,
 				'practice_id' => Session::get('practice_id')
 			);
+			$template_data3 = array(
+				'user_id' => $user_id,
+				'default' => 'default',
+				'template_name' => Input::get('template_name'),
+				'age' => Input::get('age'),
+				'category' => 'referral',
+				'sex' => 'u',
+				'group' => $group,
+				'array' => $array,
+				'practice_id' => Session::get('practice_id')
+			);
 			if (Input::get('template_id') == '') {
 				DB::table('templates')->insert($template_data1);
 				$this->audit('Add');
 				DB::table('templates')->insert($template_data2);
+				$this->audit('Add');
+				DB::table('templates')->insert($template_data3);
 				$this->audit('Add');
 				$message = "Form added as a template!";
 			} else {
 				$template_row = Templates::find(Input::get('template_id'));
 				if ($template_row->sex == 'm') {
 					$template_id1 = Input::get('template_id');
-				} else {
+				} elseif ($template_row->sex == 'f') {
 					$template_id2 = Input::get('template_id');
+				} else {
+					$template_id3 = Input::get('template_id');
 				}
 				$template_row1 = Templates::where('group', '=', $template_row->group)
 					->where('template_id', '!=', Input::get('template_id'))
-					->first();
+					->get();
 				if ($template_row1) {
-					if ($template_row1->sex == 'm') {
-						$template_id1 = $template_row1->template_id;
-					} else {
-						$template_id2 = $template_row1->template_id;
+					foreach ($template_row1 as $template_row1_row) {
+						if ($template_row1->sex == 'm') {
+							$template_id1 = $template_row1->template_id;
+						} elseif ($template_row1->sex == 'f') {
+							$template_id2 = $template_row1->template_id;
+						} else {
+							$template_id3 = $template_row1->template_id;
+						}
 					}
 					DB::table('templates')->where('template_id', '=', $template_id1)->update($template_data1);
 					$this->audit('Update');
 					DB::table('templates')->where('template_id', '=', $template_id2)->update($template_data2);
 					$this->audit('Update');
+					DB::table('templates')->where('template_id', '=', $template_id3)->update($template_data3);
+					$this->audit('Update');
 				} else {
 					if ($template_row->sex == 'm') {
 						DB::table('templates')->insert($template_data2);
 						$this->audit('Add');
+						DB::table('templates')->insert($template_data3);
+						$this->audit('Add');
+					} elseif ($template_row->sex == 'f') {
+						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+						DB::table('templates')->insert($template_data3);
+						$this->audit('Add');
 					} else {
 						DB::table('templates')->insert($template_data1);
+						$this->audit('Add');
+						DB::table('templates')->insert($template_data2);
 						$this->audit('Add');
 					}
 				}
 				$message = "Form updated as a template!";
 			}
 		} else {
-			$template_data3 = array(
+			$template_data4 = array(
 				'user_id' => $user_id,
 				'default' => 'default',
 				'template_name' => Input::get('template_name'),
@@ -2417,11 +2623,11 @@ class AjaxDashboardController extends BaseController {
 				'practice_id' => Session::get('practice_id')
 			);
 			if (Input::get('template_id') == '') {
-				DB::table('templates')->insert($template_data3);
+				DB::table('templates')->insert($template_data4);
 				$this->audit('Add');
 				$message = "Form added as a template!";
 			} else {
-				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data3);
+				DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($template_data4);
 				$this->audit('Update');
 				$message = "Form updated as a template!";
 			}

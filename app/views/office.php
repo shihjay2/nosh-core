@@ -63,9 +63,10 @@
 							<div class="pure-u-1-6"></div>
 							<div class="pure-u-1-6"></div>
 							<div class="pure-u-1-2">Gender:</div>
-							<div class="pure-u-1-6"><input type="radio" name="search_gender" id="search_gender_both" value="both" /> Both</div>
+							<div class="pure-u-1-6"><input type="radio" name="search_gender" id="search_gender_both" value="both" /> All</div>
 							<div class="pure-u-1-6"><input type="radio" name="search_gender" value="m" /> Male</div>
 							<div class="pure-u-1-6"><input type="radio" name="search_gender" value="f" /> Female</div>
+							<div class="pure-u-1-6"><input type="radio" name="search_gender" value="u" /> Undifferentiated</div>
 						</div>
 					</div>
 					<br>

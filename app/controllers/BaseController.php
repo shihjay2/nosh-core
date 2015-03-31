@@ -675,6 +675,9 @@ class BaseController extends Controller {
 		if ($data['patientInfo']->sex == 'f') {
 			$data['gender'] = 'Female';
 		}
+		if ($data['patientInfo']->sex == 'u') {
+			$data['gender'] = 'Undifferentiated';
+		}
 		$data['encounter_cc'] = nl2br($encounterInfo->encounter_cc);
 		$practiceInfo = Practiceinfo::find($practice_id);
 		$hpiInfo = Hpi::find($eid);
@@ -1875,8 +1878,10 @@ class BaseController extends Controller {
 		$data['dob'] = date('m/d/Y', $this->human_to_unix($data['patientInfo']->DOB));
 		if ($data['patientInfo']->sex == 'm') {
 			$data['sex'] = 'Male';
-		} else {
+		} elseif ($data['patientInfo']->sex == 'f') {
 			$data['sex'] = 'Female';
+		} else {
+			$data['sex'] = 'Undifferentiated';
 		}
 		$data['orders_date'] = date('m/d/Y', $this->human_to_unix($data['orders']->orders_date));
 		$data['insuranceInfo'] = nl2br($data['orders']->orders_insurance);
@@ -2328,6 +2333,9 @@ class BaseController extends Controller {
 		if ($row->sex == 'f') {
 			$gender = 'female';
 		}
+		if ($row->sex == 'u') {
+			$gender = 'individual';
+		}
 		Session::put('pid', $pid);
 		Session::put('gender', $gender);
 		Session::put('age', $age);
@@ -2568,9 +2576,12 @@ class BaseController extends Controller {
 		if ($result1->insurance_insu_gender == 'm') {
 			$bill_Box11A2 = "X       ";
 			$bill_Box11A2P = 'M';
-		} else {
+		} elseif ($result1->insurance_insu_gender == 'f') {
 			$bill_Box11A2 = "       X";
 			$bill_Box11A2P = 'F';
+		} else {
+			$bill_Box11A2 = "        ";
+			$bill_Box11A2P = 'U';
 		}
 		if ($insurance_id_2 == '' || $insurance_id_2 == '0') {
 			$bill_Box9D = '';
@@ -2592,9 +2603,12 @@ class BaseController extends Controller {
 			if ($result3->insurance_insu_gender == 'm') {
 				$bill_Box9B2 = "X      ";
 				$bill_Box9B2P = 'M';
-			} else {
+			} elseif ($result3->insurance_insu_gender == 'f') {
 				$bill_Box9B2 = "      X";
 				$bill_Box9B2P = 'F';
+			} else {
+				$bill_Box9B2 = "       ";
+				$bill_Box9B2P = 'U';
 			}
 			$bill_Box11D = 'X     ';
 			$bill_Box11DP = 'Yes';
@@ -2615,9 +2629,12 @@ class BaseController extends Controller {
 		if ($row->sex == 'm') {
 			$bill_Box3B = "X     ";
 			$bill_Box3BP = 'M';
-		} else {
+		} elseif ($row->sex == 'f') {
 			$bill_Box3B = "     X";
 			$bill_Box3BP = 'F';
+		} else {
+			$bill_Box3B = "      ";
+			$bill_Box3BP = 'U';
 		}
 		if ($row->marital_status == 'Single') {
 			$bill_Box8A = "X            ";
@@ -3600,9 +3617,12 @@ class BaseController extends Controller {
 		if ($demographics->sex == 'f') {
 			$gender = 'F';
 			$gender_full = 'Female';
-		} else {
+		} elseif ($demographics->sex == 'm') {
 			$gender = 'M';
 			$gender_full = 'Male';
+		} else {
+			$gender = 'U';
+			$gender_full = 'Undifferentiated Gender';
 		}
 		$ccda = str_replace('?gender?', $gender, $ccda);
 		$ccda = str_replace('?gender_full?', $gender_full, $ccda);
@@ -8399,9 +8419,12 @@ class BaseController extends Controller {
 			if ($row->sex == 'f') {
 				$gender = 'F';
 				$gender_full = 'Female';
-			} else {
+			} elseif ($row->sex == 'm') {
 				$gender = 'M';
 				$gender_full = 'Male';
+			} else {
+				$gender = 'UN';
+				$gender_full = 'Undifferentiated';
 			}
 			$response['gender']['coding'][] = [
 				'system' => "http://hl7.org/fhir/v3/AdministrativeGender",
@@ -8581,11 +8604,11 @@ class BaseController extends Controller {
 			"pe_eye2" => "PE - Eye - Pupil and Iris",
 			"pe_eye3" => "PE - Eye - Fundoscopic",
 			"pe_ent1" => "PE - ENT - External Ear and Nose",
-			"pe_ent1" => "PE - ENT - Canals and Tympanic Membranes",
-			"pe_ent1" => "PE - ENT - Hearing Assessment",
-			"pe_ent1" => "PE - ENT - Sinuses, Mucosa, Septum, and Turbinates",
-			"pe_ent1" => "PE - ENT - Lips, Teeth, and Gums",
-			"pe_ent1" => "PE - ENT - Oropharynx",
+			"pe_ent2" => "PE - ENT - Canals and Tympanic Membranes",
+			"pe_ent3" => "PE - ENT - Hearing Assessment",
+			"pe_ent4" => "PE - ENT - Sinuses, Mucosa, Septum, and Turbinates",
+			"pe_ent5" => "PE - ENT - Lips, Teeth, and Gums",
+			"pe_ent6" => "PE - ENT - Oropharynx",
 			"pe_neck1" => "PE - Neck - General",
 			"pe_neck2" => "PE - Neck - Thryoid",
 			"pe_resp1" => "PE - Respiratory - Effort",
@@ -8686,11 +8709,11 @@ class BaseController extends Controller {
 			"pe_eye2" => "PE - Eye - Pupil and Iris",
 			"pe_eye3" => "PE - Eye - Fundoscopic",
 			"pe_ent1" => "PE - ENT - External Ear and Nose",
-			"pe_ent1" => "PE - ENT - Canals and Tympanic Membranes",
-			"pe_ent1" => "PE - ENT - Hearing Assessment",
-			"pe_ent1" => "PE - ENT - Sinuses, Mucosa, Septum, and Turbinates",
-			"pe_ent1" => "PE - ENT - Lips, Teeth, and Gums",
-			"pe_ent1" => "PE - ENT - Oropharynx",
+			"pe_ent2" => "PE - ENT - Canals and Tympanic Membranes",
+			"pe_ent3" => "PE - ENT - Hearing Assessment",
+			"pe_ent4" => "PE - ENT - Sinuses, Mucosa, Septum, and Turbinates",
+			"pe_ent5" => "PE - ENT - Lips, Teeth, and Gums",
+			"pe_ent6" => "PE - ENT - Oropharynx",
 			"pe_neck1" => "PE - Neck - General",
 			"pe_neck2" => "PE - Neck - Thryoid",
 			"pe_resp1" => "PE - Respiratory - Effort",
@@ -8844,263 +8867,35 @@ class BaseController extends Controller {
 		return $template;
 	}
 	
-	protected function install_template_macros()
+	protected function install_template($csv, $practice_id)
 	{
-		$macro_array = array();
-		$macro_array[] = array(
-			'template_name' => 'SIDE',
-			'array' => 'RIGHT'
-		);
-		$macro_array[] = array(
-			'template_name' => 'SIDE',
-			'array' => 'LEFT'
-		);
-		$macro_array[] = array(
-			'template_name' => 'SIDE',
-			'array' => 'BILATERAL'
-		);
-		$macro_array[] = array(
-			'template_name' => 'size',
-			'array' => 'small'
-		);
-		$macro_array[] = array(
-			'template_name' => 'size',
-			'array' => 'medium'
-		);
-		$macro_array[] = array(
-			'template_name' => 'size',
-			'array' => 'large'
-		);
-		$macro_array[] = array(
-			'template_name' => 'degrees',
-			'array' => '0 degrees'
-		);
-		$macro_array[] = array(
-			'template_name' => 'degrees',
-			'array' => '30 degrees'
-		);
-		$macro_array[] = array(
-			'template_name' => 'degrees',
-			'array' => '45 degrees'
-		);
-		$macro_array[] = array(
-			'template_name' => 'degrees',
-			'array' => '60 degrees'
-		);
-		$macro_array[] = array(
-			'template_name' => 'degrees',
-			'array' => '90 degrees'
-		);
-		$macro_array[] = array(
-			'template_name' => 'degrees',
-			'array' => '120 degrees'
-		);
-		$macro_array[] = array(
-			'template_name' => 'degrees',
-			'array' => '180 degrees'
-		);
-		$macro_array[] = array(
-			'template_name' => 'yes/no',
-			'array' => 'yes'
-		);
-		$macro_array[] = array(
-			'template_name' => 'yes/no',
-			'array' => 'no'
-		);
-		$macro_array[] = array(
-			'template_name' => 'pos/neg',
-			'array' => 'positive'
-		);
-		$macro_array[] = array(
-			'template_name' => 'pos/neg',
-			'array' => 'negative'
-		);
-		$macro_array[] = array(
-			'template_name' => 'normal',
-			'array' => 'normal'
-		);
-		$macro_array[] = array(
-			'template_name' => 'normal',
-			'array' => 'abnormal'
-		);
-		$macro_array[] = array(
-			'template_name' => 'normal',
-			'array' => 'equivocal'
-		);
-		$macro_array[] = array(
-			'template_name' => 'inc/dec',
-			'array' => 'increase'
-		);
-		$macro_array[] = array(
-			'template_name' => 'inc/dec',
-			'array' => 'decrease'
-		);
-		$macro_array[] = array(
-			'template_name' => 'inc/dec',
-			'array' => 'no change'
-		);
-		foreach ($macro_array as $macro_ind) {
-			$query = DB::table('templates')->where('practice_id', '=', Session::get('practice_id'))->where('default', '=', 'default')->where('category', '=', 'specific')->where('template_name', '=', $macro_ind['template_name'])->where('array', '=', $macro_ind['array'])->first();
-			if (!$query) {
-				$macro_data = array(
-					'user_id' => '0',
-					'default' => 'default',
-					'category' => 'specific',
-					'template_name' => $macro_ind['template_name'],
-					'array' => $macro_ind['array'],
-					'practice_id' => Session::get('practice_id')
-				);
-				DB::table('templates')->insert($macro_data);
+		$csv_line = explode("\n", $csv);
+		if (count($csv_line) >= 2) {
+			$headers = explode("\t", $csv_line[0]);
+			for ($k = 1; $k < count($csv_line); $k++) {
+				if (isset($csv_line[$k])) {
+					$values = explode("\t", $csv_line[$k]);
+					if (count($values) > 1) {
+						$row = array();
+						for ($j = 0; $j < count($headers); $j++) {
+							$row[$headers[$j]] = $values[$j];
+						}
+						$row_check = DB::table('templates')->where('template_core_id', '=', $row['template_core_id'])->where('practice_id', '=', $practice_id)->first();
+						if ($row_check) {
+							DB::table('templates')->where('template_id', '=', $row_check->template_id)->update($row);
+							$this->audit('Update');
+						} else {
+							$row['practice_id'] = $practice_id;
+							DB::table('templates')->insert($row);
+							$this->audit('Add');
+						}
+					}
+				}
 			}
+			$ret['count'] = $k;
+		} else {
+			$ret['error'] = "<br>Incorrect format.";
 		}
-		$template_array = array();
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'Denies',
-			'array' => '',
-			'default' => ''
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'Denies',
-			'array' => 'fever',
-			'default' => 'normal'
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'Denies',
-			'array' => 'weight change',
-			'default' => 'normal'
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'Denies',
-			'array' => 'fatigue',
-			'default' => 'normal'
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'Denies',
-			'array' => 'weakness',
-			'default' => 'normal'
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'Denies',
-			'array' => 'appetite change',
-			'default' => 'normal'
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'REPORTS',
-			'array' => '',
-			'default' => ''
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'REPORTS',
-			'array' => 'FEVER',
-			'default' => ''
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'REPORTS',
-			'array' => 'WEIGHT LOSS',
-			'default' => ''
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'Reports',
-			'array' => 'WEIGHT GAIN',
-			'default' => ''
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'Reports',
-			'array' => 'FATIGUE',
-			'default' => ''
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'REPORTS',
-			'array' => 'WEAKNESS',
-			'default' => ''
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'REPORTS',
-			'array' => 'INCREASED APPETITE',
-			'default' => ''
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_gen',
-			'group' => 'REPORTS',
-			'array' => 'DECREASED APPETITE',
-			'default' => ''
-		);
-		
-		$template_array[] = array(
-			'template_name' =>'ros_eye',
-			'group' => 'Denies',
-			'array' => 'vision change',
-			'default' => 'normal'
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_eye',
-			'group' => 'Denies',
-			'array' => 'pain',
-			'default' => 'normal'
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_eye',
-			'group' => 'Denies',
-			'array' => 'redness',
-			'default' => 'normal'
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_eye',
-			'group' => 'Denies',
-			'array' => 'discharge',
-			'default' => 'normal'
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_eye',
-			'group' => 'REPORTS',
-			'array' => 'VISION CHANGE ON THE *SIDE* SIDE',
-			'default' => ''
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_eye',
-			'group' => 'REPORTS',
-			'array' => 'PAIN ON THE *SIDE* SIDE',
-			'default' => ''
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_eye',
-			'group' => 'REPORTS',
-			'array' => 'REDNESS ON THE *SIDE* SIDE',
-			'default' => ''
-		);
-		$template_array[] = array(
-			'template_name' =>'ros_eye',
-			'group' => 'REPORTS',
-			'array' => 'DISCHARGE ON THE *SIDE* SIDE',
-			'default' => ''
-		);
-		foreach ($template_array as $template_ind) {
-			$query1 = DB::table('templates')->where('practice_id', '=', Session::get('practice_id'))->where('default', '=', 'default')->where('category', '=', 'specific')->where('template_name', '=', $template_ind['template_name'])->where('array', '=', $template_ind['array'])->where('group', '=', $template_ind['group'])->first();
-			if (!$query) {
-				$template_data = array(
-					'user_id' => '0',
-					'default' => $template_ind['default'],
-					'category' => 'specific',
-					'template_name' => $template_ind['template_name'],
-					'array' => $template_ind['array'],
-					'group' => $template_ind['group'],
-					'practice_id' => Session::get('practice_id')
-				);
-				DB::table('templates')->insert($template_data);
-			}
-		}
+		return $ret;
 	}
 }

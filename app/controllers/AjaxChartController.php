@@ -22,6 +22,9 @@ class AjaxChartController extends BaseController {
 		if ($row->sex == 'f') {
 			$data['gender'] = 'Female';
 		}
+		if ($row->sex == 'u') {
+			$data['gender'] = 'Undifferentiated';
+		}
 		$data['nickname'] = $row->nickname;
 		if ($row->address == '') {
 			$data['new'] = 'Y';
@@ -293,7 +296,7 @@ class AjaxChartController extends BaseController {
 		if ($row->sex == 'm') {
 			$gender = 'Male';
 		} 
-		if ($row->sex == 'f') {
+		if ($row->sex == 'f' || $row->sex == 'u') {
 			$gender = 'Female';
 		}
 		$age = (time() - $this->human_to_unix($row->DOB))/31556926;
@@ -358,6 +361,8 @@ class AjaxChartController extends BaseController {
 	{
 		if (Session::get('eid') != FALSE) {
 			Session::forget('eid');
+			Session::forget('encounter_template');
+			Session::forget('encounter_DOS');
 		}
 		$eid = Input::get('eid');
 		Session::put('eid', $eid);
@@ -2380,8 +2385,10 @@ class AjaxChartController extends BaseController {
 		$user_id = Session::get('user_id');
 		if (Session::get('gender') == 'male') {
 			$sex = 'm';
-		} else {
+		} elseif (Session::get('gender') == 'female') {
 			$sex = 'f';
+		} else {
+			$sex = 'u';
 		}
 		$result = DB::table('templates')
 			->where('user_id', '=', $user_id)
@@ -4325,8 +4332,10 @@ class AjaxChartController extends BaseController {
 		$gender = Session::get('gender');
 		if ($gender == 'male') {
 			$sex = 'm';
-		} else {
+		} elseif (Session::get('gender') == 'female') {
 			$sex = 'f';
+		} else {
+			$sex = 'u';
 		}
 		$result = DB::table('templates')
 			->where('user_id', '=', $user_id)

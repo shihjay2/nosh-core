@@ -354,8 +354,10 @@ class AjaxEncounterController extends BaseController {
 	{
 		if (Session::get('gender') == 'male') {
 			$sex = 'm';
-		} else {
+		} elseif (Session::get('gender') == 'female') {
 			$sex = 'f';
+		} else {
+			$sex = 'u';
 		}
 		$query = DB::table('templates')
 			->where('user_id', '=', Session::get('user_id'))
@@ -409,8 +411,10 @@ class AjaxEncounterController extends BaseController {
 	{
 		if (Session::get('gender') == 'male') {
 			$sex = 'm';
-		} else {
+		} elseif (Session::get('gender') == 'female') {
 			$sex = 'f';
+		} else {
+			$sex = 'u';
 		}
 		$query = DB::table('templates')
 			->where('user_id', '=', Session::get('user_id'))
@@ -557,8 +561,10 @@ class AjaxEncounterController extends BaseController {
 	{
 		if (Session::get('gender') == 'male') {
 			$sex = 'm';
-		} else {
+		} elseif (Session::get('gender') == 'female') {
 			$sex = 'f';
+		} else {
+			$sex = 'u';
 		}
 		$query = DB::table('templates')
 			->where('user_id', '=', Session::get('user_id'))
@@ -588,8 +594,10 @@ class AjaxEncounterController extends BaseController {
 		if ($default == 'y' && $id == '0') {
 			if (Session::get('gender') == 'male') {
 				$sex = 'm';
-			} else {
+			} elseif (Session::get('gender') == 'female') {
 				$sex = 'f';
+			} else {
+				$sex = 'u';
 			}
 			$row = DB::table('templates')
 				->where('user_id', '=', '0')
@@ -614,8 +622,10 @@ class AjaxEncounterController extends BaseController {
 	{
 		if (Session::get('gender') == 'male') {
 			$sex = 'm';
-		} else {
+		} elseif (Session::get('gender') == 'female') {
 			$sex = 'f';
+		} else {
+			$sex = 'u';
 		}
 		$age = Session::get('agealldays');
 		if ($age <= 60.88) {
@@ -671,8 +681,10 @@ class AjaxEncounterController extends BaseController {
 		$age = Session::get('agealldays');
 		if ($gender == 'male') {
 			$sex = 'm';
-		} else {
+		} elseif ($gender == 'female') {
 			$sex = 'f';
+		} else {
+			$sex = 'u';
 		}
 		$query = DB::table('templates')
 			->where('user_id', '=', '0')
@@ -1221,8 +1233,10 @@ class AjaxEncounterController extends BaseController {
 			$gender = Session::get('gender');
 			if ($gender == 'male') {
 				$sex = 'm';
-			} else {
+			} elseif ($gender == 'female') {
 				$sex = 'f';
+			} else {
+				$sex = 'u';
 			}
 			$row = DB::table('templates')
 				->where('user_id', '=', '0')
@@ -1248,8 +1262,10 @@ class AjaxEncounterController extends BaseController {
 		$gender = Session::get('gender');
 		if ($gender == 'male') {
 			$sex = 'm';
-		} else {
+		} elseif ($gender == 'female') {
 			$sex = 'f';
+		} else {
+			$sex = 'u';
 		}
 		$query = DB::table('templates')
 			->where('user_id', '=', '0')
@@ -1286,8 +1302,10 @@ class AjaxEncounterController extends BaseController {
 	{
 		if (Session::get('gender') == 'male') {
 			$sex = 'm';
-		} else {
+		} elseif (Session::get('gender') == 'female') {
 			$sex = 'f';
+		} else {
+			$sex = 'u';
 		}
 		$query = DB::table('templates')
 			->where('user_id', '=', Session::get('user_id'))
@@ -2532,8 +2550,10 @@ class AjaxEncounterController extends BaseController {
 	{
 		if (Session::get('gender') == 'male') {
 			$sex = 'm';
-		} else {
+		} elseif (Session::get('gender') == 'female') {
 			$sex = 'f';
+		} else {
+			$sex = 'u';
 		}
 		$age = Session::get('agealldays');
 		$query = DB::table('templates')
@@ -2624,7 +2644,7 @@ class AjaxEncounterController extends BaseController {
 			}
 		}
 		if ($type == 'pe') {
-			if ($sex == 'f') {
+			if ($sex == 'f' || $sex == 'u') {
 				$gender_array = array('pe_gu1','pe_gu2','pe_gu3','pe_gu4','pe_gu5','pe_gu6');
 			} else {
 				$gender_array = array('pe_gu7','pe_gu8','pe_gu9');
@@ -2683,7 +2703,7 @@ class AjaxEncounterController extends BaseController {
 		if ($group1 == 'all') {
 			if ($type == 'pe') {
 				if (Session::get('encounter_template') == 'standardpsych' || Session::get('encounter_template') == 'standardpsych') {
-					if ($sex == 'f') {
+					if ($sex == 'f' || $sex == 'u') {
 						$psych_array('pe_ch1','pe_ch2','pe_cv1','pe_cv2','pe_cv3','pe_cv4','pe_cv5','pe_cv6','pe_ent1','pe_ent2','pe_ent3','pe_ent4','pe_ent5','pe_ent6','pe_eye1','pe_eye2','pe_eye3','pe_gen1','pe_gi1','pe_gi2','pe_gi3','pe_gi4','pe_gu1','pe_gu2','pe_gu3','pe_gu4','pe_gu5','pe_gu6','pe_lymph1','pe_lymph2','pe_lymph3','pe_neck1','pe_neck2','pe_resp1','pe_resp2','pe_resp3','pe_resp4','pe_skin1','pe_skin2');
 					} else {
 						$psych_array('pe_ch1','pe_ch2','pe_cv1','pe_cv2','pe_cv3','pe_cv4','pe_cv5','pe_cv6','pe_ent1','pe_ent2','pe_ent3','pe_ent4','pe_ent5','pe_ent6','pe_eye1','pe_eye2','pe_eye3','pe_gen1','pe_gi1','pe_gi2','pe_gi3','pe_gi4','pe_gu7','pe_gu8','pe_gu9','pe_lymph1','pe_lymph2','pe_lymph3','pe_neck1','pe_neck2','pe_resp1','pe_resp2','pe_resp3','pe_resp4','pe_skin1','pe_skin2');
@@ -2947,13 +2967,48 @@ class AjaxEncounterController extends BaseController {
 			->where('array', '=', '')
 			->where('scoring', '=', Session::get('encounter_template'))
 			->select('template_name')
-			->distinct()
-			->get();
+			->distinct();
+		if (Session::get('gender') == 'male') {
+			$query->where(function($query_array1) {
+				$query_array1->where('sex', '=', 'm')
+					->orWhere('sex', '=', '')
+					->orWhereNull('sex');
+			});
+		} elseif (Session::get('gender') == 'female') {
+			$query->where(function($query_array1) {
+				$query_array1->where('sex', '=', 'f')
+					->orWhere('sex', '=', '')
+					->orWhereNull('sex');
+			});
+		} else {
+			$query->where(function($query_array1) {
+				$query_array1->where('sex', '=', 'u')
+					->orWhere('sex', '=', '')
+					->orWhereNull('sex');
+			});
+		}
+		if (Session::has('agealldays')) {
+			$age = Session::get('agealldays');
+			if ($age <= 6574.5) {
+				$query->where(function($query_array1) {
+					$query_array1->where('age', '=', 'child')
+						->orWhere('age', '=', '')
+						->orWhereNull('age');
+				});
+			} else {
+				$query->where(function($query_array1) {
+					$query_array1->where('age', '=', 'adult')
+						->orWhere('age', '=', '')
+						->orWhereNull('age');
+				});
+			}
+		}
+		$result = $query->get();
 		$data = array();
 		$data['response'] = false;
-		if ($query) {
+		if ($result) {
 			$data['response'] = true;
-			foreach ($query as $row) {
+			foreach ($result as $row) {
 				$data['message'][$row->template_name] = $row->template_name;
 			}
 		}

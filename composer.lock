@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0682b1c113a0cad63d4451ffcc037e76",
+    "hash": "849b4c126ad2bc211e4aec712b42d8b5",
     "packages": [
         {
             "name": "barryvdh/laravel-snappy",
-            "version": "v0.1.2",
+            "version": "0.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-snappy.git",
-                "reference": "4ee0bdfcd0018329f688ffb777aa9af545705f6a"
+                "reference": "ea73a9ef060845b48c117a44e9a4dab418f45db7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-snappy/zipball/4ee0bdfcd0018329f688ffb777aa9af545705f6a",
-                "reference": "4ee0bdfcd0018329f688ffb777aa9af545705f6a",
+                "url": "https://api.github.com/repos/barryvdh/laravel-snappy/zipball/ea73a9ef060845b48c117a44e9a4dab418f45db7",
+                "reference": "ea73a9ef060845b48c117a44e9a4dab418f45db7",
                 "shasum": ""
             },
             "require": {
@@ -27,12 +27,20 @@
                 "php": ">=5.3.0"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Barryvdh\\Snappy": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
             "authors": [
                 {
                     "name": "Barry vd. Heuvel",
@@ -48,11 +56,11 @@
                 "wkhtmltoimage",
                 "wkhtmltopdf"
             ],
-            "time": "2014-08-22 12:58:14"
+            "time": "2015-03-11 19:16:40"
         },
         {
             "name": "chumper/zipper",
-            "version": "dev-master",
+            "version": "0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Chumper/Zipper.git",
@@ -238,12 +246,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle3.git",
-                "reference": "d898326a716f23fdd778942ea9404aeccbe16a46"
+                "reference": "0645b70d953bc1c067bbc8d5bc53194706b628d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle3/zipball/d898326a716f23fdd778942ea9404aeccbe16a46",
-                "reference": "d898326a716f23fdd778942ea9404aeccbe16a46",
+                "url": "https://api.github.com/repos/guzzle/guzzle3/zipball/0645b70d953bc1c067bbc8d5bc53194706b628d9",
+                "reference": "0645b70d953bc1c067bbc8d5bc53194706b628d9",
                 "shasum": ""
             },
             "require": {
@@ -325,7 +333,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2015-01-28 21:05:25"
+            "time": "2015-03-18 18:23:50"
         },
         {
             "name": "h4cc/wkhtmltopdf-amd64",
@@ -455,26 +463,32 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jenssegers/laravel-date.git",
-                "reference": "7d481d2bf915cd43067c3ff66eff57513c2eb852"
+                "reference": "cec82e9ece6c2fb6ff69a9344a7240bf94d03f51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jenssegers/laravel-date/zipball/7d481d2bf915cd43067c3ff66eff57513c2eb852",
-                "reference": "7d481d2bf915cd43067c3ff66eff57513c2eb852",
+                "url": "https://api.github.com/repos/jenssegers/laravel-date/zipball/cec82e9ece6c2fb6ff69a9344a7240bf94d03f51",
+                "reference": "cec82e9ece6c2fb6ff69a9344a7240bf94d03f51",
                 "shasum": ""
             },
             "require": {
-                "nesbot/carbon": "*",
-                "php": ">=5.3.0",
-                "symfony/translation": "*"
+                "nesbot/carbon": "~1.0",
+                "php": ">=5.3.3",
+                "symfony/translation": "~2.0"
             },
             "require-dev": {
-                "satooshi/php-coveralls": "*"
+                "phpunit/phpunit": "~4.0",
+                "satooshi/php-coveralls": "~0.6"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "Jenssegers\\Date": "src/"
+                "psr-4": {
+                    "Jenssegers\\Date\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -487,14 +501,17 @@
                     "homepage": "http://jenssegers.be"
                 }
             ],
-            "description": "A date library to help you work with dates",
+            "description": "A date library to help you work with dates in different languages",
             "keywords": [
+                "carbon",
                 "date",
                 "datetime",
+                "i18n",
                 "laravel",
-                "time"
+                "time",
+                "translation"
             ],
-            "time": "2015-02-08 22:46:08"
+            "time": "2015-03-26 20:22:24"
         },
         {
             "name": "jeremeamia/SuperClosure",
@@ -550,12 +567,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/php-github-api.git",
-                "reference": "5ff25d54ba8a8eff515683cecf4b9eab4a8697c3"
+                "reference": "d561376583db696f9b09d595f3767af64640ae4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/5ff25d54ba8a8eff515683cecf4b9eab4a8697c3",
-                "reference": "5ff25d54ba8a8eff515683cecf4b9eab4a8697c3",
+                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/d561376583db696f9b09d595f3767af64640ae4d",
+                "reference": "d561376583db696f9b09d595f3767af64640ae4d",
                 "shasum": ""
             },
             "require": {
@@ -603,7 +620,7 @@
                 "gist",
                 "github"
             ],
-            "time": "2015-02-03 09:42:00"
+            "time": "2015-03-28 00:40:32"
         },
         {
             "name": "knplabs/knp-snappy",
@@ -611,12 +628,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/snappy.git",
-                "reference": "4d46c5d2229981a20c45570d044ef9d926431a9b"
+                "reference": "eda1b39cb06b3f9ac7b4423df4c115feccea1194"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/snappy/zipball/4d46c5d2229981a20c45570d044ef9d926431a9b",
-                "reference": "4d46c5d2229981a20c45570d044ef9d926431a9b",
+                "url": "https://api.github.com/repos/KnpLabs/snappy/zipball/eda1b39cb06b3f9ac7b4423df4c115feccea1194",
+                "reference": "eda1b39cb06b3f9ac7b4423df4c115feccea1194",
                 "shasum": ""
             },
             "require": {
@@ -664,7 +681,7 @@
                 "thumbnail",
                 "wkhtmltopdf"
             ],
-            "time": "2014-12-18 23:24:44"
+            "time": "2015-03-11 12:24:42"
         },
         {
             "name": "laravel/framework",
@@ -842,12 +859,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "7583a2b96b9fda7ece90e34a23cd46e4858b3352"
+                "reference": "df7da8a5550eb94cb885df6be7ffebe2768c10fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/7583a2b96b9fda7ece90e34a23cd46e4858b3352",
-                "reference": "7583a2b96b9fda7ece90e34a23cd46e4858b3352",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/df7da8a5550eb94cb885df6be7ffebe2768c10fd",
+                "reference": "df7da8a5550eb94cb885df6be7ffebe2768c10fd",
                 "shasum": ""
             },
             "require": {
@@ -864,6 +881,7 @@
                 "phpunit/phpunit": "~4.0",
                 "raven/raven": "~0.5",
                 "ruflin/elastica": "0.90.*",
+                "swiftmailer/swiftmailer": "~5.3",
                 "videlalvaro/php-amqplib": "~2.4"
             },
             "suggest": {
@@ -880,7 +898,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.12.x-dev"
+                    "dev-master": "1.13.x-dev"
                 }
             },
             "autoload": {
@@ -906,7 +924,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-01-29 16:05:08"
+            "time": "2015-03-26 18:30:54"
         },
         {
             "name": "mustangostang/spyc",
@@ -957,16 +975,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "1.14.0",
+            "version": "1.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "bb87460c995d97fe55b39e65f6ffb7f64b0a941e"
+                "reference": "a1dd1ad9abfc8b3c4d8768068e6c71d293424e86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/bb87460c995d97fe55b39e65f6ffb7f64b0a941e",
-                "reference": "bb87460c995d97fe55b39e65f6ffb7f64b0a941e",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/a1dd1ad9abfc8b3c4d8768068e6c71d293424e86",
+                "reference": "a1dd1ad9abfc8b3c4d8768068e6c71d293424e86",
                 "shasum": ""
             },
             "require": {
@@ -993,13 +1011,13 @@
                 }
             ],
             "description": "A simple API extension for DateTime.",
-            "homepage": "https://github.com/briannesbitt/Carbon",
+            "homepage": "http://carbon.nesbot.com",
             "keywords": [
                 "date",
                 "datetime",
                 "time"
             ],
-            "time": "2015-02-06 05:07:29"
+            "time": "2015-03-08 14:05:44"
         },
         {
             "name": "nikic/php-parser",
@@ -1251,12 +1269,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "1af1529b49a6e065ae6802e70192aba35d79b7d8"
+                "reference": "bf2c13de4300e227d7b2fd08027673a79c519987"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/1af1529b49a6e065ae6802e70192aba35d79b7d8",
-                "reference": "1af1529b49a6e065ae6802e70192aba35d79b7d8",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/bf2c13de4300e227d7b2fd08027673a79c519987",
+                "reference": "bf2c13de4300e227d7b2fd08027673a79c519987",
                 "shasum": ""
             },
             "type": "library",
@@ -1266,8 +1284,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Psr\\Log\\": ""
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1286,7 +1304,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2015-02-05 09:32:11"
+            "time": "2015-03-26 14:39:45"
         },
         {
             "name": "raahul/larryfour",
@@ -1464,16 +1482,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "dev-master",
+            "version": "5.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "db95cfa68a8bc91d1c54f75c416f481c9a8bd100"
+                "reference": "728eba28e355e081b0729b4c18cb9c13abe12560"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/db95cfa68a8bc91d1c54f75c416f481c9a8bd100",
-                "reference": "db95cfa68a8bc91d1c54f75c416f481c9a8bd100",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/728eba28e355e081b0729b4c18cb9c13abe12560",
+                "reference": "728eba28e355e081b0729b4c18cb9c13abe12560",
                 "shasum": ""
             },
             "require": {
@@ -1485,7 +1503,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.3-dev"
+                    "dev-master": "5.4-dev"
                 }
             },
             "autoload": {
@@ -1512,7 +1530,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2015-01-18 13:49:36"
+            "time": "2015-03-30 15:09:02"
         },
         {
             "name": "symfony/browser-kit",
@@ -1788,12 +1806,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "e9298668dce8dd219d1ee2290c7f313954f1f984"
+                "reference": "186349c2966529804e38685f671e64746dde220b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/e9298668dce8dd219d1ee2290c7f313954f1f984",
-                "reference": "e9298668dce8dd219d1ee2290c7f313954f1f984",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/186349c2966529804e38685f671e64746dde220b",
+                "reference": "186349c2966529804e38685f671e64746dde220b",
                 "shasum": ""
             },
             "require": {
@@ -1804,6 +1822,7 @@
                 "symfony/config": "~2.0,>=2.0.5|~3.0.0",
                 "symfony/dependency-injection": "~2.6|~3.0.0",
                 "symfony/expression-language": "~2.6|~3.0.0",
+                "symfony/phpunit-bridge": "~2.7|~3.0.0",
                 "symfony/stopwatch": "~2.3|~3.0.0"
             },
             "suggest": {
@@ -1837,7 +1856,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "http://symfony.com",
-            "time": "2015-02-05 06:58:17"
+            "time": "2015-03-13 17:50:01"
         },
         {
             "name": "symfony/filesystem",
@@ -1846,16 +1865,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "e681ca515e1e668a551b089177867e62e03d7d2d"
+                "reference": "0d0790beeb3bdb997a6cb2d6f4e53f607337efe5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/e681ca515e1e668a551b089177867e62e03d7d2d",
-                "reference": "e681ca515e1e668a551b089177867e62e03d7d2d",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/0d0790beeb3bdb997a6cb2d6f4e53f607337efe5",
+                "reference": "0d0790beeb3bdb997a6cb2d6f4e53f607337efe5",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.9"
+            },
+            "require-dev": {
+                "symfony/phpunit-bridge": "~2.7|~3.0.0"
             },
             "type": "library",
             "extra": {
@@ -1884,7 +1906,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2015-01-09 06:51:41"
+            "time": "2015-03-22 16:57:18"
         },
         {
             "name": "symfony/finder",
@@ -2308,12 +2330,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yangqi/Htmldom.git",
-                "reference": "5fac0fd569350c0b90f0ad7a9c54634786a5d66e"
+                "reference": "048b36308ab6a6b448f9be1f089ecc7cf61e8ed2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yangqi/Htmldom/zipball/5fac0fd569350c0b90f0ad7a9c54634786a5d66e",
-                "reference": "5fac0fd569350c0b90f0ad7a9c54634786a5d66e",
+                "url": "https://api.github.com/repos/yangqi/Htmldom/zipball/048b36308ab6a6b448f9be1f089ecc7cf61e8ed2",
+                "reference": "048b36308ab6a6b448f9be1f089ecc7cf61e8ed2",
                 "shasum": ""
             },
             "require": {
@@ -2340,7 +2362,7 @@
                 "HTML Parser",
                 "laravel"
             ],
-            "time": "2014-12-23 04:23:21"
+            "time": "2015-03-27 18:51:01"
         }
     ],
     "packages-dev": [],
@@ -2348,11 +2370,12 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "soapbox/laravel-formatter": 20,
-        "yangqi/htmldom": 20,
-        "chumper/zipper": 20
+        "yangqi/htmldom": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=5.4.0"
+    },
     "platform-dev": []
 }

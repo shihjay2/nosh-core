@@ -2144,6 +2144,7 @@ $(document).ready(function() {
 	$("#edit_encounter_templates").click(function(){
 		var item = jQuery("#encounter_templates_list").getGridParam('selrow');
 		if(item){ 
+			$('#dialog_load').dialog('option', 'title', "Loading template...").dialog('open');
 			var a = jQuery("#encounter_templates_list").getCell(item,"template_name");
 			$.ajax({
 				type: "POST",
@@ -2151,6 +2152,7 @@ $(document).ready(function() {
 				data: 'template_name='+a,
 				dataType: "json",
 				success: function(data){
+					$('#dialog_load').dialog('close');
 					$("#template_encounter_edit_div").html(data.html);
 					loadbuttons();
 					$("#template_encounter_edit_dialog").dialog("option", "title", "Edit Encounter Template");
@@ -2177,6 +2179,20 @@ $(document).ready(function() {
 			}
 		} else {
 			$.jGrowl("Please select group to delete!");
+		}
+	});
+	$("#reset_default_templates").click(function(){
+		if(confirm('Are you sure you want to reset your default templates?  Any previous changes will be deleted!')){ 
+			$('#dialog_load').dialog('option', 'title', "Resetting default templates...").dialog('open');
+			$.ajax({
+				type: "POST",
+				url: "ajaxdashboard/reset-default-templates",
+				success: function(data){
+					$('#dialog_load').dialog('close');
+					$.jGrowl(data);
+					reload_grid("textdump_list");
+				}
+			});
 		}
 	});
 });
