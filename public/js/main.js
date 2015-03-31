@@ -1846,7 +1846,13 @@ $(document).ready(function() {
 				}
 			});
 		},
-		position: { my: "left bottom+15", at: "left top", collision: "flipfit" }
+		position: { my: "left bottom+15", at: "left top", collision: "flipfit" },
+		open: function (event, ui) {
+			setTimeout(function() {
+				$(ui.tooltip).hide('explode');
+			}, 6000);
+		},
+		track: true
 	});
 	$("#template_encounter_edit_dialog").dialog({
 		bgiframe: true, 
@@ -3133,7 +3139,11 @@ $(document).on('click', '.textdump_group_item', function(){
 				}
 			});
 			$("#textdump_target").val(id);
+			var dialogheight = $("#" + id).innerHeight();
 			$("#textdump").dialog("option", "position", { my: 'left top', at: 'right top', of: '#'+id });
+			if (dialogheight > 300) { 
+				$("#textdump").dialog("option", "height", dialogheight);
+			}
 			$("#textdump").dialog('open');
 		}
 	});
