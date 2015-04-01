@@ -2895,6 +2895,20 @@ class AjaxSearchController extends BaseController {
 		);
 		DB::table('templates')->where('template_id', '=', Input::get('pk'))->update($data);
 		$this->audit('Update');
+		$query_check = DB::table('templates')
+			->where('array', '=', $group->group)
+			->where('group', '=', $group->template_name)
+			->where('category', '=', 'encounter_templates')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->get();
+		foreach ($query_check as $query_row) {
+			$data2 = array(
+				'group' => Input::get('template_name'),
+				'array' => Input::get('group')
+			);
+			DB::table('templates')->where('template_id', '=', $query_row->template_id)->update($data2);
+			$this->audit('Update');
+		}
 		echo "Group updated";
 	}
 	
@@ -2953,6 +2967,16 @@ class AjaxSearchController extends BaseController {
 		}
 		DB::table('templates')->where('template_id', '=', $id)->delete();
 		$this->audit('Delete');
+		$query_check = DB::table('templates')
+			->where('array', '=', $group->group)
+			->where('group', '=', $group->template_name)
+			->where('category', '=', 'encounter_templates')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->get();
+		foreach ($query_check as $query_row) {
+			DB::table('templates')->where('template_id', '=', $query_row->template_id)->delete();
+			$this->audit('Delete');
+		}
 		echo 'Group deleted';
 	}
 	
@@ -3361,7 +3385,7 @@ class AjaxSearchController extends BaseController {
 					}
 				}
 				$arr['name'] = Input::get('template_name');
-				$arr['message'] = 'Encounter template named ' . Input::get('template_name') . ' automatically generated with ' . $i . 'fields!';
+				$arr['message'] = 'Encounter template named ' . Input::get('template_name') . ' automatically generated with ' . $i . ' fields!';
 			} else {
 				$arr['message'] = 'There is no encounter template of that name!';
 			}

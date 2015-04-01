@@ -2010,7 +2010,7 @@ $(document).ready(function() {
 				var id = $("#textdump_list").getCell(item,'template_id');
 				$.ajax({
 					type: "POST",
-					url: "ajaxsearch/deletetextdump/" + id,
+					url: "ajaxsearch/deletetextdumpgroup/" + id,
 					success: function(data){
 						$.jGrowl(data);
 						reload_grid("textdump_list");

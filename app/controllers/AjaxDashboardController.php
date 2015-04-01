@@ -2941,6 +2941,20 @@ class AjaxDashboardController extends BaseController {
 			}
 			DB::table('templates')->where('template_id', '=', Input::get('template_id'))->update($data);
 			$this->audit('Update');
+			$query_check = DB::table('templates')
+				->where('array', '=', $group->group)
+				->where('group', '=', $group->template_name)
+				->where('category', '=', 'encounter_templates')
+				->where('practice_id', '=', Session::get('practice_id'))
+				->get();
+			foreach ($query_check as $query_row) {
+				$data2 = array(
+					'group' => Input::get('template_name'),
+					'array' => Input::get('group')
+				);
+				DB::table('templates')->where('template_id', '=', $query_row->template_id)->update($data2);
+				$this->audit('Update');
+			}
 			$arr = "Group updated";
 		} else {
 			DB::table('templates')->insert($data);
