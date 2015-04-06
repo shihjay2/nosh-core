@@ -23,6 +23,18 @@ Route::get('start/{practicehandle}', function($practicehandle = null)
 	}
 	return Redirect::to('/');
 });
+Route::any('schedule_widget', array('as' => 'login', 'before' => 'force.ssl|schedule_check', 'uses' => 'HomeController@schedule'));
+Route::get('schedule_widget_start/{practicehandle}', function($practicehandle = null)
+{
+	if ($practicehandle != null) {
+		$practice = Practiceinfo::where('practicehandle', '=', $practicehandle)->first();
+		if ($practice) {
+			Session::put('practice_id', $practice->practice_id);
+			Session::put('group_id', 'schedule');
+		}
+	}
+	return Redirect::to('schedule_widget');
+});
 Route::get('install', array('as' => 'install', 'before' => 'force.ssl|installfix|noinstall', 'uses' => 'InstallController@view'));
 Route::get('install_fix', array('as' => 'install_fix', 'uses' => 'InstallController@install_fix'));
 Route::get('update', array('as' => 'update', 'uses' => 'AjaxInstallController@update'));
@@ -50,7 +62,7 @@ Route::group(array('before' => 'force.ssl|csrf_header|session_check|acl2'), func
 Route::group(array('before' => 'force.ssl|csrf_header|session_check|acl6'), function() {
 	Route::controller('ajaxsetup', 'AjaxSetupController');
 });
-Route::group(array('before' => 'force.ssl|acl1'), function() {
+Route::group(array('before' => 'auth|force.ssl|acl1|pid_check'), function() {
 	Route::get('chart', array('as' => 'chart', 'uses' => 'ChartController@main'));
 	Route::get('messaging', array('as' => 'messaging', 'uses' => 'HomeController@showWelcome'));
 	Route::get('schedule', array('as' => 'schedule', 'uses' => 'HomeController@showWelcome'));
@@ -309,6 +321,22 @@ Route::filter('session_check', function()
 		Session::flush();
 		header("HTTP/1.1 404 Page Not Found", true, 404);
 		exit("You cannot do this.");
+	}
+});
+
+Route::filter('pid_check', function()
+{
+	if (!Session::get('pid')) {
+		return Redirect::to('/');
+	}
+});
+
+Route::filter('schedule_check', function()
+{
+	if (!Session::get('practice_id')) {
+		Session::put('practice_id', '1');
+		Session::put('group_id', 'schedule');
+		return Redirect::to('schedule_widget');
 	}
 });
 

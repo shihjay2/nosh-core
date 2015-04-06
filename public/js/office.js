@@ -339,7 +339,7 @@ $(document).ready(function() {
 					{name:'sup_expiration',index:'sup_expiration',width:100,hidden:true,formatter:'date',formatoptions:{srcformat:"ISO8601Long", newformat: "ISO8601Short"}},
 					{name:'sup_description',index:'sup_description',width:500},
 					{name:'sup_strength',index:'sup_strength',width:1,hidden:true},
-					{name:'quantity',index:'quantity',width:100},
+					{name:'quantity1',index:'quantity1',width:100},
 					{name:'sup_manufacturer',index:'sup_manufacturer',width:1,hidden:true},
 					{name:'sup_lot',index:'sup_lot',width:1,hidden:true},
 					{name:'cpt',index:'cpt',width:1,hidden:true},
@@ -367,7 +367,7 @@ $(document).ready(function() {
 					{name:'sup_expiration',index:'sup_expiration',width:100,hidden:true,formatter:'date',formatoptions:{srcformat:"ISO8601Long", newformat: "ISO8601Short"}},
 					{name:'sup_description',index:'sup_description',width:600},
 					{name:'sup_strength',index:'sup_strength',width:1,hidden:true},
-					{name:'quantity',index:'quantity',width:1,hidden:true},
+					{name:'quantity1',index:'quantity1',width:1,hidden:true},
 					{name:'sup_manufacturer',index:'imm_manufacturer',width:1,hidden:true},
 					{name:'sup_lot',index:'sup_lot',width:1,hidden:true},
 					{name:'cpt',index:'cpt',width:1,hidden:true},
@@ -754,6 +754,9 @@ $(document).ready(function() {
 					var id1 = $("#" + input_id); 
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
+					if (input_id == 'edit_supplement_sup_quantity') {
+						bValid = bValid && checkNumeric(id1, text);
+					}
 				});
 				if (bValid) {
 					var str = $("#edit_supplement_form").serialize();

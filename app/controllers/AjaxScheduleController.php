@@ -63,7 +63,7 @@ class AjaxScheduleController extends BaseController {
 					'pid'=> $pid,
 					'timestamp' => $timestamp
 				);
-				if (Session::get('group_id') == '100') {
+				if (Session::get('group_id') == '100' || Session::get('group_id') == 'schedule') {
 					if (Session::get('pid') != $pid) {
 						$event['title'] = 'Appointment taken';
 						$event['reason'] = 'Private';

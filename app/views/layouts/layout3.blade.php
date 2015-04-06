@@ -39,6 +39,7 @@
 				'error': '<?php echo route('home'); ?>',
 				'path': "/<?php $path = explode('/', route('home')); echo $path[3];?>/js/",
 				'logout_url': '<?php echo route('logout'); ?>',
+				'login_url': '<?php echo route('home'); ?>',
 				'images': '<?php echo url('images'); ?>/',
 				'default_pos': '',
 				'displayname': '<?php echo Session::get('displayname'); ?>',

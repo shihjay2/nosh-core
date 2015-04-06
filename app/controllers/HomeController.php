@@ -73,6 +73,7 @@ class HomeController extends BaseController {
 			} else {
 				$data['mtm_alerts_status'] = "n";
 			}
+			$data['vaccine_supplement_alert'] = $this->vaccine_supplement_alert($practice_id);
 		}
 		if(Session::get('group_id') == '3') {
 			$data['number_messages'] = Messaging::where('mailbox', '=', $user_id)->count();
@@ -98,6 +99,7 @@ class HomeController extends BaseController {
 				->count();
 			$data['number_bills'] = Encounters::where('bill_submitted', '=', 'No')->where('practice_id', '=', $practice_id)->count();
 			$data['number_tests'] = Tests::whereNull('pid')->where('practice_id', '=', $practice_id)->count();
+			$data['vaccine_supplement_alert'] = $this->vaccine_supplement_alert($practice_id);
 		}
 		if(Session::get('group_id') == '4') {
 			$data['number_messages'] = Messaging::where('mailbox', '=', $user_id)->count();
@@ -198,6 +200,23 @@ class HomeController extends BaseController {
 			$this->layout->content .= View::make('forms')->render();
 			$this->layout->content .= View::make('graph')->render();
 		}
+	}
+	
+	public function schedule()
+	{
+		$practice_id = Session::get('practice_id');
+		$data['practiceinfo'] = Practiceinfo::find($practice_id);
+		if ($data['practiceinfo']->weekends == '1') {
+			$data['weekends'] = 'true';
+		} else {
+			$data['weekends'] = 'false';
+		}
+		$data['minTime'] = ltrim($data['practiceinfo']->minTime,"0");
+		$data['maxTime'] = ltrim($data['practiceinfo']->maxTime,"0");
+		$data['schedule_increment'] = '15';
+		$this->layout->style = $this->css_assets();
+		$this->layout->script = $this->js_assets('base');
+		$this->layout->content .= View::make('schedule_widget', $data)->render();
 	}
 	
 	public function view_fax($id)

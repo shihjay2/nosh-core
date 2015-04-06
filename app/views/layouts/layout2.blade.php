@@ -39,6 +39,7 @@
 				'error': '<?php echo route('home'); ?>',
 				'path': "/<?php $path = explode('/', route('home')); echo $path[3];?>/js/",
 				'logout_url': '<?php echo route('logout'); ?>',
+				'login_url': '<?php echo route('home'); ?>',
 				'login_shake': '',
 				'images': '<?php echo url('images'); ?>/',
 				'weekends': '',

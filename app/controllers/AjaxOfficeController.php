@@ -234,7 +234,7 @@ class AjaxOfficeController extends BaseController {
 		$sidx = Input::get('sidx');
 		$sord = Input::get('sord');
 		$query = DB::table('supplement_inventory')
-			->where('quantity', '>', '0')
+			->where('quantity1', '>', '0')
 			->where('practice_id', '=', $practice_id)
 			->get();
 		if($query) { 
@@ -248,7 +248,7 @@ class AjaxOfficeController extends BaseController {
 		$start = $limit*$page - $limit;
 		if($start < 0) $start = 0;
 		$query1 = DB::table('supplement_inventory')
-			->where('quantity', '>', '0')
+			->where('quantity1', '>', '0')
 			->where('practice_id', '=', $practice_id)
 			->orderBy($sidx, $sord)
 			->skip($start)
@@ -273,7 +273,7 @@ class AjaxOfficeController extends BaseController {
 		$sidx = Input::get('sidx');
 		$sord = Input::get('sord');
 		$query = DB::table('supplement_inventory')
-			->where('quantity', '<=', '0')
+			->where('quantity1', '<=', '0')
 			->where('practice_id', '=', $practice_id)
 			->get();
 		if($query) { 
@@ -287,7 +287,7 @@ class AjaxOfficeController extends BaseController {
 		$start = $limit*$page - $limit;
 		if($start < 0) $start = 0;
 		$query1 = DB::table('supplement_inventory')
-			->where('quantity', '<=', '0')
+			->where('quantity1', '<=', '0')
 			->where('practice_id', '=', $practice_id)
 			->orderBy($sidx, $sord)
 			->skip($start)
@@ -310,7 +310,7 @@ class AjaxOfficeController extends BaseController {
 			'sup_description' => Input::get('sup_description'),
 			'sup_strength' => Input::get('sup_strength'),
 			'sup_manufacturer' => Input::get('sup_manufacturer'),
-			'quantity' => Input::get('quantity'),
+			'quantity1' => Input::get('quantity1'),
 			'charge' => Input::get('charge'),
 			'sup_expiration' => date("Y-m-d H:i:s", strtotime(Input::get('sup_expiration'))),
 			'date_purchase'=> date("Y-m-d H:i:s", strtotime(Input::get('date_purchase'))),
@@ -367,7 +367,7 @@ class AjaxOfficeController extends BaseController {
 	public function postInactivateSupplement()
 	{
 		$data = array(
-			'quantity' => 0
+			'quantity1' => 0
 		);
 		DB::table('supplement_inventory')->where('supplement_id', '=', Input::get('supplement_id'))->update($data);
 		$this->audit('Update');
@@ -384,7 +384,7 @@ class AjaxOfficeController extends BaseController {
 	public function postReactivateSupplement()
 	{
 		$data = array(
-			'quantity' => Input::get('quantity')
+			'quantity1' => Input::get('quantity')
 		);
 		DB::table('supplement_inventory')->where('supplement_id', '=', Input::get('supplement_id'))->update($data);
 		$this->audit('Update');

@@ -424,6 +424,7 @@ $(document).ready(function() {
 				var a = $("#supplement_inventory_dialog_amount");
 				var bValid = true;
 				bValid = bValid && checkEmpty(a,"Quantity");
+				bValid = bValid && checkNumeric(a,"Quantity");
 				if (bValid) {
 					var b = $("#supplement_inventory_dialog_amount").val();
 					$("#sup_amount").val(b);

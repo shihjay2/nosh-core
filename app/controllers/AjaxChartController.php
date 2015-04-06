@@ -1141,7 +1141,7 @@ class AjaxChartController extends BaseController {
 			$inventory_result = DB::table('supplement_inventory')->where('supplement_id', '=', Input::get('supplement_id'))->first();
 			$result = "Supplement does not exist in the inventory!";
 			if ($inventory_result) {
-				if ($inventory_result->quantity > 0) {
+				if ($inventory_result->quantity1 > 0) {
 					$result = "OK";
 				}
 			}
@@ -1185,9 +1185,9 @@ class AjaxChartController extends BaseController {
 				if(Input::get('supplement_id') != '') {
 					$data['supplement_id'] = Input::get('supplement_id');
 					$inventory_result = DB::table('supplement_inventory')->where('supplement_id', '=', Input::get('supplement_id'))->first();
-					$quantity = $inventory_result->quantity - Input::get('amount');
+					$quantity = $inventory_result->quantity1 - Input::get('amount');
 					$inventory_data = array(
-						'quantity' => $quantity
+						'quantity1' => $quantity
 					);
 					DB::table('supplement_inventory')->where('supplement_id', '=', Input::get('supplement_id'))->update($inventory_data);
 					$this->audit('Update');

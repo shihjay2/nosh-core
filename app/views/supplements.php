@@ -59,7 +59,7 @@
 	<form id="supplement_inventory_form" class="pure-form pure-form-stacked">
 		<input type="hidden" name="supplement_id" id="reactivate_supplement_id"/>
 		This is confirmation that you will be dispensing <span id="supplement_inventory_description"></span>.<br>
-		<label for="supplement_inventory_dialog_amount">Indicate below the quantity (bottles or packages) you will be dispensing:</label>
+		<label for="supplement_inventory_dialog_amount">Indicate below the quantity (bottles, packages, mass, or volume) you will be dispensing:</label>
 		<input type="text" id="supplement_inventory_dialog_amount" class="text" required/>
 	</form>
 </div>

@@ -9,6 +9,17 @@ function checkEmpty(o,n) {
 		return true;
 	}
 }
+function checkNumeric(o,n) {
+	if (! $.isNumeric(o.val())) {
+		var text = n.replace(":","");
+		$.jGrowl(text + " is not a number!");
+		o.addClass("ui-state-error");
+		return false;
+	} else {
+		o.removeClass("ui-state-error");
+		return true;
+	}
+}
 function checkRegexp( o, regexp, n ) {
 	if ( !( regexp.test( o.val() ) ) ) {
 		var text = n.replace(":","");
@@ -181,52 +192,58 @@ function loadcalendar (y,m,d,view) {
 			if (allDay) {
 				$.jGrowl('Clicked on the entire day: ' + date);
 			} else {
-				if (noshdata.group_id != '1') {
-					if (noshdata.group_id != '100') {
-						$("#event_dialog").dialog("option", "title", "Schedule an Appointment");
-						$("#event_dialog").dialog('open');
-						$("#title").focus();
-						$("#start_date").val($.fullCalendar.formatDate(date, 'MM/dd/yyyy'));
-						$("#start_time").val($.fullCalendar.formatDate(date, 'hh:mmTT'));
-						$("#end").val('');
-						$("#schedule_visit_type").val('');
-						$("#end_row").show();
-						$("#title").val('');
-						$("#reason").val('');
-						$("#until").val('');
-						$("#until_row").hide();
-						$('#repeat').val('');
-						$('#status').val('');
-						$("#delete_form").hide();
-						$(".nosh_schedule_exist_event").hide();
-						$("#patient_appt").hide();
-						$("#other_event").hide();
-						$("#until_row").hide();
-						$("#start_form").hide();
-						$("#reason_form").hide();
-						$("#event_choose").show();
-					} else {
-						if (isOverlapping(date)) {
-							$.jGrowl('You cannot schedule an appointment in this time slot!');
-						} else {
-							$("#schedule_visit_type").focus();
-							$("#start").text($.fullCalendar.formatDate(date, 'dddd, MM/dd/yyyy, hh:mmTT'));
+				if (noshdata.group_id == 'schedule') {
+					if(confirm('You will need to login to schedule an appointment.  Proceed?')){ 
+						window.location = noshdata.login_url;
+					}
+				} else {
+					if (noshdata.group_id != '1') {
+						if (noshdata.group_id != '100') {
+							$("#event_dialog").dialog("option", "title", "Schedule an Appointment");
+							$("#event_dialog").dialog('open');
+							$("#title").focus();
 							$("#start_date").val($.fullCalendar.formatDate(date, 'MM/dd/yyyy'));
 							$("#start_time").val($.fullCalendar.formatDate(date, 'hh:mmTT'));
 							$("#end").val('');
 							$("#schedule_visit_type").val('');
+							$("#end_row").show();
+							$("#title").val('');
 							$("#reason").val('');
 							$("#until").val('');
 							$("#until_row").hide();
 							$('#repeat').val('');
-							$("#delete_form").hide("fast");
-							$("#patient_appt").show();
-							$("#start_form").show();
-							$("#reason_form").show();
+							$('#status').val('');
+							$("#delete_form").hide();
+							$(".nosh_schedule_exist_event").hide();
+							$("#patient_appt").hide();
 							$("#other_event").hide();
-							$("#event_choose").hide();
-							$("#event_dialog").dialog("option", "title", "Schedule an Appointment");
-							$("#event_dialog").dialog('open');
+							$("#until_row").hide();
+							$("#start_form").hide();
+							$("#reason_form").hide();
+							$("#event_choose").show();
+						} else {
+							if (isOverlapping(date)) {
+								$.jGrowl('You cannot schedule an appointment in this time slot!');
+							} else {
+								$("#schedule_visit_type").focus();
+								$("#start").text($.fullCalendar.formatDate(date, 'dddd, MM/dd/yyyy, hh:mmTT'));
+								$("#start_date").val($.fullCalendar.formatDate(date, 'MM/dd/yyyy'));
+								$("#start_time").val($.fullCalendar.formatDate(date, 'hh:mmTT'));
+								$("#end").val('');
+								$("#schedule_visit_type").val('');
+								$("#reason").val('');
+								$("#until").val('');
+								$("#until_row").hide();
+								$('#repeat').val('');
+								$("#delete_form").hide("fast");
+								$("#patient_appt").show();
+								$("#start_form").show();
+								$("#reason_form").show();
+								$("#other_event").hide();
+								$("#event_choose").hide();
+								$("#event_dialog").dialog("option", "title", "Schedule an Appointment");
+								$("#event_dialog").dialog('open');
+							}
 						}
 					}
 				}

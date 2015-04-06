@@ -148,7 +148,7 @@
 		<div class="pure-control-group"><label for="edit_supplement_sup_manufacturer">Manufacturer:</label><input type="text" name="sup_manufacturer" id="edit_supplement_sup_manufacturer" style="width:400px" class="text" required/></div>
 		<div class="pure-control-group"><label for="edit_supplement_sup_lot">Lot Number:</label><input type="text" name="sup_lot" id="edit_supplement_sup_lot" style="width:400px" class="text"/></div>
 		<div class="pure-control-group"><label for="edit_supplement_sup_charge">Charge:</label>$<input type="text" name="charge" id="edit_supplement_sup_charge" class="text" required/></div>
-		<div class="pure-control-group"><label for="edit_supplement_sup_quantity">Quantity (bottles or packages):</label><input type="text" name="quantity" id="edit_supplement_sup_quantity" class="text" required/></div>
+		<div class="pure-control-group"><label for="edit_supplement_sup_quantity">Quantity (bottles, packages, mass, or volume):</label><input type="text" name="quantity1" id="edit_supplement_sup_quantity" class="text" required/></div>
 		<div class="pure-control-group"><label for="edit_supplement_sup_date_purchase">Date Purchased:</label><input type="text" name="date_purchase" id="edit_supplement_sup_date_purchase" class="text" required/></div>
 		<div class="pure-control-group"><label for="edit_supplement_sup_expiration">Expiration Date:</label><input type="text" name="sup_expiration" id="edit_supplement_sup_expiration" class="text"/></div>
 	</form>

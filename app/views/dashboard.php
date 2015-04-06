@@ -52,7 +52,6 @@
 							<?php if(Session::get('patient_centric') == 'yp') {?>
 								<br><i class="fa fa-cogs fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" class="dashboard_setup">Practice Setup</a>
 							<?php }?>
-							<br><i class="fa fa-exchange fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="hieofone_sso">Transfer your credentials to HIEofOne</a>
 							<?php if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh') {?>
 								<br><i class="fa fa-exchange fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="hieofone_sso">Transfer your credentials to HIEofOne</a>
 							<?php }?>
@@ -86,6 +85,7 @@
 								<?php }?>
 							<?php }?>
 						<?php }?>
+						<?php if(Session::get('group_id') == '2' || Session::get('group_id') == '3') { echo $vaccine_supplement_alert; }?>
 						<div id="draft_div" style="display:none;">
 							<table id="draft_messages" class="scroll" cellpadding="0" cellspacing="0"></table>
 							<div id="draft_messages_pager" class="scroll" style="text-align:center;"></div><br>

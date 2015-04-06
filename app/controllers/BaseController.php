@@ -8898,4 +8898,56 @@ class BaseController extends Controller {
 		}
 		return $ret;
 	}
+	
+	protected function vaccine_supplement_alert($practice_id)
+	{
+		$time_exp = date('Y-m-d H:i:s', time() + (28 * 24 * 60 * 60));
+		$return = '';
+		$vaccine_alert_query = DB::table('vaccine_inventory')->where('quantity', '<=', '2')->where('practice_id', '=', $practice_id)->get();
+		if ($vaccine_alert_query) {
+			if ($return != '') {
+				$return .= '<br>';
+			}
+			$return .= '<strong>Vaccines in your inventory that need to be reordered soon:</strong><ul>';
+			foreach ($vaccine_alert_query as $vaccine_alert_row) {
+				$return .= '<li>' . $vaccine_alert_row->imm_brand . ', Quantity left: ' . $vaccine_alert_row->quantity . '</li>';
+			}
+			$return .= '</ul>';
+		}
+		$vaccine_alert_query1 = DB::table('vaccine_inventory')->where('quantity', '!=', '0')->where('imm_expiration', '<', $time_exp)->where('practice_id', '=', $practice_id)->get();
+		if ($vaccine_alert_query1) {
+			if ($return != '') {
+				$return .= '<br>';
+			}
+			$return .= '<strong>Vaccines in your inventory that will expire soon:</strong><ul>';
+			foreach ($vaccine_alert_query1 as $vaccine_alert_row1) {
+				$return .= '<li>' . $vaccine_alert_row1->imm_brand . ', Expiration date: ' . date('m/d/Y', $this->human_to_unix($vaccine_alert_row1->imm_expiration)) . '</li>';
+			}
+			$return .= '</ul>';
+		}
+		$supplement_alert_query = DB::table('supplement_inventory')->where('quantity1', '<=', '2')->where('practice_id', '=', $practice_id)->get();
+		if ($supplement_alert_query) {
+			if ($return != '') {
+				$return .= '<br>';
+			}
+			$return .= '<strong>Supplements/Herbs in your inventory that need to be reordered soon:</strong><ul>';
+			foreach ($supplement_alert_query as $supplement_alert_row) {
+				$return .= '<li>' . $supplement_alert_row->sup_description . ', Quantity left: ' . $supplement_alert_row->quantity1 . '</li>';
+			}
+			$return .= '</ul>';
+		}
+		$data['supplement_expire_alert'] = '';
+		$supplement_alert_query1 = DB::table('supplement_inventory')->where('quantity1', '!=', '0')->where('sup_expiration', '<', $time_exp)->where('practice_id', '=', $practice_id)->get();
+		if ($supplement_alert_query1) {
+			if ($return != '') {
+				$return .= '<br>';
+			}
+			$return .= '<strong>Supplements/Herbs in your inventory that will expire soon:</strong><ul>';
+			foreach ($supplement_alert_query1 as $supplement_alert_row1) {
+				$return .= '<li>' . $supplement_alert_row1->sup_description . ', Expiration date: ' . date('m/d/Y', $this->human_to_unix($supplement_alert_row1->sup_expiration)) . '</li>';
+			}
+			$return .= '</ul>';
+		}
+		return $return;
+	}
 }
