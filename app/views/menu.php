@@ -12,14 +12,15 @@
 			<br>
 			<div class="pure-g" style="font-size:1.1em">
 				<div class="pure-u-1-2"><i class="fa fa-umbrella fa-fw fa-lg" style="vertical-align:middle;padding:2px"></i> <a href="#" id="prevention_list" title="View prevention recommendations from U.S. Preventatitve Services Task Force and the CDC" class="nosh_tooltip">Prevention</a></div>
-				<div class="pure-u-1-2"><i class="fa fa-pencil fa-fw fa-lg" style="vertical-align:middle;padding:2px"></i> <a href="#" id="order_list" title="View pending order and historical order history for the patient" class="nosh_tooltip">Orders</a></div>
+				<div class="pure-u-1-2"><i class="fa fa-pencil fa-fw fa-lg" style="vertical-align:middle;padding:2px"></i> <a href="#" id="order_list" title="View pending and historical orders for the patient" class="nosh_tooltip">Orders</a></div>
 				<?php if($mtm == 'y') {?>
 					<div class="pure-u-1-2"><i class="fa fa-medkit fa-fw fa-lg" style="vertical-align:middle;padding:2px"></i> <a href="#" id="mtm_list" title="Medicare Medication Therapy Management" class="nosh_tooltip">MTM</a></div>
 				<?php }?>
 				<?php if (Session::get('agealldays') <6574.5) {?>
 					<div class="pure-u-1-2"><i class="fa fa-line-chart fa-fw fa-lg" style="vertical-align:middle;padding:2px"></i> <a href="#" id="gc_list" title="View growth charts" class="nosh_tooltip">Growth Charts</a></div>
 				<?php }?>
-				<div class="pure-u-1-2"><i class="fa fa-check fa-fw fa-lg" style="vertical-align:middle;padding:2px"></i> <a href="#" id="hedis_chart" title="View a HEDIS audit for this patient" class="nosh_tooltip">HEDIS Audit</a></div>
+				<div class="pure-u-1-2"><i class="fa fa-check fa-fw fa-lg" style="vertical-align:middle;padding:2px"></i> <a href="#" id="hedis_chart" title="Perform a HEDIS audit for this patient" class="nosh_tooltip">HEDIS Audit</a></div>
+				<div class="pure-u-1-2"><i class="fa fa-clock-o fa-fw fa-lg" style="vertical-align:middle;padding:2px"></i> <a href="#" id="timeline_chart" title="View a clinical timeline this patient" class="nosh_tooltip">Timeline</a></div>
 			</div>
 		</div>
 		<h3><button class="demographics_list nosh_button_edit">Edit</button><a href="#"><i class="fa fa-user fa-fw fa-lg" style="vertical-align:middle;padding:2px"></i> Demographics</a></h3>

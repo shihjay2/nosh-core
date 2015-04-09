@@ -29,7 +29,9 @@
 	</form>
 </div>
 <div id="messages_view_dialog" title="View Message">
-	<ul class="t_messages_tags"></ul>
+	<?php if(Session::get('group_id') != '100') { ?>
+		<ul class="t_messages_tags"></ul>
+	<?php }?>
 	<div id="message_view"></div>
 </div>
 <div id="messages_telephone_dialog" title="Message Helper">

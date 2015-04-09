@@ -60,7 +60,8 @@
 <div id="edit_issue_dialog" title="">
 	<form name="edit_issue_form" id="edit_issue_form" class="pure-form pure-form-aligned">
 		<input type="hidden" name="issue_id" id="issue_id"/>
-		<div class="pure-control-group"><label for="">Issue:</label><input type="text" name="issue" id="issue" style="width:500px" class="text" placeholder="Use a comma to separate distinct search terms." required/></div>
-		<div class="pure-control-group"><label for="">Date Active:</label><input type="text" name="issue_date_active" id="issue_date_active" class="text"/></div>
+		<div class="pure-control-group"><label for="issue">Issue:</label><input type="text" name="issue" id="issue" style="width:500px" class="text" placeholder="Use a comma to separate distinct search terms." required/></div>
+		<div class="pure-control-group"><label for="issue_type">Type:</label><select id="issue_type" name="type" class="text"></select></div>
+		<div class="pure-control-group"><label for="issue_date_active">Date Active:</label><input type="text" name="issue_date_active" id="issue_date_active" class="text"/></div>
 	</form>
 </div>

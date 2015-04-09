@@ -23,7 +23,7 @@ Route::get('start/{practicehandle}', function($practicehandle = null)
 	}
 	return Redirect::to('/');
 });
-Route::any('schedule_widget', array('as' => 'login', 'before' => 'force.ssl|schedule_check', 'uses' => 'HomeController@schedule'));
+Route::any('schedule_widget', array('as' => 'schedule_widget', 'before' => 'force.ssl|schedule_check', 'uses' => 'HomeController@schedule'));
 Route::get('schedule_widget_start/{practicehandle}', function($practicehandle = null)
 {
 	if ($practicehandle != null) {

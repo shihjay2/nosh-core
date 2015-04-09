@@ -584,8 +584,10 @@ function swipe(){
 			}
 		});
 		$('.textdump_text').text('Swipe right');
+		$('#swipe').show();
 	} else {
 		$('.textdump_text').text('Click shift-right arrow key');
+		$('#swipe').hide();
 	}
 }
 function menu_update(type) {
@@ -1569,6 +1571,17 @@ function typelabel (cellvalue, options, rowObject){
 		return 'MTM Encounter';
 	}
 }
+function t_messages_tags() {
+	var id = $("#t_messages_id").val();
+	$.ajax({
+		type: "POST",
+		url: "ajaxsearch/get-tags/t_messages_id/" + id,
+		dataType: "json",
+		success: function(data){
+			$(".t_messages_tags").tagit("fill",data);
+		}
+	});
+}
 $.fn.clearForm = function() {
 	return this.each(function() {
 		var type = this.type, tag = this.tagName.toLowerCase();
@@ -1964,6 +1977,20 @@ $(document).ready(function() {
 				$('#template_encounter_edit_dialog').dialog('close');
 			}
 		}
+	});
+	$("#timeline_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 500, 
+		width: 650, 
+		draggable: false,
+		resizable: false,
+		open: function(event, ui) {
+		},
+		close: function(event, ui) {
+			$("#timeline").html('');
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 });
 $(document).on("click", "#encounter_panel", function() {
@@ -3810,4 +3837,93 @@ $(document).on('click', '.remove_encounter_template_field', function() {
 	$("#group_encounter_template_div_"+count).remove();
 	$("#array_encounter_template_div_"+count).remove();
 	$("#remove_encounter_template_div_"+count).remove();
+});
+$(document).on('click', "#timeline_chart", function() {
+	$('#dialog_load').dialog('option', 'title', "Loading timeline...").dialog('open');
+	$.ajax({
+		type: "POST",
+		url: "ajaxsearch/timeline",
+		dataType: "json",
+		success: function(data){
+			var json = data.json;
+			for (var key in json) {
+				if (json.hasOwnProperty(key)) {
+					json[key]['startDate'] = new Date(json[key]['startDate'] * 1000);
+					if (json[key]['endDate'] != null) {
+						json[key]['endDate'] = new Date(json[key]['endDate'] * 1000);
+					}
+				}
+			}
+			$("#timeline").timeCube({
+				data: json,
+				granularity: data.granular,
+				startDate: new Date(data.start * 1000),
+				endDate: new Date(data.end * 1000),
+				transitionAngle: 60,
+				transitionSpacing: 100,
+				nextButton: $("#next-link"),
+				previousButton: $("#prev-link"),
+				showDate: true
+			});
+			$('#dialog_load').dialog('close');
+			$('#timeline_dialog').dialog('open');
+		}
+	});
+});
+$(document).on('click', '.timeline_event', function() {
+	var type = $(this).attr('type');
+	var value = $(this).attr('value');
+	var status = $(this).attr('status');
+	var acl = false;
+	if (noshdata.group_id == '2' || noshdata.group_id == '3') {
+		acl = true;
+	}
+	if (type == 'eid') {
+		if (status == 'Yes') {
+			if (acl) {
+				$("#encounter_view").load('ajaxchart/modal-view/' + value);
+			} else {
+				$.ajax({
+					type: "POST",
+					url: "ajaxcommon/opennotes",
+					success: function(data){
+						if (data == 'y') {
+							$("#encounter_view").load('ajaxcommon/modal-view2/' + value);
+						} else {
+							$.jGrowl('You cannot view the encounter as your provider has not activated OpenNotes.');
+						}
+					}
+				});
+			}
+			$("#encounter_view_dialog").dialog('open');
+		} else {
+			$.jGrowl('Encounter is not signed.  You cannot view it at this time.');
+		}
+	} else if (type == 't_messages_id') {
+		if (status == 'Yes') {
+			if (acl) {
+				$("#message_view").load('ajaxcommon/tmessages-view/' + value);
+				$("#t_messages_id").val(value);
+				t_messages_tags();
+				$("#messages_view_dialog").dialog('open');
+			} else {
+				$.ajax({
+					type: "POST",
+					url: "ajaxcommon/opennotes",
+					success: function(data){
+						if (data == 'y') {
+							$("#message_view").load('ajaxcommon/tmessages-view/' + value);
+							$("#t_messages_id").val(value);
+							$("#messages_view_dialog").dialog('open');
+						} else {
+							$.jGrowl('You cannot view the message as your provider has not activated OpenNotes.');
+						}
+					}
+				});
+			}
+		} else {
+			$.jGrowl('Message is not signed.  You cannot view it at this time.');
+		}
+	}
+	console.log(value + "," + type);
 });

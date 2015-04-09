@@ -34,7 +34,8 @@ class BaseController extends Controller {
 			'css/tagit.css',
 			'css/wColorPicker.min.css',
 			'css/wPaint.min.css',
-			'css/jqueryui-editable.css'
+			'css/jqueryui-editable.css',
+			'css/timecube.jquery.css'
 		);
 		$image_files = array(
 			'chosen-sprite.png',
@@ -116,7 +117,8 @@ class BaseController extends Controller {
 			'/js/jquery.touchswipe.min.js',
 			'/js/jquery.ui.touch-punch.min.js',
 			'/js/jquery-textrange.js',
-			'/js/jquery.autosize.min.js'
+			'/js/jquery.autosize.min.js',
+			'/js/timecube.jquery.js'
 		);
 		if(Session::get('group_id') == '1') {
 			$homejsfiles = array(
@@ -154,6 +156,7 @@ class BaseController extends Controller {
 				'/js/schedule.js',
 				'/js/issues.js',
 				'/js/encounters.js',
+				'/js/t_messages.js',
 				'/js/medications.js',
 				'/js/supplements.js',
 				'/js/allergies.js',

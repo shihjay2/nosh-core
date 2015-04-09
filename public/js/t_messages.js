@@ -58,17 +58,6 @@ $(document).ready(function() {
 		var response = a1+b1+c1;
 		return response;
 	}
-	function t_messages_tags() {
-		var id = $("#t_messages_id").val();
-		$.ajax({
-			type: "POST",
-			url: "ajaxsearch/get-tags/t_messages_id/" + id,
-			dataType: "json",
-			success: function(data){
-				$(".t_messages_tags").tagit("fill",data);
-			}
-		});
-	}
 	$("#messages_list_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 

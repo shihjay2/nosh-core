@@ -12,11 +12,12 @@ $(document).ready(function() {
 				url:"ajaxcommon/issues",
 				datatype: "json",
 				mtype: "POST",
-				colNames:['ID','Date Active','Issue'],
+				colNames:['ID','Date Active','Issue','Type'],
 				colModel:[
 					{name:'issue_id',index:'issue_id',width:1,hidden:true},
 					{name:'issue_date_active',index:'issue_date_active',width:100,formatter:'date',formatoptions:{srcformat:"ISO8601Long", newformat: "ISO8601Short"}},
-					{name:'issue',index:'issue',width:635}
+					{name:'issue',index:'issue',width:635},
+					{name:'type',index:'type',width:1,hidden:true}
 				],
 				rowNum:10,
 				rowList:[10,20,30],
@@ -26,6 +27,12 @@ $(document).ready(function() {
 			 	sortorder: "desc",
 			 	caption:"Issues",
 			 	height: "100%",
+			 	grouping:true,
+				groupingView : {
+					groupField : ['type'],
+					groupDataSorted : true,
+					groupColumnShow: false
+				},
 			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#issues_pager',{search:false,edit:false,add:false,del:false});
 			jQuery("#issues_inactive").jqGrid('GridUnload');
@@ -80,6 +87,7 @@ $(document).ready(function() {
 	});
 	$("#issue_date_active").mask("99/99/9999");
 	$("#issue_date_active").datepicker();
+	$("#issue_type").addOption({"Problem List":"Problem List","Medical History":"Medical History","Surgical History":"Surgical History"}, false);
 	$("#add_issue").click(function(){
 		$('#edit_issue_form').clearForm();
 		var currentDate = getCurrentDate();
@@ -250,7 +258,7 @@ $(document).ready(function() {
 					} else {
 						var old1 = '';
 					}
-					var issues1 = data.replace(/,/g,"\n");
+					var issues1 = data.replace(/;/g,"\n");
 					var len = issues1.length;
 					var len1 = len - 1;
 					var issues = issues1.slice(0, len1);
@@ -266,6 +274,7 @@ $(document).ready(function() {
 		var item = jQuery("#issues").getGridParam('selrow');
 		if(item){
 			var issue = jQuery("#issues").getCell(item,'issue');
+			var date = jQuery("#issues").getCell(item,'issue_date_active');
 			var old = $("#oh_pmh").val();
 			if(old){
 				var pos = old.lastIndexOf('\n');
@@ -282,7 +291,7 @@ $(document).ready(function() {
 			} else {
 				var old1 = '';
 			}
-			$("#oh_pmh").val(old1+issue);
+			$("#oh_pmh").val(old1+issue+', '+date);
 			$.jGrowl('Issue copied!');
 		} else {
 			$.jGrowl("Please select issue to copy!");
@@ -314,7 +323,7 @@ $(document).ready(function() {
 					} else {
 						var old1 = '';
 					}
-					var issues1 = data.replace(/,/g,"\n");
+					var issues1 = data.replace(/;/g,"\n");
 					var len = issues1.length;
 					var len1 = len - 1;
 					var issues = issues1.slice(0, len1);
@@ -330,6 +339,7 @@ $(document).ready(function() {
 		var item = jQuery("#issues").getGridParam('selrow');
 		if(item){
 			var issue = jQuery("#issues").getCell(item,'issue');
+			var date = jQuery("#issues").getCell(item,'issue_date_active');
 			var old = $("#oh_psh").val();
 			if(old){
 				var pos = old.lastIndexOf('\n');
@@ -346,7 +356,7 @@ $(document).ready(function() {
 			} else {
 				var old1 = '';
 			}
-			$("#oh_psh").val(old1+issue);
+			$("#oh_psh").val(old1+issue+', '+date);
 			$.jGrowl('Issue copied!');
 		} else {
 			$.jGrowl("Please select issue to copy!");

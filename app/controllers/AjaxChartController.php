@@ -385,6 +385,7 @@ class AjaxChartController extends BaseController {
 				'issue' => Input::get('issue'),
 				'issue_date_active' => date('Y-m-d H:i:s', strtotime(Input::get('issue_date_active'))),
 				'issue_date_inactive' => '',
+				'type' => Input::get('type'),
 				'issue_provider' => Session::get('displayname'),
 				'pid' => $pid,
 				'rcopia_sync' => 'n'

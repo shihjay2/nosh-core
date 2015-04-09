@@ -811,7 +811,7 @@ class AjaxEncounterController extends BaseController {
 		if ($query) {
 			$result = '';
 			foreach ($query as $row) {
-				$result .= $row->issue . ',';
+				$result .= $row->issue . ', ' . date('Y-m-d', $this->human_to_unix($row->issue_date_active)) . ';';
 			}
 			echo $result;
 		} else {

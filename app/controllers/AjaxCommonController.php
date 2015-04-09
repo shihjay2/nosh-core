@@ -53,8 +53,23 @@ class AjaxCommonController extends BaseController {
 		$pid = Session::get('pid');
 		$page = Input::get('page');
 		$limit = Input::get('rows');
-		$sidx = Input::get('sidx');
+		$index_arr = explode(', ', Input::get('sidx'));
+		$group_arr = explode(' ', $index_arr[0]);
+		$group_type = $group_arr[0];
+		
+		if ($group_arr[1] == 'asc') {
+			$group_sort = SORT_ASC;
+		} else {
+			$group_sort = SORT_DESC;
+		}
+		$sidx = $index_arr[1];
+		//$sidx = Input::get('sidx');
 		$sord = Input::get('sord');
+		if ($sord == 'asc') {
+			$date_sort = SORT_ASC;
+		} else {
+			$date_sort = SORT_DESC;
+		}
 		$query = DB::table('issues')
 			->where('pid', '=', $pid)
 			->where('issue_date_inactive', '=', '0000-00-00 00:00:00')
@@ -69,21 +84,21 @@ class AjaxCommonController extends BaseController {
 		if ($page > $total_pages) $page=$total_pages;
 		$start = $limit*$page - $limit; 
 		if($start < 0) $start = 0;
-		$query1 = DB::table('issues')
-			->where('pid', '=', $pid)
-			->where('issue_date_inactive', '=', '0000-00-00 00:00:00')
-			->orderBy($sidx, $sord)
-			->skip($start)
-			->take($limit)
-			->get();
+		
+		if ($query) {
+			foreach ($query as $key => $value) {
+				$group[$key]  = $value->$group_type;
+				$date[$key] = $value->$sidx;
+			}
+			array_multisort($group, $group_sort, $date, $date_sort, $query);
+			$records = array_slice($query, $start , $limit);
+		} else {
+			$records = '';
+		}
 		$response['page'] = $page;
 		$response['total'] = $total_pages;
 		$response['records'] = $count;
-		if ($query1) {
-			$response['rows'] = $query1;
-		} else {
-			$response['rows'] = '';
-		}
+		$response['rows'] = $records;
 		echo json_encode($response);
 	}
 	
@@ -901,6 +916,13 @@ class AjaxCommonController extends BaseController {
 	public function getModalView2($eid)
 	{
 		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, false);
+	}
+	
+	public function getTmessagesView($t_messages_id)
+	{
+		$row = DB::table('t_messages')->where('t_messages_id', '=', $t_messages_id)->first();
+		$text = '<br><strong>Date:</strong>  ' . date('Y-m-d', $this->human_to_unix($row->t_messages_dos)) . '<br><br><strong>Subject:</strong>  ' . $row->t_messages_subject . '<br><br><strong>Message:</strong> ' . $row->t_messages_message; 
+		return $text;
 	}
 	
 	public function checkapi($practicehandle)

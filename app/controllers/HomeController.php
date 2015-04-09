@@ -192,6 +192,7 @@ class HomeController extends BaseController {
 			$this->layout->content .= View::make('schedule')->render();
 			$this->layout->content .= View::make('issues')->render();
 			$this->layout->content .= View::make('encounters')->render();
+			$this->layout->content .= View::make('t_messages')->render();
 			$this->layout->content .= View::make('medications')->render();
 			$this->layout->content .= View::make('supplements')->render();
 			$this->layout->content .= View::make('allergies')->render();

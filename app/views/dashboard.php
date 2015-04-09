@@ -106,12 +106,13 @@
 						<h4>Welcome <?php echo $displayname;?>.</h4>
 						<i class="fa fa-envelope fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="Send a message to your provider here too!"> <a href="#" id="dashboard_messaging">View your messages.</a></span>
 						<?php if(Session::get('patient_centric') == 'n') {?>
-							<br><i class="fa fa-clock-o fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="dashboard_schedule">Schedule an appointment</a>
+							<br><i class="fa fa-calendar fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="dashboard_schedule">Schedule an appointment</a>
 						<?php }?>
 						<br><i class="fa fa-user fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="patient_demographics">Edit your demographics and insurance.</a>
 						<?php if(Session::get('patient_centric') == 'n') {?>
 							<br><i class="fa fa-check-square-o fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="Your provider may want you to fill out forms for the practice.  Do this here!"> <a href="#" id="dashboard_forms">Fill out forms.</a></span>
 						<?php }?>
+						<br><i class="fa fa-clock-o fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="View your health history in a timeline fashion."> <a href="#" id="timeline_chart">Your health timeline.</a></span>
 						<br><i class="fa fa-user-md fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="Your patient instructions for your previous encounters with your provider."> <a href="#" id="dashboard_encounters">Your past office visits.</a></span>
 						<br><i class="fa fa-bars fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="These are your active medical issues documented by your provider(s)."> <a href="#" id="dashboard_issues">Your active medical issues.</a></span>
 						<br><i class="fa fa-eyedropper fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="These are your active medications documented by your provider(s)."> <a href="#" id="dashboard_rx">Your active medication list.</a></span>

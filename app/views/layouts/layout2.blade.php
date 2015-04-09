@@ -158,6 +158,13 @@
 				<div id="template_encounter_edit_div" class="pure-g"></div>
 			</form>
 		</div>
+		<div id="timeline_dialog" title="Your Health Timeline">
+			<p>Click on the blue text for more details.</p>
+			<a href="#" onclick="return false;" id="prev-link" class="active"></a>
+			<a href="#" onclick="return false;" id="next-link" class="active"></a>
+			<div id="timeline" class="timeCube"></div>
+			<div id="swipe"></div>
+		</div>
 		<div id="allpage" class="allpage">
 			<div id="header" class="header ui-widget">
 				<?php if(Auth::check()) {?>
