@@ -1313,22 +1313,6 @@ $(document).ready(function() {
 		resizable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
-		open: function (event, ui) {
-			$.ajax({
-				type: "POST",
-				url: "ajaxchart/get-creditcard",
-				dataType: "json",
-				success: function(data){
-					if (data.message == 'y') {
-						$.each(data, function(key, value){
-							if (key != 'message') {
-								$("#creditcard_form :input[name='" + key + "']").val(value);
-							}
-						});
-					}
-				}
-			});
-		},
 		buttons: {
 			'Save': function() {
 				var bValid = true;
@@ -1365,7 +1349,21 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$(".add_creditcard").click(function() {
-		$("#creditcard_dialog").dialog('open');
+		$.ajax({
+			type: "POST",
+			url: "ajaxchart/get-creditcard",
+			dataType: "json",
+			success: function(data){
+				if (data.message == 'y') {
+					$.each(data, function(key, value){
+						if (key != 'message') {
+							$("#creditcard_form :input[name='" + key + "']").val(value);
+						}
+					});
+					$("#creditcard_dialog").dialog('open');
+				}
+			}
+		});
 	});
 	$("#connect_patient_centric_dialog").dialog({ 
 		bgiframe: true, 

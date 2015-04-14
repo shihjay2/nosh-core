@@ -3529,7 +3529,9 @@ class AjaxChartController extends BaseController {
 		$note = "<strong>Total Balance: $" .  number_format($total_balance, 2, '.', ',') . "</strong><br><br><strong>Billing Notes: </strong>" . $billing_notes . "<br>";
 		$cc = DB::table('demographics')->where('pid', '=', $pid)->first();
 		if ($cc->creditcard_number != '') {
-			$note .= "<br><strong>Credit Card on File: </strong><br>Number: " . $cc->creditcard_number . "<br>Type: " . $cc->creditcard_type . "<br>Expiration Date: " . $cc->creditcard_expiration . "<br>";
+			Crypt::setKey($cc->creditcard_key);
+			$note .= "<br><strong>Credit Card on File: </strong><br>Number: " . Crypt::decrypt($cc->creditcard_number) . "<br>Type: " . $cc->creditcard_type . "<br>Expiration Date: " . $cc->creditcard_expiration . "<br>";
+			Crypt::setKey('YourSecretKey!!!');
 		}
 		echo $note;
 	}
@@ -5350,11 +5352,17 @@ class AjaxChartController extends BaseController {
 	
 	public function postGetCreditcard()
 	{
-		$query = DB::table('demographics')->select('creditcard_number', 'creditcard_expiration', 'creditcard_type')->where('pid', '=', Session::get('pid'))->first();
+		$query = DB::table('demographics')->select('creditcard_number', 'creditcard_expiration', 'creditcard_type', 'creditcard_key')->where('pid', '=', Session::get('pid'))->first();
 		$data = array();
 		if ($query) {
+			if ($query->creditcard_key == '') {
+				$data['creditcard_number'] = '';
+			} else {
+				Crypt::setKey($query->creditcard_key);
+				$data['creditcard_number'] = Crypt::decrypt($query->creditcard_number);
+				Crypt::setKey('YourSecretKey!!!');
+			}
 			$data['message'] = 'y';
-			$data['creditcard_number'] = $query->creditcard_number;
 			$data['creditcard_expiration'] = $query->creditcard_expiration;
 			$data['creditcard_type'] = $query->creditcard_type;
 		} else {
@@ -5365,11 +5373,19 @@ class AjaxChartController extends BaseController {
 	
 	public function postSaveCreditcard()
 	{
-		$data = array(
-			'creditcard_number' => Input::get('creditcard_number'),
-			'creditcard_expiration' => Input::get('creditcard_expiration'),
-			'creditcard_type' => Input::get('creditcard_type')
-		);
+		$data = array();
+		$query = DB::table('demographics')->where('pid', '=', Session::get('pid'))->first();
+		if ($query->creditcard_key == '') {
+			$key = MD5(microtime());
+			$data['creditcard_key'] = $key;
+		} else {
+			$key = $query->creditcard_key;
+		}
+		Crypt::setKey($key);
+		$data['creditcard_number'] = Crypt::encrypt(Input::get('creditcard_number'));
+		Crypt::setKey('YourSecretKey!!!');
+		$data['creditcard_expiration'] = Input::get('creditcard_expiration');
+		$data['creditcard_type'] = Input::get('creditcard_type');
 		DB::table('demographics')->where('pid', '=', Session::get('pid'))->update($data);
 		$this->audit('Update');
 		echo "Credit Card Information Updated!";
