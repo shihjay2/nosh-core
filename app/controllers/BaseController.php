@@ -1456,17 +1456,22 @@ class BaseController extends Controller {
 			$orders_referrals_array = array();
 			foreach ($ordersInfo1 as $ordersInfo) {
 				$address_row1 = Addressbook::find($ordersInfo->address_id);
+				if ($address_row1) {
+					$orders_displayname = $address_row1->displayname;
+				} else {
+					$orders_displayname = 'Unknown';
+				}
 				if ($ordersInfo->orders_labs != '') {
-					$orders_lab_array[] = 'Orders sent to ' . $address_row1->displayname . ': '. nl2br($ordersInfo->orders_labs) . '<br />';
+					$orders_lab_array[] = 'Orders sent to ' . $orders_displayname . ': '. nl2br($ordersInfo->orders_labs) . '<br />';
 				}
 				if ($ordersInfo->orders_radiology != '') {
-					$orders_radiology_array[] = 'Orders sent to ' . $address_row1->displayname . ': '. nl2br($ordersInfo->orders_radiology) . '<br />';
+					$orders_radiology_array[] = 'Orders sent to ' . $orders_displayname . ': '. nl2br($ordersInfo->orders_radiology) . '<br />';
 				}
 				if ($ordersInfo->orders_cp != '') {
-					$orders_cp_array[] = 'Orders sent to ' . $address_row1->displayname . ': '. nl2br($ordersInfo->orders_cp) . '<br />';
+					$orders_cp_array[] = 'Orders sent to ' . $orders_displayname . ': '. nl2br($ordersInfo->orders_cp) . '<br />';
 				}
 				if ($ordersInfo->orders_referrals != '') {
-					$orders_referrals_array[] = 'Referral sent to ' . $address_row1->displayname . ': '. nl2br($ordersInfo->orders_referrals) . '<br />';
+					$orders_referrals_array[] = 'Referral sent to ' . $orders_displayname . ': '. nl2br($ordersInfo->orders_referrals) . '<br />';
 				}
 			}
 			if (count($orders_lab_array) > 0) {
