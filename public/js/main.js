@@ -3698,7 +3698,7 @@ $(document).on('click', 'textarea', function(e) {
 	var stopCharacters = [' ', '\n', '\r', '\t', ','];
 	var id = $(this).attr('id');
 	var val = $(this).val();
-	$(this).html(val);
+	$(this).html(val.replace(/[&\/\-\.]/g, 'a'));
 	var text = $(this).html();
 	var start = $(this)[0].selectionStart;
 	var end = $(this)[0].selectionEnd;

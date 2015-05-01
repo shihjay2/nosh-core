@@ -13,7 +13,7 @@
 				<label for="t_messages_subject">Subject:</label><input type="text" name="t_messages_subject" id="t_messages_subject" style="width:450px" class="text" required/>
 				<label for="t_messages_dos">Date of Service:</label><input type="text" name="t_messages_dos" id="t_messages_dos" class="text" required/>
 				<label for="t_messages_to"><span id="t_messages_assign_hx"></span></label><input type="text" name="t_messages_to" id="t_messages_to" style="width:450px"class="text"/>
-				<label for="t_messages_message">Message:</label><textarea name="t_messages_message" id="t_messages_message" rows="9" style="width:450px" class="text" required></textarea>
+				<label for="t_messages_message">Message: <span class="textdump_text"></span> for templates.</label><textarea name="t_messages_message" id="t_messages_message" rows="9" style="width:450px" class="text textdump" required></textarea>
 			</div>
 			<div class="pure-u-1-3">
 				<button type="button" id="message_telephone" style="width:140px" class="nosh_button">Phone</button><br>
