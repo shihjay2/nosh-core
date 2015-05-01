@@ -39,14 +39,451 @@ $(document).ready(function() {
 			}
 		});
 	}
+	function loadmessaging() {
+		$('#dialog_load').dialog('option', 'title', "Loading messages...").dialog('open');
+		$("#messaging_accordion").accordion({ heightStyle: "content" });
+		jQuery("#internal_inbox").jqGrid('GridUnload');
+		jQuery("#internal_inbox").jqGrid({
+			url:"ajaxmessaging/internal-inbox",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','To','','Date','FromID','From','Subject','Message','CC','PID','Patient Name','Body Text','Telephone Messages ID','Document ID'],
+			colModel:[
+				{name:'message_id',index:'message_id',width:1,hidden:true},
+				{name:'message_to',index:'message_to',width:1,hidden:true},
+				{name:'read',index:'read',width:15,formatter:mail_status},
+				{name:'date',index:'date',width:120},
+				{name:'message_from',index:'message_from',width:1,hidden:true},
+				{name:'displayname',index:'displayname',width:175},
+				{name:'subject',index:'subject',width:240},
+				{name:'body',index:'body',width:1,hidden:true},
+				{name:'cc',index:'cc',width:1,hidden:true},
+				{name:'pid',index:'pid',width:1,hidden:true},
+				{name:'patient_name',index:'patient_name',width:1,hidden:true},
+				{name:'bodytext',index:'bodytext',width:1,hidden:true},
+				{name:'t_messages_id',index:'t_messages_id',width:1,hidden:true},
+				{name:'documents_id',index:'documents_id',width:1,hidden:true}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#internal_inbox_pager'),
+			sortname: 'date',
+			viewrecords: true,
+			sortorder: "desc",
+			caption:"Inbox",
+			height: "100%",
+			multiselect: true,
+			multiboxonly: true,
+			gridComplete: function() {
+				noshdata.messaging_dialog_load += 1;
+			},
+			onCellSelect: function(id,iCol) {
+				if (iCol > 0) {
+					var row = jQuery("#internal_inbox").getRowData(id);
+					var text = '<br><strong>From:</strong> ' + row['displayname'] + '<br><br><strong>Date:</strong> ' + row['date'] + '<br><br><strong>Subject:</strong> ' + row['subject'] + '<br><br><strong>Message:</strong> ' + row['bodytext']; 
+					var rawtext = 'From:  ' + row['displayname'] + '\nDate: ' + row['date'] + '\nSubject: ' + row['subject'] + '\n\nMessage: ' + row['body']; 
+					$("#message_view1").html(text);
+					$("#message_view_rawtext").val(rawtext);
+					$("#message_view_message_id").val(id);
+					$("#message_view_from").val(row['message_from']);
+					$("#message_view_to").val(row['message_to']);
+					$("#message_view_cc").val(row['cc']);
+					$("#message_view_subject").val(row['subject']);
+					$("#message_view_body").val(row['body']);
+					$("#message_view_date").val(row['date']);
+					$("#message_view_pid").val(row['pid']);
+					$("#message_view_patient_name").val(row['patient_name']);
+					$("#message_view_t_messages_id").val(row['t_messages_id']);
+					$("#message_view_documents_id").val(row['documents_id']);
+					messages_tags();
+					if (row['pid'] == '' || row['pid'] == "0") {
+						$("#export_message").hide();
+					} else {
+						$("#export_message").show();
+					}
+					$("#internal_messages_view_dialog").dialog('open');
+					setTimeout(function() {
+						var a = $("#internal_messages_view_dialog" ).dialog("isOpen");
+						if (a) {
+							var id = $("#message_view_message_id").val();
+							var documents_id = $("#message_view_documents_id").val();
+							if (documents_id == '') {
+								documents_id = '0';
+							}
+							$.ajax({
+								type: "POST",
+								url: "ajaxmessaging/read-message/" + id + "/" + documents_id,
+								success: function(data){
+									$.jGrowl(data);
+									reload_grid("internal_inbox");
+								}
+							});
+						}
+					}, 3000);
+				}
+			}
+		}).navGrid('#internal_inbox_pager',{search:false,edit:false,add:false,del:false
+		}).navButtonAdd('#internal_inbox_pager',{
+			caption:"Delete Message", 
+			buttonicon:"ui-icon-trash", 
+			onClickButton: function(){ 
+				var item = jQuery("#internal_inbox").getGridParam('selarrrow');
+				if(item){
+					var count = item.length;
+					for (var i = 0; i < count; i++) {
+						var id = $("#internal_inbox").getCell(item[i],'message_id');
+						$.ajax({
+							type: "POST",
+							url: "ajaxmessaging/delete-message",
+							data: "message_id=" + id,
+							success: function(data){
+								$.jGrowl(data);
+							}
+						});
+					}
+					reload_grid("internal_inbox");
+				} else {
+					$.jGrowl('Choose message(s) to delete!');
+				}
+			}, 
+			position:"last"
+		});
+		jQuery("#internal_draft").jqGrid('GridUnload');
+		jQuery("#internal_draft").jqGrid({
+			url:"ajaxmessaging/internal-draft",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Date','To','CC','Subject','Message','PID','Patient Name'],
+			colModel:[
+				{name:'message_id',index:'message_id',width:1,hidden:true},
+				{name:'date',index:'date',width:120},
+				{name:'message_to',index:'message_to',width:90},
+				{name:'cc',index:'cc',width:90},
+				{name:'subject',index:'subject',width:250},
+				{name:'body',index:'body',width:1,hidden:true},
+				{name:'pid',index:'pid',width:1,hidden:true},
+				{name:'patient_name',index:'patient_name',width:1,hidden:true}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#internal_draft_pager'),
+			sortname: 'date',
+			viewrecords: true,
+			sortorder: "desc",
+			caption:"Drafts",
+			height: "100%",
+			multiselect: true,
+			multiboxonly: true,
+			hiddengrid: true,
+			onCellSelect: function(id,iCol) {
+				if (iCol > 0) {
+					jQuery("#internal_draft").GridToForm(id,"#internal_messages_form_id");
+					$("#internal_messages_dialog").dialog('open');
+					messages_tags();
+					$("#messages_subject").focus();
+				}
+			}
+		}).navGrid('#internal_draft_pager',{search:false,edit:false,add:false,del:false
+		}).navButtonAdd('#internal_draft_pager',{
+			caption:"Delete Message", 
+			buttonicon:"ui-icon-trash", 
+			onClickButton: function(){ 
+				var item = jQuery("#internal_draft").getGridParam('selarrrow');
+				if(item){
+					var count = id.length;
+					for (var i = 0; i < count; i++) {
+						var id = $("#internal_draft").getCell(item[i],'message_id');
+						$.ajax({
+							type: "POST",
+							url: "ajaxmessaging/delete-message",
+							data: "message_id=" + id,
+							success: function(data){
+								$.jGrowl(data);
+							}
+						});
+					}
+					reload_grid("internal_draft");
+				} else {
+					$.jGrowl('Choose message(s) to delete!');
+				}
+			}, 
+			position:"last"
+		});
+		jQuery("#internal_outbox").jqGrid('GridUnload');
+		jQuery("#internal_outbox").jqGrid({
+			url:"ajaxmessaging/internal-outbox",
+			datatype: "json",
+			mtype: "POST",
+			colNames:['ID','Date','To','CC','Subject','PID','Message'],
+			colModel:[
+				{name:'message_id',index:'message_id',width:1,hidden:true},
+				{name:'date',index:'date',width:120},
+				{name:'message_to',index:'message_to',width:90},
+				{name:'cc',index:'cc',width:90},
+				{name:'subject',index:'subject',width:250},
+				{name:'pid',index:'pid',width:1,hidden:true},
+				{name:'body',index:'body',width:1,hidden:true}
+			],
+			rowNum:10,
+			rowList:[10,20,30],
+			pager: jQuery('#internal_outbox_pager'),
+			sortname: 'date',
+			viewrecords: true,
+			sortorder: "desc",
+			caption:"Sent Messages",
+			height: "100%",
+			multiselect: true,
+			multiboxonly: true,
+			hiddengrid: true,
+			onCellSelect: function(id,iCol) {
+				if (iCol > 0) {
+					var row = jQuery("#internal_outbox").getRowData(id);
+					var text = '<br><strong>To:</strong>  ' + row['message_to'] + '<br><strong>CC:</strong> ' + row['cc'] + '<br><br><strong>Date:</strong>  ' + row['date'] + '<br><br><strong>Subject:</strong>  ' + row['subject'] + '<br><br><strong>Message:</strong> ' + row['body']; 
+					$("#message_view2").html(text);
+					$("#message_view_message_id").val(id);
+					$("#message_view_subject1").val(row['subject']);
+					$("#message_view_body1").val(row['body']);
+					$("#message_view_date1").val(row['date']);
+					$("#message_view_pid1").val(row['pid']);
+					messages_tags();
+					if (row['pid'] == '' || row['pid'] == "0") {
+						$("#export_message1").hide();
+					} else {
+						$("#export_message1").show();
+					}
+					$("#internal_messages_view2_dialog").dialog('open');
+				}
+			}
+		}).navGrid('#internal_outbox_pager',{search:false,edit:false,add:false,del:false});
+		if (noshdata.group_id != '100') {
+			jQuery("#received_faxes").jqGrid('GridUnload');
+			jQuery("#received_faxes").jqGrid({
+				url:"ajaxmessaging/receive-fax",
+				datatype: "json",
+				mtype: "POST",
+				colNames:['ID','Date','Pages','From','FileName','FaxPath'],
+				colModel:[
+					{name:'received_id',index:'received_id',width:1,hidden:true},
+					{name:'fileDateTime',index:'fileDate',width:150},
+					{name:'filePages',index:'filePages',width:50},
+					{name:'fileFrom',index:'fileFrom',width:350},
+					{name:'fileName',index:'fileName',width:1,hidden:true},
+					{name:'filePath',index:'filePath',width:1,hidden:true}
+				],
+				rowNum:10,
+				rowList:[10,20,30],
+				pager: jQuery('#received_faxes_pager'),
+				sortname: 'fileDateTime',
+				viewrecords: true,
+				sortorder: "desc",
+				height: "100%",
+				caption:"Received Faxes",
+				gridComplete: function() {
+					noshdata.messaging_dialog_load += 1;
+				},
+				onSelectRow: function(id){
+					var fax_id = $("#received_faxes").getCell(id,'received_id');
+					$("#view_received_id").val(fax_id);
+					$.ajax({
+						type: "POST",
+						url: "ajaxmessaging/view-fax/" + fax_id,
+						dataType: "json",
+						success: function(data){
+							$("#embedURL1").html(data.html);
+							$("#fax_filepath").val(data.filepath);
+							$("#fax_view_dialog").dialog('open');
+						}
+					});
+				},
+				emptyrecords:"No faxes received.",
+				jsonReader: { repeatitems : false, id: "0" }
+			}).navGrid('#received_faxes_pager',{search:false,edit:false,add:false,del:false});
+			jQuery("#draft_faxes").jqGrid('GridUnload');
+			jQuery("#draft_faxes").jqGrid({
+				url:"ajaxmessaging/drafts-list",
+				datatype: "json",
+				mtype: "POST",
+				colNames:['ID','Fax Subject'],
+				colModel:[
+					{name:'job_id',index:'job_id',width:100},
+					{name:'faxsubject',index:'faxsubject',width:455}
+				],
+				rowNum:10,
+				rowList:[10,20,30],
+				pager: jQuery('#draft_faxes_pager'),
+				sortname: 'job_id',
+				viewrecords: true,
+				sortorder: "desc",
+				caption:"Draft Faxes",
+				height:"100%",
+				emptyrecords:"No drafts",
+				hiddengrid: true,
+				onSelectRow: function(id){
+					var job_id = $("#draft_faxes").getCell(id,'job_id');
+					$.ajax({
+						type: "POST",
+						url: "ajaxmessaging/set-id",
+						data: "job_id=" + job_id,
+						success: function(data){
+							loadfaxjob();
+							$(".messaging_fax_dialog_old").hide();
+							$(".messaging_fax_dialog_new").show();
+							$("#messaging_fax_dialog").dialog('open');
+						}
+					});
+				},
+				jsonReader: { repeatitems : false, id: "0" }
+			}).navGrid('#draft_faxes_pager',{search:false,edit:false,add:false,del:false});
+			jQuery("#sent_faxes").jqGrid('GridUnload');
+			jQuery("#sent_faxes").jqGrid({
+				url:"ajaxmessaging/sent-list",
+				datatype: "json",
+				mtype: "POST",
+				colNames:['ID','Sent Date','Fax Subject','Status'],
+				colModel:[
+					{name:'job_id',index:'job_id',width:50},
+					{name:'sentdate',index:'sentdate',width:100},
+					{name:'faxsubject',index:'faxsubject',width:295},
+					{name:'success',index:'success',width:100,formatter:statusfn}
+				],
+				rowNum:10,
+				rowList:[10,20,30],
+				pager: jQuery('#sent_faxes_pager'),
+				sortname: 'job_id',
+				viewrecords: true,
+				sortorder: "desc",
+				height: "100%",
+				caption:"Sent Faxes",
+				hiddengrid: true,
+				onSelectRow: function(id){
+					var job_id = $("#sent_faxes").getCell(id,'job_id');
+					$.ajax({
+						type: "POST",
+						url: "ajaxmessaging/set-id",
+						data: "job_id=" + job_id,
+						success: function(data){
+							loadfaxjob();
+							$(".messaging_fax_dialog_old").show();
+							$(".messaging_fax_dialog_new").hide();
+							$("#messaging_fax_dialog").dialog('open');
+						}
+					});
+				},
+				emptyrecords:"No sent faxes.",
+				jsonReader: { repeatitems : false, id: "0" }
+			}).navGrid('#sent_faxes_pager',{search:false,edit:false,add:false,del:false});
+			jQuery("#received_scans").jqGrid('GridUnload');
+			jQuery("#received_scans").jqGrid({
+				url:"ajaxmessaging/scans",
+				datatype: "json",
+				mtype: "POST",
+				colNames:['ID','Date','Pages','File Name','FaxPath'],
+				colModel:[
+					{name:'scans_id',index:'scans_id',width:1,hidden:true},
+					{name:'fileDateTime',index:'fileDate',width:150},
+					{name:'filePages',index:'filePages',width:50},
+					{name:'fileName',index:'fileName',width:350},
+					{name:'filePath',index:'filePath',width:1,hidden:true}
+				],
+				rowNum:10,
+				rowList:[10,20,30],
+				pager: jQuery('#received_scans_pager'),
+				sortname: 'fileDateTime',
+				viewrecords: true,
+				sortorder: "desc",
+				height: "100%",
+				caption:"Scanned Documents",
+				gridComplete: function() {
+					noshdata.messaging_dialog_load += 1;
+				},
+				onCellSelect: function(id,iCol){
+					if (iCol > 0) {
+						var scans_id = $("#received_scans").getCell(id,'scans_id');
+						$("#view_scans_id").val(scans_id);
+						$.ajax({
+							type: "POST",
+							url: "ajaxmessaging/view-scan/" + scans_id,
+							dataType: "json",
+							success: function(data){
+								$("#embedURL3").html(data.html);
+								$("#scan_filepath").val(data.filepath);
+								$("#scan_view_dialog").dialog('open');
+							}
+						});
+					}
+				},
+				emptyrecords:"No scanned documents.",
+				multiselect: true,
+				multiboxonly: true,
+				jsonReader: { repeatitems : false, id: "0" }
+			}).navGrid('#received_scans_pager',{search:false,edit:false,add:false,del:false});
+			jQuery("#all_contacts_list").jqGrid('GridUnload');
+			jQuery("#all_contacts_list").jqGrid({
+				url:"ajaxmessaging/all-contacts",
+				datatype: "json",
+				mtype: "POST",
+				colNames:['ID','Name','Specialty','Last Name','First Name','Prefix','Suffix','Facility','Street Address 1','Street Address 2','City','State','Zip','Phone','Fax','Email','Comments','NPI'],
+				colModel:[
+					{name:'address_id',index:'address_id',width:1,hidden:true},
+					{name:'displayname',index:'displayname',width:150},
+					{name:'specialty',index:'specialty',width:125},
+					{name:'lastname',index:'lastname',width:1,hidden:true},
+					{name:'firstname',index:'firstname',width:1,hidden:true},
+					{name:'prefix',index:'prefix',width:1,hidden:true},
+					{name:'suffix',index:'suffix',width:1,hidden:true},
+					{name:'facility',index:'facility',width:1,hidden:true},
+					{name:'street_address1',index:'street_address1',width:125},
+					{name:'street_address2',index:'street_address2',width:1,hidden:true},
+					{name:'city',index:'city',width: 75},
+					{name:'state',index:'state',width:25},
+					{name:'zip',index:'zip',width:1,hidden:true},
+					{name:'phone',index:'phone',width:75},
+					{name:'fax',index:'fax',width:75},
+					{name:'email',index:'email',width:1,hidden:true},
+					{name:'comments',index:'comments',width:1,hidden:true},
+					{name:'npi',index:'npi',width:1,hidden:true}
+				],
+				rowNum:10,
+				rowList:[10,20,30],
+				pager: jQuery('#all_contacts_list_pager'),
+				sortname: 'displayname',
+				viewrecords: true,
+				sortorder: "asc",
+				height: "100%",
+				caption:"Address Book",
+				emptyrecords:"No contacts.",
+				gridComplete: function() {
+					noshdata.messaging_dialog_load += 1;
+				},
+				jsonReader: { repeatitems : false, id: "0" }
+			}).navGrid('#all_contacts_list_pager',{search:false,edit:false,add:false,del:false});
+		}
+		var interval = setInterval(function() {
+			if (noshdata.group_id != '100') {
+				if (noshdata.messaging_dialog_load == 4) {
+					clearInterval(interval);
+					noshdata.messaging_dialog_load = 0;
+					$('#dialog_load').dialog('close');
+					$("#messaging_dialog").dialog('open');
+				}
+			} else {
+				if (noshdata.messaging_dialog_load == 1) {
+					clearInterval(interval);
+					noshdata.messaging_dialog_load = 0;
+					$('#dialog_load').dialog('close');
+					$("#messaging_dialog").dialog('open');
+				}
+			}
+		}, 10);
+	}
 	$("#nosh_messaging").click(function() {
-		$("#messaging_dialog").dialog('open');
+		loadmessaging();
 	});
 	$("#dashboard_messaging").click(function() {
-		$("#messaging_dialog").dialog('open');
+		loadmessaging();
 	});
 	$("#dashboard_documents").click(function() {
-		$("#messaging_dialog").dialog('open');
+		loadmessaging();
 		$("#messaging_accordion").accordion({active: 1});
 	});
 	$("#messaging_dialog").dialog({ 
@@ -56,413 +493,6 @@ $(document).ready(function() {
 		width: 800, 
 		draggable: false,
 		resizable: false,
-		open: function(event, ui) {
-			$("#messaging_accordion").accordion({ heightStyle: "content" });
-			jQuery("#internal_inbox").jqGrid('GridUnload');
-			jQuery("#internal_inbox").jqGrid({
-				url:"ajaxmessaging/internal-inbox",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','To','','Date','FromID','From','Subject','Message','CC','PID','Patient Name','Body Text','Telephone Messages ID','Document ID'],
-				colModel:[
-					{name:'message_id',index:'message_id',width:1,hidden:true},
-					{name:'message_to',index:'message_to',width:1,hidden:true},
-					{name:'read',index:'read',width:15,formatter:mail_status},
-					{name:'date',index:'date',width:120},
-					{name:'message_from',index:'message_from',width:1,hidden:true},
-					{name:'displayname',index:'displayname',width:175},
-					{name:'subject',index:'subject',width:240},
-					{name:'body',index:'body',width:1,hidden:true},
-					{name:'cc',index:'cc',width:1,hidden:true},
-					{name:'pid',index:'pid',width:1,hidden:true},
-					{name:'patient_name',index:'patient_name',width:1,hidden:true},
-					{name:'bodytext',index:'bodytext',width:1,hidden:true},
-					{name:'t_messages_id',index:'t_messages_id',width:1,hidden:true},
-					{name:'documents_id',index:'documents_id',width:1,hidden:true}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#internal_inbox_pager'),
-				sortname: 'date',
-				viewrecords: true,
-				sortorder: "desc",
-				caption:"Inbox",
-				height: "100%",
-				multiselect: true,
-				multiboxonly: true,
-				onCellSelect: function(id,iCol) {
-					if (iCol > 0) {
-						var row = jQuery("#internal_inbox").getRowData(id);
-						var text = '<br><strong>From:</strong> ' + row['displayname'] + '<br><br><strong>Date:</strong> ' + row['date'] + '<br><br><strong>Subject:</strong> ' + row['subject'] + '<br><br><strong>Message:</strong> ' + row['bodytext']; 
-						var rawtext = 'From:  ' + row['displayname'] + '\nDate: ' + row['date'] + '\nSubject: ' + row['subject'] + '\n\nMessage: ' + row['body']; 
-						$("#message_view1").html(text);
-						$("#message_view_rawtext").val(rawtext);
-						$("#message_view_message_id").val(id);
-						$("#message_view_from").val(row['message_from']);
-						$("#message_view_to").val(row['message_to']);
-						$("#message_view_cc").val(row['cc']);
-						$("#message_view_subject").val(row['subject']);
-						$("#message_view_body").val(row['body']);
-						$("#message_view_date").val(row['date']);
-						$("#message_view_pid").val(row['pid']);
-						$("#message_view_patient_name").val(row['patient_name']);
-						$("#message_view_t_messages_id").val(row['t_messages_id']);
-						$("#message_view_documents_id").val(row['documents_id']);
-						messages_tags();
-						if (row['pid'] == '' || row['pid'] == "0") {
-							$("#export_message").hide();
-						} else {
-							$("#export_message").show();
-						}
-						$("#internal_messages_view_dialog").dialog('open');
-						setTimeout(function() {
-							var a = $("#internal_messages_view_dialog" ).dialog("isOpen");
-							if (a) {
-								var id = $("#message_view_message_id").val();
-								var documents_id = $("#message_view_documents_id").val();
-								if (documents_id == '') {
-									documents_id = '0';
-								}
-								$.ajax({
-									type: "POST",
-									url: "ajaxmessaging/read-message/" + id + "/" + documents_id,
-									success: function(data){
-										$.jGrowl(data);
-										reload_grid("internal_inbox");
-									}
-								});
-							}
-						}, 3000);
-					}
-				}
-			}).navGrid('#internal_inbox_pager',{search:false,edit:false,add:false,del:false
-			}).navButtonAdd('#internal_inbox_pager',{
-				caption:"Delete Message", 
-				buttonicon:"ui-icon-trash", 
-				onClickButton: function(){ 
-					var item = jQuery("#internal_inbox").getGridParam('selarrrow');
-					if(item){
-						var count = item.length;
-						for (var i = 0; i < count; i++) {
-							var id = $("#internal_inbox").getCell(item[i],'message_id');
-							$.ajax({
-								type: "POST",
-								url: "ajaxmessaging/delete-message",
-								data: "message_id=" + id,
-								success: function(data){
-									$.jGrowl(data);
-								}
-							});
-						}
-						reload_grid("internal_inbox");
-					} else {
-						$.jGrowl('Choose message(s) to delete!');
-					}
-				}, 
-				position:"last"
-			});
-			jQuery("#internal_draft").jqGrid('GridUnload');
-			jQuery("#internal_draft").jqGrid({
-				url:"ajaxmessaging/internal-draft",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Date','To','CC','Subject','Message','PID','Patient Name'],
-				colModel:[
-					{name:'message_id',index:'message_id',width:1,hidden:true},
-					{name:'date',index:'date',width:120},
-					{name:'message_to',index:'message_to',width:90},
-					{name:'cc',index:'cc',width:90},
-					{name:'subject',index:'subject',width:250},
-					{name:'body',index:'body',width:1,hidden:true},
-					{name:'pid',index:'pid',width:1,hidden:true},
-					{name:'patient_name',index:'patient_name',width:1,hidden:true}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#internal_draft_pager'),
-				sortname: 'date',
-				viewrecords: true,
-				sortorder: "desc",
-				caption:"Drafts",
-				height: "100%",
-				multiselect: true,
-				multiboxonly: true,
-				hiddengrid: true,
-				onCellSelect: function(id,iCol) {
-					if (iCol > 0) {
-						jQuery("#internal_draft").GridToForm(id,"#internal_messages_form_id");
-						$("#internal_messages_dialog").dialog('open');
-						messages_tags();
-						$("#messages_subject").focus();
-					}
-				}
-			}).navGrid('#internal_draft_pager',{search:false,edit:false,add:false,del:false
-			}).navButtonAdd('#internal_draft_pager',{
-				caption:"Delete Message", 
-				buttonicon:"ui-icon-trash", 
-				onClickButton: function(){ 
-					var item = jQuery("#internal_draft").getGridParam('selarrrow');
-					if(item){
-						var count = id.length;
-						for (var i = 0; i < count; i++) {
-							var id = $("#internal_draft").getCell(item[i],'message_id');
-							$.ajax({
-								type: "POST",
-								url: "ajaxmessaging/delete-message",
-								data: "message_id=" + id,
-								success: function(data){
-									$.jGrowl(data);
-								}
-							});
-						}
-						reload_grid("internal_draft");
-					} else {
-						$.jGrowl('Choose message(s) to delete!');
-					}
-				}, 
-				position:"last"
-			});
-			jQuery("#internal_outbox").jqGrid('GridUnload');
-			jQuery("#internal_outbox").jqGrid({
-				url:"ajaxmessaging/internal-outbox",
-				datatype: "json",
-				mtype: "POST",
-				colNames:['ID','Date','To','CC','Subject','PID','Message'],
-				colModel:[
-					{name:'message_id',index:'message_id',width:1,hidden:true},
-					{name:'date',index:'date',width:120},
-					{name:'message_to',index:'message_to',width:90},
-					{name:'cc',index:'cc',width:90},
-					{name:'subject',index:'subject',width:250},
-					{name:'pid',index:'pid',width:1,hidden:true},
-					{name:'body',index:'body',width:1,hidden:true}
-				],
-				rowNum:10,
-				rowList:[10,20,30],
-				pager: jQuery('#internal_outbox_pager'),
-				sortname: 'date',
-				viewrecords: true,
-				sortorder: "desc",
-				caption:"Sent Messages",
-				height: "100%",
-				multiselect: true,
-				multiboxonly: true,
-				hiddengrid: true,
-				onCellSelect: function(id,iCol) {
-					if (iCol > 0) {
-						var row = jQuery("#internal_outbox").getRowData(id);
-						var text = '<br><strong>To:</strong>  ' + row['message_to'] + '<br><strong>CC:</strong> ' + row['cc'] + '<br><br><strong>Date:</strong>  ' + row['date'] + '<br><br><strong>Subject:</strong>  ' + row['subject'] + '<br><br><strong>Message:</strong> ' + row['body']; 
-						$("#message_view2").html(text);
-						$("#message_view_message_id").val(id);
-						$("#message_view_subject1").val(row['subject']);
-						$("#message_view_body1").val(row['body']);
-						$("#message_view_date1").val(row['date']);
-						$("#message_view_pid1").val(row['pid']);
-						messages_tags();
-						if (row['pid'] == '' || row['pid'] == "0") {
-							$("#export_message1").hide();
-						} else {
-							$("#export_message1").show();
-						}
-						$("#internal_messages_view2_dialog").dialog('open');
-					}
-				}
-			}).navGrid('#internal_outbox_pager',{search:false,edit:false,add:false,del:false});
-			if (noshdata.group_id != '100') {
-				jQuery("#received_faxes").jqGrid('GridUnload');
-				jQuery("#received_faxes").jqGrid({
-					url:"ajaxmessaging/receive-fax",
-					datatype: "json",
-					mtype: "POST",
-					colNames:['ID','Date','Pages','From','FileName','FaxPath'],
-					colModel:[
-						{name:'received_id',index:'received_id',width:1,hidden:true},
-						{name:'fileDateTime',index:'fileDate',width:150},
-						{name:'filePages',index:'filePages',width:50},
-						{name:'fileFrom',index:'fileFrom',width:350},
-						{name:'fileName',index:'fileName',width:1,hidden:true},
-						{name:'filePath',index:'filePath',width:1,hidden:true}
-					],
-					rowNum:10,
-					rowList:[10,20,30],
-					pager: jQuery('#received_faxes_pager'),
-					sortname: 'fileDateTime',
-					viewrecords: true,
-					sortorder: "desc",
-					height: "100%",
-					caption:"Received Faxes",
-					onSelectRow: function(id){
-						var fax_id = $("#received_faxes").getCell(id,'received_id');
-						$("#view_received_id").val(fax_id);
-						$.ajax({
-							type: "POST",
-							url: "ajaxmessaging/view-fax/" + fax_id,
-							dataType: "json",
-							success: function(data){
-								$("#embedURL1").html(data.html);
-								$("#fax_filepath").val(data.filepath);
-								$("#fax_view_dialog").dialog('open');
-							}
-						});
-					},
-					emptyrecords:"No faxes received.",
-					jsonReader: { repeatitems : false, id: "0" }
-				}).navGrid('#received_faxes_pager',{search:false,edit:false,add:false,del:false});
-				jQuery("#draft_faxes").jqGrid('GridUnload');
-				jQuery("#draft_faxes").jqGrid({
-					url:"ajaxmessaging/drafts-list",
-					datatype: "json",
-					mtype: "POST",
-					colNames:['ID','Fax Subject'],
-					colModel:[
-						{name:'job_id',index:'job_id',width:100},
-						{name:'faxsubject',index:'faxsubject',width:455}
-					],
-					rowNum:10,
-					rowList:[10,20,30],
-					pager: jQuery('#draft_faxes_pager'),
-					sortname: 'job_id',
-					viewrecords: true,
-					sortorder: "desc",
-					caption:"Draft Faxes",
-					height:"100%",
-					emptyrecords:"No drafts",
-					hiddengrid: true,
-					onSelectRow: function(id){
-						var job_id = $("#draft_faxes").getCell(id,'job_id');
-						$.ajax({
-							type: "POST",
-							url: "ajaxmessaging/set-id",
-							data: "job_id=" + job_id,
-							success: function(data){
-								loadfaxjob();
-								$(".messaging_fax_dialog_old").hide();
-								$(".messaging_fax_dialog_new").show();
-								$("#messaging_fax_dialog").dialog('open');
-							}
-						});
-					},
-					jsonReader: { repeatitems : false, id: "0" }
-				}).navGrid('#draft_faxes_pager',{search:false,edit:false,add:false,del:false});
-				jQuery("#sent_faxes").jqGrid('GridUnload');
-				jQuery("#sent_faxes").jqGrid({
-					url:"ajaxmessaging/sent-list",
-					datatype: "json",
-					mtype: "POST",
-					colNames:['ID','Sent Date','Fax Subject','Status'],
-					colModel:[
-						{name:'job_id',index:'job_id',width:50},
-						{name:'sentdate',index:'sentdate',width:100},
-						{name:'faxsubject',index:'faxsubject',width:295},
-						{name:'success',index:'success',width:100,formatter:statusfn}
-					],
-					rowNum:10,
-					rowList:[10,20,30],
-					pager: jQuery('#sent_faxes_pager'),
-					sortname: 'job_id',
-					viewrecords: true,
-					sortorder: "desc",
-					height: "100%",
-					caption:"Sent Faxes",
-					hiddengrid: true,
-					onSelectRow: function(id){
-						var job_id = $("#sent_faxes").getCell(id,'job_id');
-						$.ajax({
-							type: "POST",
-							url: "ajaxmessaging/set-id",
-							data: "job_id=" + job_id,
-							success: function(data){
-								loadfaxjob();
-								$(".messaging_fax_dialog_old").show();
-								$(".messaging_fax_dialog_new").hide();
-								$("#messaging_fax_dialog").dialog('open');
-							}
-						});
-					},
-					emptyrecords:"No sent faxes.",
-					jsonReader: { repeatitems : false, id: "0" }
-				}).navGrid('#sent_faxes_pager',{search:false,edit:false,add:false,del:false});
-				jQuery("#received_scans").jqGrid('GridUnload');
-				jQuery("#received_scans").jqGrid({
-					url:"ajaxmessaging/scans",
-					datatype: "json",
-					mtype: "POST",
-					colNames:['ID','Date','Pages','File Name','FaxPath'],
-					colModel:[
-						{name:'scans_id',index:'scans_id',width:1,hidden:true},
-						{name:'fileDateTime',index:'fileDate',width:150},
-						{name:'filePages',index:'filePages',width:50},
-						{name:'fileName',index:'fileName',width:350},
-						{name:'filePath',index:'filePath',width:1,hidden:true}
-					],
-					rowNum:10,
-					rowList:[10,20,30],
-					pager: jQuery('#received_scans_pager'),
-					sortname: 'fileDateTime',
-					viewrecords: true,
-					sortorder: "desc",
-					height: "100%",
-					caption:"Scanned Documents",
-					onCellSelect: function(id,iCol){
-						if (iCol > 0) {
-							var scans_id = $("#received_scans").getCell(id,'scans_id');
-							$("#view_scans_id").val(scans_id);
-							$.ajax({
-								type: "POST",
-								url: "ajaxmessaging/view-scan/" + scans_id,
-								dataType: "json",
-								success: function(data){
-									$("#embedURL3").html(data.html);
-									$("#scan_filepath").val(data.filepath);
-									$("#scan_view_dialog").dialog('open');
-								}
-							});
-						}
-					},
-					emptyrecords:"No scanned documents.",
-					multiselect: true,
-					multiboxonly: true,
-					jsonReader: { repeatitems : false, id: "0" }
-				}).navGrid('#received_scans_pager',{search:false,edit:false,add:false,del:false});
-				jQuery("#all_contacts_list").jqGrid('GridUnload');
-				jQuery("#all_contacts_list").jqGrid({
-					url:"ajaxmessaging/all-contacts",
-					datatype: "json",
-					mtype: "POST",
-					colNames:['ID','Name','Specialty','Last Name','First Name','Prefix','Suffix','Facility','Street Address 1','Street Address 2','City','State','Zip','Phone','Fax','Email','Comments','NPI'],
-					colModel:[
-						{name:'address_id',index:'address_id',width:1,hidden:true},
-						{name:'displayname',index:'displayname',width:150},
-						{name:'specialty',index:'specialty',width:125},
-						{name:'lastname',index:'lastname',width:1,hidden:true},
-						{name:'firstname',index:'firstname',width:1,hidden:true},
-						{name:'prefix',index:'prefix',width:1,hidden:true},
-						{name:'suffix',index:'suffix',width:1,hidden:true},
-						{name:'facility',index:'facility',width:1,hidden:true},
-						{name:'street_address1',index:'street_address1',width:125},
-						{name:'street_address2',index:'street_address2',width:1,hidden:true},
-						{name:'city',index:'city',width: 75},
-						{name:'state',index:'state',width:25},
-						{name:'zip',index:'zip',width:1,hidden:true},
-						{name:'phone',index:'phone',width:75},
-						{name:'fax',index:'fax',width:75},
-						{name:'email',index:'email',width:1,hidden:true},
-						{name:'comments',index:'comments',width:1,hidden:true},
-						{name:'npi',index:'npi',width:1,hidden:true}
-					],
-					rowNum:10,
-					rowList:[10,20,30],
-					pager: jQuery('#all_contacts_list_pager'),
-					sortname: 'displayname',
-					viewrecords: true,
-					sortorder: "asc",
-					height: "100%",
-					caption:"Address Book",
-					emptyrecords:"No contacts.",
-					jsonReader: { repeatitems : false, id: "0" }
-				}).navGrid('#all_contacts_list_pager',{search:false,edit:false,add:false,del:false});
-			}
-		},
 		position: { my: 'center', at: 'top', of: '#maincontent' }
 	});
 	$.ajax({
@@ -724,6 +754,7 @@ $(document).ready(function() {
 		console.log(pid);
 		if(pid){
 			var oldpt = noshdata.pid;
+			var t_messages_id = $("#message_view_t_messages_id").val();
 			if(!oldpt){
 				$.ajax({
 					type: "POST",
@@ -731,12 +762,36 @@ $(document).ready(function() {
 					dataType: "json",
 					data: "pid=" + pid,
 					success: function(data){
-						window.location = data.url;
+						if (t_messages_id != '') {
+							$.ajax({
+								type: "POST",
+								url: "ajaxsearch/tmessagesidset",
+								data: "t_messages_id=" + t_messages_id,
+								dataType: "json",
+								success: function(data){
+									window.location = data.url;
+								}
+							});
+						} else {
+							window.location = data.url;
+						}
 					}
 				});
 			} else {
 				if(pid == oldpt){
-					$.jGrowl("Patient chart already open!");
+					if (t_messages_id != '') {
+						$.ajax({
+							type: "POST",
+							url: "ajaxsearch/tmessagesidset",
+							data: "t_messages_id=" + t_messages_id,
+							dataType: "json",
+							success: function(data){
+								window.location = data.url;
+							}
+						});
+					} else {
+						$.jGrowl("Patient chart already open!");
+					}
 				} else {
 					$.ajax({
 						type: "POST",
@@ -744,7 +799,19 @@ $(document).ready(function() {
 						dataType: "json",
 						data: "pid=" + pid,
 						success: function(data){
-							window.location = data.url;
+							if (t_messages_id != '') {
+								$.ajax({
+									type: "POST",
+									url: "ajaxsearch/tmessagesidset",
+									data: "t_messages_id=" + t_messages_id,
+									dataType: "json",
+									success: function(data){
+										window.location = data.url;
+									}
+								});
+							} else {
+								window.location = data.url;
+							}
 						}
 					});
 				}
@@ -1599,7 +1666,7 @@ $(document).ready(function() {
 			width: $("#maincontent").width(),
 			position: { my: 'left top', at: 'left top', of: '#maincontent' }
 		});
-		$('#messaging_dialog').dialog('open');
+		loadmessaging();
 	}
 	function messages_tags() {
 		$("#messages_tags").show();

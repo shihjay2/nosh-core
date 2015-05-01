@@ -68,7 +68,8 @@
 				'mtm_extension': '',
 				'hedis': '',
 				'notification_appt': '',
-				'notification_alert': ''
+				'notification_alert': '',
+				'messaging_dialog_load' : 0
 			};
 			var medcache = {};
 			var medcache1 = {};

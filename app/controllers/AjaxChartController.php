@@ -1824,20 +1824,22 @@ class AjaxChartController extends BaseController {
 				$to_array = explode('(', $to);
 				$demo_result = Demographics::find($pid);
 				$patient_name =  $demo_result->lastname . ', ' . $demo_result->firstname . ' (DOB: ' . date("m/d/Y", strtotime($demo_result->DOB)) . ') (ID: ' . $pid . ')';
-				$data1 = array(
-					'pid' => $pid,
-					'patient_name' => $patient_name,
-					'message_to' => Input::get('t_messages_to'),
-					'message_from' => Session::get('user_id'),
-					'subject' => 'Telephone Message - ' . Input::get('t_messages_subject'),
-					'body' => Input::get('t_messages_message'),
-					'status' => 'Sent',
-					't_messages_id' => Input::get('t_messages_id'),
-					'mailbox' => $this->strstrb($to_array[1], ')'),
-					'practice_id' => Session::get('practice_id')
-				);
-				DB::table('messaging')->insert($data1);
-				$this->audit('Add');
+				if (Session::get('user_id') != $this->strstrb($to_array[1], ')')) {
+					$data1 = array(
+						'pid' => $pid,
+						'patient_name' => $patient_name,
+						'message_to' => Input::get('t_messages_to'),
+						'message_from' => Session::get('user_id'),
+						'subject' => 'Telephone Message - ' . Input::get('t_messages_subject'),
+						'body' => Input::get('t_messages_message'),
+						'status' => 'Sent',
+						't_messages_id' => Input::get('t_messages_id'),
+						'mailbox' => $this->strstrb($to_array[1], ')'),
+						'practice_id' => Session::get('practice_id')
+					);
+					DB::table('messaging')->insert($data1);
+					$this->audit('Add');
+				}
 			}
 			echo "Telephone message updated!";
 		}

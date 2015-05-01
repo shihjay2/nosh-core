@@ -97,6 +97,9 @@ $(document).ready(function() {
 						var date = $('#t_messages_dos').val();
 						var edit_date = editDate(date);
 						$('#t_messages_dos').val(edit_date);
+						if ($("#t_messages_to").val() != '') {
+							$("#t_messages_assign_hx").html('Currently assigned to ' + $("#t_messages_to").val() + '.  Change assignment to:');
+						}
 						t_messages_tags();
 						$("#messages_main_dialog").dialog('open');
 					}
@@ -460,6 +463,7 @@ $(document).ready(function() {
 								$.jGrowl(data);
 								reload_grid("messages");
 								$("#edit_message_form").clearForm();
+								$("#t_messages_assign_hx").html('Assign to:');
 								$("#messages_main_dialog").dialog('close');
 							}
 						});
@@ -488,6 +492,7 @@ $(document).ready(function() {
 									$.jGrowl(data);
 									reload_grid("messages");
 									$("#edit_message_form").clearForm();
+									$("#t_messages_assign_hx").html('Assign to:');
 									$("#messages_main_dialog").dialog('close');
 								} else {
 									$.jGrowl(data);
@@ -501,6 +506,7 @@ $(document).ready(function() {
 			},
 			Cancel: function() {
 				$('#edit_message_form').clearForm();
+				$("#t_messages_assign_hx").html('Assign to:');
 				$("#messages_main_dialog").dialog('close');
 			},
 			'Delete': function() {
@@ -515,6 +521,7 @@ $(document).ready(function() {
 								$.jGrowl(data);
 								reload_grid("messages");
 								$("#edit_message_form").clearForm();
+								$("#t_messages_assign_hx").html('Assign to:');
 								$("#messages_main_dialog").dialog('close');
 							} else {
 								$.jGrowl(data);
@@ -569,6 +576,9 @@ $(document).ready(function() {
 				$.each(data, function(key, value){
 					$("#edit_message_form :input[name='" + key + "']").val(value);
 				});
+				if ($("#t_messages_to").val() != '') {
+					$("#t_messages_assign_hx").html('Currently assigned to ' + $("#t_messages_to").val() + '.  Change assignment to:');
+				}
 				var date = $('#t_messages_dos').val();
 				var edit_date = editDate1(date);
 				$('#t_messages_dos').val(edit_date);

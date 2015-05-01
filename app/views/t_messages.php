@@ -12,7 +12,7 @@
 			<div class="pure-u-2-3">
 				<label for="t_messages_subject">Subject:</label><input type="text" name="t_messages_subject" id="t_messages_subject" style="width:450px" class="text" required/>
 				<label for="t_messages_dos">Date of Service:</label><input type="text" name="t_messages_dos" id="t_messages_dos" class="text" required/>
-				<label for="t_messages_to">To:</label><input type="text" name="t_messages_to" id="t_messages_to" style="width:450px"class="text"/>
+				<label for="t_messages_to"><span id="t_messages_assign_hx"></span></label><input type="text" name="t_messages_to" id="t_messages_to" style="width:450px"class="text"/>
 				<label for="t_messages_message">Message:</label><textarea name="t_messages_message" id="t_messages_message" rows="9" style="width:450px" class="text" required></textarea>
 			</div>
 			<div class="pure-u-1-3">
