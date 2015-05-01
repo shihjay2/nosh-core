@@ -460,7 +460,7 @@ $(document).ready(function() {
 		}
 		var interval = setInterval(function() {
 			if (noshdata.group_id != '100') {
-				if (noshdata.messaging_dialog_load == 4) {
+				if (noshdata.messaging_dialog_load == 3) {
 					clearInterval(interval);
 					noshdata.messaging_dialog_load = 0;
 					$('#dialog_load').dialog('close');
