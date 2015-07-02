@@ -1046,4 +1046,38 @@ class AjaxCommonController extends BaseController {
 		}
 		echo json_encode($response);
 	}
+	
+	public function postMobileFormAction($table, $action, $row_id, $row_index)
+	{
+		$date_convert_array = array(
+			'issue_date_active',
+			
+		);
+		$rcopia_tables = array(
+			'issues',
+		);
+		$api_tables = array(
+			'issues',
+		);
+		$data = Input::all();
+		foreach ($date_convert_array as $key) {
+			if (array_key_exists($key, $data)) {
+				$data[$date_convert_item] = date('Y-m-d H:i:s', strtotime($data[$date_convert_item]));
+			}
+		}
+		foreach ($rcopia_tables as $rcopia_table) {
+			if ($rcopia_table == $table) {
+				$data['rcopia_sync'] = 'n';
+			}
+		}
+		if ($action == 'save') {
+			if ($row_id == 'new') {
+				DB::table($table)->insert($data);
+				$this->audit('Add');
+			} else {
+				DB::table($table)->where($row_index, '=', $row_id)->update($data);
+				$this->audit('Update');
+			}
+		}
+	}
 }

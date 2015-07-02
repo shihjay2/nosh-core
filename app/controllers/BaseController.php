@@ -66,62 +66,75 @@ class BaseController extends Controller {
 		return $response;
 	}
 	
-	protected function js_assets($type)
+	protected function js_assets($type,$mobile=false)
 	{
 		$current_version = File::get(__DIR__."/../../.version");
-		$basejsfiles = array(
-			'/js/jquery.maskedinput.min.js',
-			'/js/jquery.jgrowl.js',
-			'/js/jquery.selectboxes.js',
-			'/js/jquery-migrate-1.2.1.js',
-			'/js/jquery.ajaxQueue.js',
-			'/js/i18n/grid.locale-en.js',
-			'/js/jquery.jqGrid.min.js',
-			'/js/jquery.timepicker.min.js',
-			'/js/fullcalendar.js',
-			'/js/jquery-idleTimeout.js',
-			'/js/jquery.iframer.js',
-			'/js/jquery.serializeObject.js',
-			'/js/jquery.signaturepad.min.js',
-			'/js/json2.min.js',
-			'/js/highcharts.js',
-			'/js/exporting.js',
-			'/js/jquery.dform-1.1.0.js',
-			'/js/grid.addons.js',
-			'/js/grid.postext.js',
-			'/js/grid.setcolumns.js',
-			'/js/jquery.contextmenu.js',
-			'/js/jquery.searchFilter.js',
-			'/js/jquery.tablednd.js',
-			'/js/jquery.chosen.min.js',
-			'/js/ui.multiselect.js',
-			'/js/jquery.themeswitcher.js',
-			'/js/jquery.color.js',
-			'/js/jquery.Jcrop.min.js',
-			'/js/jquery.realperson.js',
-			'/js/tagit-themeroller.js',
-			'/js/jquery.jstree.js',
-			'/js/jquery.populate.js',
-			'/js/jquery.ocupload.js',
-			'/js/main.js',
-			'/js/jstz-1.0.4.min.js',
-			'/js/jquery.cookie.js',
-			'/js/bluebutton.js',
-			'/js/wColorPicker.min.js',
-			'/js/wPaint.min.js',
-			'/js/plugins/main/wPaint.menu.main.min.js',
-			'/js/plugins/text/wPaint.menu.text.min.js',
-			'/js/plugins/shapes/wPaint.menu.main.shapes.min.js',
-			'/js/plugins/file/wPaint.menu.main.file.min.js',
-			'/js/jqueryui-editable.min.js',
-			'/js/jquery.touchswipe.min.js',
-			'/js/jquery.ui.touch-punch.min.js',
-			'/js/jquery-textrange.js',
-			'/js/jquery.autosize.min.js',
-			'/js/timecube.jquery.js'
-		);
+		if ($mobile == false) {
+			$basejsfiles = array(
+				'/js/jquery.maskedinput.min.js',
+				'/js/jquery.jgrowl.js',
+				'/js/jquery.selectboxes.js',
+				'/js/jquery-migrate-1.2.1.js',
+				'/js/jquery.ajaxQueue.js',
+				'/js/i18n/grid.locale-en.js',
+				'/js/jquery.jqGrid.min.js',
+				'/js/jquery.timepicker.min.js',
+				'/js/fullcalendar.js',
+				'/js/jquery-idleTimeout.js',
+				'/js/jquery.iframer.js',
+				'/js/jquery.serializeObject.js',
+				'/js/jquery.signaturepad.min.js',
+				'/js/json2.min.js',
+				'/js/highcharts.js',
+				'/js/exporting.js',
+				'/js/jquery.dform-1.1.0.js',
+				'/js/grid.addons.js',
+				'/js/grid.postext.js',
+				'/js/grid.setcolumns.js',
+				'/js/jquery.contextmenu.js',
+				'/js/jquery.searchFilter.js',
+				'/js/jquery.tablednd.js',
+				'/js/jquery.chosen.min.js',
+				'/js/ui.multiselect.js',
+				'/js/jquery.themeswitcher.js',
+				'/js/jquery.color.js',
+				'/js/jquery.Jcrop.min.js',
+				'/js/jquery.realperson.js',
+				'/js/tagit-themeroller.js',
+				'/js/jquery.jstree.js',
+				'/js/jquery.populate.js',
+				'/js/jquery.ocupload.js',
+				'/js/jstz-1.0.4.min.js',
+				'/js/jquery.cookie.js',
+				'/js/bluebutton.js',
+				'/js/wColorPicker.min.js',
+				'/js/wPaint.min.js',
+				'/js/plugins/main/wPaint.menu.main.min.js',
+				'/js/plugins/text/wPaint.menu.text.min.js',
+				'/js/plugins/shapes/wPaint.menu.main.shapes.min.js',
+				'/js/plugins/file/wPaint.menu.main.file.min.js',
+				'/js/jqueryui-editable.min.js',
+				'/js/jquery.touchswipe.min.js',
+				'/js/jquery.ui.touch-punch.min.js',
+				'/js/jquery-textrange.js',
+				'/js/jquery.autosize.min.js',
+				'/js/timecube.jquery.js',
+				'/js/main.js',
+			);
+		} else {
+			$basejsfiles = array(
+				'/js/jquery.maskedinput.min.js',
+				'/js/jquery-idleTimeout.js',
+				'/js/jstz-1.0.4.min.js',
+				'/js/jquery.cookie.js',
+				'/js/bluebutton.js',
+				'/js/jquery-textrange.js',
+				'/js/mobile.js'
+			);
+		}
 		if(Session::get('group_id') == '1') {
 			$homejsfiles = array(
+				'/js/searchbar.js',
 				'/js/dashboard.js',
 				'/js/setup.js',
 				'/js/users.js',
@@ -685,12 +698,12 @@ class BaseController extends Controller {
 		$practiceInfo = Practiceinfo::find($practice_id);
 		$hpiInfo = Hpi::find($eid);
 		if ($hpiInfo) {
-			if ($hpiInfo->hpi != '') {
+			if (!is_null($hpiInfo->hpi) && $hpiInfo->hpi != '') {
 				$data['hpi'] = '<br><h4>History of Present Illness:</h4><p class="view">';
 				$data['hpi'] .= nl2br($hpiInfo->hpi);
 				$data['hpi'] .= '</p>';
 			}
-			if ($hpiInfo->situation != '') {
+			if (!is_null($hpiInfo->situation) && $hpiInfo->situation != '') {
 				$data['hpi'] = '<br><h4>Situation:</h4><p class="view">';
 				$data['hpi'] .= nl2br($hpiInfo->situation);
 				$data['hpi'] .= '</p>';
@@ -8955,6 +8968,160 @@ class BaseController extends Controller {
 				$return .= '<li>' . $supplement_alert_row1->sup_description . ', Expiration date: ' . date('m/d/Y', $this->human_to_unix($supplement_alert_row1->sup_expiration)) . '</li>';
 			}
 			$return .= '</ul>';
+		}
+		return $return;
+	}
+	
+	protected function mobile_menu_build($list_array, $id, $type)
+	{
+		$return = '<ul data-role="listview" id="' . $id . '">';
+		$return .= '<li data-icon="delete" class="close_menu"><a href="#" data-rel="close">Close menu</a></li>';
+		if (is_array($list_array)) {
+			foreach ($list_array as $item) {
+				$return .= '<li><a href="#" class="' . $type . ' ' . $item[1] . '">' . $item[0] . '</a></li>';
+			}
+		}
+		$return .= '</ul>';
+		return $return;
+	}
+	
+	protected function mobile_header_build($title)
+	{
+		$return = '<h2>' . $title . '</h2>';
+		$return .= '<a href="#left_panel" data-icon="bars" data-iconpos="notext">Menu</a>';
+		$return .= '<a href="#right_panel" data-icon="gear" data-iconpos="notext">Settings</a>';
+		return $return;
+	}
+	
+	protected function mobile_result_build($list_array, $id)
+	{
+		//$list_array[] = [
+			//'label' => '',
+			//'pid' => $pid,
+			//'href' => ''
+		//];
+		$return = '<ul data-role="listview" id="' . $id . '" data-inset="true" data-shadow="false">';
+		if (is_array($list_array)) {
+			foreach ($list_array as $item) {
+				$return .= '<li><a href="' . $item['href'] . '" class="mobile_link" data-nosh-pid="' . $item['pid'] . '">' . $item['label'] . '</a></li>';
+			}
+		}
+		$return .= '</ul>';
+		return $return;
+	}
+	
+	protected function mobile_form_build($form)
+	{
+		$return = '';
+		if (is_array($form)) {
+			$i = 0;
+			foreach ($form as $row) {
+				if ($i == 0) {
+					// Form definitions (form = true or false) - first row in array
+					// If form is true (form_action, refresh_url, form_id, row_id, table, row_index)
+					// If form is false (details, pid, shortcut)
+					if ($row['form'] == true) {
+						$return .= '<form id="' . $row['form_id'] . '">';
+						$form_id = $row['form_id'];
+						$table = $row['table'];
+						$row_id = $row['row_id'];
+						$refresh = $row['refresh_url'];
+						$row_index = $row['row_index'];
+						$form_status = $row['form'];
+					} else {
+						$return .= $row['details'];
+						$pid = $row['pid'];
+						$shortcut = $row['shortcut'];
+					}
+					// Form actions = save, cancel, inactivate, reactivate, delete
+					$form_actions = $row['form_action'];
+				} else {
+					// Form types = textarea, select, search, text, radio, checkbox, hidden, date, tel
+					// Form row definitions (type, id, name, label, option_array (value, label), value, search_array (class, paste_to, placeholder))
+					//$form[$i][] = [
+						//'form' => true,
+						//'form_id' => '' + $i,
+						//'table' => '',
+						//'row_id' => '',
+						//'refresh_url' => action('AjaxChartController@postIssuesList', array('true')),
+						//'row_index' => '',
+						//'form_action' => [
+							//'save',
+							//'cancel',
+							//'inactivate',
+							//'delete'
+						//]
+					//];
+					//$form[$i][] = [
+						//'type' => '',
+						//'id' => '' . $i,
+						//'name' => '',
+						//'label' => '',
+						//'option_array'[] => [
+						//	'0' => [
+						//		'value' => '',
+						//		'label' => ''
+						//	],
+						//],
+						//'value' => '',
+						//'search_array' => [
+							//'class' => '',
+							//'paste_to' => '',
+							//'placeholder' => ''
+						//]
+					//];
+					$return .= '<label for="' . $row['id'] . '">' . $row['label'] . '</label>';
+					if ($row['type'] == 'textarea') {
+						$return .= '<textarea cols="40" rows="8" id="' . $row['id'] . '" name="' . $row['name'] . '" value="' . $row['value'] . '">' . $row['value'] . '</textarea>';
+					} elseif ($row['type'] == 'select') {
+						$return .= '<select id="' . $row['id'] . '" name="' . $row['name'] . '">';
+						foreach ($row['option_array'] as $option) {
+							if ($row['value'] ==  $option['value']) {
+								$return .= '<option value="' . $option['value'] . '" selected>' . $option['label'] . '</option>';
+							} else {
+								$return .= '<option value="' . $option['value'] . '">' . $option['label'] . '</option>';
+							}
+						}
+						$return .= '</select>';
+					} elseif ($row['type'] == 'search') {
+						$return .= '<ul class="' . $row['search_array']['class'] . '" data-role="listview" data-inset="true" data-filter="true" data-filter-placeholder="' . $row['search_array']['placeholder'] .'" data-filter-theme="a" data-nosh-paste-to="' . $row['search_array']['paste_to'] . '"></ul>';
+					} else {
+						$return .= '<input type="' . $row['type'] . '" id="' . $row['id'] . '" name="' . $row['name'] . '" value="' . $row['value'] . '"/>';
+					}
+				}
+				$i++;
+			}
+			if ($form_status == true) {
+				$return .= '</form>';
+				// Add buttons
+				foreach ($form_actions as $action) {
+					if ($action == 'save') {
+						$class = "mobile_form_action ui-btn ui-btn-inline ui-icon-check ui-btn-icon-left";
+						$label = 'Save';
+					}
+					if ($action == 'cancel') {
+						$class = "mobile_form_action ui-btn ui-btn-inline ui-icon-minus ui-btn-icon-left";
+						$label = 'Cancel';
+					}
+					if ($action == 'inactivate') {
+						$class = "mobile_form_action ui-btn ui-btn-inline ui-icon-back ui-btn-icon-left";
+						$label = 'Inactivate';
+					}
+					if ($action == 'reactivate') {
+						$class = "mobile_form_action ui-btn ui-btn-inline ui-icon-forward ui-btn-icon-left";
+						$label = 'Reactivate';
+					}
+					if ($action == 'delete') {
+						$class = "mobile_form_action ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left";
+						$label = 'Delete';
+					}
+					$return .= '<a href="#" class="' . $class . '" data-nosh-form="' . $form_id . '" data-nosh-table="' . $table . '" data-nosh-row-id="' . $row_id . '" data-nosh-row-index="' . $row_index . '" data-nosh-action="' . $action . '" data-nosh-refresh="' . $refresh . '">' . $label .'</a>';
+				}
+			} else {
+				$class = "mobile_shortcut ui-btn ui-btn-inline ui-icon-forward ui-btn-icon-left";
+				$label = 'Go to Chart';
+				$return .= '<a href="#" class="' . $class . '" data-nosh-pid="' . $pid . '" data-nosh-shortcut="' . $shortcut . '">' . $label .'</a>';
+			}
 		}
 		return $return;
 	}

@@ -163,23 +163,44 @@ class AjaxChartController extends BaseController {
 		echo $result;
 	}
 	
-	public function postIssuesList()
+	public function postIssuesList($mobile=false)
 	{
 		$query = Issues::where('pid', '=', Session::get('pid'))->where('issue_date_inactive', '=', '0000-00-00 00:00:00')->get();
 		$result = '';
 		if ($query) {
-			$result .= '<ul>';
-			foreach ($query as $row) {
-				$result .= '<li>' . $row->issue . '</li>';
+			if ($mobile == false) {
+				$result .= '<ul>';
+				foreach ($query as $row) {
+					$result .= '<li>' . $row->issue . '</li>';
+				}
+				$result .= '</ul>';
+			} else {
+				$list_array = [];
+				$form = [];
+				$i = 1;
+				$columns = Schema::getColumnListing('issues');
+				$row_index = $columns[0];
+				$list_array[] = [
+					'label' => 'Add Issue',
+					'pid' => Session::get('pid'),
+					'href' => action('MobileController@editpage', array('issues', $row_index, ''))
+				];
+				foreach ($query as $row) {
+					$list_array[] = [
+						'label' => $row->issue,
+						'pid' => Session::get('pid'),
+						'href' => action('MobileController@editpage', array('issues', $row_index, $row->$row_index))
+					];
+				}
+				$result .= $this->mobile_result_build($list_array, 'mobile_issues_list');
 			}
-			$result .= '</ul>';
 		} else {
 			$result .= ' None.';
 		}
 		echo $result;
 	}
 	
-	public function postMedicationsList()
+	public function postMedicationsList($mobile=false)
 	{
 		$query = Rx_list::where('pid', '=', Session::get('pid'))
 			->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')

@@ -13,6 +13,8 @@
 
 Route::any('/', array('as' => 'home', 'before' => 'force.ssl|version_check|installfix|needinstall|update|openid|auth', 'uses' => 'HomeController@dashboard'));
 Route::any('login', array('as' => 'login', 'before' => 'force.ssl', 'uses' => 'LoginController@action'));
+Route::any('mobile', array('as' => 'mobile', 'before' => 'force.ssl|version_check|installfix|needinstall|update|openid|auth.mobile', 'uses' => 'MobileController@dashboard'));
+Route::any('login_mobile', array('as' => 'login_mobile', 'before' => 'force.ssl', 'uses' => 'MobileController@action'));
 Route::get('start/{practicehandle}', function($practicehandle = null)
 {
 	if ($practicehandle != null) {
@@ -109,6 +111,9 @@ Route::group(array('before' => 'auth|force.ssl|acl1'), function() {
 	Route::get('hippa_request_print/{id}', array('as' => 'hippa_request_print', 'uses' => 'ChartController@hippa_request_print'));
 	Route::get('export_demographics/{type}', array('as' => 'export_demographics', 'uses' => 'ChartController@export_demographics'));
 	Route::get('export_address_csv', array('as' => 'export_address_csv', 'uses' => 'HomeController@export_address_csv'));
+	Route::get('chart_mobile/{pid}', array('as' => 'chart_mobile', 'uses' => 'MobileController@chart_mobile'));
+	Route::get('editpage/{type}/{index}/{id}', array('as' => 'editpage', 'uses' => 'MobileController@editpage'));
+	Route::get('submitdata/{type}', array('as' => 'submitdata', 'uses' => 'MobileController@submitdata'));
 });
 Route::group(array('before' => 'force.ssl|acl2'), function() {
 	Route::get('encounter', array('as' => 'encounter', function()
@@ -139,6 +144,10 @@ Route::group(array('before' => 'force.ssl|acl5'), function() {
 	Route::post('cpt_update', array('as' => 'cpt_update', 'uses' => 'AjaxSetupController@cpt_update'));
 	Route::post('importupload', array('as' => 'importupload', 'uses' => 'AjaxDashboardController@importupload'));
 });
+Route::group(array('before' => 'force.ssl|acl6'), function() {
+	Route::get('print_individual_chart/{pid}', array('as' => 'print_individual_chart', 'uses' => 'HomeController@print_individual_chart'));
+});
+
 Route::get('logout', array('as' => 'logout', 'before' => 'force.ssl|needinstall', 'uses' => 'LoginController@logout'));
 Route::get('reminder', array('as' => 'reminder', 'uses' => 'ReminderController@reminder'));
 Route::get('fax', array('as' => 'fax', 'uses' => 'FaxController@fax'));
@@ -438,5 +447,8 @@ Route::filter('auth.token', function()
 		return Response::json($response, $statusCode);
 	}
 });
-
+Route::filter('auth.mobile', function()
+{
+	if (Auth::guest()) return Redirect::guest('login_mobile');
+});
 //Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));

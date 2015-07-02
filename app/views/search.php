@@ -9,7 +9,11 @@
 		<div class="innersearchbar" style="line-height:67px;width:445px;">
 			<?php if ($patient_centric == 'n') {?>
 				<form class="pure-form">
-					<input type="text" name="searchpt" id="searchpt" style="width:295px; font-size:1em;" class="text" placeholder="Search patient and then select to open the chart."/>
+					<?php if(Session::get('group_id') != '1') {?>
+						<input type="text" name="searchpt" id="searchpt" style="width:295px; font-size:1em;" class="text" placeholder="Search patient and then select to open the chart."/>
+					<?php } else {?>
+						<input type="text" name="searchpt" id="searchpt" style="width:295px; font-size:1em;" class="text" placeholder="Search patient and then select to print the entire chart."/>
+					<?php }?>
 					<input type="hidden" name="hidden_pid" id="hidden_pid">
 					<input type="hidden" name="hidden_eid" id="hidden_eid">
 					<button type="button" id="openNewPatient">New Patient</button>&nbsp

@@ -19,16 +19,20 @@ $(document).ready(function() {
 			$("#hidden_pid").val(ui.item.id);
 			var oldpt = noshdata.pid;
 			if(!oldpt){
-				$.ajax({
-					type: "POST",
-					url: "ajaxsearch/openchart",
-					dataType: "json",
-					data: "pid=" + ui.item.id,
-					success: function(data){
-						closeencounter();
-						window.location = data.url;
-					}
-				});
+				if (noshdata.group_id != '1') {
+					$.ajax({
+						type: "POST",
+						url: "ajaxsearch/openchart",
+						dataType: "json",
+						data: "pid=" + ui.item.id,
+						success: function(data){
+							closeencounter();
+							window.location = data.url;
+						}
+					});
+				} else {
+					window.open("print_individual_chart/" + ui.item.id);
+				}
 			} else {
 				if(ui.item.id != oldpt){
 					$("#search_dialog").dialog('open');

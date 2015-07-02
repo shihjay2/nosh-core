@@ -174,6 +174,53 @@ class AjaxDashboardController extends BaseController {
 		}
 	}
 	
+	public function postAlertsMobile()
+	{
+		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
+			Auth::logout();
+			Session::flush();
+			header("HTTP/1.1 404 Page Not Found", true, 404);
+			exit("You cannot do this.");
+		} else {
+			$provider = Session::get('user_id');
+			$query = DB::table('alerts')
+				->join('demographics', 'alerts.pid', '=', 'demographics.pid')
+				->where('alerts.alert_provider', '=', $provider)
+				->where('alerts.alert_date_complete', '=', '0000-00-00 00:00:00')
+				->where('alerts.alert_reason_not_complete', '=', '')
+				->where(function($query_array) {
+					$query_array->where('alerts.alert', '=', 'Laboratory results pending')
+					->orWhere('alerts.alert', '=', 'Radiology results pending')
+					->orWhere('alerts.alert', '=', 'Cardiopulmonary results pending')
+					->orWhere('alerts.alert', '=', 'Referral pending')
+					->orWhere('alerts.alert', '=', 'Laboratory results pending - NEED TO OBTAIN')
+					->orWhere('alerts.alert', '=', 'Radiology results pending - NEED TO OBTAIN')
+					->orWhere('alerts.alert', '=', 'Cardiopulmonary results pending - NEED TO OBTAIN')
+					->orWhere('alerts.alert', '=', 'Reminder')
+					->orWhere('alerts.alert', '=', 'REMINDER');
+				})
+				->get();
+			if($query) { 
+				$list_array = array();
+				foreach ($query as $row) {
+					$label = 'Due ' . date('m/d/Y', $this->human_to_unix($row->alert_date_active)) . ' for ' . $row->firstname . ' ' . $row->lastname;
+					$pid = $row->pid;
+					$list_array[] = [$label];
+					$form_array[] = [
+						'form' => false,
+						'details' => $row->alert . ' (Due ' . date('m/d/Y', $this->human_to_unix($row->alert_date_active)) . ') - ' . $row->alert_description,
+						'pid' => $pid,
+						'shortcut' => 'alerts'
+					];
+				}
+				$response = $this->mobile_result_build($list_array, 'alerts_list', true, $form_array);
+			} else { 
+				$response = '';
+			}
+			echo $response;
+		}
+	}
+	
 	public function postMtmAlerts()
 	{
 		if (Session::get('group_id') != '2') {

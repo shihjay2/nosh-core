@@ -1,0 +1,69 @@
+* {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.box {
+	margin-left:auto;
+	margin-right:auto;
+	width: 90%;
+	padding: 28px;
+}
+
+.error_text {
+	color: red;
+}
+
+#login_practice_logo {
+	width: 50px;
+	height: 50px;
+}
+
+#login_practice_logo img {
+	width: 100%;
+}
+
+.button_number {
+	color: red;
+}
+
+.button_wrap {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+/* This is the main heading that appears on the blue section */
+.splash-head {
+	font-family: 'Pacifico', arial, serif;
+	text-shadow: 4px 4px 4px #aaa;
+	font-size: 25px;
+	font-weight: bold;
+	color: white;
+	border: 3px solid white;
+	padding: 1em 1.6em;
+	font-weight: 100;
+	border-radius: 5px;
+	line-height: 1em;
+	text-transform: capitalize;
+}
+
+/* This is the subheading that appears on the blue section */
+.splash-subhead {
+	color: white;
+	letter-spacing: 0.05em;
+	opacity: 0.8;
+}
+
+.l-box {
+	padding: 1em;
+}
+
+.l-box-lrg {
+	padding: 2em;
+	border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.is-center {
+	text-align: center;
+}

@@ -162,6 +162,7 @@ class HomeController extends BaseController {
 		$this->layout->script = $this->js_assets('home');
 		$this->layout->content = '';
 		if(Session::get('group_id') == '1') {
+			$this->layout->content .= View::make('search', $this->getSearchData())->render();
 			$this->layout->content .= View::make('dashboard', $data)->render();
 			$this->layout->content .= View::make('setup')->render();
 			$this->layout->content .= View::make('users')->render();
@@ -253,5 +254,11 @@ class HomeController extends BaseController {
 		$file_path = __DIR__."/../../public/temp/" . time() . "_addressbook.txt";
 		File::put($file_path, $csv);
 		return Response::download($file_path);
+	}
+	
+	public function print_individual_chart($pid)
+	{
+		$file = $this->print_chart($pid, 'file', '', 'all');
+		return Response::download($file);
 	}
 }
