@@ -11,7 +11,7 @@
 				<?php echo HTML::image('images/openid_connect_large.png','OpenID Connect', array('border' => '0', 'height' => '50', 'width' => '50'));?>
 			</div>
 			<div align="center" style="max-height:100px;font-size:14px;">
-				<?php echo link_to_route('oidc', 'Login with HIEofOne', $parameters = array(), $attributes = array());?>
+				<?php echo link_to_route('oidc', 'Login with mdNOSH Gateway', $parameters = array(), $attributes = array());?>
 			</div>
 		<?php }?>
 	</div><br>

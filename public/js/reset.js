@@ -15,29 +15,18 @@ $(document).ajaxError(function(event,xhr,options,exc) {
 	}
 });
 $(document).ready(function() {
-	$("#db_username").focus();
-	$("#db_submit").button().click(function(){
-		var bValid = true;
-		var a = $("#db_username");
-		bValid = bValid && checkEmpty(a,"MySQL username");
-		if (bValid) {
-			var str = $("#db_fix").serialize();
-			if(str){
-				$.ajax({
-					type: "POST",
-					url: "ajaxinstall/database-fix",
-					data: str,
-					success: function(data){
-						if (data != 'OK') {
-							$.jGrowl(data);
-						} else {
-							window.location = noshdata.url;
-						}
-					}
-				});
-			} else {
-				$.jGrowl("Please complete the form");
+	$("#reset_submit").button().click(function(){
+		$.ajax({
+			type: "POST",
+			url: "ajaxinstall/reset-database",
+			data: str,
+			success: function(data){
+				if (data != 'OK') {
+					$.jGrowl(data);
+				} else {
+					window.location = noshdata.url;
+				}
 			}
-		}
+		});
 	});
 });

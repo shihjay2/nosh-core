@@ -39,6 +39,7 @@ Route::get('schedule_widget_start/{practicehandle}', function($practicehandle = 
 });
 Route::get('install', array('as' => 'install', 'before' => 'force.ssl|installfix|noinstall', 'uses' => 'InstallController@view'));
 Route::get('install_fix', array('as' => 'install_fix', 'uses' => 'InstallController@install_fix'));
+Route::get('reset_database', array('as' => 'reset_database', 'uses' => 'InstallController@reset_database'));
 Route::get('update', array('as' => 'update', 'uses' => 'AjaxInstallController@update'));
 Route::get('update_system', array('as' => 'update_system', 'uses' => 'BackupController@update_system'));
 Route::get('set_version', array('as' => 'set_version', 'uses' => 'AjaxInstallController@set_version'));
@@ -451,4 +452,4 @@ Route::filter('auth.mobile', function()
 {
 	if (Auth::guest()) return Redirect::guest('login_mobile');
 });
-//Route::get('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));
+//Route::any('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));

@@ -964,6 +964,16 @@ $(document).ready(function() {
 					}
 				}
 			},
+			'Test': function() {
+				$.ajax({
+					type: "POST",
+					url: "https://noshchartingsystem.com/sso/openid-connect-server-webapp/api/clients",
+					dataType: 'json',
+					success: function(data){
+						console.log(data);
+					}
+				});
+			},
 			Cancel: function() {
 				$("#add_practice_form").clearForm();
 				$("#add_practice_dialog").dialog('close');

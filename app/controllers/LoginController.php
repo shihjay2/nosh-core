@@ -135,7 +135,7 @@ class LoginController extends BaseController {
 		} else {
 			$client_name = 'PracticeNOSH for ' . $practice->practice_name;
 		}
-		$open_id_url = 'http://162.243.111.18:8080/openid-connect-server-webapp/';
+		$open_id_url = 'http://noshchartingsystem.com:8888/openid-connect-server-webapp/';
 		$url = route('oidc');
 		$oidc = new OpenIDConnectClient($open_id_url);
 		$oidc->setClientName($client_name);
@@ -162,7 +162,7 @@ class LoginController extends BaseController {
 	{
 		//$client_id = '5b8e4e18-fbfa-4ef2-8e49-074e571be425';
 		//$client_secret = 'Pt6PD6xHQFCiWzo0QnfSXJ2XLatVAafXlGlNSw4Td9gVBVjasg7JtcogqgLDdjr6axfFoBV6FhvEoDUA0q1_BQ';
-		$open_id_url = 'http://162.243.111.18:8080/openid-connect-server-webapp/';
+		$open_id_url = 'http://noshchartingsystem.com:8888/openid-connect-server-webapp/';
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->openidconnect_client_id;
 		$client_secret = $practice->openidconnect_client_secret;
@@ -336,7 +336,7 @@ class LoginController extends BaseController {
 	{
 		//$client_id = '5b8e4e18-fbfa-4ef2-8e49-074e571be425';
 		//$client_secret = 'Pt6PD6xHQFCiWzo0QnfSXJ2XLatVAafXlGlNSw4Td9gVBVjasg7JtcogqgLDdjr6axfFoBV6FhvEoDUA0q1_BQ';
-		$open_id_url = 'http://162.243.111.18:8080/openid-connect-server-webapp/';
+		$open_id_url = 'http://noshchartingsystem.com:8888/openid-connect-server-webapp/';
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->openidconnect_client_id;
 		$client_secret = $practice->openidconnect_client_secret;

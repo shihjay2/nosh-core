@@ -41,4 +41,12 @@ class InstallController extends BaseController {
 			$this->layout->content .= '<p>' . HTML::linkRoute('login', 'Click here to re-register to NOSH ChartingSystem') . '</p>';
 		}
 	}
+	
+	public function reset_database()
+	{
+		$this->layout->title = "NOSH ChartingSystem Reset Database";
+		$this->layout->style = '';
+		$this->layout->script = HTML::script('/js/reset.js');
+		$this->layout->content = View::make('reset_database');
+	}
 }

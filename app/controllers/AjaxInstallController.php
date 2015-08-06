@@ -50,6 +50,175 @@ class AjaxInstallController extends BaseController {
 			'practice_id' => '1'
 		);
 		$user_id = DB::table('users')->insertGetId($data1);
+		// Check if patient-centric is also tied to a UMA oAUTH server
+		$client_id = '';
+		$client_secret = '';
+		if ($type == 'patient') {
+			$res = DB::select("SHOW DATABASES LIKE 'oic_production'");
+			if(count($res) > 0) {
+				$data_edit = array(
+					'username' => Input::get('username'),
+					'password' => substr_replace(Hash::make(Input::get('password')),"$2a",0,3),
+					'enabled' => '1'
+				);
+				$data_edit1 = array(
+					'email' => Input::get('email'),
+					'preferred_username' => Input::get('username'),
+					'email_verified' => '1'
+				);
+				DB::connection('oic')->table('users')->insert($data_edit);
+				$id = DB::table('user_info')->insertGetId($data_edit1);
+				$data_edit2 = array(
+					'sub' => hash('sha256', $id)
+				);
+				DB::connection('oic')->table('user_info')->where('id', '=', $id)->update($data_edit2);
+				$data_edit3 = array(
+					'username' => Input::get('username'),
+					'authority' => 'ROLE_ADMIN'
+				);
+				DB::connection('oic')->table('authorities')->insert($data_edit3);
+				$client_id = $this->gen_uuid();
+				$client_secret = $this->gen_secret();
+				$client_name = 'Patient NOSH for ' .  Input::get('firstname') . ' ' . Input::get('lastname');
+				$data_edit4 = array(
+					'client_id' => $client_id,
+					'client_secret' => $client_secret,
+					'client_name' => $client_name,
+					'dynamically_registered' => false,
+					'refresh_token_validity_seconds' => null,
+					'access_token_validity_seconds' => 3600,
+					'id_token_validity_seconds' => 600,
+					'allow_introspection' => true,
+					'token_endpoint_auth_method' => 'SECRET_BASIC',
+					'clear_access_tokens_on_refresh' => 1
+				);
+				DB::connection('oic')->table('client_details')->insert($data_edit4);
+				$data_edit5s = array(
+					['owner_id' => $client_id, 'scope' => 'openid'],
+					['owner_id' => $client_id, 'scope' => 'profile'],
+					['owner_id' => $client_id, 'scope' => 'email'],
+					['owner_id' => $client_id, 'scope' => 'address'],
+					['owner_id' => $client_id, 'scope' => 'phone'],
+					['owner_id' => $client_id, 'scope' => 'offline_access'],
+					['owner_id' => $client_id, 'scope' => 'npi'],
+					['owner_id' => $client_id, 'scope' => 'practice_npi'],
+					['owner_id' => $client_id, 'scope' => 'uma_protection']
+				);
+				foreach ($data_edit5s as $data_edit5) {
+					DB::connection('oic')->table('client_scope')->insert($data_edit5);
+				}
+				$data_edit6s = array(
+					['owner_id' => $client_id, 'redirect_uri' => route('oidc')]
+				);
+				foreach ($data_edit6s as $data_edit6) {
+					DB::connection('oic')->table('client_redirect_uri')->insert($data_edit6);
+				}
+				$data_edit7s = array(
+					['owner_id' => $client_id, 'grant_type' => 'authorization_code'],
+					['owner_id' => $client_id, 'grant_type' => 'urn:ietf:params:oauth:grant_type:redelegate'],
+					['owner_id' => $client_id, 'grant_type' => 'implicit'],
+					['owner_id' => $client_id, 'grant_type' => 'refresh_token']
+				);
+				foreach ($data_edit7s as $data_edit7) {
+					DB::connection('oic')->table('client_grant_type')->insert($data_edit7);
+				}
+				$data_edit8s = array(
+					[
+						'scope' => 'openid',
+						'description' => 'log in using your identity',
+						'icon' => 'user',
+						'restricted' => false,
+						'default_scope' => true,
+						'structured' => false,
+						'structured_param_description' => null
+					],
+					[
+						'scope' => 'profile',
+						'description' => 'basic profile information',
+						'icon' => 'list-alt',
+						'restricted' => false,
+						'default_scope' => true,
+						'structured' => false,
+						'structured_param_description' => null
+					],
+					[
+						'scope' => 'email',
+						'description' => 'email address',
+						'icon' => 'envelope',
+						'restricted' => false,
+						'default_scope' => true,
+						'structured' => false,
+						'structured_param_description' => null
+					],
+					[
+						'scope' => 'address',
+						'description' => 'physical address',
+						'icon' => 'home',
+						'restricted' => false,
+						'default_scope' => true,
+						'structured' => false,
+						'structured_param_description' => null
+					],
+					[
+						'scope' => 'phone',
+						'description' => 'telephone number',
+						'icon' => 'bell',
+						'restricted' => false,
+						'default_scope' => true,
+						'structured' => false,
+						'structured_param_description' => null
+					],
+					[
+						'scope' => 'offline_access',
+						'description' => 'offline_access',
+						'icon' => 'time',
+						'restricted' => false,
+						'default_scope' => true,
+						'structured' => false,
+						'structured_param_description' => null
+					],
+					[
+						'scope' => 'uma_protection',
+						'description' => 'manage protected resources',
+						'icon' => 'briefcase',
+						'restricted' => false,
+						'default_scope' => true,
+						'structured' => false,
+						'structured_param_description' => null
+					],
+					[
+						'scope' => 'uma_authorization',
+						'description' => 'request access to protected resources',
+						'icon' => 'share',
+						'restricted' => false,
+						'default_scope' => true,
+						'structured' => false,
+						'structured_param_description' => null
+					],
+					[
+						'scope' => 'npi',
+						'description' => 'national provider indentification number',
+						'icon' => 'user',
+						'restricted' => false,
+						'default_scope' => true,
+						'structured' => false,
+						'structured_param_description' => null
+					],
+					[
+						'scope' => 'practice_npi',
+						'description' => 'national practice identification number',
+						'icon' => 'globe',
+						'restricted' => false,
+						'default_scope' => true,
+						'structured' => false,
+						'structured_param_description' => null
+					]
+				);
+				foreach ($data_edit8s as $data_edit8) {
+					DB::connection('oic')->table('system_scope')->insert($data_edit8);
+				}
+			}
+		}
 		// Insert practice
 		$data2 = array(
 			'practice_name' => $practice_name,
@@ -66,10 +235,14 @@ class AjaxInstallController extends BaseController {
 			'smtp_user' => $smtp_user,
 			'smtp_pass' => $smtp_pass,
 			'vivacare' => '',
-			'version' => '1.8.3',
+			'version' => '1.8.4',
 			'active' => 'Y',
 			'patient_centric' => $patient_centric
 		);
+		if ($type == 'patient' && $client_id != '') {
+			$data2['openidconnect_client_id'] = $client_id;
+			$data2['openidconnect_client_secret'] = $client_secret;
+		}
 		DB::table('practiceinfo')->insert($data2);
 		// Insert patient
 		if ($type == 'patient') {
@@ -123,6 +296,8 @@ class AjaxInstallController extends BaseController {
 			$this->audit('Add');
 			$directory = $documents_dir . $pid;
 			mkdir($directory, 0775);
+		} else {
+			$displayname = 'Administrator';
 		}
 		// Insert groups
 		$data3 = array(
@@ -1184,5 +1359,109 @@ class AjaxInstallController extends BaseController {
 		);
 		// Update version
 		DB::table('practiceinfo')->update($practiceinfo_data);
+	}
+	
+	public function postResetDatabase()
+	{
+		$db_name = $_ENV['mysql_database'];
+		$db_username = $_ENV['mysql_username'];
+		$db_password = $_ENV['mysql_password'];
+		DB::table('meds_full')->truncate();
+		$meds_sql_file = __DIR__."/../../import/meds_full.sql";
+		$meds_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $meds_sql_file;
+		system($meds_command);
+		DB::table('meds_full_package')->truncate();
+		$meds1_sql_file = __DIR__."/../../import/meds_full_package.sql";
+		$meds1_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $meds1_sql_file;
+		system($meds1_command);
+		DB::table('supplements_list')->truncate();
+		$supplements_file = __DIR__."/../../import/supplements_list.sql";
+		$supplements_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $supplements_file;
+		system($supplements_command);
+		DB::table('icd9')->truncate();
+		$icd_file = __DIR__."/../../import/icd9.sql";
+		$icd_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $icd_file;
+		system($icd_command);
+		DB::table('cpt')->truncate();
+		$cpt_file = __DIR__."/../../import/cpt.sql";
+		$cpt_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $cpt_file;
+		system($cpt_command);
+		DB::table('templates')->truncate();
+		$templates_file = __DIR__."/../../import/templates.sql";
+		$templates_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $templates_file;
+		system($templates_command);
+		DB::table('orderslist1')->truncate();
+		$orderslist1_file = __DIR__."/../../import/orderslist1.sql";
+		$orderslist1_command = "mysql -u " . $db_username . " -p". $db_password . " " . $db_name. " < " . $orderslist1_file;
+		system($orderslist1_command);
+		DB::table('addressbook')->truncate();
+		DB::table('alerts')->truncate();
+		DB::table('allergies')->truncate();
+		DB::table('api_queue')->truncate();
+		DB::table('assessment')->truncate();
+		DB::table('audit')->truncate();
+		DB::table('billing')->truncate();
+		DB::table('billing_core')->truncate();
+		DB::table('calendar')->truncate();
+		DB::table('ci_sessions')->truncate();
+		DB::table('cpt_relate')->truncate();
+		$practice = Practiceinfo::find('1');
+		$patients = DB::table('demographics')->get();
+		foreach ($patients as $patient) {
+			$directory = $practice->documents_dir . $patient->pid;
+			$this->deltree($directory, false);
+		}
+		DB::table('demographics')->truncate();
+		DB::table('documents')->truncate();
+		DB::table('encounters')->truncate();
+		DB::table('era')->truncate();
+		DB::table('extensions_log')->truncate();
+		DB::table('forms')->truncate();
+		DB::table('groups')->truncate();
+		DB::table('hippa')->truncate();
+		DB::table('hippa_request')->truncate();
+		DB::table('hpi')->truncate();
+		DB::table('image')->truncate();
+		DB::table('immunizations')->truncate();
+		DB::table('insurance')->truncate();
+		DB::table('issues')->truncate();
+		DB::table('labs')->truncate();
+		DB::table('messaging')->truncate();
+		DB::table('mtm')->truncate();
+		DB::table('orders')->truncate();
+		DB::table('orderslist')->truncate();
+		DB::table('other_history')->truncate();
+		DB::table('pages')->truncate();
+		DB::table('pe')->truncate();
+		DB::table('plan')->truncate();
+		DB::table('procedure')->truncate();
+		DB::table('procedurelist')->truncate();
+		DB::table('providers')->truncate();
+		DB::table('received')->truncate();
+		$received = $practice->documents_dir . 'received';
+		$this->deltree($received, true);
+		DB::table('recipients')->truncate();
+		DB::table('ros')->truncate();
+		DB::table('rx')->truncate();
+		DB::table('scans')->truncate();
+		$scans = $practice->documents_dir . 'scans';
+		$this->deltree($scans, true);
+		DB::table('schedule')->truncate();
+		DB::table('sendfax')->truncate();
+		$sentfax = $practice->documents_dir . 'sentfax';
+		$sentfax->deltree($sentfax, true);
+		DB::table('sessions')->truncate();
+		DB::table('supplement_inventory')->truncate();
+		DB::table('sup_list')->truncate();
+		DB::table('tags')->truncate();
+		DB::table('tags_relate')->truncate();
+		DB::table('tests')->truncate();
+		DB::table('t_messages')->truncate();
+		DB::table('users')->truncate();
+		DB::table('vaccine_inventory')->truncate();
+		DB::table('vaccine_temp')->truncate();
+		DB::table('vitals')->truncate();
+		DB::table('practiceinfo')->truncate();
+		echo "OK";
 	}
 }

@@ -4472,7 +4472,8 @@ class BaseController extends Controller {
 		return $ccda;
 	}
 	
-	protected function gen_uuid() {
+	protected function gen_uuid()
+	{
 		return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
 			mt_rand( 0, 0xffff ),
@@ -4480,6 +4481,35 @@ class BaseController extends Controller {
 			mt_rand( 0, 0x3fff ) | 0x8000,
 			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
 		);
+	}
+	
+	protected function gen_secret()
+	{
+		$length = 512;
+		$val = '';
+		for ($i = 0; $i < $length; $i++) {
+			$val .= rand(0,9);
+		} 
+		$fp = fopen('/dev/urandom','rb');
+		$val = fread($fp, 32);
+		fclose($fp);
+		$val .= uniqid(mt_rand(), true);
+		$hash = hash('sha512', $val, true);
+		$result = rtrim(strtr(base64_encode($hash), '+/', '-_'), '='); 
+		return $result;
+	}
+	
+	protected function deltree($dir, $emptyonly=false)
+	{
+		$files = array_diff(scandir($dir), array('.','..'));
+		foreach ($files as $file) {
+			(is_dir("$dir/$file")) ? $this->deltree("$dir/$file") : unlink("$dir/$file");
+		}
+		if ($emptyonly == true) {
+			return 'OK';
+		} else {
+			return rmdir($dir);
+		}
 	}
 	
 	protected function get_snomed_code($item, $date, $id)
