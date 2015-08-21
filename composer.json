@@ -30,7 +30,8 @@
 		"jenssegers/date": "*",
 		"yangqi/htmldom": "dev-master",
 		"Chumper/Zipper": "0.5.x",
-		"knplabs/github-api": "*"
+		"knplabs/github-api": "*",
+		"phpseclib/phpseclib": "*"
 	},
 	"autoload": {
 		"classmap": [

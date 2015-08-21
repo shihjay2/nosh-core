@@ -965,9 +965,14 @@ $(document).ready(function() {
 				}
 			},
 			'Test': function() {
+				var data = '';
 				$.ajax({
 					type: "POST",
-					url: "https://noshchartingsystem.com/sso/openid-connect-server-webapp/api/clients",
+					headers: {'Accept':'application/json','Content-Type':'application/json'},
+					beforeSend: '',
+					data: JSON.stringify(data),
+					crossDomain: true,
+					url: "http://162.243.111.18/uma-server-webapp/api/clients",
 					dataType: 'json',
 					success: function(data){
 						console.log(data);

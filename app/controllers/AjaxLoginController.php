@@ -164,7 +164,7 @@ class AjaxLoginController extends BaseController {
 			"practice_id" => Session::get('practice_id')
 		);
 		if (Auth::attempt($credentials)) {
-			$new_password = Hash::make(Input::get('new_password'));
+			$new_password = substr_replace(Hash::make(Input::get('new_password')),"$2a",0,3);
 			$data = array (
 				'password' => $new_password,
 				'secret_question' => Input::get('secret_question'),
@@ -172,6 +172,19 @@ class AjaxLoginController extends BaseController {
 			);
 			DB::table('users')->where('id', '=', $id)->update($data);
 			$this->audit('Update');
+			// Check if patient-centric and associated with UMA Server
+			if (Session::get('group_id') == '100' && Session::get('patient_centric') == 'y') {
+				$res = DB::select("SHOW DATABASES LIKE 'oic_production'");
+				if(count($res) > 0) {
+					$oic = DB::connection('oic')->table('users')->where('username', '=', $user->username)->first();
+					if ($oic) {
+						$data_edit = array(
+							'password' => $new_password
+						);
+						DB::connection('oic')->table('users')->where('username', '=', $user->username)->update($data_edit);
+					}
+				}
+			}
 			echo 'Password changed!';
 		} else {
 			echo 'Your old password is incorrect!';

@@ -5,37 +5,43 @@
 <div id="login">
 	<div id="logo" align="center" style="width:100%;">Nosh</div><br>
 	<div style="width:100%"><div id="login_practice_logo" align="center" style="max-height:100px;"></div></div><br>
-	<div style="width:100%">
-		<?php if(route('home') == 'https://hieofone.com/nosh' || route('home') == 'https://localhost/nosh') { ?>
-			<div id="openid_connect_logo" align="center" style="max-height:100px;">
-				<?php echo HTML::image('images/openid_connect_large.png','OpenID Connect', array('border' => '0', 'height' => '50', 'width' => '50'));?>
-			</div>
-			<div align="center" style="max-height:100px;font-size:14px;">
-				<?php echo link_to_route('oidc', 'Login with mdNOSH Gateway', $parameters = array(), $attributes = array());?>
-			</div>
-		<?php }?>
-	</div><br>
-	<div align="center" >
-		<div id="box" align="left" class="ui-corner-all ui-tabs ui-widget ui-widget-content">
-			<form method="POST" action="login" class="pure-form pure-form-stacked">
-				<div class="pure-control-group"><label for="username">Username:</label><input type="text" id="username" name="username" class="text" style="width:300px" /></div>
-				<div class="pure-control-group"><label for="password">Password:</label><input type="password" id="password" name="password" class="text" style="width:300px" /></div>
-				<?php if ($patient_centric == 'n') {?>
-					<div class="pure-control-group"><label for="practice_id">Organization/Practice:</label><select name="practice_id" id="practice_id" class="text" /></select></div>
-				<?php }?>
-				<br><br>
-				<div id="error_text">
-					<?php if ($error = $errors->first("password")) { echo $error . "<br><br>"; } ?>
-					<?php if (isset($attempts)) { echo $attempts . "<br><br>"; } ?>
-				</div> 
-				<div align="center">
-					<input type="submit" id="login_button" value="Login" name="login" class="ui-button ui-state-default ui-corner-all"/>
+	<div align="center">
+		<?php if ($patient_centric == 'y') {?>
+			<div id="box" class="ui-corner-all ui-tabs ui-widget ui-widget-content">
+				<div class="pure-g">
+					<div class="pure-u-1">
+						<div id="openid_connect_logo" align="center" style="max-height:100px;">
+							<?php echo HTML::image('images/openid_connect_large.png','OpenID Connect', array('border' => '0', 'height' => '50', 'width' => '50'));?>
+						</div>
+					</div>
+					<div class="pure-u-1">Login with OpenID Connect.</div><div class="pure-u-1"><br><br></div>
+					<div class="pure-u-1-2"><?php echo link_to_route('uma_auth', "I'm the Patient", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
+					<div class="pure-u-1-2"><?php echo link_to_route('oidc', "I'm a Provider", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
 				</div>
-			</form>
-		</div>
-		<br>
-		<?php if ($patient_centric == 'n') {?>
-			<a href="#" id="register" style="font-size:14px;">Are you new to the Patient Portal?</a><br><br>
+			</div>
+			<br><br>
+		<?php } else {?>
+			<div id="box" align="left" class="ui-corner-all ui-tabs ui-widget ui-widget-content">
+				<form method="POST" action="login" class="pure-form pure-form-stacked">
+					<div class="pure-control-group"><label for="username">Username:</label><input type="text" id="username" name="username" class="text" style="width:300px" /></div>
+					<div class="pure-control-group"><label for="password">Password:</label><input type="password" id="password" name="password" class="text" style="width:300px" /></div>
+					<?php if ($patient_centric == 'n') {?>
+						<div class="pure-control-group"><label for="practice_id">Organization/Practice:</label><select name="practice_id" id="practice_id" class="text" /></select></div>
+					<?php }?>
+					<br><br>
+					<div id="error_text">
+						<?php if ($error = $errors->first("password")) { echo $error . "<br><br>"; } ?>
+						<?php if (isset($attempts)) { echo $attempts . "<br><br>"; } ?>
+					</div> 
+					<div align="center">
+						<input type="submit" id="login_button" value="Login" name="login" class="ui-button ui-state-default ui-corner-all"/>
+					</div>
+				</form>
+			</div>
+			<br>
+			<?php if ($patient_centric == 'n') {?>
+				<a href="#" id="register" style="font-size:14px;">Are you new to the Patient Portal?</a><br><br>
+			<?php }?>
 		<?php }?>
 		<a href="#" id="forgot_password"style="font-size:14px;">Did you forget your password?</a><br><br>
 		<i class="fa fa-exclamation-triangle fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> NOSH ChartingSystem is compatible with Mozilla Firefox, Google Chrome, Apple Safari, Internet Explorer 8 and up, and Opera web browsers only.

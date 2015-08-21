@@ -1647,7 +1647,7 @@ $.widget( "custom.catcomplete", $.ui.autocomplete, {
 	}
 });
 $.ajaxSetup({
-	headers: {"cache-control":"no-cache"},
+	//headers: {"cache-control":"no-cache"},
 	beforeSend: function(request) {
 		return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
 	}

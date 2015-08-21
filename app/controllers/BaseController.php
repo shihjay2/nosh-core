@@ -9155,4 +9155,20 @@ class BaseController extends Controller {
 		}
 		return $return;
 	}
+	
+	protected function uma_api_build($command, $url, $send_object = null, $put_delete = null)
+	{
+		$open_id_url = 'http://162.243.111.18/uma-server-webapp/';
+		//$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $practice->uma_client_id;
+		$client_secret = $practice->uma_client_secret;
+		$api_endpoint = 'http://162.243.111.18/uma-server-webapp/api/' . $command;
+		//$api_endpoint = str_replace('/nosh', '/uma-server-webapp/api/' . $command, URL::to('/'));
+		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc->setRedirectURL($url);
+		$oidc->authenticate(true, 'user');
+		$response = $oidc->api($command, $api_endpoint, $send_object, $put_delete);
+		return $response;
+	}
 }

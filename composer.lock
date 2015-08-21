@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "84c9e70ac5ecac243dd4d582c5ac3002",
+    "hash": "5839d2f3b846c10b0e068c84adc79e89",
     "packages": [
         {
             "name": "barryvdh/laravel-snappy",
@@ -466,12 +466,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jenssegers/laravel-date.git",
-                "reference": "22861b75f140b6f245e22c983b269b722c239748"
+                "reference": "4a5ecdc2e622ccf426e058a28449f06cc5d9200b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jenssegers/laravel-date/zipball/22861b75f140b6f245e22c983b269b722c239748",
-                "reference": "22861b75f140b6f245e22c983b269b722c239748",
+                "url": "https://api.github.com/repos/jenssegers/laravel-date/zipball/4a5ecdc2e622ccf426e058a28449f06cc5d9200b",
+                "reference": "4a5ecdc2e622ccf426e058a28449f06cc5d9200b",
                 "shasum": ""
             },
             "require": {
@@ -514,7 +514,7 @@
                 "time",
                 "translation"
             ],
-            "time": "2015-06-13 13:51:58"
+            "time": "2015-08-10 11:19:08"
         },
         {
             "name": "jeremeamia/SuperClosure",
@@ -570,12 +570,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/php-github-api.git",
-                "reference": "99c6b87265f5dd26a19a1fa3f24f70a7d1455589"
+                "reference": "313d7ed61494f525ab93cfd8595ec2d398533220"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/99c6b87265f5dd26a19a1fa3f24f70a7d1455589",
-                "reference": "99c6b87265f5dd26a19a1fa3f24f70a7d1455589",
+                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/313d7ed61494f525ab93cfd8595ec2d398533220",
+                "reference": "313d7ed61494f525ab93cfd8595ec2d398533220",
                 "shasum": ""
             },
             "require": {
@@ -623,7 +623,7 @@
                 "gist",
                 "github"
             ],
-            "time": "2015-07-07 10:27:29"
+            "time": "2015-08-20 09:44:33"
         },
         {
             "name": "knplabs/knp-snappy",
@@ -631,26 +631,30 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/snappy.git",
-                "reference": "318a10401f556aab88009fdd061b866877d25d41"
+                "reference": "cada5a1ddcf6dc7d4c848b257c2bab580f99e542"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/snappy/zipball/318a10401f556aab88009fdd061b866877d25d41",
-                "reference": "318a10401f556aab88009fdd061b866877d25d41",
+                "url": "https://api.github.com/repos/KnpLabs/snappy/zipball/cada5a1ddcf6dc7d4c848b257c2bab580f99e542",
+                "reference": "cada5a1ddcf6dc7d4c848b257c2bab580f99e542",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
                 "symfony/process": "~2.1"
             },
+            "require-dev": {
+                "phpunit/phpunit": "4.7.*"
+            },
             "suggest": {
-                "h4cc/wkhtmltopdf-amd64": "Provide wkhtmltopdf-amd64 binary, use version `0.12.0` as dependency",
-                "h4cc/wkhtmltopdf-i386": "Provide wkhtmltopdf-i386 binary, use version `0.12.0` as dependency"
+                "h4cc/wkhtmltopdf-amd64": "Provides wkhtmltopdf-amd64 binary for Linux-compatible machines, use version `~0.12` as dependency",
+                "h4cc/wkhtmltopdf-i386": "Provides wkhtmltopdf-i386 binary for Linux-compatible machines, use version `~0.12` as dependency",
+                "wemersonjanuario/wkhtmltopdf-windows": "Provides wkhtmltopdf executable for Windows, use version `~0.12` as dependency"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.3.x-dev"
+                    "dev-master": "0.5.x-dev"
                 }
             },
             "autoload": {
@@ -682,7 +686,7 @@
                 "thumbnail",
                 "wkhtmltopdf"
             ],
-            "time": "2015-07-16 13:40:52"
+            "time": "2015-08-10 10:24:04"
         },
         {
             "name": "laravel/framework",
@@ -860,12 +864,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "c5b08724f4b11fd90a2c36a64d4868bcee7ba6a4"
+                "reference": "d58755629d665abe7955e87ecb0a7a17912670ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/c5b08724f4b11fd90a2c36a64d4868bcee7ba6a4",
-                "reference": "c5b08724f4b11fd90a2c36a64d4868bcee7ba6a4",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/d58755629d665abe7955e87ecb0a7a17912670ad",
+                "reference": "d58755629d665abe7955e87ecb0a7a17912670ad",
                 "shasum": ""
             },
             "require": {
@@ -882,7 +886,7 @@
                 "php-console/php-console": "^3.1.3",
                 "phpunit/phpunit": "~4.5",
                 "phpunit/phpunit-mock-objects": "2.3.0",
-                "raven/raven": "~0.8",
+                "raven/raven": "~0.11",
                 "ruflin/elastica": ">=0.90 <3.0",
                 "swiftmailer/swiftmailer": "~5.3",
                 "videlalvaro/php-amqplib": "~2.4"
@@ -902,7 +906,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.15.x-dev"
+                    "dev-master": "1.16.x-dev"
                 }
             },
             "autoload": {
@@ -928,7 +932,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-07-14 09:27:59"
+            "time": "2015-08-17 16:40:30"
         },
         {
             "name": "mustangostang/spyc",
@@ -936,16 +940,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mustangostang/spyc.git",
-                "reference": "eeb9f7c47e1457770d64c7fb1f3d4aabff52de4b"
+                "reference": "699184c170688363ab82f97afb8085e39d7a1769"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mustangostang/spyc/zipball/eeb9f7c47e1457770d64c7fb1f3d4aabff52de4b",
-                "reference": "eeb9f7c47e1457770d64c7fb1f3d4aabff52de4b",
+                "url": "https://api.github.com/repos/mustangostang/spyc/zipball/699184c170688363ab82f97afb8085e39d7a1769",
+                "reference": "699184c170688363ab82f97afb8085e39d7a1769",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.3.*@dev"
             },
             "type": "library",
             "extra": {
@@ -975,7 +982,7 @@
                 "yaml",
                 "yml"
             ],
-            "time": "2014-08-21 09:14:01"
+            "time": "2015-08-13 21:51:08"
         },
         {
             "name": "nesbot/carbon",

@@ -124,7 +124,7 @@
 							<br><i class="fa fa-line-chart fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="View growth charts."> <a href="#" id="dashboard_growth_chart">View growth charts.</a></span>
 						<?php }?>
 						<?php if(Session::get('patient_centric') == 'y') {?>
-							<br><i class="fa fa-plus-square fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="Manage practices so that a provider can document their encounters with you."> <a href="#" id="dashboard_manage_practice">Your connected practices.</a></span>
+							<br><i class="fa fa-plus-square fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="Manage practices so that a provider can document their encounters with you.  Mangage apps that are connected to your patient NOSH."> <a href="#" id="dashboard_manage_practice">Your connected practices and apps.</a></span>
 						<?php }?>
 						<br><i class="fa fa-key fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="change_password">Change your password.</a>
 					</div>
@@ -289,10 +289,13 @@
 		</form>
 	</div>
 </div>
-<div id="manage_practice_dialog" title="Connected Practices">
+<div id="manage_practice_dialog" title="Connected Practices and Apps">
 	<table id="manage_practice_list" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="manage_practice_list_pager" class="scroll" style="text-align:center;"></div><br>
-	<button type="button" id="dashboard_add_practice" class="nosh_button_add">Add</button>
+	<button type="button" id="dashboard_add_practice" class="nosh_button_add">Add Practice</button>
+	<button type="button" id="dashboard_delete_practice" class="nosh_button_delete">Remove Practice</button>
+	<br><br>
+	<a href="<?php $url = str_replace('/nosh', '/uma-server-webapp/manage/admin/clients', URL::to('/')); ?>" target="_blank">Manage all clients connected to your NOSH</a>
 </div>
 <div id="add_practice_dialog" title="Add a Practice">
 	<form id="add_practice_form" class="pure-form pure-form-stacked">

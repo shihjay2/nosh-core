@@ -185,6 +185,12 @@
 			<div id="timeline" class="timeCube"></div>
 			<div id="swipe"></div>
 		</div>
+		<div id="uma_dialog" title="">
+			<p></p>
+			<form id="uma_form" class="pure-form pure-form-stacked">
+			
+			</form>
+		</div>
 		<div id="allpage" class="allpage">
 			<div id="header" class="header ui-widget">
 				<?php if(Auth::check()) {?>

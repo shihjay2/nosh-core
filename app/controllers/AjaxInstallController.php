@@ -53,33 +53,41 @@ class AjaxInstallController extends BaseController {
 		// Check if patient-centric is also tied to a UMA oAUTH server
 		$client_id = '';
 		$client_secret = '';
+		$sub = '';
 		if ($type == 'patient') {
+			$pt_password = substr_replace(Hash::make(Input::get('pt_password')),"$2a",0,3);
 			$res = DB::select("SHOW DATABASES LIKE 'oic_production'");
 			if(count($res) > 0) {
 				$data_edit = array(
-					'username' => Input::get('username'),
-					'password' => substr_replace(Hash::make(Input::get('password')),"$2a",0,3),
+					'username' => Input::get('pt_username'),
+					'password' => $pt_password,
 					'enabled' => '1'
 				);
 				$data_edit1 = array(
 					'email' => Input::get('email'),
-					'preferred_username' => Input::get('username'),
+					'preferred_username' => Input::get('pt_username'),
 					'email_verified' => '1'
 				);
 				DB::connection('oic')->table('users')->insert($data_edit);
-				$id = DB::table('user_info')->insertGetId($data_edit1);
+				$id = DB::connection('oic')->table('user_info')->insertGetId($data_edit1);
+				$sub = hash('sha256', $id);
 				$data_edit2 = array(
-					'sub' => hash('sha256', $id)
+					'sub' => $sub
 				);
 				DB::connection('oic')->table('user_info')->where('id', '=', $id)->update($data_edit2);
 				$data_edit3 = array(
-					'username' => Input::get('username'),
+					'username' => Input::get('pt_username'),
 					'authority' => 'ROLE_ADMIN'
 				);
+				$data_edit3a = array(
+					'username' => Input::get('pt_username'),
+					'authority' => 'ROLE_USER'
+				);
 				DB::connection('oic')->table('authorities')->insert($data_edit3);
+				DB::connection('oic')->table('authorities')->insert($data_edit3a);
 				$client_id = $this->gen_uuid();
 				$client_secret = $this->gen_secret();
-				$client_name = 'Patient NOSH for ' .  Input::get('firstname') . ' ' . Input::get('lastname');
+				$client_name = 'Patient NOSH for ' .  Input::get('firstname') . ' ' . Input::get('lastname') . ', DOB: ' . date('Y-m-d', strtotime(Input::get('DOB')));
 				$data_edit4 = array(
 					'client_id' => $client_id,
 					'client_secret' => $client_secret,
@@ -182,7 +190,7 @@ class AjaxInstallController extends BaseController {
 						'description' => 'manage protected resources',
 						'icon' => 'briefcase',
 						'restricted' => false,
-						'default_scope' => true,
+						'default_scope' => false,
 						'structured' => false,
 						'structured_param_description' => null
 					],
@@ -191,7 +199,7 @@ class AjaxInstallController extends BaseController {
 						'description' => 'request access to protected resources',
 						'icon' => 'share',
 						'restricted' => false,
-						'default_scope' => true,
+						'default_scope' => false,
 						'structured' => false,
 						'structured_param_description' => null
 					],
@@ -240,14 +248,13 @@ class AjaxInstallController extends BaseController {
 			'patient_centric' => $patient_centric
 		);
 		if ($type == 'patient' && $client_id != '') {
-			$data2['openidconnect_client_id'] = $client_id;
-			$data2['openidconnect_client_secret'] = $client_secret;
+			$data2['uma_client_id'] = $client_id;
+			$data2['uma_client_secret'] = $client_secret;
 		}
 		DB::table('practiceinfo')->insert($data2);
 		// Insert patient
 		if ($type == 'patient') {
 			$dob = date('Y-m-d', strtotime(Input::get('DOB')));
-			$pt_password = substr_replace(Hash::make(Input::get('pt_password')),"$2a",0,3);
 			$displayname = Input::get('firstname') . " " . Input::get('lastname');
 			$patient_data = array(
 				'lastname' => Input::get('lastname'),
@@ -286,6 +293,9 @@ class AjaxInstallController extends BaseController {
 				'practice_id' => '1',
 				'password' => $pt_password
 			);
+			if ($sub != '') {
+				$patient_data2['uid'] = $sub;
+			}
 			$patient_user_id = DB::table('users')->insertGetId($patient_data2);
 			$patient_data3 = array(
 				'pid' => $pid,

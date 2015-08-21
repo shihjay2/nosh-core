@@ -185,6 +185,12 @@ Route::get('oidc', array('as' => 'oidc', 'uses' => 'LoginController@oidc'));
 Route::get('oidc_register_client', array('as' => 'oidc_register_client', 'uses' => 'LoginController@oidc_register_client'));
 Route::get('oidc_check_patient_centric', array('as' => 'oidc_check_patient_centric', 'uses' => 'LoginController@oidc_check_patient_centric'));
 Route::any('practice_choose', array('as' => 'practice_choose', 'before' => 'force.ssl', 'uses' => 'LoginController@practice_choose'));
+Route::get('uma_auth', array('as' => 'uma_auth', 'uses' => 'LoginController@uma_auth'));
+Route::get('uma_register_client', array('as' => 'uma_register_client', 'uses' => 'LoginController@uma_register_client'));
+Route::group(array('prefix' => 'uma_api'), function()
+{
+	Route::controller('', 'UMAAPIController');
+});
 // API routes
 Route::get('authtest', array('before' => 'auth.basic', function()
 {
@@ -424,7 +430,7 @@ Route::filter('acl6', function()
 
 Route::filter('force.ssl', function()
 {
-	if (route('home') != 'http://demo.noshchartingsystem.com:444/nosh' && route('home') != 'http://192.168.1.163/nosh') {
+	if (route('home') != 'http://demo.noshchartingsystem.com:444/nosh' && route('home') != 'http://192.168.1.163/nosh' && route('home') != 'http://localhost/nosh' && route('home') != 'http://162.243.111.18') {
 		if (!Request::secure()) {
 			return Redirect::secure(Request::path());
 		}
