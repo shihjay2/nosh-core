@@ -100,32 +100,32 @@ class AjaxInstallController extends BaseController {
 					'token_endpoint_auth_method' => 'SECRET_BASIC',
 					'clear_access_tokens_on_refresh' => 1
 				);
-				DB::connection('oic')->table('client_details')->insert($data_edit4);
+				$client_id1 = DB::connection('oic')->table('client_details')->insertGetId($data_edit4);
 				$data_edit5s = array(
-					['owner_id' => $client_id, 'scope' => 'openid'],
-					['owner_id' => $client_id, 'scope' => 'profile'],
-					['owner_id' => $client_id, 'scope' => 'email'],
-					['owner_id' => $client_id, 'scope' => 'address'],
-					['owner_id' => $client_id, 'scope' => 'phone'],
-					['owner_id' => $client_id, 'scope' => 'offline_access'],
-					['owner_id' => $client_id, 'scope' => 'npi'],
-					['owner_id' => $client_id, 'scope' => 'practice_npi'],
-					['owner_id' => $client_id, 'scope' => 'uma_protection']
+					['owner_id' => $client_id1, 'scope' => 'openid'],
+					['owner_id' => $client_id1, 'scope' => 'profile'],
+					['owner_id' => $client_id1, 'scope' => 'email'],
+					['owner_id' => $client_id1, 'scope' => 'address'],
+					['owner_id' => $client_id1, 'scope' => 'phone'],
+					['owner_id' => $client_id1, 'scope' => 'offline_access'],
+					['owner_id' => $client_id1, 'scope' => 'npi'],
+					['owner_id' => $client_id1, 'scope' => 'practice_npi'],
+					['owner_id' => $client_id1, 'scope' => 'uma_protection']
 				);
 				foreach ($data_edit5s as $data_edit5) {
 					DB::connection('oic')->table('client_scope')->insert($data_edit5);
 				}
 				$data_edit6s = array(
-					['owner_id' => $client_id, 'redirect_uri' => route('oidc')]
+					['owner_id' => $client_id1, 'redirect_uri' => route('oidc')]
 				);
 				foreach ($data_edit6s as $data_edit6) {
 					DB::connection('oic')->table('client_redirect_uri')->insert($data_edit6);
 				}
 				$data_edit7s = array(
-					['owner_id' => $client_id, 'grant_type' => 'authorization_code'],
-					['owner_id' => $client_id, 'grant_type' => 'urn:ietf:params:oauth:grant_type:redelegate'],
-					['owner_id' => $client_id, 'grant_type' => 'implicit'],
-					['owner_id' => $client_id, 'grant_type' => 'refresh_token']
+					['owner_id' => $client_id1, 'grant_type' => 'authorization_code'],
+					['owner_id' => $client_id1, 'grant_type' => 'urn:ietf:params:oauth:grant_type:redelegate'],
+					['owner_id' => $client_id1, 'grant_type' => 'implicit'],
+					['owner_id' => $client_id1, 'grant_type' => 'refresh_token']
 				);
 				foreach ($data_edit7s as $data_edit7) {
 					DB::connection('oic')->table('client_grant_type')->insert($data_edit7);
