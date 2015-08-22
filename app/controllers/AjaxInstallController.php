@@ -116,13 +116,12 @@ class AjaxInstallController extends BaseController {
 				foreach ($data_edit5s as $data_edit5) {
 					DB::connection('oic')->table('client_scope')->insert($data_edit5);
 				}
-				$base_url = str_replace('/nosh', '/', URL::to('/'));
 				$data_edit6s = array(
-					['owner_id' => $client_id1, 'redirect_uri' => $base_url . 'oidc'],
-					['owner_id' => $client_id1, 'redirect_uri' => $base_url . 'uma_auth'],
-					['owner_id' => $client_id1, 'redirect_uri' => $base_url . 'uma_api'],
-					['owner_id' => $client_id1, 'redirect_uri' => $base_url . 'fhir/oidc'],
-					['owner_id' => $client_id1, 'redirect_uri' => $base_url . 'fhir/v1']
+					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/oidc'],
+					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/uma_auth'],
+					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/uma_api'],
+					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/fhir/oidc'],
+					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/fhir/v1']
 				);
 				foreach ($data_edit6s as $data_edit6) {
 					DB::connection('oic')->table('client_redirect_uri')->insert($data_edit6);
