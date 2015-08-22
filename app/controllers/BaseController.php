@@ -9169,7 +9169,7 @@ class BaseController extends Controller {
 		$oidc->setRedirectURL($url);
 		$oidc->authenticate(true, 'user');
 		$token = $oidc->getAccessToken();
-		$response = $this->fetchURL($api_endpoint, null, $token, null, $json);
+		$response = $this->fetchURL($api_endpoint, null, $token, null, true);
 		return $response;
 	}
 	
