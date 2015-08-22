@@ -546,7 +546,7 @@ class OpenIDConnectClient
 	 * @throws OpenIDConnectClientException
 	 * @return mixed
 	 */
-	protected function fetchURL($url, $post_body = null, $token = null, $put_delete = null) {
+	protected function fetchURL($url, $post_body = null, $token = null, $put_delete = null, $json=false) {
 		// OK cool - then let's create a new cURL resource handle
 		$ch = curl_init();
 
@@ -559,7 +559,11 @@ class OpenIDConnectClient
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_body);
 
 			// Default content type is form encoded
-			$content_type = 'application/x-www-form-urlencoded';
+			if ($json == false) {
+				$content_type = 'application/x-www-form-urlencoded';
+			} else {
+				$content_type = 'application/json';
+			}
 
 			// Determine if this is a JSON payload and add the appropriate content type
 			if (is_object(json_decode($post_body))) {
@@ -880,11 +884,10 @@ class OpenIDConnectClient
 	 * @throws OpenIDConnectClientException
 	 */
 	public function resource_set($name, $icon, $scopes) {
-
 		$resource_set_endpoint = $this->getProviderConfigValue('resource_set_registration_endpoint',true);
 		$send_object = (object)array(
-			'name' => '',
-			'icon_uri' => '',
+			'name' => $name,
+			'icon_uri' => $icon,
 			'scopes' => array($this->getRedirectURL(), str_replace('oidc', 'fhir/oidc', $this->getRedirectURL()))
 		);
 		$response = $this->fetchURL($resource_set_endpoint, json_encode($send_object), $this->accessToken);

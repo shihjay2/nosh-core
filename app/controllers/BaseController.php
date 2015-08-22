@@ -9158,17 +9158,98 @@ class BaseController extends Controller {
 	
 	protected function uma_api_build($command, $url, $send_object = null, $put_delete = null)
 	{
-		$open_id_url = 'http://162.243.111.18/uma-server-webapp/';
-		//$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		//$open_id_url = 'http://162.243.111.18/uma-server-webapp/';
+		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
-		$api_endpoint = 'http://162.243.111.18/uma-server-webapp/api/' . $command;
-		//$api_endpoint = str_replace('/nosh', '/uma-server-webapp/api/' . $command, URL::to('/'));
+		//$api_endpoint = 'http://162.243.111.18/uma-server-webapp/api/' . $command;
+		$api_endpoint = str_replace('/nosh', '/uma-server-webapp/api/' . $command, URL::to('/'));
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc->setRedirectURL($url);
 		$oidc->authenticate(true, 'user');
-		$response = $oidc->api($command, $api_endpoint, $send_object, $put_delete);
+		$token = $oidc->getAccessToken();
+		$response = $this->fetchURL($api_endpoint, null, $token, null, $json);
 		return $response;
+	}
+	
+	protected function fetchURL($url, $post_body = null, $token = null, $put_delete = null, $json=false) {
+		// OK cool - then let's create a new cURL resource handle
+		$ch = curl_init();
+
+		// Determine whether this is a GET or POST
+		if ($post_body != null) {
+			if ($put_delete != null) {
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $put_delete);
+			}
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_body);
+
+			// Default content type is form encoded
+			if ($json == false) {
+				$content_type = 'application/x-www-form-urlencoded';
+			} else {
+				$content_type = 'application/json';
+			}
+
+			// Determine if this is a JSON payload and add the appropriate content type
+			if (is_object(json_decode($post_body))) {
+				$content_type = 'application/json';
+			}
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				"Content-Type: {$content_type}",
+				'Content-Length: ' . strlen($post_body)
+			));
+			if ($token != null) {
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+					"Content-Type: {$content_type}",
+					'Content-Length: ' . strlen($post_body),
+					'Authorization: Bearer ' . $token
+				));
+			} else {
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+					"Content-Type: {$content_type}",
+					'Content-Length: ' . strlen($post_body)
+				));
+			}
+		}
+
+		// Set URL to download
+		curl_setopt($ch, CURLOPT_URL, $url);
+		if (isset($this->httpProxy)) {
+			curl_setopt($ch, CURLOPT_PROXY, $this->httpProxy);
+		}
+
+		// Include header in result? (0 = yes, 1 = no)
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+
+		/**
+		 * Set cert
+		 * Otherwise ignore SSL peer verification
+		 */
+		if (isset($this->certPath)) {
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+			curl_setopt($ch, CURLOPT_CAINFO, $this->certPath);
+		} else {
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		}
+
+		// Should cURL return or print out the data? (true = return, false = print)
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		// Timeout in seconds
+		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+
+		// Download the given URL, and return output
+		$output = curl_exec($ch);
+
+		if ($output === false) {
+			throw new OpenIDConnectClientException('Curl error: ' . curl_error($ch));
+		}
+
+		// Close the cURL resource, and free system resources
+		curl_close($ch);
+		return $output;
 	}
 }
