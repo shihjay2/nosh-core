@@ -546,7 +546,7 @@ class OpenIDConnectClient
 	 * @throws OpenIDConnectClientException
 	 * @return mixed
 	 */
-	protected function fetchURL($url, $post_body = null, $token = null, $put_delete = null, $json=false) {
+	protected function fetchURL($url, $post_body = null, $token = null, $put_delete = null) {
 		// OK cool - then let's create a new cURL resource handle
 		$ch = curl_init();
 
@@ -559,11 +559,7 @@ class OpenIDConnectClient
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_body);
 
 			// Default content type is form encoded
-			if ($json == false) {
-				$content_type = 'application/x-www-form-urlencoded';
-			} else {
-				$content_type = 'application/json';
-			}
+			$content_type = 'application/x-www-form-urlencoded';
 
 			// Determine if this is a JSON payload and add the appropriate content type
 			if (is_object(json_decode($post_body))) {
@@ -583,6 +579,12 @@ class OpenIDConnectClient
 				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 					"Content-Type: {$content_type}",
 					'Content-Length: ' . strlen($post_body)
+				));
+			}
+		} else {
+			if ($token != null) {
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+					'Authorization: Bearer ' . $token
 				));
 			}
 		}
