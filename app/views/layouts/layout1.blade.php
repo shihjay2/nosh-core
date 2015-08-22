@@ -45,6 +45,10 @@
 		{{ $script }}
 	</head>
 	<body>
+		<div id="dialog_load" title="">
+			<?php echo HTML::image('images/indicator.gif', 'Loading image', array('border' => '0')); ?>
+			<div id="dialog_progressbar"></div>
+		</div>
 		{{ $content }}
 	</body>
 </html>

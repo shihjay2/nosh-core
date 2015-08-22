@@ -430,7 +430,7 @@ Route::filter('acl6', function()
 
 Route::filter('force.ssl', function()
 {
-	if (route('home') != 'http://demo.noshchartingsystem.com:444/nosh' && route('home') != 'http://192.168.1.163/nosh' && route('home') != 'http://localhost/nosh' && route('home') != 'http://162.243.111.18') {
+	if (route('home') != 'http://demo.noshchartingsystem.com:444/nosh' && route('home') != 'http://192.168.1.163/nosh' && route('home') != 'http://localhost/nosh' && route('home') != 'http://162.243.111.18/nosh') {
 		if (!Request::secure()) {
 			return Redirect::secure(Request::path());
 		}

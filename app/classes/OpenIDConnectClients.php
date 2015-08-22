@@ -693,19 +693,16 @@ class OpenIDConnectClient
 			$send_object = (object)array(
 				'redirect_uris' => array($this->getRedirectURL(), str_replace('oidc', 'fhir/oidc', $this->getRedirectURL())),
 				'client_name' => $this->getClientName(),
-				'logo_uri' => 'https://www.noshchartingsystem.com/wp-content/uploads/2014/11/SAAS-Logo.jpg'
+				'logo_uri' => 'https://www.noshchartingsystem.com/SAAS-Logo.jpg'
 			);
 		} else {
 			$registration_endpoint = $this->getProviderConfigValue('dynamic_client_endpoint', $uma);
 			$send_object = (object)array(
 				'redirect_uris' => array($this->getRedirectURL(), 
-					str_replace('uma_auth', 'uma_api', $this->getRedirectURL()),
-					str_replace('uma_auth', 'uma_api_clients', $this->getRedirectURL()),
-					str_replace('uma_auth', 'uma_api_put_clients', $this->getRedirectURL()),
-					str_replace('uma_auth', 'uma_api_delete_clients', $this->getRedirectURL())
+					str_replace('uma_auth', 'uma_api', $this->getRedirectURL())
 				),
 				'client_name' => $this->getClientName(),
-				'logo_uri' => 'https://www.noshchartingsystem.com/wp-content/uploads/2014/11/SAAS-Logo.jpg'
+				'logo_uri' => 'https://www.noshchartingsystem.com/SAAS-Logo.jpg'
 			);
 		}
 		$response = $this->fetchURL($registration_endpoint, json_encode($send_object));

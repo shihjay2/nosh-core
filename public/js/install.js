@@ -56,6 +56,7 @@ $(document).ready(function() {
 		if (bValid) {
 			var str = $("#install").serialize();
 			if(str){
+				$('#dialog_load').dialog('option', 'title', "Customizing NOSH ChartingSystem...").dialog('open');
 				$.ajax({
 					type: "POST",
 					url: "ajaxinstall/install-process/practice",
@@ -111,6 +112,7 @@ $(document).ready(function() {
 		if (bValid) {
 			var str = $("#install_patient_form").serialize();
 			if(str){
+				$('#dialog_load').dialog('option', 'title', "Customizing NOSH ChartingSystem...").dialog('open');
 				$.ajax({
 					type: "POST",
 					url: "ajaxinstall/install-process/patient",
