@@ -737,7 +737,8 @@ class LoginController extends BaseController {
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc->setRedirectURL($url);
 		$oidc->setAccessToken(Session::get('uma_auth_access_token'));
-		$response = $oidc->revoke();
+		$oidc->revoke();
+		$oidc->logout();
 		Session::forget('uma_auth_access_token');
 		return Redirect::intended('logout');
 	}
@@ -753,6 +754,7 @@ class LoginController extends BaseController {
 		$oidc->setRedirectURL($url);
 		$oidc->setAccessToken(Session::get('oidc_auth_access_token'));
 		$oidc->revoke();
+		$oidc->logout();
 		Session::forget('oidc_auth_access_token');
 		return Redirect::intended('logout');
 	}

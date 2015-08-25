@@ -974,4 +974,9 @@ class OpenIDConnectClient
 		$token_params = http_build_query($token_params, null, '&');
 		return $this->fetchURL($revoke_request_endpoint, $token_params);
 	}
+	
+	public function logout() {
+		$url = $well_known_config_url = rtrim($this->getProviderURL(),"/") . "/logout";
+		return $this->fetchURL($url);
+	}
 }
