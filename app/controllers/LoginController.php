@@ -739,8 +739,7 @@ class LoginController extends BaseController {
 		$oidc->setAccessToken(Session::get('uma_auth_access_token'));
 		$response = $oidc->revoke();
 		Session::forget('uma_auth_access_token');
-		return $response;
-		//return Redirect::intended('logout');
+		return Redirect::intended('logout');
 	}
 	
 	public function oidc_logout()
