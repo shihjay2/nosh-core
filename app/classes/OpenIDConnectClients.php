@@ -960,6 +960,6 @@ class OpenIDConnectClient
 	public function revoke() {
 		$revoke_request_endpoint = $this->getProviderConfigValue('revocation_endpoint',true);
 		$response = $this->fetchURL($revoke_request_endpoint, null, $this->accessToken);
-		return $response
+		return $response;
 	}
 }
