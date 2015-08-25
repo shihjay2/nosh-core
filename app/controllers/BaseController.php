@@ -9167,7 +9167,7 @@ class BaseController extends Controller {
 		$api_endpoint = str_replace('/nosh', '/uma-server-webapp/api/' . $command, URL::to('/'));
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc->setRedirectURL($url);
-		$oidc->authenticate(true, 'user');
+		$oidc->setAccessToken(Session::get('uma_auth_access_token'));
 		$response = $oidc->api($command, $api_endpoint, $send_object, $put_delete);
 		return $response;
 	}

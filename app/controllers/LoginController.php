@@ -160,8 +160,6 @@ class LoginController extends BaseController {
 	
 	public function oidc()
 	{
-		//$client_id = '5b8e4e18-fbfa-4ef2-8e49-074e571be425';
-		//$client_secret = 'Pt6PD6xHQFCiWzo0QnfSXJ2XLatVAafXlGlNSw4Td9gVBVjasg7JtcogqgLDdjr6axfFoBV6FhvEoDUA0q1_BQ';
 		$open_id_url = 'https://noshchartingsystem.com/openid-connect-server-webapp/';
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->openidconnect_client_id;
@@ -174,6 +172,7 @@ class LoginController extends BaseController {
 		$lastname = $oidc->requestUserInfo('family_name');
 		$email = $oidc->requestUserInfo('email');
 		$npi = $oidc->requestUserInfo('npi');
+		$access_token = $oidc->getAccessToken();
 		if ($npi != '') {
 			$provider = DB::table('providers')->where('npi', '=', $npi)->first();
 			if ($provider) {
@@ -198,6 +197,7 @@ class LoginController extends BaseController {
 			Session::put('rcopia', $practice->rcopia_extension);
 			Session::put('mtm_extension', $practice->mtm_extension);
 			Session::put('patient_centric', $practice->patient_centric);
+			Session::put('oidc_auth_access_token', $access_token);
 			setcookie("login_attempts", 0, time()+900, '/');
 			return Redirect::intended('/');
 		} else {
@@ -289,6 +289,7 @@ class LoginController extends BaseController {
 					Session::put('npi', $npi);
 					Session::put('practice_choose', 'y');
 					Session::put('uid', $oidc->requestUserInfo('sub'));
+					Session::put('oidc_auth_access_token', $access_token);
 					return Redirect::to('practice_choose');
 				}
 			}
@@ -327,6 +328,7 @@ class LoginController extends BaseController {
 			Session::put('rcopia', $practice1->rcopia_extension);
 			Session::put('mtm_extension', $practice1->mtm_extension);
 			Session::put('patient_centric', $practice1->patient_centric);
+			Session::put('oidc_auth_access_token', $access_token);
 			setcookie("login_attempts", 0, time()+900, '/');
 			return Redirect::intended('/');
 		}
@@ -536,6 +538,7 @@ class LoginController extends BaseController {
 		$lastname = $oidc->requestUserInfo('family_name');
 		$email = $oidc->requestUserInfo('email');
 		$npi = $oidc->requestUserInfo('npi');
+		$access_token = $oidc->getAccessToken();
 		if ($npi != '') {
 			$provider = DB::table('providers')->where('npi', '=', $npi)->first();
 			if ($provider) {
@@ -560,7 +563,7 @@ class LoginController extends BaseController {
 			Session::put('rcopia', $practice->rcopia_extension);
 			Session::put('mtm_extension', $practice->mtm_extension);
 			Session::put('patient_centric', $practice->patient_centric);
-			Session::put('uma_auth', true);
+			Session::put('uma_auth_access_token', $access_token);
 			setcookie("login_attempts", 0, time()+900, '/');
 			return Redirect::intended('/');
 		} else {
@@ -652,6 +655,7 @@ class LoginController extends BaseController {
 					Session::put('npi', $npi);
 					Session::put('practice_choose', 'y');
 					Session::put('uid', $oidc->requestUserInfo('sub'));
+					Session::put('uma_auth_access_token', $access_token);
 					return Redirect::to('practice_choose');
 				}
 			}
@@ -690,6 +694,7 @@ class LoginController extends BaseController {
 			Session::put('rcopia', $practice1->rcopia_extension);
 			Session::put('mtm_extension', $practice1->mtm_extension);
 			Session::put('patient_centric', $practice1->patient_centric);
+			Session::put('uma_auth_access_token', $access_token);
 			setcookie("login_attempts", 0, time()+900, '/');
 			return Redirect::intended('/');
 		}
@@ -731,10 +736,11 @@ class LoginController extends BaseController {
 		$url = route('uma_logout');
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc->setRedirectURL($url);
-		$oidc->authenticate(true, 'user');
-		$oidc->revoke();
-		Session::forget('uma_auth');
-		return Redirect::intended('logout');
+		$oidc->setAccessToken(Session::get('uma_auth_access_token'));
+		$response = $oidc->revoke();
+		Session::forget('uma_auth_access_token');
+		return $response;
+		//return Redirect::intended('logout');
 	}
 	
 	public function oidc_logout()
@@ -746,9 +752,9 @@ class LoginController extends BaseController {
 		$url = route('oidc_logout');
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc->setRedirectURL($url);
-		$oidc->authenticate(true, 'user');
+		$oidc->setAccessToken(Session::get('oidc_auth_access_token'));
 		$oidc->revoke();
-		Session::forget('oidc_auth');
+		Session::forget('oidc_auth_access_token');
 		return Redirect::intended('logout');
 	}
 }

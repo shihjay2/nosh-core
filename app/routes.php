@@ -362,10 +362,10 @@ Route::filter('schedule_check', function()
 
 Route::filter('logout_type', function()
 {
-	if (Session::has('uma_auth')) {
+	if (Session::has('uma_auth_access_token')) {
 		return Redirect::to('uma_logout');
 	}
-	if (Session::has('oidc_auth')) {
+	if (Session::has('oidc_auth_access_token')) {
 		return Redirect::to('oidc_logout');
 	}
 });

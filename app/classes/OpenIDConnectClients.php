@@ -769,6 +769,13 @@ class OpenIDConnectClient
 	}
 
 	/**
+	 * @param $accessToken
+	 */
+	public function setAccessToken($accessToken) {
+		$this->accessToken = $accessToken;
+	}
+	
+	/**
 	 * @return string
 	 */
 	public function getAccessToken() {
@@ -959,7 +966,12 @@ class OpenIDConnectClient
 	
 	public function revoke() {
 		$revoke_request_endpoint = $this->getProviderConfigValue('revocation_endpoint',true);
-		$response = $this->fetchURL($revoke_request_endpoint, null, $this->accessToken);
-		return $response;
+		$token_params = array(
+			'token' => $this->accessToken,
+			'client_id' => $this->clientID,
+			'client_secret' => $this->clientSecret
+		);
+		$token_params = http_build_query($token_params, null, '&');
+		return $this->fetchURL($revoke_request_endpoint, $token_params);
 	}
 }
