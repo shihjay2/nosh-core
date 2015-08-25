@@ -99,7 +99,8 @@ class AjaxInstallController extends BaseController {
 					'allow_introspection' => true,
 					'token_endpoint_auth_method' => 'SECRET_BASIC',
 					'clear_access_tokens_on_refresh' => 1,
-					'logo_uri' => 'https://www.noshchartingsystem.com/SAAS-Logo.jpg'
+					'logo_uri' => 'https://www.noshchartingsystem.com/SAAS-Logo.jpg',
+					'client_uri' => URL::to('/')
 				);
 				$client_id1 = DB::connection('oic')->table('client_details')->insertGetId($data_edit4);
 				$data_edit5s = array(
@@ -121,7 +122,8 @@ class AjaxInstallController extends BaseController {
 					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/uma_auth'],
 					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/uma_api'],
 					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/fhir/oidc'],
-					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/fhir/v1']
+					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/fhir/v1'],
+					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/uma_logout']
 				);
 				foreach ($data_edit6s as $data_edit6) {
 					DB::connection('oic')->table('client_redirect_uri')->insert($data_edit6);

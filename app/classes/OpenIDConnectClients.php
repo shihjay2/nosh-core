@@ -269,7 +269,7 @@ class OpenIDConnectClient
 			if ($uma == false) {
 				$well_known_config_url = rtrim($this->getProviderURL(),"/") . "/.well-known/openid-configuration";
 			} else {
-				if ($param != 'jwks_uri') {
+				if ($param != 'jwks_uri' && $param != 'revocation_endpoint') {
 					$well_known_config_url = rtrim($this->getProviderURL(),"/") . "/.well-known/uma-configuration";
 				} else {
 					$well_known_config_url = rtrim($this->getProviderURL(),"/") . "/.well-known/openid-configuration";
@@ -543,6 +543,7 @@ class OpenIDConnectClient
 	/**
 	 * @param $url
 	 * @param null $post_body string If this is set the post type will be POST
+	 * $put_delete = either "PUT", "DELETE", or null
 	 * @throws OpenIDConnectClientException
 	 * @return mixed
 	 */
@@ -952,8 +953,13 @@ class OpenIDConnectClient
 		} else {
 			$response = $this->fetchURL($api_endpoint, null, $this->accessToken, $put_delete);
 		}
-		$json_response = json_decode($response);
-		return $response;
+		$json_response = json_decode($response, true);
+		return $json_response;
 	}
-
+	
+	public function revoke() {
+		$revoke_request_endpoint = $this->getProviderConfigValue('revocation_endpoint',true);
+		$response = $this->fetchURL($revoke_request_endpoint, null, $this->accessToken);
+		return $response
+	}
 }

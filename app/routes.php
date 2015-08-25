@@ -149,7 +149,9 @@ Route::group(array('before' => 'force.ssl|acl6'), function() {
 	Route::get('print_individual_chart/{pid}', array('as' => 'print_individual_chart', 'uses' => 'HomeController@print_individual_chart'));
 });
 
-Route::get('logout', array('as' => 'logout', 'before' => 'force.ssl|needinstall', 'uses' => 'LoginController@logout'));
+Route::get('logout', array('as' => 'logout', 'before' => 'force.ssl|needinstall|logout_type', 'uses' => 'LoginController@logout'));
+Route::get('uma_logout', array('as' => 'uma_logout', 'before' => 'force.ssl|needinstall', 'uses' => 'LoginController@uma_logout'));
+Route::get('oidc_logout', array('as' => 'oidc_logout', 'before' => 'force.ssl|needinstall', 'uses' => 'LoginController@oidc_logout'));
 Route::get('reminder', array('as' => 'reminder', 'uses' => 'ReminderController@reminder'));
 Route::get('fax', array('as' => 'fax', 'uses' => 'FaxController@fax'));
 Route::get('footerpdf', array("as" => "footerpdf", function()
@@ -355,6 +357,16 @@ Route::filter('schedule_check', function()
 		Session::put('practice_id', '1');
 		Session::put('group_id', 'schedule');
 		return Redirect::to('schedule_widget');
+	}
+});
+
+Route::filter('logout_type', function()
+{
+	if (Session::has('uma_auth')) {
+		return Redirect::to('uma_logout');
+	}
+	if (Session::has('oidc_auth')) {
+		return Redirect::to('oidc_logout');
 	}
 });
 

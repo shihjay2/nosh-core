@@ -524,8 +524,7 @@ class LoginController extends BaseController {
 	// Patient-centric, UMA login
 	public function uma_auth()
 	{
-		$open_id_url = 'http://162.243.111.18/uma-server-webapp/';
-		//$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
@@ -561,6 +560,7 @@ class LoginController extends BaseController {
 			Session::put('rcopia', $practice->rcopia_extension);
 			Session::put('mtm_extension', $practice->mtm_extension);
 			Session::put('patient_centric', $practice->patient_centric);
+			Session::put('uma_auth', true);
 			setcookie("login_attempts", 0, time()+900, '/');
 			return Redirect::intended('/');
 		} else {
@@ -720,5 +720,33 @@ class LoginController extends BaseController {
 		DB::table('practiceinfo')->where('practice_id', '=', '1')->update($data);
 		$this->audit('Update');
 		return Redirect::intended('/');
+	}
+	
+	public function uma_logout()
+	{
+		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $practice->uma_client_id;
+		$client_secret = $practice->uma_client_secret;
+		$url = route('uma_logout');
+		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc->setRedirectURL($url);
+		$oidc->authenticate(true, 'user');
+		$oidc->revoke();
+		return Redirect::to('logout');
+	}
+	
+	public function oidc_logout()
+	{
+		$open_id_url = 'https://noshchartingsystem.com/openid-connect-server-webapp/';
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $practice->uma_client_id;
+		$client_secret = $practice->uma_client_secret;
+		$url = route('oidc_logout');
+		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc->setRedirectURL($url);
+		$oidc->authenticate(true, 'user');
+		$oidc->revoke();
+		return Redirect::to('logout');
 	}
 }
