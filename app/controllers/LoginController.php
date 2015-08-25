@@ -733,7 +733,8 @@ class LoginController extends BaseController {
 		$oidc->setRedirectURL($url);
 		$oidc->authenticate(true, 'user');
 		$oidc->revoke();
-		return Redirect::to('logout');
+		Session::forget('uma_auth');
+		return Redirect::intended('logout');
 	}
 	
 	public function oidc_logout()
@@ -747,6 +748,7 @@ class LoginController extends BaseController {
 		$oidc->setRedirectURL($url);
 		$oidc->authenticate(true, 'user');
 		$oidc->revoke();
-		return Redirect::to('logout');
+		Session::forget('oidc_auth');
+		return Redirect::intended('logout');
 	}
 }
