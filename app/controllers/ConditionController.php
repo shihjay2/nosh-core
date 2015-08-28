@@ -1,6 +1,6 @@
 <?php
 
-class ConditionController extends \BaseController {
+class ConditionController extends BaseController {
 
 	/**
 	 * Display a listing of the resource.
@@ -65,7 +65,7 @@ class ConditionController extends \BaseController {
 						'title' => 'Resource of type ' . $resource . ' with id = issue_id_' . $row_id . ' and version = 1',
 						'link' => [
 							'rel' => 'self',
-							'href' => Request::url() . '/issue_id' . $row_id
+							'href' => Request::url() . '/issue_id_' . $row_id
 						],
 						'id' => Request::url() . '/issue_id_' . $row_id,
 						'updated' => $time,
@@ -122,6 +122,7 @@ class ConditionController extends \BaseController {
 			];
 			$statusCode = 404;
 		}
+		$response['test'] = $count;
 		return Response::json($response, $statusCode);
 	}
 
@@ -156,7 +157,28 @@ class ConditionController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		//
+		$resource = 'Condition';
+		if (strpos($id, 'issue_id_') >= 0 && strpos($id, 'issue_id_') !== false) {
+			$table = "issues";
+			$table_primary_key = 'issue_id';
+			$value = str_replace('issue_id_', '', $id);
+		} 
+		if (strpos($id, 'eid_') >= 0 && strpos($id, 'eid_') !== false) {
+			$table = "assessment";
+			$table_primary_key = 'eid';
+			$value = str_replace('eid_', '', $id);
+		}
+		$row = DB::table($table)->where($table_primary_key, '=', $value)->first();
+		if ($row) {
+			$statusCode = 200;
+			$response = $this->resource_detail($row, $resource);
+		} else {
+			$response = [
+				'error' => $resource . " doesn't exist."
+			];
+			$statusCode = 404;
+		}
+		return Response::json($response, $statusCode);
 	}
 
 

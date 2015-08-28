@@ -257,4 +257,13 @@ $(document).ready(function() {
 			}
 		});
 	});
+	$('#open_regular_box').click(function() {
+		$('#regular_box').show();
+		$('#openid_box').hide();
+	});
+	$('#open_openid_box').click(function() {
+		console.log('Boom');
+		$('#openid_box').show();
+		$('#regular_box').hide();
+	});
 });

@@ -61,4 +61,13 @@ class UMAAPIController extends BaseController
 		return $result;
 	}
 	
+	public function postResourceSet()
+	{
+		$url = URL::current();
+		$name = Input::get('name');
+		$icon = Input::get('icon');
+		$scopes = Input::get('scopes');
+		$result = $this->uma_resource_set($url, $name, $icon, $scopes);
+		return $result;
+	}
 }

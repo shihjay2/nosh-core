@@ -132,15 +132,13 @@ class PatientController extends BaseController {
 		$resource = 'Patient';
 		$table = 'demographics';
 		$table_primary_key = 'pid';
-		
-		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$row = DB::table($table)->where($table_primary_key, '=', $id)->first();
 		if ($row) {
 			$statusCode = 200;
 			$response = $this->resource_detail($row, $resource);
 		} else {
 			$response = [
-				'error' => "Patient doesn't exist."
+				'error' => $resource . " doesn't exist."
 			];
 			$statusCode = 404;
 		}

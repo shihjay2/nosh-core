@@ -122,7 +122,7 @@ class AjaxInstallController extends BaseController {
 					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/uma_auth'],
 					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/uma_api'],
 					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/fhir/oidc'],
-					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/fhir/v1'],
+					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/fhir'],
 					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/uma_logout']
 				);
 				foreach ($data_edit6s as $data_edit6) {

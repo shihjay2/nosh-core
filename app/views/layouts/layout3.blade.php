@@ -19,7 +19,7 @@
 		<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
 		<meta http-equiv="pragma" content="no-cache" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.3.0/pure-min.css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 		<link type="text/css" href="https://code.jquery.com/ui/1.11.0-beta.2/themes/cupertino/jquery-ui.css" rel="Stylesheet" />
 		<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 		<?php echo HTML::style('css/fullcalendar.print.css', array('media' => 'print'));?>
@@ -215,7 +215,10 @@
 							&nbspVersion <?php echo Session::get('version');?> &nbsp|&nbsp
 							<?php echo Session::get('displayname') . ' ';?>&nbsp|&nbsp
 							<?php echo date('M j, Y') . ' ';?>&nbsp
-							<?php echo HTML::linkRoute('logout', 'Logout'); ?>
+							<?php if(Session::get('patient_centric') == 'n') {?>
+								<i class="fa fa-share-square-o fa-fw fa-lg nosh_tooltip" style="vertical-align:middle;padding:2px" id="share_command" title="Share your Chart"></i>
+							<?php }?>
+							<i class="fa fa-lock fa-fw fa-lg nosh_tooltip" style="vertical-align:middle;padding:2px" id="logout_command" title="Logout"></i>
 						</div>
 					</div>
 					<br />

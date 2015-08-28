@@ -1,6 +1,6 @@
 <?php
 
-class ImmunizationController extends \BaseController {
+class ImmunizationController extends BaseController {
 
 	/**
 	 * Display a listing of the resource.

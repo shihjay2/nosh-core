@@ -8159,69 +8159,87 @@ class BaseController extends Controller {
 		return $return_value;
 	}
 	
-	protected function query_build($query, $table_key, $key1, $comparison, $value1, $or, $resource)
+	protected function query_build($query, $table_key, $key1, $comparison, $value1, $or, $resource, $table)
 	{
-		// check if value is a date
-		$unixdate = strtotime($value1);
-		if ($unixdate) {
-			if ($key1 == 'birthDate') {
-				$value1 = date('Y-m-d', $unixdate);
-			}
-		}
-		// check if value is booleen
-		if ($value1 == 'true') {
-			$value1 = '1';
-		}
-		if ($value1 == 'false') {
-			$value1 = '0';
-		}
-		if (is_array($table_key[$key1])) {
-			if ($or == false) {
-				$query->where(function($query_array1) use ($table_key, $key1, $value1) {
-					$a = 0;
-					foreach ($table_key[$key1] as $key_name) {
-						if ($a == 0) {
-							$query_array1->where($key_name, 'LIKE', "%$value1%");
-						} else {
-							$query_array1->orWhere($key_name, 'LIKE', "%$value1%");
-						}
-						$a++;
-					}
-				});
-			} else {
-				$query->orWhere(function($query_array1) use ($table_key, $key1, $value1) {
-					$a = 0;
-					foreach ($table_key[$key1] as $key_name) {
-						if ($a == 0) {
-							$query_array1->where($key_name, 'LIKE', "%$value1%");
-						} else {
-							$query_array1->orWhere($key_name, 'LIKE', "%$value1%");
-						}
-						$a++;
-					}
-				});
+		$proceed = false;
+		// check if resource is a condition and clean up identifier values if present
+		if ($resource == 'Condition') {
+			if ($key1 == 'identifier') {
+				if (strpos($value1, 'issue_id_') >= 0 && $table == 'issues') {
+					$value1 = str_replace('issue_id_', '', $value1);
+					$proceed = true;
+				}
+				if (strpos($value1, 'eid_') >= 0 && $table == 'assessment') {
+					$value1 = str_replace('eid_', '', $value1);
+					$proceed = true;
+				}
 			}
 		} else {
-			if ($key1 == 'subject') {
-				if ($resource == 'Patient') {
-					$key_name = 'pid';
+			$proceed = true;
+		}
+		if ($proceed == true) {
+			// check if value is a date
+			$unixdate = strtotime($value1);
+			if ($unixdate) {
+				if ($key1 == 'birthDate') {
+					$value1 = date('Y-m-d', $unixdate);
+				}
+			}
+			// check if value is booleen
+			if ($value1 == 'true') {
+				$value1 = '1';
+			}
+			if ($value1 == 'false') {
+				$value1 = '0';
+			}
+			if (is_array($table_key[$key1])) {
+				if ($or == false) {
+					$query->where(function($query_array1) use ($table_key, $key1, $value1) {
+						$a = 0;
+						foreach ($table_key[$key1] as $key_name) {
+							if ($a == 0) {
+								$query_array1->where($key_name, 'LIKE', "%$value1%");
+							} else {
+								$query_array1->orWhere($key_name, 'LIKE', "%$value1%");
+							}
+							$a++;
+						}
+					});
+				} else {
+					$query->orWhere(function($query_array1) use ($table_key, $key1, $value1) {
+						$a = 0;
+						foreach ($table_key[$key1] as $key_name) {
+							if ($a == 0) {
+								$query_array1->where($key_name, 'LIKE', "%$value1%");
+							} else {
+								$query_array1->orWhere($key_name, 'LIKE', "%$value1%");
+							}
+							$a++;
+						}
+					});
+				}
+			} else {
+				if ($key1 == 'subject') {
+					if ($resource == 'Patient') {
+						$key_name = 'pid';
+					} else {
+						$key_name = $table_key[$key1];
+					}
 				} else {
 					$key_name = $table_key[$key1];
 				}
-			} else {
-				$key_name = $table_key[$key1];
-			}
-			if ($or == false) {
-				if ($comparison == '=') {
-					$query->where($key_name, 'LIKE', "%$value1%");
+				if ($or == false) {
+					if ($comparison == '=') {
+						$query->where($key_name, 'LIKE', "%$value1%");
+					} else {
+						$query->where($key_name, $comparison, $value1);
+					}
 				} else {
-					$query->where($key_name, $comparison, $value1);
-				}
-			} else {
-				if ($comparison == '=') {
-					$query->orWhere($key_name, 'LIKE', "%$value1%");
-				} else {
-					$query->orWhere($key_name, $comparison, $value1);
+					if ($comparison == '=') {
+						$query->orWhere($key_name, 'LIKE', "%$value1%");
+					} else {
+						$query->orWhere($key_name, $comparison, $value1);
+					}
 				}
 			}
 		}
@@ -8311,7 +8329,7 @@ class BaseController extends Controller {
 				if ($i == 0) {
 					$query = DB::table($table);
 				} else {
-					$this->query_build($query, $table_key, $key1, $comparison, $value1, false, $resource);
+					$this->query_build($query, $table_key, $key1, $comparison, $value1, false, $resource, $table);
 				}
 				$value_composite1 = explode(",", $value1);
 				if (count($value_composite1) > 1) {
@@ -8370,22 +8388,22 @@ class BaseController extends Controller {
 						}
 					}
 					if (isset($code[0])) {
-						$query->where(function($query_array1) use ($code, $table_key, $resource) {
+						$query->where(function($query_array1) use ($code, $table_key, $resource, $table) {
 							$k = 0;
 							foreach ($code as $line) {
 								if ($k == 0) {
-									$this->query_build($query_array1, $table_key, $line['key'], $line['comparison'], $line['value'], false, $resource);
+									$this->query_build($query_array1, $table_key, $line['key'], $line['comparison'], $line['value'], false, $resource, $table);
 								} else {
-									$this->query_build($query_array1, $table_key, $line['key'], $line['comparison'], $line['value'], true, $resource);
+									$this->query_build($query_array1, $table_key, $line['key'], $line['comparison'], $line['value'], true, $resource, $table);
 								}
 								$k++;
 							}
 						});
 					} else {
-						$this->query_build($query, $table_key, $key1, $comparison, $temp_value, false, $resource);
+						$this->query_build($query, $table_key, $key1, $comparison, $temp_value, false, $resource, $table);
 					}
 				} else {
-					$this->query_build($query, $table_key, $key1, $comparison, $value1, false, $resource);
+					$this->query_build($query, $table_key, $key1, $comparison, $value1, false, $resource, $table);
 				}
 				$i++;
 			}
@@ -9158,17 +9176,57 @@ class BaseController extends Controller {
 	
 	protected function uma_api_build($command, $url, $send_object = null, $put_delete = null)
 	{
-		//$open_id_url = 'http://162.243.111.18/uma-server-webapp/';
 		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
-		//$api_endpoint = 'http://162.243.111.18/uma-server-webapp/api/' . $command;
 		$api_endpoint = str_replace('/nosh', '/uma-server-webapp/api/' . $command, URL::to('/'));
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc->setRedirectURL($url);
 		$oidc->setAccessToken(Session::get('uma_auth_access_token'));
 		$response = $oidc->api($command, $api_endpoint, $send_object, $put_delete);
+		return $response;
+	}
+	
+	protected function uma_resource_set($url, $name = null, $icon = null, $scopes = null)
+	{
+		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $practice->uma_client_id;
+		$client_secret = $practice->uma_client_secret;
+		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc->setRedirectURL($url);
+		if (Session::has('uma_auth_pat')) {
+			$oidc->setAccessToken(Session::get('uma_auth_pat'));
+		} else {
+			$oidc->authenticate(true,'pat');
+			Session::put('uma_auth_pat', $oidc->getAccessToken());
+		}
+		$response = $oidc->resource_set($name, $icon, $scopes);
+		return $response;
+	}
+	
+	protected function uma_permission_request($resource_set_id = null, $scopes = null)
+	{
+		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $practice->uma_client_id;
+		$client_secret = $practice->uma_client_secret;
+		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc->refresh($practice->uma_refresh_token,true);
+		$response = $oidc->permission_request($resource_set_id, $scopes);
+		return $response;
+	}
+	
+	protected function uma_introspect($token)
+	{
+		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $practice->uma_client_id;
+		$client_secret = $practice->uma_client_secret;
+		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc->refresh($practice->uma_refresh_token,true);
+		$response = $oidc->introspect($token);
 		return $response;
 	}
 }

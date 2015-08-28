@@ -210,16 +210,17 @@ Route::group(array('prefix' => 'api/v1', 'before' => 'force.ssl|auth.basic'), fu
 });
 // FHIR routes
 Route::get('fhir/oidc', array('as' => 'oidc_api', 'uses' => 'LoginController@oidc_api'));
-Route::group(array('prefix' => 'fhir/v1', 'before' => 'auth.token'), function()
+Route::group(array('prefix' => 'fhir'), function()
+//Route::group(array('prefix' => 'fhir', 'before' => 'auth.token'), function()
 {
 	Route::resource('AdverseReaction', 'AdverseReactionController');
 	Route::resource('Alert', 'AlertController');
-	Route::resource('AllergyIntolerance', 'AllergyIntoleranceController');
-	Route::resource('Binary', 'BinaryController');
+	Route::resource('AllergyIntolerance', 'AllergyIntoleranceController'); // in use - allergies
+	Route::resource('Binary', 'BinaryController'); // in use - documents
 	Route::resource('CarePlan', 'CarePlanController');
 	Route::resource('Composition', 'CompositionController');
 	Route::resource('ConceptMap', 'ConceptMapController');
-	Route::resource('Condition', 'ConditionController');
+	Route::resource('Condition', 'ConditionController'); //in use - issues, assessments
 	Route::resource('Conformance', 'ConformanceController');
 	Route::resource('Device', 'DeviceController');
 	Route::resource('DeviceObservationReport', 'DeviceObservationReportController');
@@ -227,20 +228,20 @@ Route::group(array('prefix' => 'fhir/v1', 'before' => 'auth.token'), function()
 	Route::resource('DiagnosticReport', 'DiagnosticReportController');
 	Route::resource('DocumentReference', 'DocumentReferenceController');
 	Route::resource('DocumentManifest', 'DocumentManifestController');
-	Route::resource('Encounter', 'EncounterController');
-	Route::resource('FamilyHistory', 'FamilyHistoryController');
+	Route::resource('Encounter', 'EncounterController'); //in use - encounters
+	Route::resource('FamilyHistory', 'FamilyHistoryController'); //in use
 	Route::resource('Group', 'GroupController');
 	Route::resource('ImagingStudy', 'ImagingStudyController');
-	Route::resource('Immunization', 'ImmunizationController');
+	Route::resource('Immunization', 'ImmunizationController'); // in use - immunizations
 	Route::resource('ImmunizationRecommendation', 'ImmunizationRecommendationController');
 	Route::resource('List', 'ListController');
 	Route::resource('Location', 'LocationController');
 	Route::resource('Media', 'MediaController');
-	Route::resource('Medication', 'MedicationController');
+	Route::resource('Medication', 'MedicationController'); //in use - rxnorm
 	Route::resource('MedicationAdministration', 'MedicationAdministrationController');
 	Route::resource('MedicationDispense', 'MedicationDispenseController');
 	Route::resource('MedicationPrescription', 'MedicationPrescriptionController');
-	Route::resource('MedicationStatement', 'MedicationStatementController');
+	Route::resource('MedicationStatement', 'MedicationStatementController'); //in use - medication list
 	Route::resource('MessageHeader', 'MessageHeaderController');
 	Route::resource('Observation', 'ObservationController');
 	Route::resource('OperationOutcome', 'OperationOutcomeController');
@@ -248,8 +249,8 @@ Route::group(array('prefix' => 'fhir/v1', 'before' => 'auth.token'), function()
 	Route::resource('OrderResponse', 'OrderResponseController');
 	Route::resource('Organization', 'OrganizationController');
 	Route::resource('Other', 'OtherController');
-	Route::resource('Patient', 'PatientController');
-	Route::resource('Practitioner', 'PractitionerController');
+	Route::resource('Patient', 'PatientController'); //in use
+	Route::resource('Practitioner', 'PractitionerController'); //in use
 	Route::resource('Procedure', 'ProcedureController');
 	Route::resource('Profile', 'ProfileController');
 	Route::resource('Provenance', 'ProvenanceController');
@@ -456,15 +457,90 @@ Route::filter('auth.basic', function()
 
 Route::filter('auth.token', function()
 {
-	$payload = Request::header('X-Auth-Token');
-	$user =  DB::table('users')->where('oauth_token', '=', $payload)->where('oauth_token_secret', '>', time())->first();
-	if(!$payload || !$user) {
-		$statusCode = 401;
-		$response['error'] = true;
-		$response['message'] = 'Not authenticated';
-		$response['code'] = 401;
-		return Response::json($response, $statusCode);
+	$payload = Request::header('Authorization');
+	if ($payload) {
+		// RPT, Perform Token Introspection
+		$rpt = str_replace('Bearer ', '', $payload);
+		$result_rpt = $this->uma_introspect($rpt);
+		if ($result_rpt['active'] == false) {
+			// Inactive RPT, Request Permission Ticket
+			$url = Request::url();
+			$query = DB::table('uma')->where('scope', '=', $url)->first();
+			$as_uri = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+			$header = [
+				'WWW-Authenticate' => 'UMA realm = "pNOSH_UMA", as_uri = "' . $as_uri . '"'
+			];
+			$statusCode = 403;
+			if ($query) {
+				// Look for additional scopes for resource_set_id
+				$query1 = DB::table('uma')->where('resource_set_id', '=', $query->resource_set_id)->get();
+				$scopes = array();
+				foreach ($query1 as $row1) {
+					$scopes[] = $row1->scope;
+				}
+				$permission_ticket = $this->uma_permission_request($query->resource_set_id, $scopes);
+				if (isset($permission_ticket['error'])) {
+					$response = [
+						'error' => $permission_ticket['error'],
+						'error_description' => $permission_ticket['error_description']
+					];
+				} else {
+					$response = [
+						'ticket' => $permission_ticket['ticket']
+					];
+				}
+			} else {
+				$response = [
+					'error' => 'invalid_scope',
+					'error_description' => 'At least one of the scopes included in the request was not registered previously by this resource server.'
+				];
+			}
+			return Response::json($response, $statusCode, $header);
+		}
+	} else {
+		// No RPT, Request Permission Ticket
+		$url = Request::url();
+		$query = DB::table('uma')->where('scope', '=', $url)->first();
+		$as_uri = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$header = [
+			'WWW-Authenticate' => 'UMA realm = "pNOSH_UMA", as_uri = "' . $as_uri . '"'
+		];
+		$statusCode = 403;
+		if ($query) {
+			// Look for additional scopes for resource_set_id
+			$query1 = DB::table('uma')->where('resource_set_id', '=', $query->resource_set_id)->get();
+			$scopes = array();
+			foreach ($query1 as $row1) {
+				$scopes[] = $row1->scope;
+			}
+			$permission_ticket = $this->uma_permission_request($query->resource_set_id, $scopes);
+			if (isset($permission_ticket['error'])) {
+				$response = [
+					'error' => $permission_ticket['error'],
+					'error_description' => $permission_ticket['error_description']
+				];
+			} else {
+				$response = [
+					'ticket' => $permission_ticket['ticket']
+				];
+			}
+		} else {
+			$response = [
+				'error' => 'invalid_scope',
+				'error_description' => 'At least one of the scopes included in the request was not registered previously by this resource server.'
+			];
+		}
+		return Response::json($response, $statusCode, $header);
 	}
+	//$payload = Request::header('X-Auth-Token');
+	//$user =  DB::table('users')->where('oauth_token', '=', $payload)->where('oauth_token_secret', '>', time())->first();
+	//if(!$payload || !$user) {
+		//$statusCode = 401;
+		//$response['error'] = true;
+		//$response['message'] = 'Not authenticated';
+		//$response['code'] = 401;
+		//return Response::json($response, $statusCode);
+	//}
 });
 Route::filter('auth.mobile', function()
 {

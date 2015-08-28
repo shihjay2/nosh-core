@@ -224,8 +224,6 @@ class OpenIDConnectClient
 				
 				// Save the refresh token, if we got one
 				if (isset($token_json->refresh_token)) $this->refreshToken = $token_json->refresh_token;
-
-				// Success!
 				return true;
 			} else {
 				throw new OpenIDConnectClientException ("Unable to verify JWT claims");
@@ -237,6 +235,37 @@ class OpenIDConnectClient
 				$this->requestUmaAuthorization($type);
 			}
 			return false;
+		}
+	}
+	
+	public function refresh($token, $uma=false) {
+		$token_json = $this->requestTokens('', $uma, $token);
+
+		// Throw an error if the server returns one
+		if (isset($token_json->error)) {
+			throw new OpenIDConnectClientException($token_json->error_description);
+		}
+		if (!property_exists($token_json, 'id_token')) {
+			throw new OpenIDConnectClientException("User did not authorize openid scope.");
+		}
+		$claims = $this->decodeJWT($token_json->id_token, 1);
+		
+		// Verify the signature
+		if ($this->canVerifySignatures()) {
+			if (!$this->verifyJWTsignature($token_json->id_token, $uma)) {
+				throw new OpenIDConnectClientException ("Unable to verify signature");
+			}
+		} else {
+			user_error("Warning: JWT signature verification unavailable.");
+		}
+
+		// If this is a valid claim
+		if ($this->verifyJWTclaims($claims)) {
+			// Save the access token
+			$this->accessToken = $token_json->access_token;
+			return true;
+		} else {
+			throw new OpenIDConnectClientException ("Unable to verify JWT claims");
 		}
 	}
 
@@ -368,17 +397,24 @@ class OpenIDConnectClient
 	 * @param $code
 	 * @return mixed
 	 */
-	private function requestTokens($code, $uma=false) {
+	private function requestTokens($code, $uma=false, $refresh_token='') {
 		$token_endpoint = $this->getProviderConfigValue("token_endpoint", $uma);
-		$grant_type = "authorization_code";
-		$token_params = array(
-			'grant_type' => $grant_type,
-			'code' => $code,
-			'redirect_uri' => $this->getRedirectURL(),
-			'client_id' => $this->clientID,
-			'client_secret' => $this->clientSecret
-		);
-		
+		if ($refresh_token != '') {
+			$token_params = array(
+				'grant_type' => 'authorization_code',
+				'code' => $code,
+				'redirect_uri' => $this->getRedirectURL(),
+				'client_id' => $this->clientID,
+				'client_secret' => $this->clientSecret
+			);
+		} else {
+			$token_params = array(
+				'grant_type' => 'refresh_token',
+				'refresh_token' => $refresh_token,
+				'client_id' => $this->clientID,
+				'client_secret' => $this->clientSecret
+			);
+		}
 		// Convert token params to string format
 		$token_params = http_build_query($token_params, null, '&');
 		return json_decode($this->fetchURL($token_endpoint, $token_params));
@@ -796,48 +832,6 @@ class OpenIDConnectClient
 	/**
 	 * @param $resourceID
 	 */
-	public function setResourceID($resourceID) {
-		$this->resourceID = $resourceID;
-	}
-	
-	/**
-	 * @return string
-	 */
-	public function getResourceID() {
-		return $this->resourceID;
-	}
-	
-	/**
-	 * @param $permissionTicket
-	 */
-	public function setPermissionTicket($permissionTicket) {
-		$this->permissionTicket = $permissionTicket;
-	}
-	
-	/**
-	 * @return string
-	 */
-	public function getPermissionTicket() {
-		return $this->permissionTicket;
-	}
-	
-	/**
-	 * @param $RPT
-	 */
-	public function setRPT($RPT) {
-		$this->RPT = $RPT;
-	}
-	
-	/**
-	 * @return string
-	 */
-	public function getRPT() {
-		return $this->RPT;
-	}
-	
-	/**
-	 * @param $resourceID
-	 */
 	private function requestUmaAuthorization($type) {
 		$auth_endpoint = $this->getProviderConfigValue("authorization_endpoint", true);
 		$response_type = "code";
@@ -858,7 +852,7 @@ class OpenIDConnectClient
 				'client_id' => $this->clientID,
 				'nonce' => $nonce,
 				'state' => $state,
-				'scope' => 'uma_protection'
+				'scope' => 'uma_protection offline_access'
 			));
 		} elseif ($type == 'user') {
 			$auth_params = array_merge($this->authParams, array(
@@ -906,9 +900,13 @@ class OpenIDConnectClient
 		if ($json_response === false) {
 			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
 		} elseif (isset($json_response->{'error_description'})) {
+			$return['error'] = $json_response->{'error'};
+			$return['error_description'] = $json_response->{'error_description'};
 			throw new OpenIDConnectClientException($json_response->{'error_description'});
 		}
-		$this->setResourceID($json_response->{'_id'});
+		$return['resource_set_id'] = $json_response->{'_id'};
+		$return['user_access_policy_uri'] = $json_response->{'user_access_policy_uri'};
+		return $return;
 	}
 
 	/**
@@ -928,9 +926,11 @@ class OpenIDConnectClient
 		if ($json_response === false) {
 			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
 		} elseif (isset($json_response->{'error_description'})) {
-			throw new OpenIDConnectClientException($json_response->{'error_description'});
+			$return['error'] = $json_response->{'error'};
+			$return['error_description'] = $json_response->{'error_description'};
 		}
-		$this->setPermissionTicket($json_response->{'ticket'});
+		$return['ticket'] = $json_response->{'ticket'};
+		return $return;
 	}
 	
 	/**
@@ -949,9 +949,21 @@ class OpenIDConnectClient
 		if ($json_response === false) {
 			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
 		} elseif (isset($json_response->{'error_description'})) {
-			throw new OpenIDConnectClientException($json_response->{'error_description'});
+			$return['error'] = $json_response->{'error'};
+			$return['error_description'] = $json_response->{'error_description'};
 		}
-		$this->setRPT($json_response->{'ticket'});
+		$return['ticket'] = $json_response->{'ticket'};
+		return $return;
+	}
+	
+	public function introspect($token) {
+		$introspect_endpoint = $this->getProviderConfigValue('introspection_endpoint',true);
+		$send_object = (object)array(
+			'token' => $token
+		);
+		$response = $this->fetchURL($introspect_endpoint, json_encode($send_object), $this->accessToken);
+		$json_response = json_decode($response, true);
+		return $json_response;
 	}
 	
 	public function api($command, $api_endpoint, $send_object = null, $put_delete = null) {

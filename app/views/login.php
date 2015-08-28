@@ -8,7 +8,7 @@
 	<div align="center">
 		<?php if ($patient_centric == 'y') {?>
 			<div id="box" class="ui-corner-all ui-tabs ui-widget ui-widget-content">
-				<div class="pure-g">
+				<div id="openid_box" class="pure-g">
 					<div class="pure-u-1">
 						<div id="openid_connect_logo" align="center" style="max-height:100px;">
 							<?php echo HTML::image('images/openid_connect_large.png','OpenID Connect', array('border' => '0', 'height' => '50', 'width' => '50'));?>
@@ -17,6 +17,26 @@
 					<div class="pure-u-1">Login with OpenID Connect.</div><div class="pure-u-1"><br><br></div>
 					<div class="pure-u-1-2"><?php echo link_to_route('uma_auth', "I'm the Patient", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
 					<div class="pure-u-1-2"><?php echo link_to_route('oidc', "I'm a Provider", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
+					<div class="pure-u-1"><br><br><a href="#" id="open_regular_box">Standard Login for Administrator</a></div>
+				</div>
+				<div id="regular_box" style="display:none">
+					<form method="POST" action="login" class="pure-form pure-form-stacked">
+						<div class="pure-control-group"><label for="username">Username:</label><input type="text" id="username" name="username" class="text" style="width:300px" /></div>
+						<div class="pure-control-group"><label for="password">Password:</label><input type="password" id="password" name="password" class="text" style="width:300px" /></div>
+						<?php if ($patient_centric == 'n') {?>
+							<div class="pure-control-group"><label for="practice_id">Organization/Practice:</label><select name="practice_id" id="practice_id" class="text" /></select></div>
+						<?php }?>
+						<br><br>
+						<div id="error_text">
+							<?php if ($error = $errors->first("password")) { echo $error . "<br><br>"; } ?>
+							<?php if (isset($attempts)) { echo $attempts . "<br><br>"; } ?>
+						</div> 
+						<div align="center">
+							<input type="submit" id="login_button" value="Login" name="login" class="ui-button ui-state-default ui-corner-all"/>
+							<br><br>
+							<a href="#" id="open_openid_box">OpenID Connect Login</a>
+						</div>
+					</form>
 				</div>
 			</div>
 			<br><br>

@@ -1992,6 +1992,19 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
+	$("#uma_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 500, 
+		width: 650, 
+		draggable: false,
+		resizable: false,
+		open: function(event, ui) {
+		},
+		close: function(event, ui) {
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
 });
 $(document).on("click", "#encounter_panel", function() {
 	noshdata.encounter_active = 'y';
@@ -3927,3 +3940,10 @@ $(document).on('click', '.timeline_event', function() {
 	}
 	console.log(value + "," + type);
 });
+$(document).on('click', '#share_command', function() {
+	console.log('You clicked on share command');
+});
+$(document).on('click', '#logout_command', function() {
+	window.location = noshdata.logout_url;
+});
+
