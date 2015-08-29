@@ -22,8 +22,9 @@ class ImmunizationController extends BaseController {
 		);
 		$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc1->refresh($practice->uma_refresh_token,true);
+		$response = 'True';
 		foreach ($resource_set_array as $resource_set_item) {
-			$response = $oidc1->resource_set($resource_set_item['name'], $resource_set_item['icon'], $resource_set_item['scopes']);
+			$response .= $oidc1->resource_set($resource_set_item['name'], $resource_set_item['icon'], $resource_set_item['scopes']);
 		}
 		return $response;
 	}
