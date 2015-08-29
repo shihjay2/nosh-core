@@ -861,6 +861,15 @@ class OpenIDConnectClient
 				'state' => $state,
 				'scope' => 'uma_protection offline_access'
 			));
+		} elseif ($type == 'user1') {
+			$auth_params = array_merge($this->authParams, array(
+				'response_type' => $response_type,
+				'redirect_uri' => $this->getRedirectURL(),
+				'client_id' => $this->clientID,
+				'nonce' => $nonce,
+				'state' => $state,
+				'scope' => 'openid offline_access'
+			));
 		} elseif ($type == 'user') {
 			$auth_params = array_merge($this->authParams, array(
 				'response_type' => $response_type,

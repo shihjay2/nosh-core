@@ -534,9 +534,10 @@ class LoginController extends BaseController {
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc->setRedirectURL($url);
 		if ($practice->uma_refresh_token == '') {
-			$oidc->addScope('offline_access');
+			$oidc->authenticate(true, 'user1');
+		} else {
+			$oidc->authenticate(true, 'user');
 		}
-		$oidc->authenticate(true, 'user');
 		$firstname = $oidc->requestUserInfo('given_name');
 		$lastname = $oidc->requestUserInfo('family_name');
 		$email = $oidc->requestUserInfo('email');
