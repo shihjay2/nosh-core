@@ -9,7 +9,10 @@ class ImmunizationController extends BaseController {
 	 */
 	public function index()
 	{
+		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $practice->uma_client_id;
+		$client_secret = $practice->uma_client_secret;
 		$resource_set_array[] = array(
 			'name' => 'Binary Files',
 			'icon' => 'https://noshchartingsystem.com/i-file.png',
