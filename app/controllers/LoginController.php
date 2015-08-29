@@ -556,7 +556,7 @@ class LoginController extends BaseController {
 		}
 		if ($user) {
 			// Add refresh token, if there is one
-			if ($oidc->getRefreshToken != '') {
+			if ($oidc->getRefreshToken() != '') {
 				$refresh_data['uma_refresh_token'] = $oidc->getRefreshToken();
 				DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
 				// Register scopes, if none are set yet
