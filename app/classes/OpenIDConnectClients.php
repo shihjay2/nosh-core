@@ -917,10 +917,11 @@ class OpenIDConnectClient
 		$send_object = (object)array(
 			'name' => $name,
 			'icon_uri' => $icon,
-			'scopes' => array($this->getRedirectURL(), str_replace('oidc', 'fhir/oidc', $this->getRedirectURL()))
+			'scopes' => $scopes
 		);
 		$response = $this->fetchURL($resource_set_endpoint, json_encode($send_object), $this->accessToken);
-		$json_response = json_decode($response);
+		//$json_response = json_decode($response);
+		$json_response = json_decode($response, true);
 		// Throw some errors if we encounter them
 		if ($json_response === false) {
 			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
@@ -929,9 +930,9 @@ class OpenIDConnectClient
 			$return['error_description'] = $json_response->{'error_description'};
 			throw new OpenIDConnectClientException($json_response->{'error_description'});
 		}
-		$return['resource_set_id'] = $json_response->{'_id'};
-		$return['user_access_policy_uri'] = $json_response->{'user_access_policy_uri'};
-		return $return;
+		//$return['resource_set_id'] = $json_response->{'_id'};
+		//$return['user_access_policy_uri'] = $json_response->{'user_access_policy_uri'};
+		return $json_response;
 	}
 
 	/**
