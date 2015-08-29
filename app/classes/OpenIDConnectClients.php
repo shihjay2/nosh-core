@@ -399,7 +399,7 @@ class OpenIDConnectClient
 	 */
 	private function requestTokens($code, $uma=false, $refresh_token='') {
 		$token_endpoint = $this->getProviderConfigValue("token_endpoint", $uma);
-		if ($refresh_token != '') {
+		if ($refresh_token == '') {
 			$token_params = array(
 				'grant_type' => 'authorization_code',
 				'code' => $code,
@@ -816,6 +816,13 @@ class OpenIDConnectClient
 	 */
 	public function getAccessToken() {
 		return $this->accessToken;
+	}
+	
+	/**
+	 * @param $refreshToken
+	 */
+	public function setRefreshToken($refreshToken) {
+		$this->refreshToken = $refreshToken;
 	}
 
 	/**

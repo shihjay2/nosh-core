@@ -558,85 +558,85 @@ class LoginController extends BaseController {
 			if ($oidc->getRefreshToken != '') {
 				$refresh_data['uma_refresh_token'] = $oidc->getRefreshToken();
 				DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
-			}
-			// Register scopes, if none are set yet
-			$uma = DB::table('uma')->first();
-			if (!$uma) {
-				$resource_set_array[] = array(
-					'name' => 'Patient',
-					'icon' => 'https://noshchartingsystem.com/i-patient.png',
-					'scopes' => array(
-						URL::to('/') . '/fhir/Patient',
-						URL::to('/') . '/fhir/Medication',
-						URL::to('/') . '/fhir/Practitioner'
-					)
-				);
-				$resource_set_array[] = array(
-					'name' => 'Condition',
-					'icon' => 'https://noshchartingsystem.com/i-condition.png',
-					'scopes' => array(
-						URL::to('/') . '/fhir/Condition'
-					)
-				);
-				$resource_set_array[] = array(
-					'name' => 'Medication List',
-					'icon' => 'https://noshchartingsystem.com/i-pharmacy.png',
-					'scopes' => array(
-						URL::to('/') . '/fhir/MedicationStatement'
-					)
-				);
-				$resource_set_array[] = array(
-					'name' => 'Allergy',
-					'icon' => 'https://noshchartingsystem.com/i-allergy.png',
-					'scopes' => array(
-						URL::to('/') . '/fhir/AllergyIntolerance'
-					)
-				);
-				$resource_set_array[] = array(
-					'name' => 'Immunization',
-					'icon' => 'https://noshchartingsystem.com/i-immunization.png',
-					'scopes' => array(
-						URL::to('/') . '/fhir/Immunization'
-					)
-				);
-				$resource_set_array[] = array(
-					'name' => 'Encounter',
-					'icon' => 'https://noshchartingsystem.com/i-medical-records.png',
-					'scopes' => array(
-						URL::to('/') . '/fhir/Encounter'
-					)
-				);
-				$resource_set_array[] = array(
-					'name' => 'Family History',
-					'icon' => 'https://noshchartingsystem.com/i-family-practice.png',
-					'scopes' => array(
-						URL::to('/') . '/fhir/FamilyHistory'
-					)
-				);
-				$resource_set_array[] = array(
-					'name' => 'Binary Files',
-					'icon' => 'https://noshchartingsystem.com/i-file.png',
-					'scopes' => array(
-						URL::to('/') . '/fhir/Binary'
-					)
-				);
-				$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
-				$oidc1->refresh($refresh_data['uma_refresh_token'],true);
-				foreach ($resource_set_array as $resource_set_item) {
-					$response = $oidc1->resource_set($resource_set_item['name'], $$resource_set_item['icon'], $resource_set_item['scopes']);
-					if (isset($response['resource_set_id'])) {
-						foreach ($resource_set_item['scopes'] as $scope_item) {
-							$response_data1 = array(
-								'resource_set_id' => $response['resource_set_id'],
-								'scope' => $scope_item,
-								'user_access_policy_uri' => $response['user_access_policy_uri']
-							);
-							DB::table('uma')->insert($response_data1);
-							$this->audit('Add'); 
+				// Register scopes, if none are set yet
+				$uma = DB::table('uma')->first();
+				if (!$uma) {
+					$resource_set_array[] = array(
+						'name' => 'Patient',
+						'icon' => 'https://noshchartingsystem.com/i-patient.png',
+						'scopes' => array(
+							URL::to('/') . '/fhir/Patient',
+							URL::to('/') . '/fhir/Medication',
+							URL::to('/') . '/fhir/Practitioner'
+						)
+					);
+					$resource_set_array[] = array(
+						'name' => 'Condition',
+						'icon' => 'https://noshchartingsystem.com/i-condition.png',
+						'scopes' => array(
+							URL::to('/') . '/fhir/Condition'
+						)
+					);
+					$resource_set_array[] = array(
+						'name' => 'Medication List',
+						'icon' => 'https://noshchartingsystem.com/i-pharmacy.png',
+						'scopes' => array(
+							URL::to('/') . '/fhir/MedicationStatement'
+						)
+					);
+					$resource_set_array[] = array(
+						'name' => 'Allergy',
+						'icon' => 'https://noshchartingsystem.com/i-allergy.png',
+						'scopes' => array(
+							URL::to('/') . '/fhir/AllergyIntolerance'
+						)
+					);
+					$resource_set_array[] = array(
+						'name' => 'Immunization',
+						'icon' => 'https://noshchartingsystem.com/i-immunization.png',
+						'scopes' => array(
+							URL::to('/') . '/fhir/Immunization'
+						)
+					);
+					$resource_set_array[] = array(
+						'name' => 'Encounter',
+						'icon' => 'https://noshchartingsystem.com/i-medical-records.png',
+						'scopes' => array(
+							URL::to('/') . '/fhir/Encounter'
+						)
+					);
+					$resource_set_array[] = array(
+						'name' => 'Family History',
+						'icon' => 'https://noshchartingsystem.com/i-family-practice.png',
+						'scopes' => array(
+							URL::to('/') . '/fhir/FamilyHistory'
+						)
+					);
+					$resource_set_array[] = array(
+						'name' => 'Binary Files',
+						'icon' => 'https://noshchartingsystem.com/i-file.png',
+						'scopes' => array(
+							URL::to('/') . '/fhir/Binary'
+						)
+					);
+					$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+					$oidc1->refresh($refresh_data['uma_refresh_token'],true);
+					foreach ($resource_set_array as $resource_set_item) {
+						$response = $oidc1->resource_set($resource_set_item['name'], $$resource_set_item['icon'], $resource_set_item['scopes']);
+						if (isset($response['resource_set_id'])) {
+							foreach ($resource_set_item['scopes'] as $scope_item) {
+								$response_data1 = array(
+									'resource_set_id' => $response['resource_set_id'],
+									'scope' => $scope_item,
+									'user_access_policy_uri' => $response['user_access_policy_uri']
+								);
+								DB::table('uma')->insert($response_data1);
+								$this->audit('Add'); 
+							}
 						}
 					}
 				}
-			} 
+			}
 			Auth::login($user);
 			$practice = Practiceinfo::find($user->practice_id);
 			Session::put('user_id', $user->id);
