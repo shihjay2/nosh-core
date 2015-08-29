@@ -260,7 +260,7 @@ class OpenIDConnectClient
 		}
 
 		// If this is a valid claim
-		if ($this->verifyJWTclaims($claims)) {
+		if ($this->verifyJWTclaimsRefresh($claims)) {
 			// Save the access token
 			$this->accessToken = $token_json->access_token;
 			return true;
@@ -519,6 +519,15 @@ class OpenIDConnectClient
 		return (($claims->iss == $this->getProviderURL())
 			&& (($claims->aud == $this->clientID) || (in_array($this->clientID, $claims->aud)))
 			&& ($claims->nonce == $_SESSION['openid_connect_nonce']));
+	}
+	
+	/**
+	 * @param object $claims
+	 * @return bool
+	 */
+	private function verifyJWTclaimsRefresh($claims) {
+		return (($claims->iss == $this->getProviderURL())
+			&& (($claims->aud == $this->clientID) || (in_array($this->clientID, $claims->aud))));
 	}
 
 	/**
