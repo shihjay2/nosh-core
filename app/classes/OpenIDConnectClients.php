@@ -861,23 +861,14 @@ class OpenIDConnectClient
 		$state = $this->generateRandString();
 		$_SESSION['openid_connect_state'] = $state;
 		
-		if ($type == 'pat') {
+		if ($type == 'user1') {
 			$auth_params = array_merge($this->authParams, array(
 				'response_type' => $response_type,
 				'redirect_uri' => $this->getRedirectURL(),
 				'client_id' => $this->clientID,
 				'nonce' => $nonce,
 				'state' => $state,
-				'scope' => 'uma_protection offline_access'
-			));
-		} elseif ($type == 'user1') {
-			$auth_params = array_merge($this->authParams, array(
-				'response_type' => $response_type,
-				'redirect_uri' => $this->getRedirectURL(),
-				'client_id' => $this->clientID,
-				'nonce' => $nonce,
-				'state' => $state,
-				'scope' => 'openid offline_access'
+				'scope' => 'openid offline_access uma_protection'
 			));
 		} elseif ($type == 'user') {
 			$auth_params = array_merge($this->authParams, array(
@@ -919,7 +910,7 @@ class OpenIDConnectClient
 			'icon_uri' => $icon,
 			'scopes' => $scopes
 		);
-		$response = $this->fetchURL($resource_set_endpoint, json_encode($send_object), $this->accessToken);
+		$response = $this->fetchURL($resource_set_endpoint . '/resource_set', json_encode($send_object), $this->accessToken);
 		//$json_response = json_decode($response);
 		$json_response = json_decode($response, true);
 		// Throw some errors if we encounter them
@@ -930,9 +921,8 @@ class OpenIDConnectClient
 			$return['error_description'] = $json_response->{'error_description'};
 			throw new OpenIDConnectClientException($json_response->{'error_description'});
 		}
-		//$return['resource_set_id'] = $json_response->{'_id'};
-		//$return['user_access_policy_uri'] = $json_response->{'user_access_policy_uri'};
-		return $json_response;
+		$return['resource_set_id'] = $json_response->{'_id'};
+		$return['user_access_policy_uri'] = $json_response->{'user_access_policy_uri'};
 	}
 
 	/**
