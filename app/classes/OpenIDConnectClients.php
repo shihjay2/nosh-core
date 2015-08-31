@@ -912,7 +912,7 @@ class OpenIDConnectClient
 		);
 		$response = $this->fetchURL($resource_set_endpoint . '/resource_set', json_encode($send_object), $this->accessToken);
 		//$json_response = json_decode($response);
-		$json_response = json_decode($response, true);
+		$json_response = json_decode($response);
 		// Throw some errors if we encounter them
 		if ($json_response === false) {
 			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
@@ -923,6 +923,7 @@ class OpenIDConnectClient
 		}
 		$return['resource_set_id'] = $json_response->{'_id'};
 		$return['user_access_policy_uri'] = $json_response->{'user_access_policy_uri'};
+		return $return;
 	}
 
 	/**
