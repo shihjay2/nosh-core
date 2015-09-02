@@ -3948,6 +3948,8 @@ $(document).on('click', '#share_command', function() {
 		success: function(data){
 			$("#uma_resources").html(data);
 			$(".nosh_tooltip").tooltip();
+			$('#uma_dialog').dialog('option', 'title', "Registered Resources");
+			$("#uma_dialog").dialog('open');
 		}
 	});
 });
