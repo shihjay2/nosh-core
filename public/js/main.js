@@ -2005,6 +2005,19 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
+	$("#uma_dialog_frame").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 500, 
+		width: 800, 
+		draggable: false,
+		resizable: false,
+		open: function(event, ui) {
+		},
+		close: function(event, ui) {
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
 });
 $(document).on("click", "#encounter_panel", function() {
 	noshdata.encounter_active = 'y';
@@ -3964,23 +3977,12 @@ $(document).on('click', '#logout_command', function() {
 });
 $(document).on('click', '.edit_user_access', function() {
 	var url = $(this).attr('nosh-url');
-	console.log(url);
-	$("#uma_resources").hide();
 	$('#uma_iframe').attr('src', url);
-	$('#uma_frame_action').show();
-	$('#uma_frame_action').css('height', function() {
-		return $("#uma_dialog").height() * 0.98;
+	$('#uma_dialog_frame').dialog('option', {
+		height: $("#maincontent").height(),
+		width: $("#maincontent").width(),
+		position: { my: 'left top', at: 'left top', of: '#maincontent' }
 	});
-	$('#uma_iframe').css('height', function() {
-		return $("#uma_frame_action").height() * 0.98;
-	});
-	$('#uma_iframe').css('width', function() {
-		return $("#uma_frame_action").width() * 0.95;
-	});
-});
-$(document).on('click', '#uma_back', function() {
-	$('#uma_frame_action').hide();
-	$('#uma_iframe').attr('src', '');
-	$("#uma_resources").show();
+	$("#uma_dialog_frame").dialog('open');
 });
 

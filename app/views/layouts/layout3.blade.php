@@ -192,6 +192,9 @@
 			<form id="uma_form" class="pure-form pure-form-stacked">
 			</form>
 		</div>
+		<div id="uma_dialog_frame" title="pNOSH User Managed Access">
+			<iframe id="uma_iframe" src="" style="height:98%; width:98%;"></iframe></div>
+		</div>
 		<div id="allpage" class="allpage">
 			<div id="header" class="header ui-widget">
 				<?php if(Auth::check()) {?>

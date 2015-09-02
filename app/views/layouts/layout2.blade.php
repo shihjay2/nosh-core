@@ -169,9 +169,11 @@
 		<div id="uma_dialog" title="">
 			<p></p>
 			<div id="uma_resources"></div>
-			<div id="uma_frame_action"><a href="#" id="uma_back">Back to Resources List</a><br><iframe id="uma_iframe" src="" style="height:400px; width:700px;"></iframe></div>
 			<form id="uma_form" class="pure-form pure-form-stacked">
 			</form>
+		</div>
+		<div id="uma_dialog_frame" title="pNOSH User Managed Access">
+			<iframe id="uma_iframe" src="" style="height:98%; width:98%;"></iframe></div>
 		</div>
 		<div id="allpage" class="allpage">
 			<div id="header" class="header ui-widget">
