@@ -1130,7 +1130,7 @@ class AjaxCommonController extends BaseController {
 					$title = 'This resource is your list of associated medical documents in PDF format';
 					$resource = 'Documents';
 				}
-				$html .= '<tr><td><span class="nosh_tooltip" title="' . $title . '">' . $resource . '</span></td><td><i class="fa fa-pencil-square-o fa-fw fa-2x edit_user_access" style="vertical-align:middle;padding:2px" nosh-url="' . $row->user_access_policy_uri . '"></i></td></tr>';
+				$html .= '<tr><td><span class="nosh_tooltip" title="' . $title . '">' . $resource . '</span></td><td><i class="fa fa-pencil-square-o fa-fw fa-2x edit_user_access nosh_tooltip" style="vertical-align:middle;padding:2px" title="Edit Policy" nosh-url="' . $row->user_access_policy_uri . '"></i></td></tr>';
 			}
 			$html .= '</table>';
 		}
