@@ -3968,11 +3968,14 @@ $(document).on('click', '.edit_user_access', function() {
 	$("#uma_resources").hide();
 	$('#uma_iframe').attr('src', url);
 	$('#uma_frame_action').show();
+	$('#uma_frame_action').css('height', function() {
+		return $("#uma_dialog").height() * 0.98;
+	});
 	$('#uma_iframe').css('height', function() {
-		return $("#uma_frame_action").height() * 0.8;
+		return $("#uma_frame_action").height() * 0.98;
 	});
 	$('#uma_iframe').css('width', function() {
-		return $("#uma_frame_action").width() * 0.9;
+		return $("#uma_frame_action").width() * 0.95;
 	});
 });
 $(document).on('click', '#uma_back', function() {
