@@ -3948,6 +3948,7 @@ $(document).on('click', '#share_command', function() {
 		success: function(data){
 			$("#uma_resources").html(data);
 			$(".nosh_tooltip").tooltip();
+			$('#uma_iframe').hide();
 			$('#uma_dialog').dialog('option', 'title', "Registered Resources");
 			$("#uma_dialog").dialog('open');
 		}
@@ -3961,5 +3962,10 @@ $(document).on('click', '.edit_user_access', function() {
 	console.log(url);
 	$("#uma_resources").hide();
 	$('#uma_iframe').attr('src', url);
+});
+$(document).on('click', '#uma_back', function() {
+	$('#uma_iframe').hide();
+	$('#uma_iframe').attr('src', '');
+	$("#uma_resources").show();
 });
 
