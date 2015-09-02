@@ -3955,12 +3955,6 @@ $(document).on('click', '#share_command', function() {
 				title: 'Registered Resources',
 				position: { my: 'left top', at: 'left top', of: '#maincontent' }
 			});
-			$('#uma_iframe').css('height', function() {
-				return $("#uma_frame_action").height() * 0.8;
-			});
-			$('#uma_iframe').css('width', function() {
-				return $("#uma_frame_action").width() * 0.9;
-			});
 			$("#uma_dialog").dialog('open');
 		}
 	});
@@ -3974,6 +3968,12 @@ $(document).on('click', '.edit_user_access', function() {
 	$("#uma_resources").hide();
 	$('#uma_iframe').attr('src', url);
 	$('#uma_frame_action').show();
+	$('#uma_iframe').css('height', function() {
+		return $("#uma_frame_action").height() * 0.8;
+	});
+	$('#uma_iframe').css('width', function() {
+		return $("#uma_frame_action").width() * 0.9;
+	});
 });
 $(document).on('click', '#uma_back', function() {
 	$('#uma_frame_action').hide();
