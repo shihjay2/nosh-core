@@ -9229,4 +9229,39 @@ class BaseController extends Controller {
 		$response = $oidc->introspect($token);
 		return $response;
 	}
+	
+	protected function syncuser($token)
+	{
+		$url = 'https://noshchartingsystem.com/nosh-sso/syncuser?token=' . $token;
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+		$output = curl_exec($ch);
+		$result = json_decode($output, true);
+		if (isset($result['error'])) {
+			$return = false;
+		} else {
+			$query = DB::connection('oic')->table('users')->where('username', '=', $result['users']['username'])->first();
+			if ($query) {
+				DB::connection('oic')->table('users')->where('username', '=', $result['users']['username'])->update($result['users']);
+			} else {
+				DB::connection('oic')->table('users')->insert($result['users']);
+				$data = array(
+					'username' => $result['users']['username'],
+					'authority' => 'ROLE_USER'
+				);
+				DB::connection('oic')->table('authorities')->insert($data);
+			}
+			$query1 = DB::connection('oic')->table('user_info')->where('preferred_username', '=', $result['user_info']['preferred_username'])->first();
+			if ($query1) {
+				unset($result['user_info']['id']);
+				DB::connection('oic')->table('user_info')->where('id', '=', $query1->id)->update($result['user_info']);
+			} else {
+				DB::connection('oic')->table('user_info')->insert($result['user_info']);
+			}
+		}
+		return $return;
+	}
 }

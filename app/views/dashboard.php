@@ -295,7 +295,7 @@
 	<button type="button" id="dashboard_add_practice" class="nosh_button_add">Add Practice</button>
 	<button type="button" id="dashboard_delete_practice" class="nosh_button_delete">Remove Practice</button>
 	<br><br>
-	<a href="<?php $url = str_replace('/nosh', '/uma-server-webapp/manage/admin/clients', URL::to('/')); ?>" target="_blank">Manage all clients connected to your NOSH</a>
+	<a href="<?php $url = str_replace('/nosh', '/uma-server-webapp/manage/admin/clients', URL::to('/')); echo $url; ?>" target="_blank">Manage all clients connected to your NOSH</a>
 </div>
 <div id="add_practice_dialog" title="Add a Practice">
 	<form id="add_practice_form" class="pure-form pure-form-stacked">

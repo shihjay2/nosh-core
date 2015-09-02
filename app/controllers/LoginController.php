@@ -186,6 +186,7 @@ class LoginController extends BaseController {
 		}
 		if ($user) {
 			Auth::login($user);
+			$this->syncuser($access_token);
 			$practice = Practiceinfo::find($user->practice_id);
 			Session::put('user_id', $user->id);
 			Session::put('group_id', $user->group_id);
@@ -279,6 +280,7 @@ class LoginController extends BaseController {
 					$practice_id = DB::table('practiceinfo')->insertGetId($practice_data);
 					$this->audit('Add');
 				} else {
+					$this->syncuser($access_token);
 					Session::put('practice_npi_array', implode(',', $practice_npi_array_null));
 					Session::put('firstname', $firstname);
 					Session::put('lastname', $lastname);
@@ -476,6 +478,7 @@ class LoginController extends BaseController {
 			);
 			DB::table('providers')->insert($data1);
 			$this->audit('Add');
+			$this->syncuser(Session::get('oidc_auth_access_token'));
 			$user1 = User::where('id', '=', $id)->first();
 			Auth::login($user1);
 			$practice1 = Practiceinfo::find($user1->practice_id);

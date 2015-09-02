@@ -895,8 +895,8 @@ $(document).ready(function() {
 	$("#add_practice_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
-		height: 350, 
-		width: 400, 
+		height: 500, 
+		width: 800, 
 		modal: true,
 		draggable: false,
 		resizable: false,
@@ -963,21 +963,6 @@ $(document).ready(function() {
 						$.jGrowl("Please complete the form");
 					}
 				}
-			},
-			'Test': function() {
-				var data = '';
-				$.ajax({
-					type: "POST",
-					headers: {'Accept':'application/json','Content-Type':'application/json'},
-					beforeSend: '',
-					data: JSON.stringify(data),
-					crossDomain: true,
-					url: "http://162.243.111.18/uma-server-webapp/api/clients",
-					dataType: 'json',
-					success: function(data){
-						console.log(data);
-					}
-				});
 			},
 			Cancel: function() {
 				$("#add_practice_form").clearForm();
