@@ -3949,7 +3949,18 @@ $(document).on('click', '#share_command', function() {
 			$("#uma_resources").html(data);
 			$(".nosh_tooltip").tooltip();
 			$('#uma_frame_action').hide();
-			$('#uma_dialog').dialog('option', 'title', "Registered Resources");
+			$('#uma_dialog').dialog('option', {
+				height: $("#maincontent").height(),
+				width: $("#maincontent").width(),
+				title: 'Registered Resources',
+				position: { my: 'left top', at: 'left top', of: '#maincontent' }
+			});
+			$('#uma_iframe').css('height', function() {
+				$("#uma_dialog").height() * 0.8;
+			});
+			$('#uma_iframe').css('width', function() {
+				$("#uma_dialog").width() * 0.9;
+			});
 			$("#uma_dialog").dialog('open');
 		}
 	});
