@@ -188,8 +188,7 @@
 		<div id="uma_dialog" title="">
 			<p></p>
 			<div id="uma_resources"></div>
-			<div id="uma_frame_action"><a href="#" id="uma_back">Back to Resources List</a></div>
-			<iframe id="uma_iframe" src="" style="height:450; width:630;"></iframe>
+			<div id="uma_frame_action"><a href="#" id="uma_back">Back to Resources List</a><br><iframe id="uma_iframe" src="" style="height:450; width:630;"></iframe></div>
 			<form id="uma_form" class="pure-form pure-form-stacked">
 			</form>
 		</div>
