@@ -3956,10 +3956,10 @@ $(document).on('click', '#share_command', function() {
 				position: { my: 'left top', at: 'left top', of: '#maincontent' }
 			});
 			$('#uma_iframe').css('height', function() {
-				$("#uma_dialog").height() * 0.8;
+				return $("#uma_dialog").height() * 0.8;
 			});
 			$('#uma_iframe').css('width', function() {
-				$("#uma_dialog").width() * 0.9;
+				return $("#uma_dialog").width() * 0.9;
 			});
 			$("#uma_dialog").dialog('open');
 		}
