@@ -1996,7 +1996,7 @@ $(document).ready(function() {
 		bgiframe: true, 
 		autoOpen: false, 
 		height: 500, 
-		width: 650, 
+		width: 800, 
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
