@@ -187,8 +187,9 @@
 		</div>
 		<div id="uma_dialog" title="">
 			<p></p>
+			<div id="uma_resources"></div>
+			<iframe id="uma_iframe" src=""></iframe>
 			<form id="uma_form" class="pure-form pure-form-stacked">
-			
 			</form>
 		</div>
 		<div id="allpage" class="allpage">

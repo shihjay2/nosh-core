@@ -3942,8 +3942,22 @@ $(document).on('click', '.timeline_event', function() {
 });
 $(document).on('click', '#share_command', function() {
 	console.log('You clicked on share command');
+	$.ajax({
+		type: "POST",
+		url: "ajaxcommon/get-patient-resources",
+		success: function(data){
+			$("#uma_resources").html(data);
+			$(".nosh_tooltip").tooltip();
+		}
+	});
 });
 $(document).on('click', '#logout_command', function() {
 	window.location = noshdata.logout_url;
+});
+$(document).on('click', '.edit_user_access', function() {
+	var url = $(this).attr('nosh-url');
+	console.log(url);
+	$("#uma_resources").hide();
+	$('#uma_iframe').attr('src', url);
 });
 

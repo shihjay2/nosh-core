@@ -1080,4 +1080,59 @@ class AjaxCommonController extends BaseController {
 			}
 		}
 	}
+	
+	public function postGetPatientResources()
+	{
+		$query = DB::table('uma')->get();
+		$html = 'No resources registered.';
+		if ($query) {
+			$html = '<table class="pure-table"><thead><tr><th>Resource</th><th>Action</th></tr></thead>';
+			foreach ($query as $row) {
+				$name = end(explode('/', $row->scope));
+				if ($name == 'Patient') {
+					$title = 'This resource is your demographic information.';
+					$resource = 'Demographics';
+				}
+				if ($name == 'Medication') {
+					$title = 'This resource is the RXNorm medication database.  This is NOT your active medication list.';
+					$resource = 'Medication Database';
+				}
+				if ($name == 'Practitioner') {
+					$title = 'This resource is a list of your participating medical providers.';
+					$resource = 'Providers';
+				}
+				if ($name == 'Condition') {
+					$title = 'This resource is a list of your medical history, active problem list, surgical history, and encounter diagnoses.';
+					$resource = 'Conditions';
+				}
+				if ($name == 'MedicationStatement') {
+					$title = 'This resource is a list of your active medications.';
+					$resource = 'Medications';
+				}
+				if ($name == 'AllergyIntolerance') {
+					$title = 'This resource is a list of your allergies.';
+					$resource = 'Allergies';
+				}
+				if ($name == 'Immunization') {
+					$title = 'This resource is a list of your immunizations given.';
+					$resource = 'Immunizations';
+				}
+				if ($name == 'Encounter') {
+					$title = 'This resource is a list of your medical encounters.';
+					$resource = 'Encounters';
+				}
+				if ($name == 'FamilyHistory') {
+					$title = 'This resource is your family medical history.';
+					$resource = 'Family History';
+				}
+				if ($name == 'Binary') {
+					$title = 'This resource is your list of associated medical documents in PDF format';
+					$resource = 'Documents';
+				}
+				$html .= '<tr><td><span class="nosh_tooltip" title="' . $title . '">' . $resource . '</span></td><td><i class="fa fa-pencil-square-o fa-fw fa-2x edit_user_access" style="vertical-align:middle;padding:2px" nosh-url="' . $row->user_access_policy_uri . '"></i></td></tr>';
+			}
+			$html .= '</table>';
+		}
+		echo $html;
+	}
 }
