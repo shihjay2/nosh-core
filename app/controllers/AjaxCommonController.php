@@ -1149,7 +1149,8 @@ class AjaxCommonController extends BaseController {
 					foreach ($query1 as $row1) {
 						$query2 = DB::connection('oic')->table('claim')->where('name', '=', 'sub')->where('id', '=', $row1->claim_id)->first();
 						if ($query2) {
-							$query3 = DB::connection('oic')->table('user_info')->where('sub', '=', $query2->claim_value)->first();
+							$sub = trim($query2->claim_value, '"');
+							$query3 = DB::connection('oic')->table('user_info')->where('sub', '=', $sub)->first();
 							$html .= '<tr><td>' . $query3->given_name . ' ' . $query3->family_name . ' (' . $query3->email . ')</td><td><i class="fa fa-times fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Remove permission for this user" nosh-sub="' . $query3->sub . '"></i></td></tr>';
 						}
 					}
