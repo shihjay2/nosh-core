@@ -9290,6 +9290,7 @@ class BaseController extends Controller {
 			foreach ($query as $row) {
 				$html .= '<label for="uma_scope_' . $i . '" class="pure-checkbox">';
 				$html .= Form::checkbox('scopes', $row->scope, true, ['id' => 'uma_scope_' . $i]);
+				$html .= $row->scope;
 				$html .= '</label>';
 				$i++;
 			}
@@ -9301,11 +9302,10 @@ class BaseController extends Controller {
 	{
 		$query = DB::connection('oic')->table('policy')->where('resource_set_id', '=', $resource_set_id)->get();
 		$user_data = $this->uma_users();
-		$html = '<form id="uma_form" class="pure-form pure-form-stacked"><input name="resource_set_id" id="uma_resource_set_id" type="hidden" value="' . $resource_set_id . '"/><label for="uma_email">Add User with the following scopes for this resource:</label>';
+		$html = '<div class="pure-g"><div class="pure-u-2-3"><form id="uma_form" class="pure-form pure-form-stacked"><input name="resource_set_id" id="uma_resource_set_id" type="hidden" value="' . $resource_set_id . '"/><label for="uma_email">Add User with the following scopes for this resource:</label>';
 		$html .= Form::select('email', $user_data, null, array('id'=>'uma_email','style'=>'width:300px','class'=>'text'));
 		$html .= $this->uma_scopes($resource_set_id);
-		$html .= '</form>';
-		$html .= '<i id="add_uma_policy_user" class="fa fa-plus fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add permitted user to this resource"></i><br>';
+		$html .= '</form></div><div class="pure-u-1-3"><i id="add_uma_policy_user" class="fa fa-plus fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add permitted user to this resource"></i></div></div><br>';
 		if ($query) {
 			$html .= '<table class="pure-table pure-table-horizontal"><thead><tr><th>User</th><th>Action</th></tr></thead>';
 			foreach ($query as $row) {
