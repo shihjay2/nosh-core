@@ -3978,6 +3978,7 @@ $(document).on('click', '.view_uma_users', function() {
 		success: function(data){
 			$("#uma_users").html(data);
 			$(".nosh_tooltip").tooltip();
+		}
 	});
 	$('.uma_table').css('background-color','white');
 	$(this).closest('tr').css('background-color','yellow');
