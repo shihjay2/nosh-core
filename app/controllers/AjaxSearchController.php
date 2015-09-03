@@ -3704,4 +3704,17 @@ class AjaxSearchController extends BaseController {
 		$arr['json'] = $json;
 		echo json_encode($arr);
 	}
+	
+	public function postUmaUsers()
+	{
+		$query = DB::table('users')->where('id', '=', Session::get('user_id'))->first();
+		$query1 = DB::connection('oic')->table('user_info')->where('sub', '!=', $query->uid)->get();
+		$return = array();
+		foreach ($query1 as $row1) {
+			$return[] = array(
+				$row1->email => $row->given_name . " " . $row->family_name
+			);
+		}
+		echo json_encode($return);
+	}
 }

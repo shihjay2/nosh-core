@@ -1086,7 +1086,7 @@ class AjaxCommonController extends BaseController {
 		$query = DB::table('uma')->get();
 		$html = 'No resources registered.';
 		if ($query) {
-			$html = '<table class="pure-table"><thead><tr><th>Resource</th><th>Action</th></tr></thead>';
+			$html = '<table class="pure-table pure-table-horizontal"><thead><tr><th>Resource</th><th>Action</th></tr></thead>';
 			foreach ($query as $row) {
 				$name_arr = explode('/', $row->scope);
 				$name = end($name_arr);
@@ -1130,10 +1130,39 @@ class AjaxCommonController extends BaseController {
 					$title = 'This resource is your list of associated medical documents in PDF format';
 					$resource = 'Documents';
 				}
-				$html .= '<tr><td><span class="nosh_tooltip" title="' . $title . '">' . $resource . '</span></td><td><i class="fa fa-pencil-square-o fa-fw fa-2x edit_user_access nosh_tooltip" style="vertical-align:middle;padding:2px" title="Edit Policy" nosh-url="' . $row->user_access_policy_uri . '"></i></td></tr>';
+				$html .= '<tr class="uma_table1"><td><span class="nosh_tooltip" title="' . $title . '">' . $resource . '</span></td><td><i class="fa fa-user fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="View Permitted Users" nosh-id="' . $row->resource_set_id . '"></i><i class="fa fa-pencil-square-o fa-fw fa-2x edit_user_access nosh_tooltip" style="vertical-align:middle;padding:2px" title="Edit Policy" nosh-url="' . $row->user_access_policy_uri . '"></i></td></tr>';
 			}
 			$html .= '</table>';
 		}
 		echo $html;
+	}
+	
+	public function postGetPatientResourceUsers($resource_set_id)
+	{
+		$query = DB::connection('oic')->table('policy')->where('resource_set_id', '=', $resource_set_id)->get();
+		$html = '<i id="add_uma_policy_user" class="fa fa-plus fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add permitted user to this resource"></i><br>';
+		if ($query) {
+			$html .= '<table class="pure-table pure-table-horizontal"><thead><tr><th>User</th><th>Action</th></tr></thead>';
+			foreach ($query as $row) {
+				$query1 = DB::connection('oic')->table('claim_to_policy')->where('policy_id', '=', $row->id)->get();
+				if ($query1) {
+					foreach ($query1 as $row1) {
+						$query2 = DB::connection('oic')->table('claim')->where('name', '=', 'sub')->where('id', '=', $row1->claim_id)->first();
+						if ($query2) {
+							$query3 = DB::connection('oic')->table('user_info')->where('sub', '=', $query2->claim_value)->first();
+							$html .= '<tr><td>' . $query3->given_name . ' ' . $query->family_name . ' (' . $query->email . ')</td><td><i class="fa fa-times fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Remove permission for this user" nosh-sub="' . $query3->sub . '"></i></td></tr>';
+						}
+					}
+				}
+			}
+			$html .= '</table>';
+		}
+		echo $html;
+	}
+	
+	public function postEditPolicy()
+	{
+		$result = $this->uma_policy(Input::get('resource_set_id'),Input::get('email'),Input::get('scopes'),Input::get('policy_id'));
+		echo $result;
 	}
 }

@@ -9264,4 +9264,59 @@ class BaseController extends Controller {
 		}
 		return $return;
 	}
+	
+	protected function uma_policy($resource_set_id, $email, $scopes, $policy_id='')
+	{
+		$query = DB::connection('oic')->table('user_info')->where('email', '=', $email)->first();
+		if ($query) {
+			$claim_ids = array();
+			$data1a = array(
+				'name' => 'email',
+				'claim_value' => $email
+			);
+			$claim_ids[] = DB::connection('oic')->table('claim')->insertGetId($data1a);
+			if ($query->email_verfied == '1') {
+				$email_verfied = true;
+			} else {
+				$email_verified = false;
+			}
+			$data1b = array(
+				'name' => 'email_verified',
+				'claim_value' => $email_verified
+			);
+			$claim_ids[] = DB::connection('oic')->table('claim')->insertGetId($data1b);
+			$data1c = array(
+				'name' => 'sub',
+				'claim_value' => $query->sub
+			);
+			$claim_ids[] = DB::connection('oic')->table('claim')->insertGetId($data1c);
+			$query1 = DB::connection('oic')->table('poilcy')->where('id', '=', $policy_id)->first();
+			if ($policy_id != '' && $query1) {
+				DB::connection('oic')->table('policy_scope')->where('owner_id', '=', $policy_id)->delete();
+				DB::connection('oic')->table('claim_to_policy')->where('policy_id', '=', $policy_id)->delete();
+				$return = 'Updated policy';
+			} else {
+				$data2['resource_set_id'] = $resource_set_id;
+				$policy_id = DB::connection('oic')->table('policy')->insertGetId($data2);
+				$return = 'Added policy';
+			}
+			foreach($scopes as $scope) {
+				$data3 = array(
+					'owner_id' => $policy_id,
+					'scope' => $scope
+				);
+				DB::connection('oic')->table('policy_scope')->insert($data3);
+			}
+			foreach($claim_ids as $claim_id) {
+				$data4 = array(
+					'policy_id' => $policy_id,
+					'claim_id' => $claim_id
+				);
+				DB::connection('oic')->table('claim_to_policy')->insert($data4);
+			}
+		} else {
+			$return = 'Email address or user is not registered!';
+		}
+		return $return;
+	}
 }

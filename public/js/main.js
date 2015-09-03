@@ -1999,10 +1999,6 @@ $(document).ready(function() {
 		width: 800, 
 		draggable: false,
 		resizable: false,
-		open: function(event, ui) {
-		},
-		close: function(event, ui) {
-		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#uma_dialog_frame").dialog({ 
@@ -2012,9 +2008,8 @@ $(document).ready(function() {
 		width: 800, 
 		draggable: false,
 		resizable: false,
-		open: function(event, ui) {
-		},
 		close: function(event, ui) {
+			$('#uma_iframe').attr('src', '');
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
@@ -3974,6 +3969,18 @@ $(document).on('click', '#share_command', function() {
 });
 $(document).on('click', '#logout_command', function() {
 	window.location = noshdata.logout_url;
+});
+$(document).on('click', '.view_uma_users', function() {
+	var id = $(this).attr('nosh-id');
+	$.ajax({
+		type: "POST",
+		url: "ajaxcommon/get-patient-resource-users/" + id,
+		success: function(data){
+			$("#uma_users").html(data);
+			$(".nosh_tooltip").tooltip();
+	});
+	$('.uma_table').css('background-color','white');
+	$(this).closest('tr').css('background-color','yellow');
 });
 $(document).on('click', '.edit_user_access', function() {
 	var url = $(this).attr('nosh-url');

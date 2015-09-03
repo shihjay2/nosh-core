@@ -186,9 +186,10 @@
 			<div id="swipe"></div>
 		</div>
 		<div id="uma_dialog" title="">
-			<p></p>
-			<div id="uma_resources"></div>
-			<div id="uma_frame_action"><a href="#" id="uma_back">Back to Resources List</a><br><iframe id="uma_iframe" src="" style="height:400px; width:700px;"></iframe></div>
+			<div class="pure-g">
+				<div class="pure-u-1-3" id="uma_resources"></div>
+				<div class="pure-u-2-3" id="uma_users"></div>
+			</div>
 			<form id="uma_form" class="pure-form pure-form-stacked">
 			</form>
 		</div>
