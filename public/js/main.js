@@ -3993,6 +3993,33 @@ $(document).on('click', '.edit_user_access', function() {
 	});
 	$("#uma_dialog_frame").dialog('open');
 });
+$(document).on('click', '#add_uma_policy_user', function() {
+	var bValid = true;
+	$("#uma_form").find(".text").each(function() {
+		var input_id = $(this).attr('id');
+		var id1 = $("#" + input_id); 
+		var text = $("label[for='" + input_id + "']").html();
+		bValid = bValid && checkEmpty(id1, text);
+	});
+	if (bValid) {
+		var uma_str = $("#uma_form").serialize();
+		if(uma_str){
+			$.ajax({
+				type: "POST",
+				url: "ajaxcommon/edit-policy",
+				data: uma_str,
+				dataType: 'json',
+				success: function(data){
+					$.jGrowl(data.message);
+					$("#uma_users").html(data.html);
+					$(".nosh_tooltip").tooltip();
+				}
+			});
+		} else {
+			$.jGrowl("Please complete the form");
+		}
+	}
+});
 $(document).on('click', '.remove_uma_user', function() {
 	var sub = $(this).attr('nosh-sub');
 	var resource_set_id = $(this).attr('nosh-resource-set-id');
@@ -4009,15 +4036,5 @@ $(document).on('click', '.remove_uma_user', function() {
 			}
 		});
 	}
-	
-	$.ajax({
-		type: "POST",
-		url: "ajaxcommon/get-patient-resource-users/" + id,
-		success: function(data){
-			$("#uma_users").html(data);
-			$(".nosh_tooltip").tooltip();
-		}
-	});
-	
 });
 

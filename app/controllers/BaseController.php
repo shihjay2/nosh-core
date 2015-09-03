@@ -9265,10 +9265,47 @@ class BaseController extends Controller {
 		return $return;
 	}
 	
+	protected function uma_users()
+	{
+		$query = DB::table('users')->where('id', '=', Session::get('user_id'))->first();
+		$query1 = DB::connection('oic')->table('user_info')->where('sub', '!=', $query->uid)->get();
+		$return = array();
+		$return[] = array('' => 'Select User to Add...');
+		if ($query1) {
+			foreach ($query1 as $row1) {
+				$return[] = array(
+					$row1->email => $row->given_name . " " . $row->family_name
+				);
+			}
+		}
+		return $return;
+	}
+	
+	protected function uma_scopes($resource_set_id)
+	{
+		$query = DB::table('uma')->where('resource_set_id', '=', $resource_set_id)->get();
+		$html = '';
+		$i=0;
+		if ($query) {
+			foreach ($query as $row) {
+				$html .= '<label for="uma_scope_' . $i . '" class="pure-checkbox">';
+				$html .= Form::checkbox('scopes', $row->scope, true, ['id' => 'uma_scope_' . $i]);
+				$html .= '</label>';
+				$i++;
+			}
+		}
+		return $html;
+	}
+	
 	protected function get_uma_policy($resource_set_id)
 	{
 		$query = DB::connection('oic')->table('policy')->where('resource_set_id', '=', $resource_set_id)->get();
-		$html = '<i id="add_uma_policy_user" class="fa fa-plus fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add permitted user to this resource"></i><br>';
+		$user_data = $this->uma_users();
+		$html = '<form id="uma_form" class="pure-form pure-form-stacked"><input name="resource_set_id" id="uma_resource_set_id" type="hidden" value="' . $resource_set_id . '"/><label for="uma_email">Add User with the following scopes for this resource:</label>';
+		$html .= Form::select('email', $user_data, null, array('id'=>'uma_email','style'=>'width:300px','class'=>'text'));
+		$html .= $this->uma_scopes();
+		$html .= '</form>';
+		$html .= '<i id="add_uma_policy_user" class="fa fa-plus fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add permitted user to this resource"></i><br>';
 		if ($query) {
 			$html .= '<table class="pure-table pure-table-horizontal"><thead><tr><th>User</th><th>Action</th></tr></thead>';
 			foreach ($query as $row) {
