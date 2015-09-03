@@ -9265,6 +9265,30 @@ class BaseController extends Controller {
 		return $return;
 	}
 	
+	protected function get_uma_policy($resource_set_id)
+	{
+		$query = DB::connection('oic')->table('policy')->where('resource_set_id', '=', $resource_set_id)->get();
+		$html = '<i id="add_uma_policy_user" class="fa fa-plus fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add permitted user to this resource"></i><br>';
+		if ($query) {
+			$html .= '<table class="pure-table pure-table-horizontal"><thead><tr><th>User</th><th>Action</th></tr></thead>';
+			foreach ($query as $row) {
+				$query1 = DB::connection('oic')->table('claim_to_policy')->where('policy_id', '=', $row->id)->get();
+				if ($query1) {
+					foreach ($query1 as $row1) {
+						$query2 = DB::connection('oic')->table('claim')->where('name', '=', 'sub')->where('id', '=', $row1->claim_id)->first();
+						if ($query2) {
+							$sub = trim($query2->claim_value, '"');
+							$query3 = DB::connection('oic')->table('user_info')->where('sub', '=', $sub)->first();
+							$html .= '<tr><td>' . $query3->given_name . ' ' . $query3->family_name . ' (' . $query3->email . ')</td><td><i class="fa fa-times fa-fw fa-2x remove_uma_user nosh_tooltip" style="vertical-align:middle;padding:2px" title="Remove permission for this user" nosh-sub="' . $query3->sub . '" nosh-resource-set-id="' . $resource_set_id . '" nosh-policy-id="' . $row->id . '" nosh-name="' . $query3->given_name . ' ' . $query3->family_name . ' (' . $query3->email . ')"></i></td></tr>';
+						}
+					}
+				}
+			}
+			$html .= '</table>';
+		}
+		return $html;
+	}
+	
 	protected function uma_policy($resource_set_id, $email, $scopes, $policy_id='')
 	{
 		$query = DB::connection('oic')->table('user_info')->where('email', '=', $email)->first();
@@ -9290,7 +9314,7 @@ class BaseController extends Controller {
 				'claim_value' => $query->sub
 			);
 			$claim_ids[] = DB::connection('oic')->table('claim')->insertGetId($data1c);
-			$query1 = DB::connection('oic')->table('poilcy')->where('id', '=', $policy_id)->first();
+			$query1 = DB::connection('oic')->table('policy')->where('id', '=', $policy_id)->first();
 			if ($policy_id != '' && $query1) {
 				DB::connection('oic')->table('policy_scope')->where('owner_id', '=', $policy_id)->delete();
 				DB::connection('oic')->table('claim_to_policy')->where('policy_id', '=', $policy_id)->delete();

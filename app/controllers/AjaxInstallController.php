@@ -66,7 +66,9 @@ class AjaxInstallController extends BaseController {
 				$data_edit1 = array(
 					'email' => Input::get('email'),
 					'preferred_username' => Input::get('pt_username'),
-					'email_verified' => '1'
+					'email_verified' => '1',
+					'given_name' => Input::get('firstname'),
+					'family_name' => Input::get('lastname')
 				);
 				DB::connection('oic')->table('users')->insert($data_edit);
 				$id = DB::connection('oic')->table('user_info')->insertGetId($data_edit1);

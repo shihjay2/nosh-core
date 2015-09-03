@@ -3980,7 +3980,7 @@ $(document).on('click', '.view_uma_users', function() {
 			$(".nosh_tooltip").tooltip();
 		}
 	});
-	$('.uma_table').css('background-color','white');
+	$('.uma_table1').css('background-color','white');
 	$(this).closest('tr').css('background-color','yellow');
 });
 $(document).on('click', '.edit_user_access', function() {
@@ -3992,5 +3992,32 @@ $(document).on('click', '.edit_user_access', function() {
 		position: { my: 'left top', at: 'left top', of: '#maincontent' }
 	});
 	$("#uma_dialog_frame").dialog('open');
+});
+$(document).on('click', '.remove_uma_user', function() {
+	var sub = $(this).attr('nosh-sub');
+	var resource_set_id = $(this).attr('nosh-resource-set-id');
+	var policy_id = $(this).attr('nosh-policy-id');
+	var name = $(this).attr('nosh-name');
+	if(confirm('You will remove ' + name + ' from having permission to view this resource.  Proceed?')){ 
+		$.ajax({
+			type: "POST",
+			url: "ajaxcommon/remove-patient-resource-user",
+			data: "sub=" + sub + "&resource_set_id=" + resource_set_id + "&policy_id=" + policy_id,
+			success: function(data){
+				$("#uma_users").html(data);
+				$(".nosh_tooltip").tooltip();
+			}
+		});
+	}
+	
+	$.ajax({
+		type: "POST",
+		url: "ajaxcommon/get-patient-resource-users/" + id,
+		success: function(data){
+			$("#uma_users").html(data);
+			$(".nosh_tooltip").tooltip();
+		}
+	});
+	
 });
 

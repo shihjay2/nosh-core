@@ -1139,31 +1139,27 @@ class AjaxCommonController extends BaseController {
 	
 	public function postGetPatientResourceUsers($resource_set_id)
 	{
-		$query = DB::connection('oic')->table('policy')->where('resource_set_id', '=', $resource_set_id)->get();
-		$html = '<i id="add_uma_policy_user" class="fa fa-plus fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add permitted user to this resource"></i><br>';
-		if ($query) {
-			$html .= '<table class="pure-table pure-table-horizontal"><thead><tr><th>User</th><th>Action</th></tr></thead>';
-			foreach ($query as $row) {
-				$query1 = DB::connection('oic')->table('claim_to_policy')->where('policy_id', '=', $row->id)->get();
-				if ($query1) {
-					foreach ($query1 as $row1) {
-						$query2 = DB::connection('oic')->table('claim')->where('name', '=', 'sub')->where('id', '=', $row1->claim_id)->first();
-						if ($query2) {
-							$sub = trim($query2->claim_value, '"');
-							$query3 = DB::connection('oic')->table('user_info')->where('sub', '=', $sub)->first();
-							$html .= '<tr><td>' . $query3->given_name . ' ' . $query3->family_name . ' (' . $query3->email . ')</td><td><i class="fa fa-times fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Remove permission for this user" nosh-sub="' . $query3->sub . '"></i></td></tr>';
-						}
-					}
-				}
-			}
-			$html .= '</table>';
+		$result = $this->get_uma_policy($resource_set_id);
+		echo $result;
+	}
+	
+	public function postRemovePatientResourceUser()
+	{
+		$query = DB::connection('oic')->table('claim_to_policy')->where('policy_id', '=', Input::get('policy_id'))->get();
+		foreach ($query as $row) {
+			DB::connection('oic')->table('claim')->where('id', '=', $row->claim_id)->delete();
+			DB::connection('oic')->table('claim_to_policy')->where('policy_id', '=', Input::get('policy_id'))->where('claim_id', '=', $row->claim_id)->delete();
 		}
-		echo $html;
+		DB::connection('oic')->table('policy')->where('id', '=', Input::get('policy_id'))->delete();
+		DB::connection('oic')->table('policy_scope')->where('owner_id', '=', Input::get('policy_id'))->delete();
+		$result = $this->get_uma_policy(Input::get('resource_set_id'));
+		echo $result;
 	}
 	
 	public function postEditPolicy()
 	{
-		$result = $this->uma_policy(Input::get('resource_set_id'),Input::get('email'),Input::get('scopes'),Input::get('policy_id'));
-		echo $result;
+		$result['message'] = $this->uma_policy(Input::get('resource_set_id'),Input::get('email'),Input::get('scopes'),Input::get('policy_id'));
+		$result['html'] = $this->get_uma_policy(Input::get('resource_set_id'));
+		echo json_encode($result);
 	}
 }
