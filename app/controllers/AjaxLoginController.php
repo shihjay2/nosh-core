@@ -299,7 +299,7 @@ class AjaxLoginController extends BaseController {
 	{
 		$arr['response'] = 'y';
 		$arr['message'] = "Credentials transferred!";
-		$url = 'http://162.243.111.18/nosh-sso/noshadduser';
+		$url = 'https://noshchartingsystem.com/nosh-sso/noshadduser';
 		$user = DB::table('users')->where('id', '=', Session::get('user_id'))->first();
 		if (Input::get('username') != '') {
 			$username = Input::get('username');

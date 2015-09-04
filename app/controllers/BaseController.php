@@ -9300,7 +9300,7 @@ class BaseController extends Controller {
 	{
 		$query = DB::connection('oic')->table('policy')->where('resource_set_id', '=', $resource_set_id)->get();
 		$user_data = $this->uma_users();
-		$html = '<form id="uma_form" class="pure-form pure-form-stacked"><input name="resource_set_id" id="uma_resource_set_id" type="hidden" value="' . $resource_set_id . '"/><label for="uma_email">Add User with the following scopes for this resource:</label>';
+		$html = '<form id="uma_form" class="pure-form pure-form-stacked"><input name="resource_set_id" id="uma_resource_set_id" type="hidden" value="' . $resource_set_id . '"/><label for="uma_email">Add a user with the following scopes for this resource:</label>';
 		$html .= Form::select('email', $user_data, null, array('id'=>'uma_email','style'=>'width:300px','class'=>'text'));
 		$html .= $this->uma_scopes($resource_set_id);
 		$html .= '</form><i id="add_uma_policy_user" class="fa fa-plus fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add permitted user to this resource"></i>Add User<br>';

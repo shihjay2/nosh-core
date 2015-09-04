@@ -1130,7 +1130,7 @@ class AjaxCommonController extends BaseController {
 					$title = 'This resource is your list of associated medical documents in PDF format';
 					$resource = 'Documents';
 				}
-				$html .= '<tr class="uma_table1"><td><span class="nosh_tooltip" title="' . $title . '">' . $resource . '</span></td><td><i class="fa fa-user fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="View Permitted Users" nosh-id="' . $row->resource_set_id . '"></i><i class="fa fa-pencil-square-o fa-fw fa-2x edit_user_access nosh_tooltip" style="vertical-align:middle;padding:2px" title="Edit Policy" nosh-url="' . $row->user_access_policy_uri . '"></i></td></tr>';
+				$html .= '<tr class="uma_table1"><td><span class="nosh_tooltip" title="' . $title . '">' . $resource . '</span></td><td><i class="fa fa-pencil-square-o fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add/Edit Permitted Users" nosh-id="' . $row->resource_set_id . '"></i><i class="fa fa-openid fa-fw fa-2x edit_user_access nosh_tooltip" style="vertical-align:middle;padding:2px" title="Edit Policy in the pNOSH UMA Server Webapp" nosh-url="' . $row->user_access_policy_uri . '"></i></td></tr>';
 			}
 			$html .= '</table>';
 		}

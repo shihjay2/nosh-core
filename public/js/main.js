@@ -4037,4 +4037,12 @@ $(document).on('click', '.remove_uma_user', function() {
 		});
 	}
 });
+$(document).on('click', ".dashboard_manage_practice", function() {
+	$('#manage_practice_dialog').dialog('option', {
+		height: $("#maincontent").height(),
+		width: $("#maincontent").width(),
+		position: { my: 'left top', at: 'left top', of: '#maincontent' }
+	});
+	$("#manage_practice_dialog").dialog('open');
+});
 

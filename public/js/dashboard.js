@@ -883,14 +883,6 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#dashboard_manage_practice").click(function() {
-		$('#manage_practice_dialog').dialog('option', {
-			height: $("#maincontent").height(),
-			width: $("#maincontent").width(),
-			position: { my: 'left top', at: 'left top', of: '#maincontent' }
-		});
-		$("#manage_practice_dialog").dialog('open');
-	});
 	$("#add_practice_state").addOption(states, false);
 	$("#add_practice_dialog").dialog({ 
 		bgiframe: true, 

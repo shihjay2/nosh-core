@@ -53,7 +53,7 @@
 								<br><i class="fa fa-cogs fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" class="dashboard_setup">Practice Setup</a>
 							<?php }?>
 							<?php if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh') {?>
-								<br><i class="fa fa-exchange fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="hieofone_sso">Transfer your credentials to HIEofOne</a>
+								<br><i class="fa fa-exchange fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="hieofone_sso">Transfer your credentials to mdNOSH - a Single-Sign-On Solution for Medical Providers</a>
 							<?php }?>
 						<?php }?>
 						<?php if(Session::get('group_id') == '3') {?>
@@ -124,7 +124,7 @@
 							<br><i class="fa fa-line-chart fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="View growth charts."> <a href="#" id="dashboard_growth_chart">View growth charts.</a></span>
 						<?php }?>
 						<?php if(Session::get('patient_centric') == 'y') {?>
-							<br><i class="fa fa-plus-square fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="Manage practices so that a provider can document their encounters with you.  Mangage apps that are connected to your patient NOSH."> <a href="#" id="dashboard_manage_practice">Your connected practices and apps.</a></span>
+							<br><i class="fa fa-plus-square fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="Manage practices so that a provider can document their encounters with you.  Mangage apps that are connected to your patient NOSH."> <a href="#" class="dashboard_manage_practice">Your connected practices and apps.</a></span>
 						<?php }?>
 						<br><i class="fa fa-key fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="change_password">Change your password.</a>
 					</div>

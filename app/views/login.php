@@ -11,7 +11,7 @@
 				<div id="openid_box" class="pure-g">
 					<div class="pure-u-1">
 						<div id="openid_connect_logo" align="center" style="max-height:100px;">
-							<?php echo HTML::image('images/openid_connect_large.png','OpenID Connect', array('border' => '0', 'height' => '50', 'width' => '50'));?>
+							<i class="fa fa-openid fa-fw fa-4x" style="vertical-align:middle;padding:2px"></i>
 						</div>
 					</div>
 					<div class="pure-u-1">Login with OpenID Connect.</div><div class="pure-u-1"><br><br></div>
