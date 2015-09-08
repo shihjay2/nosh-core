@@ -1177,7 +1177,7 @@ class AjaxCommonController extends BaseController {
 					$resource = 'Documents';
 				}
 				$html .= '<label for="mdnosh_provider_' . $i . '" class="pure-checkbox" style="display:block;margin-left:20px;">';
-				$html .= Form::checkbox('resources', $row->resource_set_id, true, ['id' => 'mdnosh_resource_' . $i, 'style' => 'float:left; margin-left:-20px; margin-right:7px;', 'class' => 'mdnosh_resource_select']);
+				$html .= Form::checkbox('resources[]', $row->resource_set_id, true, ['id' => 'mdnosh_resource_' . $i, 'style' => 'float:left; margin-left:-20px; margin-right:7px;', 'class' => 'mdnosh_resource_select']);
 				$html .= ' ' . $resource;
 				$html .= '</label>';
 				$i++;
