@@ -1111,8 +1111,7 @@ $(document).ready(function() {
 				url: "ajaxsearch/md-nosh",
 				data: str,
 				success: function(data){
-					console.log(data);
-					//$('#send_uma_invite_results').html(data);
+					$('#send_uma_invite_results').html(data);
 				}
 			});
 		} else {
