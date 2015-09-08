@@ -564,6 +564,7 @@ function loadbuttons() {
 	$(".nosh_button_image").button({icons: {primary: "ui-icon-image"}});
 	$(".nosh_button_star").button({icons: {primary: "ui-icon-star"}});
 	$(".nosh_button_script").button({icons: {primary: "ui-icon-script"}});
+	$(".nosh_button_search").button({icons: {primary: "ui-icon-search"}});
 	$(".nosh_button_next").button({text: false, icons: {primary: "ui-icon-seek-next"}});
 	$(".nosh_button_prev").button({text: false, icons: {primary: "ui-icon-seek-prev"}});
 }

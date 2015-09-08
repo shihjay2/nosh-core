@@ -338,7 +338,7 @@
 		<form id="send_uma_invite_form1" class="pure-form">
 			<label for="mdnosh_provider_search_input">Practice Name (for search):</label>
 			<input type="text" id="mdnosh_provider_search_input" name="term" style="width:60%" class="text" required/>
-			<button class="pure-button" id="send_uma_invite_form1_submit"><i class="fa fa-search"></i> Search</button>
+			<button type="button" id="send_uma_invite_form1_submit" class="nosh_button_search">Search</button>
 		</form><br>
 		<div id="send_uma_invite_results"></div>
 	</div>
