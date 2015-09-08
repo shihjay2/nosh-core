@@ -3717,7 +3717,7 @@ class AjaxSearchController extends BaseController {
 		$result = json_decode($output, true);
 		$return = '';
 		if ($result['response'] != 'false') {
-			$return =
+			$return = '';
 			$i = 0;
 			foreach ($result['message'] as $row) { 
 				$return .= '<label for="mdnosh_provider_' . $i . '" class="pure-checkbox" style="display:block;margin-left:20px;">';
