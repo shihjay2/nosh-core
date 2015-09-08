@@ -3704,4 +3704,31 @@ class AjaxSearchController extends BaseController {
 		$arr['json'] = $json;
 		echo json_encode($arr);
 	}
+	
+	public function postMdNosh()
+	{
+		$url = 'https://noshchartingsystem.com/nosh-sso/providersearch?term=' . Input::get('term');
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+		$output = curl_exec($ch);
+		$result = json_decode($output, true);
+		$return = '';
+		if ($result['response'] != 'false') {
+			$return =
+			$i = 0;
+			foreach ($result['message'] as $row) { 
+				$return .= '<label for="mdnosh_provider_' . $i . '" class="pure-checkbox" style="display:block;margin-left:20px;">';
+				$return .= Form::radio('mdnosh_email', $row['email'], false, ['id' => 'mdnosh_email_' . $i, 'style' => 'float:left; margin-left:-20px; margin-right:7px;', 'class' => 'mdnosh_email_select']);
+				$return .= ' <span id="mdnosh_email_label_span_' . $i . '">' . $row['label'] . '</span>';
+				$return .= '</label>';
+				$i++;
+			}
+		} else {
+			$return .= 'No providers identified with the search terms provided';
+		}
+		return $return;
+	}
 }

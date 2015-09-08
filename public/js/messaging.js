@@ -1667,6 +1667,31 @@ $(document).ready(function() {
 			position: { my: 'left top', at: 'left top', of: '#maincontent' }
 		});
 		loadmessaging();
+		$.ajax({
+			type: "POST",
+			url: "ajaxlogin/check-secret",
+			dataType: "json",
+			success: function(data){
+				if (data.secret == "Need secret question and answer!") {
+					$.jGrowl(data.secret);
+					$("#change_secret_answer_dialog").dialog('open');
+				}
+				if (data.setup == 'y') {
+					$("#setup_dialog").dialog('open');
+				}
+				if (data.template == 'y') {
+					$('#dialog_load').dialog('option', 'title', "Installing default templates...").dialog('open');
+					$.ajax({
+						type: "POST",
+						url: "ajaxdashboard/reset-default-templates",
+						success: function(data){
+							$('#dialog_load').dialog('close');
+							$.jGrowl(data);
+						}
+					});
+				}
+			}
+		});
 	}
 	function messages_tags() {
 		$("#messages_tags").show();

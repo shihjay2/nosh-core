@@ -202,137 +202,168 @@ class LoginController extends BaseController {
 			setcookie("login_attempts", 0, time()+900, '/');
 			return Redirect::intended('/');
 		} else {
-			$practice_npi = $oidc->requestUserInfo('practice_npi');
-			$practice_id = false;
-			if ($practice_npi != '') {
-				$practice_npi_array = explode(',', $practice_npi);
-				$practice_npi_array_null = array();
-				foreach ($practice_npi_array as $practice_npi_item) {
-					$practice_query = DB::table('practiceinfo')->where('npi', '=', $practice_npi_item)->first();
-					if ($practice_query) {
-						$practice_id = $practice_query->practice_id;
-					} else {
-						$practice_npi_array_null[] = $practice_npi_item;
+			// If patient-centric, confirm if user request is registered to pNOSH first
+			if ($practice->patient_centric == 'y') {
+				// Check if there is an invite first
+				$invite_query = DB::table('uma_invitation')->where('email', '=', $email)->where('invitation_timeout', '>', time())->first();
+				if (!$invite_query) {
+					// No invitation, expired invitation, or access
+					return Redirect::to('uma_invitation_request');
+				}
+				// Sync mdNOSH Gateway and pNOSH UMA Server user credentials
+				$this->syncuser($access_token);
+				// Add resources associated with new provider user to pNOSH UMA Server
+				$resource_set_id_arr = explode(',', $invite_query->resource_set_ids);
+				foreach ($resource_set_id_arr as $resource_set_id) {
+					$uma_query = DB::table('uma')->where('resource_set_id', '=', $resource_set_id)->get();
+					$scopes = array();
+					if ($uma_query) {
+						// Register all scopes for resource sets for now
+						foreach ($uma_query as $uma_row) {
+							$scopes[] = $uma_row->scope;
+						}
+					}
+					$this->uma_policy($resource_set_id, $email, $scopes);
+				}
+				// Get Practice NPI from Oauth credentials and check if practice already loaded
+				$practice_npi = $oidc->requestUserInfo('practice_npi');
+				$practice_id = false;
+				if ($practice_npi != '') {
+					$practice_npi_array = explode(',', $practice_npi);
+					$practice_npi_array_null = array();
+					foreach ($practice_npi_array as $practice_npi_item) {
+						$practice_query = DB::table('practiceinfo')->where('npi', '=', $practice_npi_item)->first();
+						if ($practice_query) {
+							$practice_id = $practice_query->practice_id;
+						} else {
+							$practice_npi_array_null[] = $practice_npi_item;
+						}
 					}
 				}
-			}
-			if ($practice_id == false) {
-				if (count($practice_npi_array_null) == 1) {
-					$url = 'http://docnpi.com/api/index.php?ident=' . $practice_npi_array_null[0] . '&is_ident=true&format=aha';
-					$ch = curl_init();
-					curl_setopt($ch,CURLOPT_URL, $url);
-					curl_setopt($ch,CURLOPT_FAILONERROR,1);
-					curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
-					curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-					curl_setopt($ch,CURLOPT_TIMEOUT, 15);
-					$data1 = curl_exec($ch);
-					curl_close($ch);
-					$html = new Htmldom($data1);
-					$practicename = '';
-					$address = '';
-					$street_address1 = '';
-					$city = '';
-					$state = '';
-					$zip = '';
-					if (isset($html)) {
-						$li = $html->find('li',0);
-						if (isset($li)) {
-							$nomatch = $li->innertext;
-							if ($nomatch != ' no matching results ') {
-								$name_item = $li->find('span[class=org]',0);
-								$practicename = $name_item->innertext;
-								$address_item = $li->find('span[class=address]',0);
-								$address = $address_item->innertext;
+				if ($practice_id == false) {
+					// No practice is registered to pNOSH yet so let's add it
+					if (count($practice_npi_array_null) == 1) {
+						// Only 1 NPI associated with provider, great!
+						$url = 'http://docnpi.com/api/index.php?ident=' . $practice_npi_array_null[0] . '&is_ident=true&format=aha';
+						$ch = curl_init();
+						curl_setopt($ch,CURLOPT_URL, $url);
+						curl_setopt($ch,CURLOPT_FAILONERROR,1);
+						curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+						curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+						curl_setopt($ch,CURLOPT_TIMEOUT, 15);
+						$data1 = curl_exec($ch);
+						curl_close($ch);
+						$html = new Htmldom($data1);
+						$practicename = '';
+						$address = '';
+						$street_address1 = '';
+						$city = '';
+						$state = '';
+						$zip = '';
+						if (isset($html)) {
+							$li = $html->find('li',0);
+							if (isset($li)) {
+								$nomatch = $li->innertext;
+								if ($nomatch != ' no matching results ') {
+									$name_item = $li->find('span[class=org]',0);
+									$practicename = $name_item->innertext;
+									$address_item = $li->find('span[class=address]',0);
+									$address = $address_item->innertext;
+								}
 							}
 						}
+						if ($address != '') {
+							$address_array = explode(',', $address);
+							if (isset($address_array[0])) {
+								$street_address1 = trim($address_array[0]);
+							}
+							if (isset($address_array[1])) {
+								$zip = trim($address_array[1]);
+							}
+							if (isset($address_array[2])) {
+								$city = trim($address_array[2]);
+							}
+							if (isset($address_array[3])) {
+								$state = trim($address_array[3]);
+							}
+						}
+						$practice_data = array(
+							'npi' => $practice_npi_array_null[0],
+							'practice_name' => $practicename,
+							'street_address1' => $street_address1,
+							'city' => $city,
+							'state' => $state,
+							'zip' => $zip,
+							'documents_dir' => $practice->documents_dir,
+							'version' => $practice->version,
+							'active' => 'Y',
+							'fax_type' => '',
+							'vivacare' => '',
+							'patient_centric' => 'yp',
+							'smtp_user' => $practice->smtp_user,
+							'smtp_pass' => $practice->smtp_pass
+						);
+						$practice_id = DB::table('practiceinfo')->insertGetId($practice_data);
+						$this->audit('Add');
+					} else {
+						// Ask for provider to choose which practice to link with pNOSH
+						Session::put('practice_npi_array', implode(',', $practice_npi_array_null));
+						Session::put('firstname', $firstname);
+						Session::put('lastname', $lastname);
+						Session::put('username', $oidc->requestUserInfo('sub'));
+						Session::put('middle', $oidc->requestUserInfo('middle_name'));
+						Session::put('displayname', $oidc->requestUserInfo('name'));
+						Session::put('email', $email);
+						Session::put('npi', $npi);
+						Session::put('practice_choose', 'y');
+						Session::put('uid', $oidc->requestUserInfo('sub'));
+						Session::put('oidc_auth_access_token', $access_token);
+						return Redirect::to('practice_choose');
 					}
-					if ($address != '') {
-						$address_array = explode(',', $address);
-						if (isset($address_array[0])) {
-							$street_address1 = trim($address_array[0]);
-						}
-						if (isset($address_array[1])) {
-							$zip = trim($address_array[1]);
-						}
-						if (isset($address_array[2])) {
-							$city = trim($address_array[2]);
-						}
-						if (isset($address_array[3])) {
-							$state = trim($address_array[3]);
-						}
-					}
-					$practice_data = array(
-						'npi' => $practice_npi_array_null[0],
-						'practice_name' => $practicename,
-						'street_address1' => $street_address1,
-						'city' => $city,
-						'state' => $state,
-						'zip' => $zip,
-						'documents_dir' => $practice->documents_dir,
-						'version' => $practice->version,
-						'active' => 'Y',
-						'fax_type' => '',
-						'vivacare' => '',
-						'patient_centric' => 'yp',
-						'smtp_user' => $practice->smtp_user,
-						'smtp_pass' => $practice->smtp_pass
-					);
-					$practice_id = DB::table('practiceinfo')->insertGetId($practice_data);
-					$this->audit('Add');
-				} else {
-					$this->syncuser($access_token);
-					Session::put('practice_npi_array', implode(',', $practice_npi_array_null));
-					Session::put('firstname', $firstname);
-					Session::put('lastname', $lastname);
-					Session::put('username', $oidc->requestUserInfo('sub'));
-					Session::put('middle', $oidc->requestUserInfo('middle_name'));
-					Session::put('displayname', $oidc->requestUserInfo('name'));
-					Session::put('email', $email);
-					Session::put('npi', $npi);
-					Session::put('practice_choose', 'y');
-					Session::put('uid', $oidc->requestUserInfo('sub'));
-					Session::put('oidc_auth_access_token', $access_token);
-					return Redirect::to('practice_choose');
 				}
+				// Finally, add user to pNOSH
+				$data = array(
+					'username' => $oidc->requestUserInfo('sub'),
+					'firstname' => $firstname,
+					'middle' => $oidc->requestUserInfo('middle_name'),
+					'lastname' => $lastname,
+					'displayname' => $oidc->requestUserInfo('name'),
+					'email' => $email,
+					'group_id' => '2',
+					'active'=> '1',
+					'practice_id' => $practice_id,
+					'secret_question' => 'Use mdNOSH Gateway to reset your password!',
+					'uid' => $oidc->requestUserInfo('sub')
+				);
+				$id = DB::table('users')->insertGetId($data);
+				$this->audit('Add');
+				$data1 = array(
+					'id' => $id,
+					'npi' => $npi,
+					'practice_id' => $practice_id
+				);
+				DB::table('providers')->insert($data1);
+				$this->audit('Add');
+				$user1 = User::where('id', '=', $id)->first();
+				Auth::login($user1);
+				$practice1 = Practiceinfo::find($user1->practice_id);
+				Session::put('user_id', $user1->id);
+				Session::put('group_id', $user1->group_id);
+				Session::put('practice_id', $user1->practice_id);
+				Session::put('version', $practice1->version);
+				Session::put('practice_active', $practice1->active);
+				Session::put('displayname', $user1->displayname);
+				Session::put('documents_dir', $practice1->documents_dir);
+				Session::put('rcopia', $practice1->rcopia_extension);
+				Session::put('mtm_extension', $practice1->mtm_extension);
+				Session::put('patient_centric', $practice1->patient_centric);
+				Session::put('oidc_auth_access_token', $access_token);
+				setcookie("login_attempts", 0, time()+900, '/');
+				return Redirect::intended('/');
+			} else {
+				// No registered mdNOSH user for this NOSH instance - punt back to login page.
+				return Redirect::intended('/');
 			}
-			$data = array(
-				'username' => $oidc->requestUserInfo('sub'),
-				'firstname' => $firstname,
-				'middle' => $oidc->requestUserInfo('middle_name'),
-				'lastname' => $lastname,
-				'displayname' => $oidc->requestUserInfo('name'),
-				'email' => $email,
-				'group_id' => '2',
-				'active'=> '1',
-				'practice_id' => $practice_id,
-				'secret_question' => 'Use mdNOSH Gateway to reset your password!',
-				'uid' => $oidc->requestUserInfo('sub')
-			);
-			$id = DB::table('users')->insertGetId($data);
-			$this->audit('Add');
-			$data1 = array(
-				'id' => $id,
-				'npi' => $npi,
-				'practice_id' => $practice_id
-			);
-			DB::table('providers')->insert($data1);
-			$this->audit('Add');
-			$user1 = User::where('id', '=', $id)->first();
-			Auth::login($user1);
-			$practice1 = Practiceinfo::find($user1->practice_id);
-			Session::put('user_id', $user1->id);
-			Session::put('group_id', $user1->group_id);
-			Session::put('practice_id', $user1->practice_id);
-			Session::put('version', $practice1->version);
-			Session::put('practice_active', $practice1->active);
-			Session::put('displayname', $user1->displayname);
-			Session::put('documents_dir', $practice1->documents_dir);
-			Session::put('rcopia', $practice1->rcopia_extension);
-			Session::put('mtm_extension', $practice1->mtm_extension);
-			Session::put('patient_centric', $practice1->patient_centric);
-			Session::put('oidc_auth_access_token', $access_token);
-			setcookie("login_attempts", 0, time()+900, '/');
-			return Redirect::intended('/');
 		}
 	}
 	
@@ -524,6 +555,16 @@ class LoginController extends BaseController {
 				return Redirect::intended('/');
 			}
 		}
+	}
+	
+	public function uma_invitation_request()
+	{
+		$this->layout->style = $this->css_assets();
+		$this->layout->script = $this->js_assets('base');
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$arr['email'] = $practice->email . '?Subject=Invitation%20Request';
+		Session::put('version', $practice->version);
+		$this->layout->content = View::make('uma_invitation_request', $arr);
 	}
 	
 	// Patient-centric, UMA login

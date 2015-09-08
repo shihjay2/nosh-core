@@ -290,12 +290,13 @@
 	</div>
 </div>
 <div id="manage_practice_dialog" title="Connected Practices and Apps">
+	<i class="fa fa-openid fa-fw fa-2x send_uma_invite" style="vertical-align:middle;padding:2px"></i> <a href="#" class="send_uma_invite">Send an invitation to a medical provider to use your chart</a>
 	<table id="manage_practice_list" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="manage_practice_list_pager" class="scroll" style="text-align:center;"></div><br>
 	<button type="button" id="dashboard_add_practice" class="nosh_button_add">Add Practice</button>
 	<button type="button" id="dashboard_delete_practice" class="nosh_button_delete">Remove Practice</button>
 	<br><br>
-	<a href="<?php $url = str_replace('/nosh', '/uma-server-webapp/manage/admin/clients', URL::to('/')); echo $url; ?>" target="_blank">Manage all clients connected to your NOSH</a>
+	<i class="fa fa-openid fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="<?php $url = str_replace('/nosh', '/uma-server-webapp/manage/admin/clients', URL::to('/')); echo $url; ?>" target="_blank">Manage all clients connected to your NOSH</a>
 </div>
 <div id="add_practice_dialog" title="Add a Practice">
 	<form id="add_practice_form" class="pure-form pure-form-stacked">
@@ -329,6 +330,25 @@
 		<form class="pure-form">
 			<label for="hieofone_username">Select new username:</label>
 			<input type="text" id="hieofone_username" name="hieofone_username" style="width:95%" class="text"/>
+		</form>
+	</div>
+</div>
+<div id="send_uma_invite_dialog" title="Invite a Provider to Access your Chart">
+	<div id="send_uma_invite_div1">
+		<form id="send_uma_invite_form1" class="pure-form">
+			<label for="mdnosh_provider_search_input">Practice Name (for search):</label>
+			<input type="text" id="mdnosh_provider_search_input" name="term" style="width:80%" class="text" required/>
+			<button class="pure-button" id="send_uma_invite_form1_submit"><i class="fa fa-search"></i> Search</button>
+		</form><br>
+		<div id="send_uma_invite_results"></div>
+	</div>
+	<div id="send_uma_invite_div2">
+		<h3>Invite this provider:</h3>
+		<div id="send_uma_invite_provider"></div>
+		<h3>With access to these resources:</h3>
+		<form id="send_uma_invite_form2" class="pure-form">
+			<input type="hidden" id="mdnosh_email_final" name="email" required/>
+			<div id="send_uma_invite_div3"></div>
 		</form>
 	</div>
 </div>

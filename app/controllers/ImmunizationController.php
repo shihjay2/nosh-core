@@ -9,7 +9,8 @@ class ImmunizationController extends BaseController {
 	 */
 	public function index()
 	{
-		//
+		$ret = HTML::mailto('shihjay2@gmail.com?Subject=Hello%20again', 'Email Me', array('target'=>'_blank'));
+		return $ret;
 	}
 
 

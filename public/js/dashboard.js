@@ -302,31 +302,33 @@ $(document).ready(function() {
 	var secret_question = {"What was your childhood nickname?":"What was your childhood nickname?","In what city did you meet your spouse/significant other?":"In what city did you meet your spouse/significant other?","What is the name of your favorite childhood friend?":"What is the name of your favorite childhood friend?","What street did you live on in third grade?":"What street did you live on in third grade?","What is your oldest sibling’s birthday month and year? (e.g., January 1900)":"What is your oldest sibling’s birthday month and year? (e.g., January 1900)","What is the middle name of your oldest child?":"What is the middle name of your oldest child?","What is your oldest sibling's middle name?":"What is your oldest sibling's middle name?","What school did you attend for sixth grade?":"What is your oldest sibling's middle name?","What was your childhood phone number including area code? (e.g., 000-000-0000)":"What was your childhood phone number including area code? (e.g., 000-000-0000)","What is your oldest cousin's first and last name?":"What is your oldest cousin's first and last name?","What was the name of your first stuffed animal?":"What was the name of your first stuffed animal?","In what city or town did your mother and father meet?":"In what city or town did your mother and father meet?","Where were you when you had your first kiss?":"Where were you when you had your first kiss?","What is the first name of the boy or girl that you first kissed?":"What is the first name of the boy or girl that you first kissed?","What was the last name of your third grade teacher?":"What was the last name of your third grade teacher?","In what city does your nearest sibling live?":"In what city does your nearest sibling live?","What is your oldest brother’s birthday month and year? (e.g., January 1900)":"What is your oldest brother’s birthday month and year? (e.g., January 1900)","What is your maternal grandmother's maiden name?":"What is your maternal grandmother's maiden name?","In what city or town was your first job?":"In what city or town was your first job?","What is the name of the place your wedding reception was held?":"What is the name of the place your wedding reception was held?","What is the name of a college you applied to but didn't attend?":"What is the name of a college you applied to but didn't attend?"};
 	$("#secret_question").addOption(secret_question, false);
 	$("#secret_question1").addOption(secret_question, false);
-	$.ajax({
-		type: "POST",
-		url: "ajaxlogin/check-secret",
-		dataType: "json",
-		success: function(data){
-			if (data.secret == "Need secret question and answer!") {
-				$.jGrowl(data.secret);
-				$("#change_secret_answer_dialog").dialog('open');
+	if (noshdata.group_id != '100') {
+		$.ajax({
+			type: "POST",
+			url: "ajaxlogin/check-secret",
+			dataType: "json",
+			success: function(data){
+				if (data.secret == "Need secret question and answer!") {
+					$.jGrowl(data.secret);
+					$("#change_secret_answer_dialog").dialog('open');
+				}
+				if (data.setup == 'y') {
+					$("#setup_dialog").dialog('open');
+				}
+				if (data.template == 'y') {
+					$('#dialog_load').dialog('option', 'title', "Installing default templates...").dialog('open');
+					$.ajax({
+						type: "POST",
+						url: "ajaxdashboard/reset-default-templates",
+						success: function(data){
+							$('#dialog_load').dialog('close');
+							$.jGrowl(data);
+						}
+					});
+				}
 			}
-			if (data.setup == 'y') {
-				$("#setup_dialog").dialog('open');
-			}
-			if (data.template == 'y') {
-				$('#dialog_load').dialog('option', 'title', "Installing default templates...").dialog('open');
-				$.ajax({
-					type: "POST",
-					url: "ajaxdashboard/reset-default-templates",
-					success: function(data){
-						$('#dialog_load').dialog('close');
-						$.jGrowl(data);
-					}
-				});
-			}
-		}
-	});
+		});
+	}
 	$("#change_secret_answer_dialog").dialog({ 
 		bgiframe: true, 
 		autoOpen: false, 
@@ -1043,5 +1045,76 @@ $(document).ready(function() {
 		$("#hieofone_username").val('');
 		$("#hieofone_error").html('');
 		$("#hieofone_dialog").dialog('open');
+	});
+	$('#send_uma_invite_dialog').dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 500, 
+		width: 800, 
+		modal: true,
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Back': function() {
+				$("#send_uma_invite_div1").show();
+				$("#send_uma_invite_div2").hide();
+			},
+			'Send Invitation': function() {
+				var bValid = true;
+				$("#send_uma_invite_form2").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+				});
+				if (bValid) {
+					var str = $("#send_uma_invite_form2").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxcommon/send-uma-invite",
+							data: str,
+							success: function(data){
+								$.jGrowl(data);
+								$("#send_uma_invite_form1").clearForm();
+								$("#send_uma_invite_form2").clearForm();
+								$("#send_uma_invite_dialog").dialog('close');
+							}
+						});
+					} else {
+						$.jGrowl("Please complete the form");
+					}
+				}
+			},
+			Cancel: function() {
+				$("#send_uma_invite_form1").clearForm();
+				$("#send_uma_invite_form2").clearForm();
+				$("#send_uma_invite_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	$("#send_uma_invite_form1_submit").click(function(){
+		$("#send_uma_invite_form1").find("[required]").each(function() {
+			var input_id = $(this).attr('id');
+			var id1 = $("#" + input_id); 
+			var text = $("label[for='" + input_id + "']").html();
+			bValid = bValid && checkEmpty(id1, text);
+		});
+		if (bValid) {
+			var str = $("#send_uma_invite_form1").serialize();
+			$.ajax({
+				type: "POST",
+				url: "ajaxsearch/md-nosh",
+				data: str,
+				success: function(data){
+					$('#send_uma_invite_results').html(data);
+				}
+			});
+		} else {
+			$.jGrowl("Please complete the form");
+		}
 	});
 });

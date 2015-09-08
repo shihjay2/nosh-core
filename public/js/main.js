@@ -4045,4 +4045,31 @@ $(document).on('click', ".dashboard_manage_practice", function() {
 	});
 	$("#manage_practice_dialog").dialog('open');
 });
+$(document).on('click', ".send_uma_invite", function() {
+	$('#send_uma_invite_dialog').dialog('option', {
+		height: $("#maincontent").height(),
+		width: $("#maincontent").width(),
+		position: { my: 'left top', at: 'left top', of: '#maincontent' }
+	});
+	$.ajax({
+		url: "ajaxcommon/get-patient-resources1",
+		type: "POST",
+		success: function(data){
+			$("#send_uma_invite_div3").html(data);
+		}
+	});
+	$("#send_uma_invite_div1").show();
+	$("#send_uma_invite_div2").hide();
+	$("#send_uma_invite_dialog").dialog('open');
+});
+$(document).on('click', ".mdnosh_email_select", function() {
+	var id = $(this).attr('id');
+	var id1 = id.replace("mdnosh_email_","mdnosh_email_label_span_");
+	var a = $("#"+id).html();
+	var b = $(this).val();
+	$("#mdnosh_email_final").val(b);
+	$("#send_uma_invite_provider").html(a);
+	$("#send_uma_invite_div1").hide();
+	$("#send_uma_invite_div2").show();
+});
 

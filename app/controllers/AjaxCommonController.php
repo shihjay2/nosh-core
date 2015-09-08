@@ -1137,10 +1137,75 @@ class AjaxCommonController extends BaseController {
 		echo $html;
 	}
 	
+	public function postGetPatientResources1()
+	{
+		$query = DB::table('uma')->get();
+		$html = 'No resources registered.';
+		if ($query) {
+			$i = 0;
+			foreach ($query as $row) { 
+				$name_arr = explode('/', $row->scope);
+				$name = end($name_arr);
+				if ($name == 'Patient') {
+					$resource = 'Demographics';
+				}
+				if ($name == 'Medication') {
+					$resource = 'Medication Database';
+				}
+				if ($name == 'Practitioner') {
+					$resource = 'Providers';
+				}
+				if ($name == 'Condition') {
+					$resource = 'Conditions';
+				}
+				if ($name == 'MedicationStatement') {
+					$resource = 'Medications';
+				}
+				if ($name == 'AllergyIntolerance') {
+					$resource = 'Allergies';
+				}
+				if ($name == 'Immunization') {
+					$resource = 'Immunizations';
+				}
+				if ($name == 'Encounter') {
+					$resource = 'Encounters';
+				}
+				if ($name == 'FamilyHistory') {
+					$resource = 'Family History';
+				}
+				if ($name == 'Binary') {
+					$resource = 'Documents';
+				}
+				$html .= '<label for="mdnosh_provider_' . $i . '" class="pure-checkbox" style="display:block;margin-left:20px;">';
+				$html .= Form::checkbox('resources', $row->resource_set_id, true, ['id' => 'mdnosh_resource_' . $i, 'style' => 'float:left; margin-left:-20px; margin-right:7px;', 'class' => 'mdnosh_resource_select']);
+				$html .= ' ' . $resource;
+				$html .= '</label>';
+				$i++;
+			}
+		}
+		echo $html;
+	}
+	
 	public function postGetPatientResourceUsers($resource_set_id)
 	{
 		$result = $this->get_uma_policy($resource_set_id);
 		echo $result;
+	}
+	
+	public function postSendUmaInvite()
+	{
+		$resource_set_ids = implode(',', Input::get('resources'));
+		$data = array(
+			'email' => Input::get('email'),
+			'invitation_timeout' => time() + 259200,
+			'resource_set_ids' => $resource_set_ids
+		);
+		DB::table('uma_invitation')->insert($data);
+		$this->audit('Add');
+		$data_message['temp_url'] = URL::to('oidc');
+		$data_message['patient'] = Session::get('displayname');
+		$this->send_mail('emails.apiregister', $data_message, 'URGENT: Invitation to access the personal electronic medical record of ' . Session::get('displayname'), Input::get('email'), '1');
+		echo 'Invitation sent to ' . Input::get('email') . '!';
 	}
 	
 	public function postRemovePatientResourceUser()
