@@ -290,7 +290,7 @@
 	</div>
 </div>
 <div id="manage_practice_dialog" title="Connected Practices and Apps">
-	<i class="fa fa-openid fa-fw fa-2x send_uma_invite" style="vertical-align:middle;padding:2px"></i> <a href="#" class="send_uma_invite">Send an invitation to a medical provider to use your chart</a>
+	<i class="fa fa-plus fa-fw fa-2x send_uma_invite" style="vertical-align:middle;padding:2px"></i> <a href="#" class="send_uma_invite">Send an invitation to a medical provider to use your chart</a>
 	<table id="manage_practice_list" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="manage_practice_list_pager" class="scroll" style="text-align:center;"></div><br>
 	<button type="button" id="dashboard_add_practice" class="nosh_button_add">Add Practice</button>
@@ -337,7 +337,7 @@
 	<div id="send_uma_invite_div1">
 		<form id="send_uma_invite_form1" class="pure-form">
 			<label for="mdnosh_provider_search_input">Practice Name (for search):</label>
-			<input type="text" id="mdnosh_provider_search_input" name="term" style="width:80%" class="text" required/>
+			<input type="text" id="mdnosh_provider_search_input" name="term" style="width:60%" class="text" required/>
 			<button class="pure-button" id="send_uma_invite_form1_submit"><i class="fa fa-search"></i> Search</button>
 		</form><br>
 		<div id="send_uma_invite_results"></div>

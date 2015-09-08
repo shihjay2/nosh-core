@@ -1097,6 +1097,7 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#send_uma_invite_form1_submit").click(function(){
+		var bValid = true;
 		$("#send_uma_invite_form1").find("[required]").each(function() {
 			var input_id = $(this).attr('id');
 			var id1 = $("#" + input_id); 
