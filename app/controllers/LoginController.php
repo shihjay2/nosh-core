@@ -887,4 +887,33 @@ class LoginController extends BaseController {
 		Session::forget('oidc_auth_access_token');
 		return Redirect::intended('logout');
 	}
+	
+	public function googleoauth()
+	{
+		$file = File::get(__DIR__."/../../.google");
+		$file_arr = json_decode($file, true);
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
+		$client_id = $file_arr['installed']['client_id'];
+		$client_secret = $file_arr['installed']['client_secret'];
+		$url = Request::URL();
+		$google = new Google_Client();
+		$google->setRedirectUri($url);
+		$google->setApplicationName('NOSH ChartingSystem');
+		$google->setClientID($client_id);
+		$google->setClientSecret($client_secret);
+		$google->setAccessType('offline');
+		$google->setApprovalPrompt('force');
+		$google->setScopes(array('https://mail.google.com/'));
+		if (isset($_REQUEST["code"])) {
+			$credentials = $google->authenticate($_GET['code']);
+			$result = json_decode($credentials, true);
+			$data['google_refresh_token'] = $result['refresh_token'];
+			DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->update($data);
+			return Redirect::intended('/');
+		} else {
+			$authUrl = $google->createAuthUrl();
+			header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
+			exit;
+		}
+	}
 }

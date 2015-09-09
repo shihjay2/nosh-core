@@ -3591,7 +3591,7 @@ class BaseController extends Controller {
 		return 'Fax Job ' . $job_id . ' Sent';
 	}
 	
-	protected function send_mail($template, $data_message, $subject, $to, $practice_id)
+	protected function send_mail_old($template, $data_message, $subject, $to, $practice_id)
 	{
 		$practice = Practiceinfo::find($practice_id);
 		$config = array(
@@ -3612,6 +3612,64 @@ class BaseController extends Controller {
 				->subject($subject);
 		});
 		return "E-mail sent.";
+	}
+	
+	protected function send_mail($template, $data_message, $subject, $to, $practice_id)
+	{
+		if ($this->googleoauth_refresh($practice_id)) {
+			$practice = Practiceinfo::find($practice_id);
+			$config = array(
+				'driver' => 'smtp',
+				'host' => 'smtp.gmail.com',
+				'port' => 465,
+				'from' => array('address' => null, 'name' => null),
+				'encryption' => 'ssl',
+				'username' => $practice->smtp_user,
+				'password' => $practice->smtp_pass, //access token now
+				'sendmail' => '/usr/sbin/sendmail -bs',
+				'pretend' => false
+			);
+			Config::set('mail',$config);
+			extract(Config::get('mail'));
+			$transport = Swift_SmtpTransport::newInstance($host, $port, 'ssl');
+			$transport->setAuthMode('XOAUTH2');
+			if (isset($encryption)) $transport->setEncryption($encryption);
+			if (isset($username)) {
+				$transport->setUsername($username);
+				$transport->setPassword($password);
+			}
+			Mail::setSwiftMailer(new Swift_Mailer($transport));
+			Mail::send($template, $data_message, function($message) use ($to, $practice, $subject) {
+				$message->to($to)
+					->from($practice->email, $practice->practice_name)
+					->subject($subject);
+			});
+			return "E-mail sent.";
+		} else {
+			return "No refresh token available to create access token!";
+		}
+	}
+	
+	protected function googleoauth_refresh($practice_id)
+	{
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->first();
+		if ($practice->google_refresh_token != '') {
+			$file = File::get(__DIR__."/../../.google");
+			$file_arr = json_decode($file, true);
+			$client_id = $file_arr['installed']['client_id'];
+			$client_secret = $file_arr['installed']['client_secret'];
+			$google = new Google_Client();
+			$google->setClientID($client_id);
+			$google->setClientSecret($client_secret);
+			$google->refreshToken($practice->google_refresh_token);
+			$credentials = $google->getAccessToken();
+			$result = json_decode($credentials, true);
+			$data['smtp_pass'] = $result['access_token'];
+			DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->update($data);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	protected function generate_ccda($hippa_id='',$pid='')

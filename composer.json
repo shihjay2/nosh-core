@@ -31,7 +31,8 @@
 		"yangqi/htmldom": "dev-master",
 		"Chumper/Zipper": "0.5.x",
 		"knplabs/github-api": "*",
-		"phpseclib/phpseclib": "*"
+		"phpseclib/phpseclib": "*",
+		"google/apiclient": "1.0.*@beta"
 	},
 	"autoload": {
 		"classmap": [

@@ -5,6 +5,7 @@ composer.phar
 .env.php
 .noshdir
 .version
+.google
 .codeigniter
 .DS_Store
 Thumbs.db

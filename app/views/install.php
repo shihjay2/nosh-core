@@ -63,10 +63,6 @@
 					<?php echo Form::label('smtp_user', 'Gmail Username for Sending E-mail:');?>
 					<?php echo Form::text('smtp_user','',array('id'=>'smtp_user','required','style'=>'width:500px','class'=>'text'));?>
 				</div>
-				<div class="pure-control-group">
-					<?php echo Form::label('smtp_pass', 'Gmail Password for Sending E-mail:');?>
-					<?php echo Form::password('smtp_pass', array('id'=>'smtp_pass','required','style'=>'width:500px','class'=>'text'));?>
-				</div>
 				<br>
 				<button type='button' id='install_submit'>Install NOSH ChartingSystem</button>
 			</div>
@@ -142,10 +138,6 @@
 				<div class="pure-control-group">
 					<?php echo Form::label('smtp_user1', 'Gmail Username for Sending E-mail:');?>
 					<?php echo Form::text('smtp_user','',array('id'=>'smtp_user1','required','style'=>'width:500px','class'=>'text'));?>
-				</div>
-				<div class="pure-control-group">
-					<?php echo Form::label('smtp_pass1', 'Gmail Password for Sending E-mail:');?>
-					<?php echo Form::password('smtp_pass', array('id'=>'smtp_pass1','required','style'=>'width:500px','class'=>'text'));?>
 				</div>
 				<br>
 				<button type='button' id='install_submit1'>Install NOSH ChartingSystem</button>

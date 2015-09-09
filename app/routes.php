@@ -11,7 +11,7 @@
 |
 */
 
-Route::any('/', array('as' => 'home', 'before' => 'force.ssl|version_check|installfix|needinstall|update|openid|auth', 'uses' => 'HomeController@dashboard'));
+Route::any('/', array('as' => 'home', 'before' => 'force.ssl|version_check|installfix|needinstall|update|openid|auth|google', 'uses' => 'HomeController@dashboard'));
 Route::any('login', array('as' => 'login', 'before' => 'force.ssl', 'uses' => 'LoginController@action'));
 Route::any('mobile', array('as' => 'mobile', 'before' => 'force.ssl|version_check|installfix|needinstall|update|openid|auth.mobile', 'uses' => 'MobileController@dashboard'));
 Route::any('login_mobile', array('as' => 'login_mobile', 'before' => 'force.ssl', 'uses' => 'MobileController@action'));
@@ -183,6 +183,7 @@ Route::get('mtmheaderpdf/{pid}', array("as" => "mtmheaderpdf", function($pid)
 }));
 Route::get('backup', array('as' => 'backup', 'uses' => 'BackupController@backup'));
 Route::post('backuprestore', array('as' => 'backuprestore', 'uses' => 'BackupController@restore'));
+Route::get('googleoauth', array('as' => 'googleoauth', 'uses' => 'LoginController@googleoauth'));
 Route::get('oidc', array('as' => 'oidc', 'uses' => 'LoginController@oidc'));
 Route::get('oidc_register_client', array('as' => 'oidc_register_client', 'uses' => 'LoginController@oidc_register_client'));
 Route::get('oidc_check_patient_centric', array('as' => 'oidc_check_patient_centric', 'uses' => 'LoginController@oidc_check_patient_centric'));
@@ -306,6 +307,14 @@ Route::filter('update', function()
 	// Check version number
 	if ($row->version < $current_version) {
 		return Redirect::to('update');
+	}
+});
+
+Route::filter('google', function()
+{
+	$row = Practiceinfo::find(1);
+	if ($row->google_refresh_token == '' && Session::get('group_id') == '1') {
+		return Redirect::to('googleoauth');
 	}
 });
 

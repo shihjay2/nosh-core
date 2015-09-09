@@ -11,7 +11,6 @@ class AjaxInstallController extends BaseController {
 		set_time_limit(0);
 		ini_set('memory_limit','196M');
 		$smtp_user = Input::get('smtp_user');
-		$smtp_pass = Input::get('smtp_pass');
 		$username = Input::get('username');
 		$password = substr_replace(Hash::make(Input::get('password')),"$2a",0,3);
 		$email = Input::get('email');
@@ -250,7 +249,6 @@ class AjaxInstallController extends BaseController {
 			'documents_dir' => $documents_dir,
 			'fax_type' => '',
 			'smtp_user' => $smtp_user,
-			'smtp_pass' => $smtp_pass,
 			'vivacare' => '',
 			'version' => '1.8.4',
 			'active' => 'Y',
