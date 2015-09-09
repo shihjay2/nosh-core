@@ -893,8 +893,8 @@ class LoginController extends BaseController {
 		$file = File::get(__DIR__."/../../.google");
 		$file_arr = json_decode($file, true);
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
-		$client_id = $file_arr['installed']['client_id'];
-		$client_secret = $file_arr['installed']['client_secret'];
+		$client_id = $file_arr['web']['client_id'];
+		$client_secret = $file_arr['web']['client_secret'];
 		$url = Request::URL();
 		$google = new Google_Client();
 		$google->setRedirectUri($url);

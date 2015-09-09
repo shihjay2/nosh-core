@@ -3656,8 +3656,8 @@ class BaseController extends Controller {
 		if ($practice->google_refresh_token != '') {
 			$file = File::get(__DIR__."/../../.google");
 			$file_arr = json_decode($file, true);
-			$client_id = $file_arr['installed']['client_id'];
-			$client_secret = $file_arr['installed']['client_secret'];
+			$client_id = $file_arr['web']['client_id'];
+			$client_secret = $file_arr['web']['client_secret'];
 			$google = new Google_Client();
 			$google->setClientID($client_id);
 			$google->setClientSecret($client_secret);
