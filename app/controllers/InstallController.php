@@ -49,4 +49,17 @@ class InstallController extends BaseController {
 		$this->layout->script = HTML::script('/js/reset.js');
 		$this->layout->content = View::make('reset_database');
 	}
+	
+	public function google_start()
+	{
+		$this->layout->title = "NOSH ChartingSystem Pre Installation Check";
+		$this->layout->style = '';
+		$this->layout->script =  HTML::script('/js/google_start.js');
+		$config_file = __DIR__."/../../.google";
+		$data['file'] = "<strong>You're' here because you have not installed a Google OAuth2 Client ID file.  You'll need to set this up first before configuring NOSH Charting System.'</strong>";
+		if (file_exists($config_file)) {
+			$data['file'] = '<strong>A Google OAuth2 Client ID file is already installed.  Uploading a new file will overwrite the existing file!</strong>';
+		}
+		$this->layout->content = View::make('google_start', $data);
+	}
 }

@@ -1080,6 +1080,7 @@ $(document).ready(function() {
 								$.jGrowl(data);
 								$("#send_uma_invite_form1").clearForm();
 								$("#send_uma_invite_form2").clearForm();
+								$('#send_uma_invite_results').html('');
 								$("#send_uma_invite_dialog").dialog('close');
 							}
 						});
@@ -1091,6 +1092,7 @@ $(document).ready(function() {
 			Cancel: function() {
 				$("#send_uma_invite_form1").clearForm();
 				$("#send_uma_invite_form2").clearForm();
+				$('#send_uma_invite_results').html('');
 				$("#send_uma_invite_dialog").dialog('close');
 			}
 		},

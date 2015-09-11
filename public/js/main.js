@@ -4066,7 +4066,7 @@ $(document).on('click', ".send_uma_invite", function() {
 $(document).on('click', ".mdnosh_email_select", function() {
 	var id = $(this).attr('id');
 	var id1 = id.replace("mdnosh_email_","mdnosh_email_label_span_");
-	var a = $("#"+id).html();
+	var a = $("#"+id1).html();
 	var b = $(this).val();
 	$("#mdnosh_email_final").val(b);
 	$("#send_uma_invite_provider").html(a);

@@ -868,7 +868,7 @@ class OpenIDConnectClient
 				'client_id' => $this->clientID,
 				'nonce' => $nonce,
 				'state' => $state,
-				'scope' => 'openid offline_access uma_protection'
+				'scope' => 'openid offline_access uma_protection email profile'
 			));
 		} elseif ($type == 'user') {
 			$auth_params = array_merge($this->authParams, array(
@@ -877,7 +877,7 @@ class OpenIDConnectClient
 				'client_id' => $this->clientID,
 				'nonce' => $nonce,
 				'state' => $state,
-				'scope' => 'openid'
+				'scope' => 'openid email profile'
 			));
 		} else {
 			$auth_params = array_merge($this->authParams, array(
@@ -886,7 +886,7 @@ class OpenIDConnectClient
 				'client_id' => $this->clientID,
 				'nonce' => $nonce,
 				'state' => $state,
-				'scope' => 'uma_authorization'
+				'scope' => 'uma_authorization email profile'
 			));
 		}
 

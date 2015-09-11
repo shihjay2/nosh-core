@@ -167,6 +167,9 @@ class LoginController extends BaseController {
 		$url = route('oidc');
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc->setRedirectURL($url);
+		$oidc->addScope('openid');
+		$oidc->addScope('email');
+		$oidc->addScope('profile');
 		$oidc->authenticate();
 		$firstname = $oidc->requestUserInfo('given_name');
 		$lastname = $oidc->requestUserInfo('family_name');

@@ -11,7 +11,7 @@
 |
 */
 
-Route::any('/', array('as' => 'home', 'before' => 'force.ssl|version_check|installfix|needinstall|update|openid|auth|google', 'uses' => 'HomeController@dashboard'));
+Route::any('/', array('as' => 'home', 'before' => 'force.ssl|version_check|installfix|googlecheck|needinstall|update|openid|auth|google', 'uses' => 'HomeController@dashboard'));
 Route::any('login', array('as' => 'login', 'before' => 'force.ssl', 'uses' => 'LoginController@action'));
 Route::any('mobile', array('as' => 'mobile', 'before' => 'force.ssl|version_check|installfix|needinstall|update|openid|auth.mobile', 'uses' => 'MobileController@dashboard'));
 Route::any('login_mobile', array('as' => 'login_mobile', 'before' => 'force.ssl', 'uses' => 'MobileController@action'));
@@ -40,6 +40,8 @@ Route::get('schedule_widget_start/{practicehandle}', function($practicehandle = 
 Route::get('install', array('as' => 'install', 'before' => 'force.ssl|installfix|noinstall', 'uses' => 'InstallController@view'));
 Route::get('install_fix', array('as' => 'install_fix', 'uses' => 'InstallController@install_fix'));
 Route::get('reset_database', array('as' => 'reset_database', 'uses' => 'InstallController@reset_database'));
+Route::get('google_start', array('as' => 'google_start', 'uses' => 'InstallController@google_start'));
+Route::post('google_upload', array('as' => 'google_upload', 'uses' => 'AjaxInstallController@google_upload'));
 Route::get('update', array('as' => 'update', 'uses' => 'AjaxInstallController@update'));
 Route::get('update_system', array('as' => 'update_system', 'uses' => 'BackupController@update_system'));
 Route::get('set_version', array('as' => 'set_version', 'uses' => 'AjaxInstallController@set_version'));
@@ -318,9 +320,17 @@ Route::filter('google', function()
 	}
 });
 
+Route::filter('googlecheck', function()
+{
+	$config_file = __DIR__."/../.google";
+	if (! file_exists($config_file)) {
+		return Redirect::to('google_start');
+	}
+});
+
 Route::filter('openid', function()
 {
-	if(route('home') == 'https://hieofone.com/nosh' || route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh') {
+	if(route('home') == 'https://hieofone.com/nosh' || route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh' || route('home') == 'http://uma.noshchartingsystem.com/nosh') {
 		$row = Practiceinfo::find(1);
 		if ($row->openidconnect_client_id == '') {
 			return Redirect::to('oidc_register_client');

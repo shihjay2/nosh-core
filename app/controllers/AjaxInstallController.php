@@ -210,24 +210,6 @@ class AjaxInstallController extends BaseController {
 						'default_scope' => false,
 						'structured' => false,
 						'structured_param_description' => null
-					],
-					[
-						'scope' => 'npi',
-						'description' => 'national provider indentification number',
-						'icon' => 'user',
-						'restricted' => false,
-						'default_scope' => true,
-						'structured' => false,
-						'structured_param_description' => null
-					],
-					[
-						'scope' => 'practice_npi',
-						'description' => 'national practice identification number',
-						'icon' => 'globe',
-						'restricted' => false,
-						'default_scope' => true,
-						'structured' => false,
-						'structured_param_description' => null
 					]
 				);
 				foreach ($data_edit8s as $data_edit8) {
@@ -979,6 +961,30 @@ class AjaxInstallController extends BaseController {
 		}
 		return "Imported " . $i . " templates." . $error;
 	}
+	
+	public function google_upload()
+	{
+		$pid = Session::get('pid');
+		$directory = __DIR__."/../../";
+		$new_name = ".google";
+		$config_file = __DIR__."/../../.google";
+		foreach (Input::file('file') as $file) {
+			if ($file) {
+				$json = file_get_contents($file->getRealPath());
+				if (json_decode($json) == NULL) {
+					echo "This is not a json file.  Try again.";
+					exit (0);
+				}
+				if (file_exists($config_file)) {
+					unlink($config_file);
+				}
+				$file->move($directory, $new_name);
+			}
+		}
+		echo 'Google client JSON file saved!';
+	}
+	
+	// Update scripts
 	
 	public function update()
 	{
