@@ -207,6 +207,10 @@ class LoginController extends BaseController {
 		} else {
 			// If patient-centric, confirm if user request is registered to pNOSH first
 			if ($practice->patient_centric == 'y') {
+				// Flush out all previous errored attempts.
+				if (Session::has('uma_error')) {
+					Session::forget('uma_error');
+				}
 				// Check if there is an invite first
 				$invite_query = DB::table('uma_invitation')->where('email', '=', $email)->where('invitation_timeout', '>', time())->first();
 				if (!$invite_query) {
@@ -214,115 +218,122 @@ class LoginController extends BaseController {
 					return Redirect::to('uma_invitation_request');
 				}
 				// Sync mdNOSH Gateway and pNOSH UMA Server user credentials
-				$this->syncuser($access_token);
-				// Add resources associated with new provider user to pNOSH UMA Server
-				$resource_set_id_arr = explode(',', $invite_query->resource_set_ids);
-				foreach ($resource_set_id_arr as $resource_set_id) {
-					$uma_query = DB::table('uma')->where('resource_set_id', '=', $resource_set_id)->get();
-					$scopes = array();
-					if ($uma_query) {
-						// Register all scopes for resource sets for now
-						foreach ($uma_query as $uma_row) {
-							$scopes[] = $uma_row->scope;
+				if ($this->syncuser($access_token)) {
+					// Add resources associated with new provider user to pNOSH UMA Server
+					$resource_set_id_arr = explode(',', $invite_query->resource_set_ids);
+					foreach ($resource_set_id_arr as $resource_set_id) {
+						$uma_query = DB::table('uma')->where('resource_set_id', '=', $resource_set_id)->get();
+						$scopes = array();
+						if ($uma_query) {
+							// Register all scopes for resource sets for now
+							foreach ($uma_query as $uma_row) {
+								$scopes[] = $uma_row->scope;
+							}
 						}
+						$this->uma_policy($resource_set_id, $email, $scopes);
 					}
-					$this->uma_policy($resource_set_id, $email, $scopes);
-				}
-				// Get Practice NPI from Oauth credentials and check if practice already loaded
-				$practice_npi = $oidc->requestUserInfo('practice_npi');
-				$practice_id = false;
-				if ($practice_npi != '') {
-					$practice_npi_array = explode(',', $practice_npi);
+					// Get Practice NPI from Oauth credentials and check if practice already loaded
+					$practice_npi = $oidc->requestUserInfo('practice_npi');
+					$practice_id = false;
 					$practice_npi_array_null = array();
-					foreach ($practice_npi_array as $practice_npi_item) {
-						$practice_query = DB::table('practiceinfo')->where('npi', '=', $practice_npi_item)->first();
-						if ($practice_query) {
-							$practice_id = $practice_query->practice_id;
-						} else {
-							$practice_npi_array_null[] = $practice_npi_item;
+					if ($practice_npi != '') {
+						$practice_npi_array = explode(',', $practice_npi);
+						foreach ($practice_npi_array as $practice_npi_item) {
+							$practice_query = DB::table('practiceinfo')->where('npi', '=', $practice_npi_item)->first();
+							if ($practice_query) {
+								$practice_id = $practice_query->practice_id;
+							} else {
+								$practice_npi_array_null[] = $practice_npi_item;
+							}
 						}
+					} else {
+						Session::put('uma_error', 'No Practice NPI registered.  Please have one registered on mdNOSH to continue.');
+						return Redirect::to('uma_invitation_request');
 					}
-				}
-				if ($practice_id == false) {
-					// No practice is registered to pNOSH yet so let's add it
-					if (count($practice_npi_array_null) == 1) {
-						// Only 1 NPI associated with provider, great!
-						$url = 'http://docnpi.com/api/index.php?ident=' . $practice_npi_array_null[0] . '&is_ident=true&format=aha';
-						$ch = curl_init();
-						curl_setopt($ch,CURLOPT_URL, $url);
-						curl_setopt($ch,CURLOPT_FAILONERROR,1);
-						curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
-						curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-						curl_setopt($ch,CURLOPT_TIMEOUT, 15);
-						$data1 = curl_exec($ch);
-						curl_close($ch);
-						$html = new Htmldom($data1);
-						$practicename = '';
-						$address = '';
-						$street_address1 = '';
-						$city = '';
-						$state = '';
-						$zip = '';
-						if (isset($html)) {
-							$li = $html->find('li',0);
-							if (isset($li)) {
-								$nomatch = $li->innertext;
-								if ($nomatch != ' no matching results ') {
-									$name_item = $li->find('span[class=org]',0);
-									$practicename = $name_item->innertext;
-									$address_item = $li->find('span[class=address]',0);
-									$address = $address_item->innertext;
+					if ($practice_id == false) {
+						// No practice is registered to pNOSH yet so let's add it
+						if (count($practice_npi_array_null) == 1) {
+							// Only 1 NPI associated with provider, great!
+							$url = 'http://docnpi.com/api/index.php?ident=' . $practice_npi_array_null[0] . '&is_ident=true&format=aha';
+							$ch = curl_init();
+							curl_setopt($ch,CURLOPT_URL, $url);
+							curl_setopt($ch,CURLOPT_FAILONERROR,1);
+							curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+							curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+							curl_setopt($ch,CURLOPT_TIMEOUT, 15);
+							$data1 = curl_exec($ch);
+							curl_close($ch);
+							$html = new Htmldom($data1);
+							$practicename = '';
+							$address = '';
+							$street_address1 = '';
+							$city = '';
+							$state = '';
+							$zip = '';
+							if (isset($html)) {
+								$li = $html->find('li',0);
+								if (isset($li)) {
+									$nomatch = $li->innertext;
+									if ($nomatch != ' no matching results ') {
+										$name_item = $li->find('span[class=org]',0);
+										$practicename = $name_item->innertext;
+										$address_item = $li->find('span[class=address]',0);
+										$address = $address_item->innertext;
+									}
 								}
 							}
+							if ($address != '') {
+								$address_array = explode(',', $address);
+								if (isset($address_array[0])) {
+									$street_address1 = trim($address_array[0]);
+								}
+								if (isset($address_array[1])) {
+									$zip = trim($address_array[1]);
+								}
+								if (isset($address_array[2])) {
+									$city = trim($address_array[2]);
+								}
+								if (isset($address_array[3])) {
+									$state = trim($address_array[3]);
+								}
+							}
+							$practice_data = array(
+								'npi' => $practice_npi_array_null[0],
+								'practice_name' => $practicename,
+								'street_address1' => $street_address1,
+								'city' => $city,
+								'state' => $state,
+								'zip' => $zip,
+								'documents_dir' => $practice->documents_dir,
+								'version' => $practice->version,
+								'active' => 'Y',
+								'fax_type' => '',
+								'vivacare' => '',
+								'patient_centric' => 'yp',
+								'smtp_user' => $practice->smtp_user,
+								'smtp_pass' => $practice->smtp_pass
+							);
+							$practice_id = DB::table('practiceinfo')->insertGetId($practice_data);
+							$this->audit('Add');
+						} else {
+							// Ask for provider to choose which practice to link with pNOSH
+							Session::put('practice_npi_array', implode(',', $practice_npi_array_null));
+							Session::put('firstname', $firstname);
+							Session::put('lastname', $lastname);
+							Session::put('username', $oidc->requestUserInfo('sub'));
+							Session::put('middle', $oidc->requestUserInfo('middle_name'));
+							Session::put('displayname', $oidc->requestUserInfo('name'));
+							Session::put('email', $email);
+							Session::put('npi', $npi);
+							Session::put('practice_choose', 'y');
+							Session::put('uid', $oidc->requestUserInfo('sub'));
+							Session::put('oidc_auth_access_token', $access_token);
+							return Redirect::to('practice_choose');
 						}
-						if ($address != '') {
-							$address_array = explode(',', $address);
-							if (isset($address_array[0])) {
-								$street_address1 = trim($address_array[0]);
-							}
-							if (isset($address_array[1])) {
-								$zip = trim($address_array[1]);
-							}
-							if (isset($address_array[2])) {
-								$city = trim($address_array[2]);
-							}
-							if (isset($address_array[3])) {
-								$state = trim($address_array[3]);
-							}
-						}
-						$practice_data = array(
-							'npi' => $practice_npi_array_null[0],
-							'practice_name' => $practicename,
-							'street_address1' => $street_address1,
-							'city' => $city,
-							'state' => $state,
-							'zip' => $zip,
-							'documents_dir' => $practice->documents_dir,
-							'version' => $practice->version,
-							'active' => 'Y',
-							'fax_type' => '',
-							'vivacare' => '',
-							'patient_centric' => 'yp',
-							'smtp_user' => $practice->smtp_user,
-							'smtp_pass' => $practice->smtp_pass
-						);
-						$practice_id = DB::table('practiceinfo')->insertGetId($practice_data);
-						$this->audit('Add');
-					} else {
-						// Ask for provider to choose which practice to link with pNOSH
-						Session::put('practice_npi_array', implode(',', $practice_npi_array_null));
-						Session::put('firstname', $firstname);
-						Session::put('lastname', $lastname);
-						Session::put('username', $oidc->requestUserInfo('sub'));
-						Session::put('middle', $oidc->requestUserInfo('middle_name'));
-						Session::put('displayname', $oidc->requestUserInfo('name'));
-						Session::put('email', $email);
-						Session::put('npi', $npi);
-						Session::put('practice_choose', 'y');
-						Session::put('uid', $oidc->requestUserInfo('sub'));
-						Session::put('oidc_auth_access_token', $access_token);
-						return Redirect::to('practice_choose');
 					}
+				} else {
+					Session::put('uma_error', 'Unable to synchronize user information from mdNOSH.  Please login again at a later time.');
+					return Redirect::to('uma_invitation_request');
 				}
 				// Finally, add user to pNOSH
 				$data = array(

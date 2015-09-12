@@ -9319,6 +9319,7 @@ class BaseController extends Controller {
 			} else {
 				DB::connection('oic')->table('user_info')->insert($result['user_info']);
 			}
+			$return = true;
 		}
 		return $return;
 	}
