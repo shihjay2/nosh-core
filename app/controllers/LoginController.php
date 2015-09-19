@@ -592,10 +592,17 @@ class LoginController extends BaseController {
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc->setRedirectURL($url);
 		if ($practice->uma_refresh_token == '') {
-			$oidc->authenticate(true, 'user1');
+			$oidc->addScope('openid');
+			$oidc->addScope('email');
+			$oidc->addScope('profile');
+			$oidc->addScope('offline');
+			$oidc->addScope('uma_protection');
 		} else {
-			$oidc->authenticate(true, 'user');
+			$oidc->addScope('openid');
+			$oidc->addScope('email');
+			$oidc->addScope('profile');
 		}
+		$oidc->authenticate(true);
 		$firstname = $oidc->requestUserInfo('given_name');
 		$lastname = $oidc->requestUserInfo('family_name');
 		$email = $oidc->requestUserInfo('email');
@@ -847,16 +854,11 @@ class LoginController extends BaseController {
 	
 	public function uma_register_client()
 	{
-		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
-		if ($practice->patient_centric == 'y') {
-			$patient = DB::table('demographics')->first();
-			$dob = date('m/d/Y', strtotime($patient->DOB));
-			$client_name = 'PatientNOSH for ' . $patient->firstname . ' ' . $patient->lastname . ' (DOB: ' . $dob . ')'; 
-		} else {
-			$client_name = 'PracticeNOSH for ' . $practice->practice_name;
-		}
-		$open_id_url = 'http://162.243.111.18/uma-server-webapp/';
-		$url = route('uma_auth');
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
+		$client_name = 'Practice NOSH for ' . $practice->practice_name;
+		$patient = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();
+		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', $patient->url);
+		$url = route('uma_get_refresh_token');
 		$oidc = new OpenIDConnectClient($open_id_url);
 		$oidc->setClientName($client_name);
 		$oidc->setRedirectURL($url);
@@ -867,9 +869,38 @@ class LoginController extends BaseController {
 			'uma_client_id' => $client_id,
 			'uma_client_secret' => $client_secret
 		);
-		DB::table('practiceinfo')->where('practice_id', '=', '1')->update($data);
+		DB::table('demographics_relate')->where('demographics_relate_id', '=', $patient->demographics_relate_id)->update($data);
 		$this->audit('Update');
-		return Redirect::intended('/');
+		return Redirect::to('chart');
+	}
+	
+	public function uma_get_refresh_token()
+	{
+		$patient = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();
+		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', $patient->url);
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $patient->uma_client_id;
+		$client_secret = $patient->uma_client_secret;
+		$url = route('uma_get_refresh_token');
+		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc->setRedirectURL($url);
+		$oidc->addScope('openid');
+		$oidc->addScope('email');
+		$oidc->addScope('profile');
+		$oidc->addScope('offline');
+		$oidc->addScope('uma_authorization');
+		$oidc->authenticate(true);
+		$firstname = $oidc->requestUserInfo('given_name');
+		$lastname = $oidc->requestUserInfo('family_name');
+		$email = $oidc->requestUserInfo('email');
+		$npi = $oidc->requestUserInfo('npi');
+		$access_token = $oidc->getAccessToken();
+		if ($oidc->getRefreshToken() != '') {
+			$refresh_data['uma_refresh_token'] = $oidc->getRefreshToken();
+			DB::table('demographics_relate')->where('demographics_relate_id', '=', $patient->demographics_relate_id)->update($refresh_data);
+			$this->audit('Update');
+		}
+		return Redirect::to('chart');
 	}
 	
 	public function uma_logout()

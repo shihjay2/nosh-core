@@ -67,7 +67,7 @@ Route::group(array('before' => 'force.ssl|csrf_header|session_check|acl2'), func
 Route::group(array('before' => 'force.ssl|csrf_header|session_check|acl6'), function() {
 	Route::controller('ajaxsetup', 'AjaxSetupController');
 });
-Route::group(array('before' => 'auth|force.ssl|acl1|pid_check'), function() {
+Route::group(array('before' => 'auth|force.ssl|acl1|pid_check|uma_check'), function() {
 	Route::get('chart', array('as' => 'chart', 'uses' => 'ChartController@main'));
 	Route::get('messaging', array('as' => 'messaging', 'uses' => 'HomeController@showWelcome'));
 	Route::get('schedule', array('as' => 'schedule', 'uses' => 'HomeController@showWelcome'));
@@ -193,6 +193,7 @@ Route::any('practice_choose', array('as' => 'practice_choose', 'before' => 'forc
 Route::any('uma_invitation_request', array('as' => 'uma_invitation_request', 'before' => 'force.ssl', 'uses' => 'LoginController@uma_invitation_request'));
 Route::get('uma_auth', array('as' => 'uma_auth', 'uses' => 'LoginController@uma_auth'));
 Route::get('uma_register_client', array('as' => 'uma_register_client', 'uses' => 'LoginController@uma_register_client'));
+Route::get('uma_get_refresh_token', array('as' => 'uma_get_refresh_token', 'uses' => 'LoginController@uma_get_refresh_token'));
 Route::group(array('prefix' => 'uma_api'), function()
 {
 	Route::controller('', 'UMAAPIController');
@@ -203,12 +204,13 @@ Route::get('authtest', array('before' => 'auth.basic', function()
 	return View::make('hello');
 }));
 Route::get('checkapi/{practicehandle}', array('as' => 'checkapi', 'before' => 'force.ssl', 'uses' => 'AjaxCommonController@checkapi'));
+Route::post('registerapi', array('as' => 'registerapi', 'before' => 'force.ssl', 'uses' => 'AjaxCommonController@registerapi'));
 Route::get('practiceregister/{api}', array('as' => 'practiceregister', 'before' => 'force.ssl', 'uses' => 'InstallController@practiceregister'));
 Route::post('practiceregisternosh/{api}', array('as' => 'practiceregisternosh', 'uses' => 'AjaxInstallController@practiceregisternosh'));
 Route::get('providerregister/{api}', array('as' => 'providerregister', 'before' => 'force.ssl', 'uses' => 'InstallController@providerregister'));
 Route::post('apilogin', array('as' => 'apilogin', 'uses' => 'AjaxLoginController@apilogin'));
 Route::post('apilogout', array('as' => 'apilogout', 'uses' => 'AjaxLoginController@apilogout'));
-Route::group(array('prefix' => 'api/v1', 'before' => 'force.ssl|auth.basic'), function()
+Route::group(array('prefix' => 'api/v1', 'before' => 'force.ssl|auth.token'), function()
 {
 	Route::controller('sync', 'APIv1Controller');
 });
@@ -369,6 +371,20 @@ Route::filter('pid_check', function()
 {
 	if (!Session::get('pid')) {
 		return Redirect::to('/');
+	}
+});
+
+Route::filter('uma_check', function()
+{
+	$query = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();
+	if ($query->api_key != '') {
+		if ($query->uma_client_id == '') {
+			return Redirect::to('uma_register_client');
+		} else {
+			if ($query->uma_refresh_token) {
+				return Redirect::to('uma_get_refresh_token');
+			}
+		}
 	}
 });
 

@@ -55,7 +55,8 @@
 				'default_template' : '',
 				'mtm_extension': '',
 				'hedis': '',
-				'messaging_dialog_load' : 0
+				'messaging_dialog_load' : 0,
+				'patient_centric' : '<?php echo Session::get('patient_centric'); ?>'
 			};
 			var gender = {"m":"Male","f":"Female","u":"Undifferentiated"};
 			var marital = {"":"","Single":"Single","Married":"Married","Common law":"Common law","Domestic partner":"Domestic partner","Registered domestic partner":"Registered domestic partner","Interlocutory":"Interlocutory","Living together":"Living together","Legally Separated":"Legally Separated","Divorced":"Divorced","Separated":"Separated","Widowed":"Widowed","Other":"Other","Unknown":"Unknown","Unmarried":"Unmarried","Unreported":"Unreported"};
@@ -176,6 +177,12 @@
 		<div id="uma_dialog_frame" title="pNOSH User Managed Access">
 			<iframe id="uma_iframe" src="" style="height:98%; width:98%;"></iframe></div>
 		</div>
+		<div id="uma_provider_dialog" title="Connect to your EHR">
+			<form id="uma_provider_dialog_form" class="pure-form pure-form-stacked">
+				<label for="uma_provider_practice_url">Enter the URL of your practice NOSH:</label>
+				<input type="text" style="width:95%" name="practice_url" id="uma_provider_practice_url" class="text" required/>
+			</form>
+		</div>
 		<div id="allpage" class="allpage">
 			<div id="header" class="header ui-widget">
 				<?php if(Auth::check()) {?>
@@ -203,7 +210,7 @@
 							&nbspVersion <?php echo Session::get('version');?> &nbsp|&nbsp
 							<?php echo Session::get('displayname') . ' ';?>&nbsp|&nbsp
 							<?php echo date('M j, Y') . ' ';?>&nbsp
-							<?php if(Session::get('patient_centric') == 'y') {?>
+							<?php if(Session::get('patient_centric') == 'y' || Session::get('patient_centric') == 'yp') {?>
 								<i class="fa fa-share-square-o fa-fw fa-lg nosh_tooltip" style="vertical-align:middle;padding:2px" id="share_command" title="Share your Chart"></i>
 							<?php }?>
 							<i class="fa fa-lock fa-fw fa-lg nosh_tooltip" style="vertical-align:middle;padding:2px" id="logout_command" title="Logout"></i>

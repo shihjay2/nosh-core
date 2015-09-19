@@ -111,8 +111,6 @@ class AjaxInstallController extends BaseController {
 					['owner_id' => $client_id1, 'scope' => 'address'],
 					['owner_id' => $client_id1, 'scope' => 'phone'],
 					['owner_id' => $client_id1, 'scope' => 'offline_access'],
-					['owner_id' => $client_id1, 'scope' => 'npi'],
-					['owner_id' => $client_id1, 'scope' => 'practice_npi'],
 					['owner_id' => $client_id1, 'scope' => 'uma_protection']
 				);
 				foreach ($data_edit5s as $data_edit5) {
@@ -207,7 +205,7 @@ class AjaxInstallController extends BaseController {
 						'description' => 'request access to protected resources',
 						'icon' => 'share',
 						'restricted' => false,
-						'default_scope' => false,
+						'default_scope' => true,
 						'structured' => false,
 						'structured_param_description' => null
 					]

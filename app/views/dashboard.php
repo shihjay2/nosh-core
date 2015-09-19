@@ -294,7 +294,6 @@
 	<i class="fa fa-openid fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="<?php $url = str_replace('/nosh', '/uma-server-webapp/manage/admin/clients', URL::to('/')); echo $url; ?>" target="_blank">Manage all clients (applications and providers) connected to your NOSH</a><br><br>
 	<table id="manage_practice_list" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="manage_practice_list_pager" class="scroll" style="text-align:center;"></div><br>
-	<button type="button" id="dashboard_add_practice" class="nosh_button_add">Add Practice</button>
 	<button type="button" id="dashboard_delete_practice" class="nosh_button_delete">Remove Practice</button>
 </div>
 <div id="add_practice_dialog" title="Add a Practice">

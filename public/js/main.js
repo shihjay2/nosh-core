@@ -2014,6 +2014,73 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
+	$("#uma_provider_dialog").dialog({ 
+		bgiframe: true, 
+		autoOpen: false, 
+		height: 200, 
+		width: 400, 
+		draggable: false,
+		resizable: false,
+		closeOnEscape: false,
+		dialogClass: "noclose",
+		buttons: {
+			'Save': function() {
+				var bValid = true;
+				$("#uma_provider_dialog_form").find("[required]").each(function() {
+					var input_id = $(this).attr('id');
+					var id1 = $("#" + input_id); 
+					var text = $("label[for='" + input_id + "']").html();
+					bValid = bValid && checkEmpty(id1, text);
+					if (input_id == 'uma_provider_practice_url') {
+						bValid = bValid && checkRegexp(id1, /\(?(?:(http|https):\/\/)?(?:((?:[^\W\s]|\.|-|[:]{1})+)@{1})?((?:www.)?(?:[^\W\s]|\.|-)+[\.][^\W\s]{2,4}|localhost(?=\/)|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(?::(\d*))?([\/]?[^\s\?]*[\/]{1})*(?:\/?([^\s\n\?\[\]\{\}\#]*(?:(?=\.)){1}|[^\s\n\?\[\]\{\}\.\#]*)?([\.]{1}[^\s\?\#]*)?)?(?:\?{1}([^\s\n\#\[\]]*))?([\#][^\s\n]*)?\)?/, "eg. https://www.nosh.com/nosh" );
+					}
+				});
+				if (bValid) {
+					var str = $("#uma_provider_dialog_form").serialize();
+					if(str){
+						$.ajax({
+							type: "POST",
+							url: "ajaxcommon/practice-api",
+							data: str,
+							dataType: 'json',
+							success: function(data){
+								if (data.status == 'y') {
+									$.jGrowl(data.message);
+									$("#uma_provider_dialog_form").clearForm();
+									$("#uma_provider_dialog").dialog('close');
+									$("#share_command").css('color','green');
+									$("#share_command").attr('title', 'Connected to: ' + data.url);
+								} else {
+									$.jGrowl(data.message);
+								}
+							}
+						});
+					} else {
+						$.jGrowl("Please complete the form");
+					}
+				}
+			},
+			Cancel: function() {
+				$("#uma_provider_dialog_form").clearForm();
+				$("#uma_provider_dialog").dialog('close');
+			}
+		},
+		position: { my: 'center', at: 'center', of: '#maincontent' }
+	});
+	if (noshdata.patient_centric == 'yp') {
+		$.ajax({
+			type: "POST",
+			url: "ajaxcommon/get-provider-nosh",
+			success: function(data){
+				if (data != '') {
+					$("#share_command").css('color','green');
+					$("#share_command").attr('title', 'Connected to: ' + data);
+				} else {
+					$("#share_command").attr('title', 'Connect to your mdNOSH instance here');
+				}
+			}
+		});
+	}
 });
 $(document).on("click", "#encounter_panel", function() {
 	noshdata.encounter_active = 'y';
@@ -3950,23 +4017,33 @@ $(document).on('click', '.timeline_event', function() {
 	console.log(value + "," + type);
 });
 $(document).on('click', '#share_command', function() {
-	console.log('You clicked on share command');
-	$.ajax({
-		type: "POST",
-		url: "ajaxcommon/get-patient-resources",
-		success: function(data){
-			$("#uma_resources").html(data);
-			$(".nosh_tooltip").tooltip();
-			$('#uma_frame_action').hide();
-			$('#uma_dialog').dialog('option', {
-				height: $("#maincontent").height(),
-				width: $("#maincontent").width(),
-				title: 'Registered Resources',
-				position: { my: 'left top', at: 'left top', of: '#maincontent' }
-			});
-			$("#uma_dialog").dialog('open');
-		}
-	});
+	if (noshdata.group_id == '100') {
+		$.ajax({
+			type: "POST",
+			url: "ajaxcommon/get-patient-resources",
+			success: function(data){
+				$("#uma_resources").html(data);
+				$(".nosh_tooltip").tooltip();
+				$('#uma_frame_action').hide();
+				$('#uma_dialog').dialog('option', {
+					height: $("#maincontent").height(),
+					width: $("#maincontent").width(),
+					title: 'Registered Resources',
+					position: { my: 'left top', at: 'left top', of: '#maincontent' }
+				});
+				$("#uma_dialog").dialog('open');
+			}
+		});
+	} else {
+		$.ajax({
+			type: "POST",
+			url: "ajaxcommon/get-provider-nosh",
+			success: function(data){
+				$("#uma_provider_practice_url").val(data);
+				$("#uma_provider_dialog").dialog('open');
+			}
+		});
+	}
 });
 $(document).on('click', '#logout_command', function() {
 	window.location = noshdata.logout_url;

@@ -941,6 +941,100 @@ class AjaxCommonController extends BaseController {
 		echo $result;
 	}
 	
+	public function registerapi()
+	{
+		if (Input::get('practicehandle') == '0') {
+			$query = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		} else {
+			$query = DB::table('practiceinfo')->where('practicehandle', '=', Input::get('practicehandle'))->first();
+		}
+		$practice_id = $query->practice_id;
+		$patient_query = DB::table('demographics')->where('lastname', '=', Input::get('lastname'))->where('firstname', '=', Input::get('firstname'))->where('DOB', '=', Input::get('DOB'))->where('sex', '=', Input::get('sex'))->first();
+		if ($patient_query) {
+			// Patient exists
+			$pid = $patient_query->pid;
+		} else {
+			// If patient doesn't exist, create a new one
+			$data = array(
+				'lastname' => Input::get('lastname'),
+				'firstname' => Input::get('firstname'),
+				'middle' => Input::get('middle'),
+				'nickname' => Input::get('nickname'),
+				'title' => Input::get('title'),
+				'sex' => Input::get('sex'),
+				'DOB'=> Input::get('DOB'),
+				'ss' => Input::get('ss'),
+				'race' => Input::get('race'),
+				'ethnicity' => Input::get('ethnicity'),
+				'language' => Input::get('language'),
+				'address' => Input::get('address'),
+				'city' => Input::get('city'),
+				'state' => Input::get('state'),
+				'zip' => Input::get('zip'),
+				'phone_home' => Input::get('phone_home'),
+				'phone_work' => Input::get('phone_work'),
+				'phone_cell' => Input::get('phone_cell'),
+				'email' => Input::get('email'),
+				'marital_status' => Input::get('marital_status'),
+				'partner_name' => Input::get('partner_name'),
+				'employer' => Input::get('employer'),
+				'emergency_contact' => Input::get('emergency_contact'),
+				'emergency_phone' => Input::get('emergency_phone'),
+				'reminder_method' => Input::get('reminder_method'),
+				'reminder_to' => Input::get('reminder_to'),
+				'cell_carrier' => Input::get('cell_carrier'),
+				'preferred_provider' => Input::get('preferred_provider'),
+				'preferred_pharmacy' => Input::get('preferred_pharmacy'),
+				'active' => Input::get('active'),
+				'other1' => Input::get('other1'),
+				'other2' => Input::get('other2'),
+				'caregiver' => Input::get('caregiver'),
+				'referred_by' => Input::get('referred_by'),
+				'comments' => Input::get('comments'),
+				'rcopia_sync' => 'n',
+				'race_code' => Input::get('race_code'),
+				'ethnicity_code' => Input::get('ethnicity_code'),
+				'guardian_lastname' => Input::get('guardian_lastname'),
+				'guardian_firstname' => Input::get('guardian_firstname'),
+				'guardian_relationship' => Input::get('guardian_relationship'),
+				'guardian_code' => Input::get('guardian_code'),
+				'guardian_address' => Input::get('guardian_address'),
+				'guardian_city' => Input::get('guardian_city'),
+				'guardian_state' => Input::get('guardian_state'),
+				'guardian_zip' => Input::get('guardian_zip'),
+				'guardian_phone_home' => Input::get('guardian_phone_home'),
+				'guardian_phone_work' => Input::get('guardian_phone_work'),
+				'guardian_phone_cell' => Input::get('guardian_phone_cell'),
+				'guardian_email' => Input::get('guardian_email'),
+				'lang_code' => Input::get('lang_code')
+			);
+			$pid = DB::table('demographics')->insertGetId($data);
+			$this->audit('Add');
+			$data1 = array(
+				'billing_notes' => '',
+				'imm_notes' => '',
+				'pid' => $pid,
+				'practice_id' => $practice_id
+			);
+			DB::table('demographics_notes')->insert($data1);
+			$this->audit('Add');
+			$data2 = array(
+				'pid' => $pid,
+				'practice_id' => $practice_id
+			);
+			DB::table('demographics_relate')->insert($data2);
+			$this->audit('Add');
+			$directory = $query->documents_dir . $pid;
+			mkdir($directory, 0775);
+		}
+		$patient_data = array(
+			'api_key' => Input::get('api_key'),
+			'url' => Input::get('url')
+		);
+		DB::table('demographics_relate')->where('pid', '=', $pid)->where('practice_id', '=', $practice_id)->update($patient_data);
+		$this->audit('Update');
+	}
+	
 	public function postPracticeApi()
 	{
 		$url_check = false;
@@ -948,69 +1042,71 @@ class AjaxCommonController extends BaseController {
 		$api_key = uniqid('nosh',true);
 		$register_code = uniqid();
 		$patient_portal = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
-		if (Input::get('practice_url') != '') {
-			$pos = stripos(Input::get('practice_url'), 'noshchartingsystem.com');
-			if ($pos !== false) {
-				$url_explode = explode('/', Input::get('practice_url'));
-				$url = 'https://noshchartingsystem.com/nosh/checkapi/' . $url_explode[5];
+		$patient = DB::table('demographics')->first();
+		$register_data = (array) $patient;
+		$register_data['api_key'] = $api_key;
+		$register_data['url'] = URL::to('/');
+		$pos = stripos(Input::get('practice_url'), 'noshchartingsystem.com');
+		if ($pos !== false) {
+			$url_explode = explode('/', Input::get('practice_url'));
+			$url = 'https://noshchartingsystem.com/nosh/checkapi/' . $url_explode[5];
+			$url1 = 'https://noshchartingsystem.com/nosh/registerapi';
+			$register_data['practicehandle'] = $url_explode[5];
+		} else {
+			$url = Input::get('practice_url') . '/checkapi/0';
+			$url1 = Input::get('practice_url') . '/registerapi';
+			$register_data['practicehandle'] = '0';
+		}
+		$ch = curl_init();
+		curl_setopt($ch,CURLOPT_URL, $url);
+		curl_setopt($ch,CURLOPT_FAILONERROR,1);
+		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch,CURLOPT_TIMEOUT, 60);
+		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT ,0);
+		$result = curl_exec($ch);
+		if(curl_errno($ch)){
+			$url_reason = 'Error: ' . curl_error($ch);
+		} else {
+			if ($result !== 'No') {
+				$url_check = true;
 			} else {
-				$url = Input::get('practice_url') . '/checkapi/0';
-			}
-			$ch = curl_init();
-			curl_setopt($ch,CURLOPT_URL, $url);
-			curl_setopt($ch,CURLOPT_FAILONERROR,1);
-			curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
-			curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-			curl_setopt($ch,CURLOPT_TIMEOUT, 60);
-			curl_setopt($ch,CURLOPT_CONNECTTIMEOUT ,0);
-			$result = curl_exec($ch);
-			if(curl_errno($ch)){
-				$url_reason = 'Error: ' . curl_error($ch);
-			} else {
-				if ($result !== 'No') {
-					$url_check = true;
-				} else {
-					$url_reason = 'Practice NOSH is not set up to accept API connections.  Please update the practice NOSH installation.';
-				}
+				$url_reason = 'mdNOSH is not set up to accept API connections.  Please update the mdNOSH installation.';
 			}
 		}
-		$data = array(
-			'practice_api_key' => $api_key,
-			'active' => 'Y',
-			'practice_name' => Input::get('practice_name'),
-			'npi' => Input::get('npi'),
-			'email' => Input::get('email'),
-			'documents_dir' => $patient_portal->documents_dir,
-			'fax_type' => '',
-			'smtp_user' => $patient_portal->smtp_user,
-			'smtp_pass' => $patient_portal->smtp_pass,
-			'vivacare' => '',
-			'version' => $patient_portal->version,
-			'patient_centric' => 'yp',
-			'practice_registration_key' => $register_code,
-			'practice_registration_timeout' => time() + 86400
-		);
-		$practice_id = DB::table('practiceinfo')->insertGetId($data);
-		$patient = DB::table('demographics')->first();
-		$data2 = array(
-			'pid' => $patient->pid,
-			'practice_id' => $practice_id,
-			'api_key' => $api_key
-		);
-		DB::table('demographics_relate')->insert($data2);
-		$this->audit('Add');
 		if ($url_check == false) {
-			$data_message['temp_url'] = rtrim($patient_portal->patient_portal, '/') . '/practiceregister/' . $register_code;
-			$return = 'Practice added without NOSH integration.';
+			$return['status'] = 'n';
+			//$data_message['temp_url'] = rtrim($patient_portal->patient_portal, '/') . '/practiceregister/' . $register_code;
+			$return['message'] = 'Problem with contacting the URL problem for NOSH integration.  Please check if you have NOSH and that the URL provided is correct.';
 			if ($url_reason != '') {
-				$return .= '  ' . $url_reason;
+				$return['message'] .= '  ' . $url_reason;
 			}
 		} else {
-			$data_message['temp_url'] = rtrim($patient_portal->patient_portal, '/') . '/practiceregisternosh/' . $register_code;
-			$return = 'Practice added with NOSH integration.';
+			$data = array(
+				'practice_api_key' => $api_key,
+				'active' => 'Y',
+				'practice_registration_key' => $register_code,
+				'practice_registration_timeout' => time() + 86400,
+				'practice_api_url' => Input::get('practice_url')
+			);
+			$practice_id = Session::get('practice_id');
+			DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->update($data);
+			$data2 = array(
+				'pid' => $patient->pid,
+				'practice_id' => $practice_id,
+				'api_key' => $api_key
+			);
+			DB::table('demographics_relate')->insert($data2);
+			$this->audit('Add');
+			//$data_message['temp_url'] = rtrim($patient_portal->patient_portal, '/') . '/practiceregisternosh/' . $register_code;
+			// Send API key to mdNOSH;
+			$result = $this->send_api_data($url1, $register_data, '', '');
+			$return['status'] = 'y';
+			$return['message'] = 'Practice added with NOSH integration.';
+			$return['url'] = 'Connected to this NOSH URL: ' . $url2; 
 		}
-		$this->send_mail('emails.apiregister', $data_message, 'NOSH ChartingSystem API Registration', Input::get('email'), '1');
-		echo $return;
+		//$this->send_mail('emails.apiregister', $data_message, 'NOSH ChartingSystem API Registration', Input::get('email'), '1');
+		echo json_encode($return);
 	}
 	
 	public function postConnectedPractices()
@@ -1079,6 +1175,12 @@ class AjaxCommonController extends BaseController {
 				$this->audit('Update');
 			}
 		}
+	}
+	
+	public function postGetProviderNosh()
+	{
+		$query = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
+		echo $query->practice_api_url;
 	}
 	
 	public function postGetPatientResources()

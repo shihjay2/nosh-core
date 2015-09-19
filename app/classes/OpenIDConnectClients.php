@@ -178,7 +178,7 @@ class OpenIDConnectClient
 	 * @return bool
 	 * @throws OpenIDConnectClientException
 	 */
-	public function authenticate($uma=false,$type='') {
+	public function authenticate($uma=false) {
 
 		// Do a preemptive check to see if the provider has thrown an error from a previous redirect
 		if (isset($_REQUEST['error'])) {
@@ -232,7 +232,7 @@ class OpenIDConnectClient
 			if ($uma == false) {
 				$this->requestAuthorization();
 			} else {
-				$this->requestUmaAuthorization($type);
+				$this->requestUmaAuthorization();
 			}
 			return false;
 		}
@@ -751,7 +751,7 @@ class OpenIDConnectClient
 			$registration_endpoint = $this->getProviderConfigValue('dynamic_client_endpoint', $uma);
 			$send_object = (object)array(
 				'redirect_uris' => array($this->getRedirectURL(), 
-					str_replace('uma_auth', 'uma_api', $this->getRedirectURL())
+					str_replace('uma_get_refresh_token', 'uma_api', $this->getRedirectURL())
 				),
 				'client_name' => $this->getClientName(),
 				'logo_uri' => 'https://www.noshchartingsystem.com/SAAS-Logo.jpg'
@@ -848,7 +848,7 @@ class OpenIDConnectClient
 	/**
 	 * @param $resourceID
 	 */
-	private function requestUmaAuthorization($type) {
+	private function requestUmaAuthorization() {
 		$auth_endpoint = $this->getProviderConfigValue("authorization_endpoint", true);
 		$response_type = "code";
 
@@ -861,35 +861,15 @@ class OpenIDConnectClient
 		$state = $this->generateRandString();
 		$_SESSION['openid_connect_state'] = $state;
 		
-		if ($type == 'user1') {
-			$auth_params = array_merge($this->authParams, array(
-				'response_type' => $response_type,
-				'redirect_uri' => $this->getRedirectURL(),
-				'client_id' => $this->clientID,
-				'nonce' => $nonce,
-				'state' => $state,
-				'scope' => 'openid offline_access uma_protection email profile'
-			));
-		} elseif ($type == 'user') {
-			$auth_params = array_merge($this->authParams, array(
-				'response_type' => $response_type,
-				'redirect_uri' => $this->getRedirectURL(),
-				'client_id' => $this->clientID,
-				'nonce' => $nonce,
-				'state' => $state,
-				'scope' => 'openid email profile'
-			));
-		} else {
-			$auth_params = array_merge($this->authParams, array(
-				'response_type' => $response_type,
-				'redirect_uri' => $this->getRedirectURL(),
-				'client_id' => $this->clientID,
-				'nonce' => $nonce,
-				'state' => $state,
-				'scope' => 'uma_authorization email profile'
-			));
-		}
-
+		$auth_params = array_merge($this->authParams, array(
+			'response_type' => $response_type,
+			'redirect_uri' => $this->getRedirectURL(),
+			'client_id' => $this->clientID,
+			'nonce' => $nonce,
+			'state' => $state,
+			'scope' => 'openid'
+		));
+		
 		// If the client has been registered with additional scopes
 		if (sizeof($this->scopes) > 0) {
 			$auth_params = array_merge($auth_params, array('scope' => implode(' ', $this->scopes)));
