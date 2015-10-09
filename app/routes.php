@@ -494,13 +494,13 @@ Route::filter('auth.basic', function()
 Route::filter('auth.token', function()
 {
 	$payload = Request::header('Authorization');
+	$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+	$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+	$client_id = $practice->uma_client_id;
+	$client_secret = $practice->uma_client_secret;
 	if ($payload) {
 		// RPT, Perform Token Introspection
 		$rpt = str_replace('Bearer ', '', $payload);
-		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
-		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
-		$client_id = $practice->uma_client_id;
-		$client_secret = $practice->uma_client_secret;
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc->refresh($practice->uma_refresh_token,true);
 		$result_rpt = $oidc->introspect($rpt);
