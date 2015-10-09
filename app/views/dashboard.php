@@ -319,10 +319,10 @@
 		<button type="button" id="manual_cancel_practice_button">Select</button>
 	</form>
 </div>
-<div id="hieofone_dialog" title="Transfer credentials to HIEofOne">
-	By clicking OK, your login credentials will be transferred automatically to HIE of One.<br><br>
-	By using HIEofOne as your login provider, you will be able to use your username and password to any PatientNOSH instances.<br><br>
-	<a href="http://162.243.111.18/nosh-sso" target="_blank">Click here for more information</a>.<br><br>
+<div id="hieofone_dialog" title="Transfer credentials to mdNOSH Gateway">
+	By clicking OK, your login credentials will be transferred automatically to mdNOSH Gateway.<br><br>
+	By using mdNOSH Gateway as your login provider, you will be able to use your username and password to any PatientNOSH instances.<br><br>
+	<a href="https://noshchartingsystem.com/nosh-sso" target="_blank">Click here for more information</a>.<br><br>
 	<div id="hieofone_error"></div>
 	<div id="hieofone_username_div">
 		<form class="pure-form">

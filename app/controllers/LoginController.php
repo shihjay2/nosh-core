@@ -685,6 +685,13 @@ class LoginController extends BaseController {
 							URL::to('/') . '/fhir/Binary'
 						)
 					);
+					$resource_set_array[] = array(
+						'name' => 'Observation',
+						'icon' => 'https://noshchartingsystem.com/i-cardiology.png',
+						'scopes' => array(
+							URL::to('/') . '/fhir/Observation'
+						)
+					);
 					$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 					$oidc1->refresh($refresh_data['uma_refresh_token'],true);
 					foreach ($resource_set_array as $resource_set_item) {

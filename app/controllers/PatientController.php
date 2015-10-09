@@ -17,6 +17,7 @@ class PatientController extends BaseController {
 			$table_key = [
 				'name' => ['lastname','firstname'],
 				'identifier' => 'pid',
+				'_id' => 'pid',
 				'telcom' => ['phone_home','phone_work','phone_cell'],
 				'gender' => 'sex',
 				'birthDate' => 'dob',
@@ -26,7 +27,6 @@ class PatientController extends BaseController {
 				'contact.telcom' => 'guardian_phone_home',
 				'active' => 'active'
 			];
-			
 			$result = $this->resource_translation($data, $table, $table_primary_key, $table_key);
 			$queries = DB::getQueryLog();
 			$sql = end($queries);
@@ -38,47 +38,16 @@ class PatientController extends BaseController {
 			}
 			if ($result['response'] == true) {
 				$statusCode = 200;
-				$time = date('c', time());
-				$reference_uuid = $this->gen_uuid();
 				$response['resourceType'] = 'Bundle';
-				$response['title'] = 'Search result';
+				$response['type'] = 'searchset';
 				$response['id'] = 'urn:uuid:' . $this->gen_uuid();
-				$response['updated'] = $time;
-				$response['category'][] = [
-					'scheme' => 'http://hl7.org/fhir/tag',
-					'term' => 'http://hl7.org/fhir/tag/message',
-					'label' => 'http://ht7.org/fhir/tag/label'
-				];
-				$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
-				$response['author'][] = [
-					'name' => $practice->practice_name,
-					'uri' => route('home') . '/fhir'
-				];
-				$response['totalResults'] = $result['total'];
+				$response['total'] = $result['total'];
 				foreach ($result['data'] as $row_id) {
 					$row = DB::table($table)->where($table_primary_key, '=', $row_id)->first();
 					$resource_content = $this->resource_detail($row, $resource);
 					$response['entry'][] = [
-						'title' => 'Resource of type ' . $resource . ' with id = ' . $row_id . ' and version = 1',
-						'link' => [
-							'rel' => 'self',
-							'href' => Request::url() . '/' . $row_id
-						],
-						'id' => Request::url() . '/' . $row_id,
-						'updated' => $time,
-						'published' => $time,
-						'author' => [
-							'name' => $practice->practice_name,
-							'uri' => route('home') . '/fhir'
-						],
-						'category' => [
-							'scheme' => 'http://hl7.org/fhir/tag',
-							'term' => 'http://hl7.org/fhir/tag/message',
-							'label' => 'http://ht7.org/fhir/tag/label'
-						],
-						'content' => $resource_content,
-						// the summary is variable
-						'summary' => '<div><h5>' . $row->lastname . ', ' . $row->firstname . '. MRN: ' . $row->pid . '</h5></div>'
+						'fullUrl' => Request::url() . '/' . $row_id,
+						'resource' => $resource_content
 					];
 				}
 			} else {
@@ -93,8 +62,6 @@ class PatientController extends BaseController {
 			];
 			$statusCode = 404;
 		}
-		
-		$response['code'] = $sql['query'];
 		return Response::json($response, $statusCode);
 	}
 

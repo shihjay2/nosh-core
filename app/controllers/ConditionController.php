@@ -16,7 +16,7 @@ class ConditionController extends BaseController {
 			$table_primary_key = 'issue_id';
 			$table_key = [
 				'identifier' => 'issue_id',
-				'subject' => 'subject',
+				'patient' => 'pid',
 				'encounter' => 'encounter',
 				'dateAsserted' => 'issue_date_active',
 				'code' => 'issue'
@@ -26,7 +26,7 @@ class ConditionController extends BaseController {
 			$table1_primary_key = 'eid';
 			$table1_key = [
 				'identifier' => 'eid',
-				'subject' => 'subject',
+				'patient' => 'pid',
 				'encounter' => 'encounter',
 				'dateAsserted' => 'assessment_date',
 				'code' => ['assessment_1','assessment_2','assessment_3','assessment_4','assessment_5','assessment_6','assessment_7','assessment_8','assessment_9','assessment_10','assessment_11','assessment_12']
@@ -41,73 +41,24 @@ class ConditionController extends BaseController {
 			}
 			if ($count > 0) {
 				$statusCode = 200;
-				$time = date('c', time());
-				$reference_uuid = $this->gen_uuid();
 				$response['resourceType'] = 'Bundle';
-				$response['title'] = 'Search result';
+				$response['type'] = 'searchset';
 				$response['id'] = 'urn:uuid:' . $this->gen_uuid();
-				$response['updated'] = $time;
-				$response['category'][] = [
-					'scheme' => 'http://hl7.org/fhir/tag',
-					'term' => 'http://hl7.org/fhir/tag/message',
-					'label' => 'http://ht7.org/fhir/tag/label'
-				];
-				$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
-				$response['author'][] = [
-					'name' => $practice->practice_name,
-					'uri' => route('home') . '/fhir'
-				];
-				$response['totalResults'] = $count;
+				$response['total'] = $count;
 				foreach ($result['data'] as $row_id) {
 					$row = DB::table($table)->where($table_primary_key, '=', $row_id)->first();
 					$resource_content = $this->resource_detail($row, $resource);
 					$response['entry'][] = [
-						'title' => 'Resource of type ' . $resource . ' with id = issue_id_' . $row_id . ' and version = 1',
-						'link' => [
-							'rel' => 'self',
-							'href' => Request::url() . '/issue_id_' . $row_id
-						],
-						'id' => Request::url() . '/issue_id_' . $row_id,
-						'updated' => $time,
-						'published' => $time,
-						'author' => [
-							'name' => $practice->practice_name,
-							'uri' => route('home') . '/fhir'
-						],
-						'category' => [
-							'scheme' => 'http://hl7.org/fhir/tag',
-							'term' => 'http://hl7.org/fhir/tag/message',
-							'label' => 'http://ht7.org/fhir/tag/label'
-						],
-						'content' => $resource_content,
-						// the summary is variable
-						//'summary' => '<div><h5>' . $row->lastname . ', ' . $row->firstname . '. MRN: ' . $row->pid . '</h5></div>'
+						'fullUrl' => Request::url() . '/issue_id_' . $row_id,
+						'resource' => $resource_content
 					];
 				}
 				foreach ($result1['data'] as $row_id1) {
 					$row1 = DB::table($table1)->where($table1_primary_key, '=', $row_id1)->first();
 					$resource_content1 = $this->resource_detail($row1, $resource);
 					$response['entry'][] = [
-						'title' => 'Resource of type ' . $resource . ' with id = eid_' . $row_id1 . ' and version = 1',
-						'link' => [
-							'rel' => 'self',
-							'href' => Request::url() . '/eid_' . $row_id1
-						],
-						'id' => Request::url() . '/eid_' . $row_id1,
-						'updated' => $time,
-						'published' => $time,
-						'author' => [
-							'name' => $practice->practice_name,
-							'uri' => route('home') . '/fhir'
-						],
-						'category' => [
-							'scheme' => 'http://hl7.org/fhir/tag',
-							'term' => 'http://hl7.org/fhir/tag/message',
-							'label' => 'http://ht7.org/fhir/tag/label'
-						],
-						'content' => $resource_content1,
-						// the summary is variable
-						//'summary' => '<div><h5>' . $row->lastname . ', ' . $row->firstname . '. MRN: ' . $row->pid . '</h5></div>'
+						'fullUrl' => Request::url() . '/eid_' . $row_id,
+						'resource' => $resource_content1
 					];
 				}
 			} else {

@@ -504,7 +504,7 @@ Route::filter('auth.token', function()
 			$query = DB::table('uma')->where('scope', '=', $url)->first();
 			$as_uri = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
 			$header = [
-				'WWW-Authenticate' => 'UMA realm = "pNOSH_UMA", as_uri = "' . $as_uri . '"'
+				'WWW-Authenticate' => 'UMA realm="pNOSH_UMA", as_uri="' . $as_uri . '"'
 			];
 			$statusCode = 403;
 			if ($query) {

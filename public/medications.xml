@@ -23,8 +23,8 @@
                      </effectiveTime>
                      <routeCode
                         code="?med_code?"
-                        codeSystem="2.16.840.1.113883.3.26.1.1"
-                        codeSystemName="NCI Thesaurus"
+                        codeSystem="2.16.840.1.113883.3.26.1.2"
+                        codeSystemName="NCI Metathesaurus"
                         displayName="?med_code_description?"/>
                      <doseQuantity
                         value="?med_dosage?"

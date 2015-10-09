@@ -1,6 +1,6 @@
 <?php
 
-class EncounterController extends \BaseController {
+class EncounterController extends BaseController {
 
 	/**
 	 * Display a listing of the resource.

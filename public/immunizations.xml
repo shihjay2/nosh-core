@@ -20,8 +20,8 @@
                         value="?imm_date?"/>
                      <routeCode
                         code="?imm_code?"
-                        codeSystem="2.16.840.1.113883.3.26.1.1"
-                        codeSystemName="National Cancer Institute (NCI) Thesaurus"
+                        codeSystem="2.16.840.1.113883.3.26.1.2"
+                        codeSystemName="NCI Metathesaurus"
                         displayName="?imm_code_description?"/>
                      <doseQuantity
                         value="?imm_dosage?"
@@ -35,7 +35,7 @@
                            <manufacturedMaterial>
                               <code
                                  code="?imm_cvxcode?"
-                                 codeSystem="2.16.840.1.113883.6.59"
+                                 codeSystem="2.16.840.1.113883.12.292"
                                  displayName="?vaccine_name?"
                                  codeSystemName="CVX">
                                  <originalText>?vaccine_name?</originalText>

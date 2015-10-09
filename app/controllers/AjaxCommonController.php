@@ -953,6 +953,7 @@ class AjaxCommonController extends BaseController {
 		if ($patient_query) {
 			// Patient exists
 			$pid = $patient_query->pid;
+			$return['status'] = 'Patient already exists, updated API Key and URL';
 		} else {
 			// If patient doesn't exist, create a new one
 			$data = array(
@@ -1026,6 +1027,7 @@ class AjaxCommonController extends BaseController {
 			$this->audit('Add');
 			$directory = $query->documents_dir . $pid;
 			mkdir($directory, 0775);
+			$return['status'] = 'Patient newly created in the chart.';
 		}
 		$patient_data = array(
 			'api_key' => Input::get('api_key'),
@@ -1033,6 +1035,7 @@ class AjaxCommonController extends BaseController {
 		);
 		DB::table('demographics_relate')->where('pid', '=', $pid)->where('practice_id', '=', $practice_id)->update($patient_data);
 		$this->audit('Update');
+		return $return;
 	}
 	
 	public function postPracticeApi()
@@ -1103,7 +1106,8 @@ class AjaxCommonController extends BaseController {
 			$result = $this->send_api_data($url1, $register_data, '', '');
 			$return['status'] = 'y';
 			$return['message'] = 'Practice added with NOSH integration.';
-			$return['url'] = 'Connected to this NOSH URL: ' . $url2; 
+			$return['message'] .= '  Response from server: ' . $result['status'];
+			$return['url'] = Input::get('practice_url'); 
 		}
 		//$this->send_mail('emails.apiregister', $data_message, 'NOSH ChartingSystem API Registration', Input::get('email'), '1');
 		echo json_encode($return);

@@ -1,6 +1,6 @@
 <?php
 
-class MedicationStatementController extends \BaseController {
+class MedicationStatementController extends BaseController {
 
 	/**
 	 * Display a listing of the resource.
@@ -9,7 +9,44 @@ class MedicationStatementController extends \BaseController {
 	 */
 	public function index()
 	{
-		//
+		$data = Input::all();
+		if ($data) {
+			$resource = 'MedicationStatement';
+			$table = 'rx_list';
+			$table_primary_key = 'rxl_id';
+			$table_key = [
+				'identifier' => 'rxl_id',
+				'patient' => 'pid',
+				'medication' => ['rxl_medication','rxl_ndcid']
+			];
+			$result = $this->resource_translation($data, $table, $table_primary_key, $table_key);
+			if ($result['response'] == true) {
+				$statusCode = 200;
+				$response['resourceType'] = 'Bundle';
+				$response['type'] = 'searchset';
+				$response['id'] = 'urn:uuid:' . $this->gen_uuid();
+				$response['total'] = $result['total'];
+				foreach ($result['data'] as $row_id) {
+					$row = DB::table($table)->where($table_primary_key, '=', $row_id)->first();
+					$resource_content = $this->resource_detail($row, $resource);
+					$response['entry'][] = [
+						'fullUrl' => Request::url() . '/' . $row_id,
+						'resource' => $resource_content
+					];
+				}
+			} else {
+				$response = [
+					'error' => "Query returned 0 records.",
+				];
+				$statusCode = 404;
+			}
+		} else {
+			$response = [
+				'error' => "Invalid query."
+			];
+			$statusCode = 404;
+		}
+		return Response::json($response, $statusCode);
 	}
 
 
@@ -43,21 +80,14 @@ class MedicationStatementController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		$query = DB::table('rx_list')->where('pid', '=', $id)->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00')->get();
-		if ($query) {
+		$resource = 'MedicationStatement';
+		$row = DB::table('rx_list')->where('rxl_id', '=', $id)->first();
+		if ($row) {
 			$statusCode = 200;
-			$response['resourceType'] = 'Patient';
-			$response['text']['status'] = 'generated';
-			$response['text']['div'] = '';
-			$response['patient']['reference'] = 'Patient/example';
-			$response['whenGiven']['start'] = date('c', $this->human_to_unix($med_row->rxl_date_active));
-			$response['whenGiven']['end'] = date('c', $this->human_to_unix($med_row->rxl_date_active));
-			foreach ($query as $row) {
-			
-			}
+			$response = $this->resource_detail($row, $resource);
 		} else {
 			$response = [
-				'error' => "No active medications for patient."
+				'error' => $resource . " doesn't exist."
 			];
 			$statusCode = 404;
 		}

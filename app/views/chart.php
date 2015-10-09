@@ -53,9 +53,6 @@
 			<legend>Actions</legend>
 			<div class="pure-g">
 				<div class="pure-u-1-2"><i class="fa fa-credit-card fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" class="add_creditcard">Add/Edit Credit Card Information</a></div>
-				<?php if(Session::get('patient_centric') == 'n') {?>
-					<div class="pure-u-1-2"><i class="fa fa-exchange fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="connect_patient_nosh">Connect to Patient Centric NOSH (Status: <span="connect_patient_nosh_status"><?php echo $url;?></span>)</a></div>
-				<?php }?>
 			</div>
 		</fieldset><br>
 		<fieldset class="ui-corner-all">
@@ -228,12 +225,6 @@
 	</div>
 	<div id="hedis_chart_load"><?php echo HTML::image('images/indicator.gif', 'Loading'); ?> Loading...</div>
 	<div id="hedis_chart_items"></div>
-</div>
-<div id="connect_patient_centric_dialog" title="Connect to a Patient Centric NOSH">
-	<form id="connect_patient_centric_form" class="pure-form pure-form-stacked">
-		<label for="connect_patient_centric_url">Enter the URL in your email that you recevied:</label>
-		<input type="text" style="width:95%" name="url" id="connect_patient_centric_url" class="text" required/>
-	</form>
 </div>
 <div id="template_encounter_dialog" title="Encounter Templates">
 	<form id="template_encounter_form" class="pure-form pure-form-stacked">

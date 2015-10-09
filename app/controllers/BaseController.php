@@ -4042,19 +4042,19 @@ class BaseController extends Controller {
 				$imm_code = '';
 				$imm_code_description = '';
 				if ($imm_row->imm_route == "intramuscularly") {
-					$imm_code = "C28161";
+					$imm_code = "C1556154";
 					$imm_code_description = "Intramuscular Route of Administration";
 				}
 				if ($imm_row->imm_route == "subcutaneously") {
-					$imm_code = "C38299";
+					$imm_code = "C1522438";
 					$imm_code_description = "Subcutaneous Route of Administration";
 				}
 				if ($imm_row->imm_route == "intravenously") {
-					$imm_code = "C38273";
+					$imm_code = "C2960476";
 					$imm_code_description = "Intravascular Route of Administration";
 				}
 				if ($imm_row->imm_route == "by mouth") {
-					$imm_code = "C38289";
+					$imm_code = "C1522409";
 					$imm_code_description = "Oropharyngeal Route of Administration";
 				}
 				$imm_file = str_replace('?imm_code?', $imm_code, $imm_file);
@@ -4106,27 +4106,27 @@ class BaseController extends Controller {
 					$med_code = '';
 					$med_code_description = '';
 					if ($med_row->rxl_route == "by mouth") {
-						$med_code = "C38289";
+						$med_code = "C1522409";
 						$med_code_description = "Oropharyngeal Route of Administration";
 					}
 					if ($med_row->rxl_route == "per rectum") {
-						$med_code = "C38295";
+						$med_code = "C1527425";
 						$med_code_description = "Rectal Route of Administration";
 					}
 					if ($med_row->rxl_route == "transdermal") {
-						$med_code = "C38305";
+						$med_code = "C0040652";
 						$med_code_description = "Transdermal Route of Administration";
 					}
 					if ($med_row->rxl_route == "subcutaneously") {
-						$med_code = "C38299";
+						$med_code = "C1522438";
 						$med_code_description = "Subcutaneous Route of Administration";
 					}
 					if ($med_row->rxl_route == "intravenously") {
-						$med_code = "C38273";
+						$med_code = "C2960476";
 						$med_code_description = "Intravascular Route of Administration";
 					}
 					if ($med_row->rxl_route == "intramuscularly") {
-						$med_code = "C28161";
+						$med_code = "C1556154";
 						$med_code_description = "Intramuscular Route of Administration";
 					}
 					$med_period = '';
@@ -4220,27 +4220,27 @@ class BaseController extends Controller {
 					$med_code = '';
 					$med_code_description = '';
 					if ($sup_row->sup_route == "by mouth") {
-						$med_code = "C38289";
+						$med_code = "C1522409";
 						$med_code_description = "Oropharyngeal Route of Administration";
 					}
 					if ($sup_row->sup_route == "per rectum") {
-						$med_code = "C38295";
+						$med_code = "C1527425";
 						$med_code_description = "Rectal Route of Administration";
 					}
 					if ($sup_row->sup_route == "transdermal") {
-						$med_code = "C38305";
+						$med_code = "C0040652";
 						$med_code_description = "Transdermal Route of Administration";
 					}
 					if ($sup_row->sup_route == "subcutaneously") {
-						$med_code = "C38299";
+						$med_code = "C1522438";
 						$med_code_description = "Subcutaneous Route of Administration";
 					}
 					if ($sup_row->sup_route == "intravenously") {
-						$med_code = "C38273";
+						$med_code = "C2960476";
 						$med_code_description = "Intravascular Route of Administration";
 					}
 					if ($sup_row->sup_route == "intramuscularly") {
-						$med_code = "C28161";
+						$med_code = "C1556154";
 						$med_code_description = "Intramuscular Route of Administration";
 					}
 					$med_period = '';
@@ -8235,6 +8235,25 @@ class BaseController extends Controller {
 		} else {
 			$proceed = true;
 		}
+		// check if resource is medication statement and clean up references
+		if ($resource == 'MedicationStatement') {
+			if ($key1 == 'status') {
+				if ($value1 == 'active') {
+					$query->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')->where('rxl_date_old', '=', '0000-00-00 00:00:00');
+				}
+				if ($value1 == 'completed') {
+					$query->where('rxl_date_inactive', '!=', '0000-00-00 00:00:00');
+				}
+				if ($value1 == 'entered-in-error') {
+					//not functional
+				}
+				if ($value1 == 'intended') {
+					//not functional
+				}
+			}
+		} else {
+			$proceed = true;
+		}
 		if ($proceed == true) {
 			// check if value is a date
 			$unixdate = strtotime($value1);
@@ -8243,7 +8262,7 @@ class BaseController extends Controller {
 					$value1 = date('Y-m-d', $unixdate);
 				}
 			}
-			// check if value is booleen
+			// check if value is boolean
 			if ($value1 == 'true') {
 				$value1 = '1';
 			}
@@ -8499,10 +8518,9 @@ class BaseController extends Controller {
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$response['resourceType'] = $resource_type;
 		$response['text']['status'] = 'generated';
-		$response['text']['div'] = '<div><table><tbody>';
-		
 		// Patient
 		if ($resource_type == 'Patient') {
+			$response['text']['div'] = '<div><table><tbody>';
 			$response['identifier'][] = [
 				'use' => 'usual',
 				'label' => 'MRN',
@@ -8592,31 +8610,28 @@ class BaseController extends Controller {
 			} else {
 				$response['active'] = true;
 			}
+			$response['text']['div'] .= '</tbody></table></div>';
 		}
 		
 		// Condition
 		if ($resource_type == 'Condition') {
 			$patient = DB::table('demographics')->where('pid', '=', $row->pid)->first();
-			$response['subject'] = [
+			$response['patient'] = [
 				'reference' => 'Patient/' . $row->pid,
 				'display' => $patient->firstname . ' ' . $patient->lastname
 			];
-			$response['text']['div'] .= '<tr><td><b>Subject</b></td><td>' . $patient->firstname . ' ' . $patient->lastname .'</td></td></tr>';
-			if (isset($row->eid)) {
-				$response['encounter'] = [
-					'reference' => 'Encounter/' . $row->eid
-				];
-				$response['text']['div'] .= '<tr><td><b>Encounter</b></td><td><a href="' . route('home') . '/fhir/v1/Encounter/' . $row->eid .'">' . $row->eid . '</a></td></td></tr>';
-			}
 			if ($practice->icd == '9') {
 				$condition_system = 'http://hl7.org/fhir/sid/icd-9';
 			} else {
 				$condition_system = 'http://hl7.org/fhir/sid/icd-10';
 			}
 			if (isset($row->eid)) {
+				$response['encounter'] = [
+					'reference' => 'Encounter/' . $row->eid
+				];
+				$response['id'] = 'eid_' . $row->eid;
 				$provider = DB::table('users')->where('displayname', '=', $row->encounter_provider)->first();
-				$response['dateAsserted'] = date('Y-m-d', $this->human_to_unix($row->assessment_date));
-				$response['text']['div'] .= '<tr><td><b>Date Asserted</b></td><td>' . date('Y-m-d', $this->human_to_unix($row->assessment_date)) .'</td></td></tr>';
+				$response['dateRecorded'] = date('Y-m-d', $this->human_to_unix($row->assessment_date));
 				$i = 1;
 				while ($i <= 12) {
 					$condition_row_array = (array) $row;
@@ -8627,7 +8642,7 @@ class BaseController extends Controller {
 							'code' => str_replace(']', '', $code_array[1]),
 							'display' => $code_array[0]
 						];
-						$response['text']['div'] .= '<tr><td><b>Code</b></td><td>' . $condition_row_array['assessment_' . $i] .'</td></tr>';
+						$response['text']['div'] = '<div>' . $condition_row_array['assessment_' . $i] . ', <a href="' . route('home') . '/fhir/Encounter/' . $row->eid .'">Encounter Assessment</a>, Date Active: ' . date('Y-m-d', $this->human_to_unix($row->assessment_date)) . '</div>';
 					}
 					$i++;
 				}
@@ -8636,38 +8651,290 @@ class BaseController extends Controller {
 					'code' => 'diagnosis',
 					'display' => 'Diagnosis'
 				];
-				$response['text']['div'] .= '<tr><td><b>Category</b></td><td>Diagnosis</td></tr>';
 			} else {
+				$response['id'] = 'issue_id_' . $row->issue_id;
 				$provider = DB::table('users')->where('displayname', '=', $row->issue_provider)->first();
-				$response['dateAsserted'] = date('Y-m-d', $this->human_to_unix($row->issue_date_active));
+				$response['dateRecorded'] = date('Y-m-d', $this->human_to_unix($row->issue_date_active));
+				$response['onsetDateTime'] = date('Y-m-d', $this->human_to_unix($row->issue_date_active));
 				$code_array = explode(' [', $row->issue);
 				$response['code']['coding'][] = [
 					'system' => $condition_system,
 					'code' => str_replace(']', '', $code_array[1]),
 					'display' => $code_array[0]
 				];
-				$response['text']['div'] .= '<tr><td><b>Code</b></td><td>' . $row->issue .'</td></tr>';
+				$response['text']['div'] = '<div>' . $row->issue . ', Problem, Date Active: ' . date('Y-m-d', $this->human_to_unix($row->issue_date_active)) . '</div>';
 				$response['category']['coding'][] = [
 					'system' => 'http://snomed.info/sct',
 					'code' => '55607006',
 					'display' => 'Problem'
 				];
-				$response['text']['div'] .= '<tr><td><b>Category</b></td><td>Problem</td></tr>';
 			}
 			$response['asserter'] = [
 				'reference' => 'Practitioner/' . $provider->id,
 				'display' => $provider->displayname
 			];
-			$response['text']['div'] .= '<tr><td><b>Practitioner</b></td><td><a href="' . route('home') . '/fhir/v1/Practitioner/' . $provider->id .'">' . $provider->displayname .'</a></td></td></tr>';
 			$response['status'] = 'confirmed';
-			$response['text']['div'] .= '<tr><td><b>Status</b></td><td>Confirmed</td></tr>';
-			// missing onsetDate
 			// missing severity
 			// missing evidence
 			// missing location
 			// missing relatedItem
 		}
-		$response['text']['div'] .= '</tbody></table></div>';
+		
+		// MedicationStatement
+		if ($resource_type == 'MedicationStatement') {
+			$response['id'] = $row->rxl_id;
+			$patient = DB::table('demographics')->where('pid', '=', $row->pid)->first();
+			$response['patient'] = [
+				'reference' => 'Patient/' . $row->pid,
+				'display' => $patient->firstname . ' ' . $patient->lastname
+			];
+			$provider = DB::table('users')->where('displayname', '=', $row->rxl_provider)->first();
+			if ($provider) {
+				$response['recorder'] = [
+					'reference' => 'Practitioner/' . $provider->id,
+					'display' => $row->rxl_provider
+				];
+			}
+			$response['dateAsserted'] = date('Y-m-d');
+			$response['effectiveDateTime'] = date('Y-m-d', $this->human_to_unix($row->rxl_date_active));
+			if ($row->rxl_ndcid != '') {
+				$rxnormapi = new RxNormApi();
+				$rxnormapi->output_type = 'json';
+				$rxnorm = json_decode($rxnormapi->findRxcuiById("NDC", $med_row->rxl_ndcid), true);
+				if (isset($rxnorm['idGroup']['rxnormId'][0])) {
+					$rxnorm1 = json_decode($rxnormapi->getRxConceptProperties($rxnorm['idGroup']['rxnormId'][0]), true);
+					$response['medicationReference'] = [
+						'reference' => 'Medication/' . $row->rxl_ndcid,
+						'display' => $rxnorm1['properties']['name']
+					];
+				}
+			}
+			$med_prn_array = array("as needed", "PRN");
+			if ($row->rxl_sig == '') {
+				$response['text']['div'] = '<div>' . $row->rxl_medication . ' ' . $row->rxl_dosage . ' ' . $row->rxl_dosage_unit . ', ' . $row->rxl_instructions . ' for ' . $row->rxl_reason . '</div>';
+				$dosage_text = $row->rxl_instructions . ' for ' . $row->rxl_reason;
+				$asNeededBoolean = false;
+				if (in_array($med_row->rxl_instructions, $med_prn_array)) {
+					$asNeededBoolean = true;
+				}
+				$dosage_array = [
+					'text' => $dosage_text,
+					'asNeededBoolean' => $asNeededBoolean,
+					'quantityQuantity' => [
+						'value' => $row->rxl_quantity
+					]
+				];
+			} else {
+				$response['text']['div'] = '<div>' . $row->rxl_medication . ' ' . $row->rxl_dosage . ' ' . $row->rxl_dosage_unit . ', ' . $row->rxl_sig . ' ' . $row->rxl_route . ' ' . $row->rxl_frequency . ' for ' . $row->rxl_reason . '</div>';
+				$dosage_text = $row->rxl_sig . ' ' . $row->rxl_route . ' ' . $row->rxl_frequency . ' for ' . $row->rxl_reason;
+				$med_dosage_parts = explode(" ", $med_row->rxl_sig);
+				$med_dosage = $med_dosage_parts[0];
+				if (count($med_dosage_parts) > 1) {
+					$med_dosage_unit = $med_dosage_parts[1];
+				} else {
+					$med_dosage_unit = '';
+				}
+				$med_code = '';
+				$med_code_description = '';
+				if ($med_row->rxl_route == "by mouth") {
+					$med_code = "C1522409";
+					$med_code_description = "Oropharyngeal Route of Administration";
+				}
+				if ($med_row->rxl_route == "per rectum") {
+					$med_code = "C1527425";
+					$med_code_description = "Rectal Route of Administration";
+				}
+				if ($med_row->rxl_route == "transdermal") {
+					$med_code = "C0040652";
+					$med_code_description = "Transdermal Route of Administration";
+				}
+				if ($med_row->rxl_route == "subcutaneously") {
+					$med_code = "C1522438";
+					$med_code_description = "Subcutaneous Route of Administration";
+				}
+				if ($med_row->rxl_route == "intravenously") {
+					$med_code = "C2960476";
+					$med_code_description = "Intravascular Route of Administration";
+				}
+				if ($med_row->rxl_route == "intramuscularly") {
+					$med_code = "C1556154";
+					$med_code_description = "Intramuscular Route of Administration";
+				}
+				$med_period = '';
+				$med_freq_array_1 = array("once daily", "every 24 hours", "once a day", "1 time a day", "QD");
+				$med_freq_array_2 = array("twice daily", "every 12 hours", "two times a day", "2 times a day", "BID", "q12h", "Q12h");
+				$med_freq_array_3 = array("three times daily", "every 8 hours", "three times a day", "3 times daily", "3 times a day", "TID", "q8h", "Q8h");
+				$med_freq_array_4 = array("every six hours", "every 6 hours", "four times daily", "4 times a day", "four times a day", "4 times daily", "QID", "q6h", "Q6h");
+				$med_freq_array_5 = array("every four hours", "every 4 hours", "six times a day", "6 times a day", "six times daily", "6 times daily", "q4h", "Q4h");
+				$med_freq_array_6 = array("every three hours", "every 3 hours", "eight times a day", "8 times a day", "eight times daily", "8 times daily", "q3h", "Q3h");
+				$med_freq_array_7 = array("every two hours", "every 2 hours", "twelve times a day", "12 times a day", "twelve times daily", "12 times daily", "q2h", "Q2h");
+				$med_freq_array_8 = array("every hour", "every 1 hour", "every one hour", "q1h", "Q1h");
+				if (in_array($med_row->rxl_frequency, $med_freq_array_1)) {
+					$med_period = "24";
+				}
+				if (in_array($med_row->rxl_frequency, $med_freq_array_2)) {
+					$med_period = "12";
+				}
+				if (in_array($med_row->rxl_frequency, $med_freq_array_3)) {
+					$med_period = "8";
+				}
+				if (in_array($med_row->rxl_frequency, $med_freq_array_4)) {
+					$med_period = "6";
+				}
+				if (in_array($med_row->rxl_frequency, $med_freq_array_5)) {
+					$med_period = "4";
+				}
+				if (in_array($med_row->rxl_frequency, $med_freq_array_6)) {
+					$med_period = "3";
+				}
+				if (in_array($med_row->rxl_frequency, $med_freq_array_7)) {
+					$med_period = "2";
+				}
+				if (in_array($med_row->rxl_frequency, $med_freq_array_8)) {
+					$med_period = "1";
+				}
+				$asNeededBoolean = false;
+				if (in_array($med_row->rxl_frequency, $med_prn_array)) {
+					$asNeededBoolean = true;
+				}
+				$dosage_array = [
+					'text' => $dosage_text,
+					'asNeededBoolean' => $asNeededBoolean,
+					'quantityQuantity' => [
+						'value' => $row->rxl_quantity
+					]
+				];
+				if ($med_period != '') {
+					$dosage_array['timing'] = [
+						'repeat' => [
+							'frequency' => $med_period,
+							'period' => '1',
+							'periodUnits' => 'd'
+						]
+					];
+				}
+				if ($med_code != '' && $med_code_description != '') {
+					$dosage_array['route'] = [
+						'coding' => [
+							'0' => [
+								'system' => 'http://ncimeta.nci.nih.gov',
+								'code' => $med_code,
+								'display' => $med_code_description
+							]
+						]
+					];
+				}
+			}
+			if ($row->rxl_date_inactive == '0000-00-00 00:00:00' && $row->rxl_date_old == '0000-00-00 00:00:00') {
+				$response['status'] = 'active';
+				$response['wasNotTaken'] = false;
+			}
+			if ($row->rxl_date_inactive != '0000-00-00 00:00:00') {
+				$response['status'] = 'completed';
+				$response['wasNotTaken'] = true;
+			}
+			$response['dosage'][] = $dosage_array;
+		}
+		// AllergyIntolerance
+		if ($resource_type == 'AllergyIntolerance') {
+			$response['id'] = $row->allergies_id;
+			$patient = DB::table('demographics')->where('pid', '=', $row->pid)->first();
+			$response['patient'] = [
+				'reference' => 'Patient/' . $row->pid,
+				'display' => $patient->firstname . ' ' . $patient->lastname
+			];
+			$provider = DB::table('users')->where('displayname', '=', $row->allergies_provider)->first();
+			if ($provider) {
+				$response['recorder'] = [
+					'reference' => 'Practitioner/' . $provider->id,
+					'display' => $row->allergies_provider
+				];
+			}
+			$response['recordedDate'] = date('Y-m-d', $this->human_to_unix($row->allergies_date_active));
+			$rxnormapi = new RxNormApi();
+			$rxnormapi->output_type = 'json';
+			$rxnorm = json_decode($rxnormapi->findRxcuiByString($row->allergies_med), true);
+			$rxnorm1 = array();
+			if (isset($rxnorm['idGroup']['rxnormId'][0])) {
+				$rxnorm1 = json_decode($rxnormapi->getRxConceptProperties($rxnorm['idGroup']['rxnormId'][0]), true);
+				$response['substance']['coding'][] = [
+					'system' => 'http://www.nlm.nih.gov/research/umls/rxnorm',
+					'code' => $rxnorm['idGroup']['rxnormId'][0],
+					'display' => $rxnorm1['properties']['name']
+				];
+			} else {
+				$response['substance']['text'] = $row->allergies_med;
+			}
+			$response['text']['div'] = '<div>' . $row->allergies_med . ', Reaction: ' . $row->allergies_reaction . ', Severeity ' . $row->allergies_severity . '</div>';
+			$response['reaction'][] = [
+				'manifestation' => [
+					'0' => [
+						'coding' => [
+							'0' => [
+								'system' => 'http://snomed.info/sct',
+								'code' => '', //need code
+								'display' => '' //need definition
+							]
+						]
+					]
+				]
+			];
+		}
+		// Immunization
+		if ($resource_type == 'Immunization') {
+			$response['id'] = $row->imm_id;
+			$patient = DB::table('demographics')->where('pid', '=', $row->pid)->first();
+			$response['patient'] = [
+				'reference' => 'Patient/' . $row->pid,
+				'display' => $patient->firstname . ' ' . $patient->lastname
+			];
+			$provider = DB::table('users')->where('displayname', '=', $row->imm_provider)->first();
+			if ($provider) {
+				$response['requester'] = [
+					'reference' => 'Practitioner/' . $provider->id,
+					'display' => $row->imm_provider
+				];
+			}
+			if ($row->imm_cvxcode != '') {
+				$response['vaccineCode']['coding'][] = [
+					'system' => 'http://hl7.org/fhir/sid/cvx',
+					'code' => $row->imm_cvxcode,
+					'display' => $row->imm_immunization
+				];
+			} else {
+				$response['vaccineCode']['text'] = $row->imm_immunization;
+			}
+			$response['date'] = date('Y-m-d', $this->human_to_unix($row->imm_date));
+			$response['status'] = 'completed';
+			$response['wasNotGiven'] = false;
+			if ($row->imm_lot != '') {
+				$response['lotNumber'] = $row->imm_lot;
+			}
+			if ($row->imm_expiration != '') {
+				$response['expirationDate'] = date('Y-m-d', $this->human_to_unix($row->imm_expiration));
+			}
+			if ($row->imm_sequence != '') {
+				$response['vaccinationProtocol'][] = [
+					'doseSequence' => $row->imm_sequence
+				];
+			}
+			if ($row->imm_sequence == '1') {
+				$sequence = ', first';
+			}
+			if ($row->imm_sequence == '2') {
+				$sequence = ', second';
+			}
+			if ($row->imm_sequence == '3') {
+				$sequence = ', third';
+			}
+			if ($row->imm_sequence == '4') {
+				$sequence = ', fourth';
+			}
+			if ($row->imm_sequence == '5') {
+				$sequence = ', fifth';
+			}
+			$response['text']['div'] = '<div>' . $row->imm_immunization . $sequence . ', Given: ' . date('Y-m-d', $this->human_to_unix($row->imm_date)) . '</div>';
+		}
 		return $response;
 	}
 	

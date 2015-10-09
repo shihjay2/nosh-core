@@ -5508,52 +5508,6 @@ class AjaxChartController extends BaseController {
 		echo json_encode($data);
 	}
 	
-	public function postConnectPatientNosh()
-	{
-		$data = array();
-		$practiceinfo = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
-		$practiceinfo_data = (array) $practiceinfo;
-		unset($practiceinfo_data['practice_id']);
-		unset($practiceinfo_data['documents_dir']);
-		unset($practiceinfo_data['updox_extension']);
-		unset($practiceinfo_data['mtm_extension']);
-		unset($practiceinfo_data['mtm_alert_users']);
-		unset($practiceinfo_data['fax_type']);
-		unset($practiceinfo_data['fax_email']);
-		unset($practiceinfo_data['fax_email_password']);
-		unset($practiceinfo_data['fax_email_hostname']);
-		unset($practiceinfo_data['fax_email_smtp']);
-		unset($practiceinfo_data['phaxio_api_key']);
-		unset($practiceinfo_data['phaxio_api_secret']);
-		unset($practiceinfo_data['practice_api_key']);
-		unset($practiceinfo_data['practice_registration_key']);
-		unset($practiceinfo_data['practice_registration_timeout']);
-		$data['practice'] = $practiceinfo_data;
-		$result = $this->send_api_data(Input::get('url'), $data, '', '');
-		$message['status'] = 'n';
-		if ($result['url_error'] == '') {
-			if (isset($result['error'])) {
-				if ($result['error'] == true) {
-					$message['message'] = 'Error: ' . $result['message'];
-				} else {
-					$patient_data = array(
-						'api_key' => $result['api_key'],
-						'url' => Input::get('url')
-					);
-					DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->update($patient_data);
-					$this->audit('Update');
-					$message['status'] = 'y';
-					$message['message'] = $result['message'];
-				}
-			} else {
-				$message['message'] = 'Error: not a valid connection, check your URL';
-			}
-		} else {
-			$message['message'] = $result['url_error'];
-		}
-		echo json_encode($message);
-	}
-	
 	public function postGetPatientCentric()
 	{
 		$row = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();

@@ -9,7 +9,44 @@ class ImmunizationController extends BaseController {
 	 */
 	public function index()
 	{
-		//
+		$data = Input::all();
+		if ($data) {
+			$resource = 'Immunization';
+			$table = 'immunizations';
+			$table_primary_key = 'imm_id';
+			$table_key = [
+				'identifier' => 'imm_id',
+				'patient' => 'pid',
+				'vaccineCode' => ['imm_immunization','imm_cvxcode']
+			];
+			$result = $this->resource_translation($data, $table, $table_primary_key, $table_key);
+			if ($result['response'] == true) {
+				$statusCode = 200;
+				$response['resourceType'] = 'Bundle';
+				$response['type'] = 'searchset';
+				$response['id'] = 'urn:uuid:' . $this->gen_uuid();
+				$response['total'] = $result['total'];
+				foreach ($result['data'] as $row_id) {
+					$row = DB::table($table)->where($table_primary_key, '=', $row_id)->first();
+					$resource_content = $this->resource_detail($row, $resource);
+					$response['entry'][] = [
+						'fullUrl' => Request::url() . '/' . $row_id,
+						'resource' => $resource_content
+					];
+				}
+			} else {
+				$response = [
+					'error' => "Query returned 0 records.",
+				];
+				$statusCode = 404;
+			}
+		} else {
+			$response = [
+				'error' => "Invalid query."
+			];
+			$statusCode = 404;
+		}
+		return Response::json($response, $statusCode);
 	}
 
 
@@ -43,7 +80,18 @@ class ImmunizationController extends BaseController {
 	 */
 	public function show($id)
 	{
-		//
+		$resource = 'Immunization';
+		$row = DB::table('immunizations')->where('imm_id', '=', $id)->first();
+		if ($row) {
+			$statusCode = 200;
+			$response = $this->resource_detail($row, $resource);
+		} else {
+			$response = [
+				'error' => $resource . " doesn't exist."
+			];
+			$statusCode = 404;
+		}
+		return Response::json($response, $statusCode);
 	}
 
 
