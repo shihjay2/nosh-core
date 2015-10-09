@@ -497,7 +497,13 @@ Route::filter('auth.token', function()
 	if ($payload) {
 		// RPT, Perform Token Introspection
 		$rpt = str_replace('Bearer ', '', $payload);
-		$result_rpt = $this->uma_introspect($rpt);
+		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $practice->uma_client_id;
+		$client_secret = $practice->uma_client_secret;
+		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc->refresh($practice->uma_refresh_token,true);
+		$result_rpt = $oidc->introspect($rpt);
 		if ($result_rpt['active'] == false) {
 			// Inactive RPT, Request Permission Ticket
 			$url = Request::url();
@@ -514,7 +520,9 @@ Route::filter('auth.token', function()
 				foreach ($query1 as $row1) {
 					$scopes[] = $row1->scope;
 				}
-				$permission_ticket = $this->uma_permission_request($query->resource_set_id, $scopes);
+				$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+				$oidc->refresh($practice->uma_refresh_token,true);
+				$permission_ticket = $oidc->permission_request($query->resource_set_id, $scopes);
 				if (isset($permission_ticket['error'])) {
 					$response = [
 						'error' => $permission_ticket['error'],
