@@ -557,7 +557,9 @@ Route::filter('auth.token', function()
 			foreach ($query1 as $row1) {
 				$scopes[] = $row1->scope;
 			}
-			$permission_ticket = $this->uma_permission_request($query->resource_set_id, $scopes);
+			$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+			$oidc->refresh($practice->uma_refresh_token,true);
+			$permission_ticket = $oidc->permission_request($query->resource_set_id, $scopes);
 			if (isset($permission_ticket['error'])) {
 				$response = [
 					'error' => $permission_ticket['error'],
