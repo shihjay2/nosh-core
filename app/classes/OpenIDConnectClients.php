@@ -905,6 +905,25 @@ class OpenIDConnectClient
 		$return['user_access_policy_uri'] = $json_response->{'user_access_policy_uri'};
 		return $return;
 	}
+	
+	public function delete_resource_set($id) {
+		$resource_set_endpoint = $this->getProviderConfigValue('resource_set_registration_endpoint',true);
+		$send_object = (object)array(
+			'resource_set_id' => $id
+		);
+		$response = $this->fetchURL($resource_set_endpoint . '/resource_set/' . $id, json_encode($send_object), $this->accessToken, 'DELETE');
+		$json_response = json_decode($response);
+		if ($json_response === false) {
+			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
+		} elseif (isset($json_response->{'error_description'})) {
+			$return['error'] = $json_response->{'error'};
+			$return['error_description'] = $json_response->{'error_description'};
+			throw new OpenIDConnectClientException($json_response->{'error_description'});
+		}
+		$return['resource_set_id'] = $json_response->{'_id'};
+		$return['user_access_policy_uri'] = $json_response->{'user_access_policy_uri'};
+		return $return;
+	}
 
 	/**
 	 * UMA - Permission Request
@@ -936,6 +955,21 @@ class OpenIDConnectClient
 	 * @throws OpenIDConnectClientException
 	 */
 	public function rpt_request($permission_ticket) {
+		if (isset($_REQUEST["access"])) {
+			if ($_REQUEST["access"] == 'granted' && $_REQUEST["state"] == $_SESSION['rpt_state']) {
+				// Request new RPT
+				$return = $this->rpt_request_token($permission_ticket);
+				unset($_SESSION['rpt_state']);
+			} else {
+				$return['error'] = 'Request to resource denied due to insufficient permissions.';
+			}
+		} else {
+			$return = $this->rpt_request_token($permission_ticket);
+		}
+		return $return;
+	}
+	
+	public function rpt_request_token($permission_ticket) {
 		$rpt_request_endpoint = $this->getProviderConfigValue('rpt_endpoint',true);
 		$send_object = (object)array(
 			'ticket' => $permission_ticket
@@ -945,9 +979,18 @@ class OpenIDConnectClient
 		// Throw some errors if we encounter them
 		if ($json_response === false) {
 			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
-		} elseif (isset($json_response->{'error_description'})) {
-			$return['error'] = $json_response->{'error'};
-			$return['error_description'] = $json_response->{'error_description'};
+		} elseif (isset($json_response->{'error_details'})) {
+			// Check if needing requesting party claims
+			if ($json_response->{'error'} == 'need_info') {
+				$ticket = $json_response->{'error_details'}->{'requesting_party_claims'}->{'ticket'};
+				$requesting_party_claims_endpoint = $this->getProviderConfigValue('requesting_party_claims_endpoint',true);
+				$state = $this->generateRandString();
+				$_SESSION['rpt_state'] = $state;
+				$requesting_party_claims_endpoint .= "?ticket=" . $ticket . "&redirect_uri=" . $this->getRedirectURL() . "&client_id=" . $this->clientID . "&state=" . $state;
+				$this->redirect($requesting_party_claims_endpoint);
+			} else {
+				$return['error'] = 'Error in getting RPT.';
+			}
 		}
 		$return['ticket'] = $json_response->{'ticket'};
 		return $return;

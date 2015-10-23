@@ -41,10 +41,45 @@ class MedicationStatementController extends BaseController {
 				$statusCode = 404;
 			}
 		} else {
-			$response = [
-				'error' => "Invalid query."
-			];
-			$statusCode = 404;
+			$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+			if ($practice->patient_centric == 'y') {
+				// Patient Centric only
+				$data1['patient'] = '1';
+				$resource = 'MedicationStatement';
+				$table = 'rx_list';
+				$table_primary_key = 'rxl_id';
+				$table_key = [
+					'identifier' => 'rxl_id',
+					'patient' => 'pid',
+					'medication' => ['rxl_medication','rxl_ndcid']
+				];
+				$result = $this->resource_translation($data1, $table, $table_primary_key, $table_key);
+				if ($result['response'] == true) {
+					$statusCode = 200;
+					$response['resourceType'] = 'Bundle';
+					$response['type'] = 'searchset';
+					$response['id'] = 'urn:uuid:' . $this->gen_uuid();
+					$response['total'] = $result['total'];
+					foreach ($result['data'] as $row_id) {
+						$row = DB::table($table)->where($table_primary_key, '=', $row_id)->first();
+						$resource_content = $this->resource_detail($row, $resource);
+						$response['entry'][] = [
+							'fullUrl' => Request::url() . '/' . $row_id,
+							'resource' => $resource_content
+						];
+					}
+				} else {
+					$response = [
+						'error' => "Query returned 0 records.",
+					];
+					$statusCode = 404;
+				}
+			} else {
+				$response = [
+					'error' => "Invalid query."
+				];
+				$statusCode = 404;
+			}
 		}
 		return Response::json($response, $statusCode);
 	}

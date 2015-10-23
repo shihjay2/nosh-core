@@ -68,10 +68,72 @@ class ConditionController extends BaseController {
 				$statusCode = 404;
 			}
 		} else {
-			$response = [
-				'error' => "Invalid query."
-			];
-			$statusCode = 404;
+			$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+			if ($practice->patient_centric == 'y') {
+				// Patient Centric only
+				$data1['patient'] = '1';
+				$resource = 'Condition';
+				$table = 'issues';
+				$table_primary_key = 'issue_id';
+				$table_key = [
+					'identifier' => 'issue_id',
+					'patient' => 'pid',
+					'encounter' => 'encounter',
+					'dateAsserted' => 'issue_date_active',
+					'code' => 'issue'
+				];
+				$result = $this->resource_translation($data1, $table, $table_primary_key, $table_key);
+				$table1 = 'assessment';
+				$table1_primary_key = 'eid';
+				$table1_key = [
+					'identifier' => 'eid',
+					'patient' => 'pid',
+					'encounter' => 'encounter',
+					'dateAsserted' => 'assessment_date',
+					'code' => ['assessment_1','assessment_2','assessment_3','assessment_4','assessment_5','assessment_6','assessment_7','assessment_8','assessment_9','assessment_10','assessment_11','assessment_12']
+				];
+				$result1 = $this->resource_translation($data1, $table1, $table1_primary_key, $table1_key);
+				$count = 0;
+				if ($result['response'] == true) {
+					$count += $result['total'];
+				}
+				if ($result1['response'] == true) {
+					$count += $result1['total'];
+				}
+				if ($count > 0) {
+					$statusCode = 200;
+					$response['resourceType'] = 'Bundle';
+					$response['type'] = 'searchset';
+					$response['id'] = 'urn:uuid:' . $this->gen_uuid();
+					$response['total'] = $count;
+					foreach ($result['data'] as $row_id) {
+						$row = DB::table($table)->where($table_primary_key, '=', $row_id)->first();
+						$resource_content = $this->resource_detail($row, $resource);
+						$response['entry'][] = [
+							'fullUrl' => Request::url() . '/issue_id_' . $row_id,
+							'resource' => $resource_content
+						];
+					}
+					foreach ($result1['data'] as $row_id1) {
+						$row1 = DB::table($table1)->where($table1_primary_key, '=', $row_id1)->first();
+						$resource_content1 = $this->resource_detail($row1, $resource);
+						$response['entry'][] = [
+							'fullUrl' => Request::url() . '/eid_' . $row_id,
+							'resource' => $resource_content1
+						];
+					}
+				} else {
+					$response = [
+						'error' => "Query returned 0 records.",
+					];
+					$statusCode = 404;
+				}
+			} else {
+				$response = [
+					'error' => "Invalid query."
+				];
+				$statusCode = 404;
+			}
 		}
 		$response['test'] = $count;
 		return Response::json($response, $statusCode);

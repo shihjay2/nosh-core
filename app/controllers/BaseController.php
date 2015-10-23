@@ -9704,4 +9704,116 @@ class BaseController extends Controller {
 		}
 		return $return;
 	}
+	
+	protected function register_scope($id, $type, $table)
+	{
+		if ($type == 'Condition') {
+			if ($table == 'encounters') {
+				$table_key = 'eid_';
+			}
+			if ($table == 'issues') {
+				$table_key = 'issue_id';
+			}
+ 			$resource_set_array = array(
+				'name' => 'Condition',
+				'icon' => 'https://noshchartingsystem.com/i-condition.png',
+				'scopes' => array(
+					URL::to('/') . '/fhir/Condition/' . $table_key . $id,
+					URL::to('/') . '/fhir/Condition?identifier=' . $table_key . $id,
+				)
+			);
+		}
+		if ($type == 'MedicationStatement') {
+			$resource_set_array = array(
+				'name' => 'Medication List',
+				'icon' => 'https://noshchartingsystem.com/i-pharmacy.png',
+				'scopes' => array(
+					URL::to('/') . '/fhir/MedicationStatement/' . $id,
+					URL::to('/') . '/fhir/MedicationStatement?identifier=' . $id
+				)
+			);
+		}
+		if ($type == 'Allergy') {
+			$resource_set_array = array(
+				'name' => 'Allergy',
+				'icon' => 'https://noshchartingsystem.com/i-allergy.png',
+				'scopes' => array(
+					URL::to('/') . '/fhir/AllergyIntolerance/' . $id,
+					URL::to('/') . '/fhir/AllergyIntolerance?identifier=' . $id,
+				)
+			);
+		}
+		if ($type == 'Immunization') {
+			$resource_set_array = array(
+				'name' => 'Immunization',
+				'icon' => 'https://noshchartingsystem.com/i-immunization.png',
+				'scopes' => array(
+					URL::to('/') . '/fhir/Immunization/' . $id,
+					URL::to('/') . '/fhir/Immunization?identifier=' . $id,
+				)
+			);
+		}
+		if ($type == 'Encounter') {
+			$resource_set_array = array(
+				'name' => 'Encounter',
+				'icon' => 'https://noshchartingsystem.com/i-medical-records.png',
+				'scopes' => array(
+					URL::to('/') . '/fhir/Encounter/' . $id,
+					URL::to('/') . '/fhir/Encounter?identifier=' . $id,
+				)
+			);
+		}
+		if ($type == 'FamilyHistory') {
+			$resource_set_array = array(
+				'name' => 'Family History',
+				'icon' => 'https://noshchartingsystem.com/i-family-practice.png',
+				'scopes' => array(
+					URL::to('/') . '/fhir/FamilyHistory/' . $id,
+					URL::to('/') . '/fhir/FamilyHistory?identifier=' . $id,
+				)
+			);
+		}
+		if ($type == 'Binary') {
+			$resource_set_array[] = array(
+				'name' => 'Binary Files',
+				'icon' => 'https://noshchartingsystem.com/i-file.png',
+				'scopes' => array(
+					URL::to('/') . '/fhir/Binary/' . $id,
+					URL::to('/') . '/fhir/Binary?identifier=' . $id
+				)
+			);
+		}
+		if ($type == 'Observation') {
+			$resource_set_array = array(
+				'name' => 'Observation',
+				'icon' => 'https://noshchartingsystem.com/i-cardiology.png',
+				'scopes' => array(
+					URL::to('/') . '/fhir/Observation/' . $id,
+					URL::to('/') . '/fhir/Observation?identifier=' . $id
+				)
+			);
+		}
+		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $practice->uma_client_id;
+		$client_secret = $practice->uma_client_secret;
+		$refresh_token = $practice->uma_refresh_token;
+		$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc1->refresh($refresh_token,true);
+		$response = $oidc1->resource_set($resource_set_array['name'], $resource_set_array['icon'], $resource_set_array['scopes']);
+		if (isset($response['resource_set_id'])) {
+			foreach ($resource_set_array['scopes'] as $scope_item) {
+				$response_data1 = array(
+					'resource_set_id' => $response['resource_set_id'],
+					'scope' => $scope_item,
+					'user_access_policy_uri' => $response['user_access_policy_uri'],
+					'table_id' => $id,
+					'table' => $table
+				);
+				DB::table('uma')->insert($response_data1);
+				$this->audit('Add'); 
+			}
+		}
+		return true;
+	}
 }

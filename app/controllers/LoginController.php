@@ -174,7 +174,6 @@ class LoginController extends BaseController {
 		$firstname = $oidc->requestUserInfo('given_name');
 		$lastname = $oidc->requestUserInfo('family_name');
 		$email = $oidc->requestUserInfo('email');
-		$npi = $oidc->requestUserInfo('npi');
 		$access_token = $oidc->getAccessToken();
 		if ($npi != '') {
 			$provider = DB::table('providers')->where('npi', '=', $npi)->first();
@@ -631,7 +630,9 @@ class LoginController extends BaseController {
 						'name' => 'Patient',
 						'icon' => 'https://noshchartingsystem.com/i-patient.png',
 						'scopes' => array(
-							URL::to('/') . '/fhir/Patient',
+							URL::to('/') . '/fhir/Patient/1',
+							URL::to('/') . '/fhir/Patient?identifier=1',
+							URL::to('/') . '/fhir/Patient?_id=1',
 							URL::to('/') . '/fhir/Medication',
 							URL::to('/') . '/fhir/Practitioner'
 						)

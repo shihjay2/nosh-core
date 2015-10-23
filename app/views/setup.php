@@ -89,8 +89,8 @@
 							</select><input type="hidden" id="hc_unit_old"/>
 							<label for="icd">ICD database:</label>
 							<select name="icd" id="icd" class="text" required>
-								<option value="9">ICD-9</option>
 								<option value="0">ICD-10</option>
+								<option value="9">ICD-9</option>
 							</select><input type="hidden" id="icd_old"/>
 							<label for="encounter_template">Default Encounter Template:</label>
 							<select name="encounter_template" id="encounter_template" class="text" required></select><input type="hidden" id="encounter_template_old"/>
