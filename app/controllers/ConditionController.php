@@ -135,7 +135,6 @@ class ConditionController extends BaseController {
 				$statusCode = 404;
 			}
 		}
-		$response['test'] = $count;
 		return Response::json($response, $statusCode);
 	}
 

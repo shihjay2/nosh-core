@@ -129,6 +129,7 @@ class AjaxInstallController extends BaseController {
 				}
 				$data_edit7s = array(
 					['owner_id' => $client_id1, 'grant_type' => 'authorization_code'],
+					['owner_id' => $client_id1, 'grant_type' => 'client_credentials'],
 					['owner_id' => $client_id1, 'grant_type' => 'urn:ietf:params:oauth:grant_type:redelegate'],
 					['owner_id' => $client_id1, 'grant_type' => 'implicit'],
 					['owner_id' => $client_id1, 'grant_type' => 'refresh_token']

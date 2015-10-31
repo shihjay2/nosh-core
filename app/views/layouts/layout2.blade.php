@@ -175,7 +175,7 @@
 			</div>
 		</div>
 		<div id="uma_dialog_frame" title="pNOSH User Managed Access">
-			<iframe id="uma_iframe" src="" style="height:98%; width:98%;"></iframe>
+			<iframe id="uma_iframe" src="" style="height:98%; width:98%; border: 0;"></iframe>
 		</div>
 		<div id="uma_provider_dialog" title="Connect to your EHR">
 			<form id="uma_provider_dialog_form" class="pure-form pure-form-stacked">
