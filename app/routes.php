@@ -376,13 +376,15 @@ Route::filter('pid_check', function()
 
 Route::filter('uma_check', function()
 {
-	$query = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();
-	if ($query->api_key != '') {
-		if ($query->uma_client_id == '') {
-			return Redirect::to('uma_register_client');
-		} else {
-			if ($query->uma_refresh_token) {
-				return Redirect::to('uma_get_refresh_token');
+	if (Session::get('patient_centric') != 'yp') {
+		$query = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();
+		if ($query->api_key != '') {
+			if ($query->uma_client_id == '') {
+				return Redirect::to('uma_register_client');
+			} else {
+				if ($query->uma_refresh_token) {
+					return Redirect::to('uma_get_refresh_token');
+				}
 			}
 		}
 	}
