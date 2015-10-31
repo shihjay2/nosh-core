@@ -2064,7 +2064,7 @@ class BaseController extends Controller {
 			$patient = Demographics::find(Session::get('pid'));
 			$search_data['pt'] = $patient->firstname . ' ' . $patient->lastname;
 		} else {
-			if (Session::get('group') == '2' && Session::get('patient_centric') == 'y') {
+			if (Session::get('group_id') == '2' && Session::get('patient_centric') == 'y') {
 				$this->setpatient('1');
 				$patient = Demographics::find('1');
 				$search_data['pt'] = $patient->firstname . ' ' . $patient->lastname;
