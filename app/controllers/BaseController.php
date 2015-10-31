@@ -9605,7 +9605,7 @@ class BaseController extends Controller {
 		$return[''] = 'Select User to Add...';
 		if ($query1) {
 			foreach ($query1 as $row1) {
-				$return[$row1->email] = $row->given_name . " " . $row->family_name;
+				$return[$row1->email] = $row1->given_name . " " . $row1->family_name;
 			}
 		}
 		return $return;
