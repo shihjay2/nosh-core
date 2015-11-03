@@ -216,8 +216,8 @@ Route::group(array('prefix' => 'api/v1', 'before' => 'force.ssl|auth.token'), fu
 });
 // FHIR routes
 Route::get('fhir/oidc', array('as' => 'oidc_api', 'uses' => 'LoginController@oidc_api'));
-Route::group(array('prefix' => 'fhir'), function()
-//Route::group(array('prefix' => 'fhir', 'before' => 'auth.token'), function()
+//Route::group(array('prefix' => 'fhir'), function()
+Route::group(array('prefix' => 'fhir', 'before' => 'auth.token'), function()
 {
 	Route::resource('AdverseReaction', 'AdverseReactionController');
 	Route::resource('Alert', 'AlertController');
