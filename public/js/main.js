@@ -1685,10 +1685,17 @@ $(document).ready(function() {
 	loadbuttons();
 	$(".nosh_tooltip").tooltip();
 	$(".phonemask").mask("(999) 999-9999");
-	$("#switcher").themeswitcher({
-		imgpath: noshdata.images,
-		loadtheme: "redmond"
-	});
+	if (noshdata.patient_centric == 'y' || noshdata.patient_centric == 'yp') {
+		$("#switcher").themeswitcher({
+			imgpath: noshdata.images,
+			loadtheme: "smoothness"
+		});
+	} else {
+		$("#switcher").themeswitcher({
+			imgpath: noshdata.images,
+			loadtheme: "redmond"
+		});
+	}
 	$("#dialog_load").dialog({
 		height: 100,
 		autoOpen: false,
