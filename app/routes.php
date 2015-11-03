@@ -595,4 +595,3 @@ Route::filter('auth.mobile', function()
 	if (Auth::guest()) return Redirect::guest('login_mobile');
 });
 //Route::any('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));
-//Test
