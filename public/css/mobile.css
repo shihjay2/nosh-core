@@ -37,10 +37,10 @@
 .splash-head {
 	font-family: 'Pacifico', arial, serif;
 	text-shadow: 4px 4px 4px #aaa;
-	font-size: 25px;
+	font-size: 35px;
 	font-weight: bold;
-	color: white;
-	border: 3px solid white;
+	color: #000000;
+	border: 3px solid #009688;
 	padding: 1em 1.6em;
 	font-weight: 100;
 	border-radius: 5px;
@@ -50,7 +50,7 @@
 
 /* This is the subheading that appears on the blue section */
 .splash-subhead {
-	color: white;
+	color: #000000;
 	letter-spacing: 0.05em;
 	opacity: 0.8;
 }
@@ -66,4 +66,183 @@
 
 .is-center {
 	text-align: center;
+}
+
+.controlgroup-textinput {
+	padding-top:.22em;
+	padding-bottom:.22em;
+	width: 80%;
+}
+
+.adjust-width .ui-controlgroup-controls {
+    width: 100%;
+}
+
+.adjust-width .ui-controlgroup-controls ui-input-text {
+	width: 100%;
+}
+
+.nosh_fab {
+	margin: 10px;
+}
+
+.nosh_fab_i {
+	width: 23px;
+}
+
+
+.demo-info { margin: 0.8em 0 0; font-size: 1em; }
+.ui-datepicker { display: none; }
+/* set height and left/right margin to accomodate prev/next icons */
+.ui-datepicker-header { position: relative; padding: 0.3125em 2.0625em; line-height: 1.75em; text-align: center; }
+.ui-datepicker-header .ui-btn { margin: -1px 0 0 0; }
+/* fixed width layout for calendar; cells are fixed width */
+.ui-datepicker-calendar { border-collapse: collapse; line-height: 2; }
+.ui-datepicker-calendar .ui-btn { margin: 0; padding: 0; width: 2em; line-height: inherit; }
+.ui-datepicker-today .ui-btn { text-decoration: underline !important; }
+.ui-datepicker-days-cell-over .ui-btn { border-color: inherit !important; }
+.ui-datepicker-buttonpane .ui-btn { float: left; margin: 0.5em 0 0; padding: 0.5em 1em; }
+.ui-datepicker-buttonpane .ui-btn:last-child { float: right; }
+/* class that can be added to datepicker <input> element's wrapper; makes room for trigger button */
+.dp-input-button-wrap { position: relative; padding-right: 2.5em; }
+.dp-input-button-wrap .ui-btn { top: 0.1875em; margin: 0; }
+/* jQM framework wraps popup content inside a div with the ID <div-id>-popup */
+#dp-fullsize-popup { width: 80%; }
+/* fluid width layout for calendar; table is 100% wide; cells size automatically */
+.ui-datepicker-inline .ui-datepicker-calendar { width: 100%; }
+.ui-datepicker-inline .ui-datepicker-calendar .ui-btn { width: auto; }
+
+/*!
+ * Waves v0.7.2
+ * http://fian.my.id/Waves 
+ * 
+ * Copyright 2014 Alfiana E. Sibuea and other contributors 
+ * Released under the MIT license 
+ * https://github.com/fians/Waves/blob/master/LICENSE 
+ */
+
+.waves-effect {
+/*	position: relative;*/
+	cursor: pointer;
+/*	display: inline-block;*/
+	overflow: hidden;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-tap-highlight-color: transparent
+}
+.waves-effect .waves-ripple {
+	position: absolute;
+	border-radius: 50%;
+	width: 100px;
+	height: 100px;
+	margin-top: -50px;
+	margin-left: -50px;
+	opacity: 0;
+	background: rgba(0,0,0,.2);
+	background: -webkit-radial-gradient(rgba(0,0,0,.2) 0,rgba(0,0,0,.3) 40%,rgba(0,0,0,.4) 50%,rgba(0,0,0,.5) 60%,rgba(255,255,255,0) 70%);
+	background: -o-radial-gradient(rgba(0,0,0,.2) 0,rgba(0,0,0,.3) 40%,rgba(0,0,0,.4) 50%,rgba(0,0,0,.5) 60%,rgba(255,255,255,0) 70%);
+	background: -moz-radial-gradient(rgba(0,0,0,.2) 0,rgba(0,0,0,.3) 40%,rgba(0,0,0,.4) 50%,rgba(0,0,0,.5) 60%,rgba(255,255,255,0) 70%);
+	background: radial-gradient(rgba(0,0,0,.2) 0,rgba(0,0,0,.3) 40%,rgba(0,0,0,.4) 50%,rgba(0,0,0,.5) 60%,rgba(255,255,255,0) 70%);
+	-webkit-transition: all .5s ease-out;
+	-moz-transition: all .5s ease-out;
+	-o-transition: all .5s ease-out;
+	transition: all .5s ease-out;
+	-webkit-transition-property: -webkit-transform, opacity;
+	-moz-transition-property: -moz-transform, opacity;
+	-o-transition-property: -o-transform, opacity;
+	transition-property: transform, opacity;
+	-webkit-transform: scale(0) translate(0,0);
+	-moz-transform: scale(0) translate(0,0);
+	-ms-transform: scale(0) translate(0,0);
+	-o-transform: scale(0) translate(0,0);
+	transform: scale(0) translate(0,0);
+	pointer-events: none
+}
+.waves-effect.waves-light .waves-ripple {
+	background: rgba(255,255,255,.4);
+	background: -webkit-radial-gradient(rgba(255,255,255,.2) 0,rgba(255,255,255,.3) 40%,rgba(255,255,255,.4) 50%,rgba(255,255,255,.5) 60%,rgba(255,255,255,0) 70%);
+	background: -o-radial-gradient(rgba(255,255,255,.2) 0,rgba(255,255,255,.3) 40%,rgba(255,255,255,.4) 50%,rgba(255,255,255,.5) 60%,rgba(255,255,255,0) 70%);
+	background: -moz-radial-gradient(rgba(255,255,255,.2) 0,rgba(255,255,255,.3) 40%,rgba(255,255,255,.4) 50%,rgba(255,255,255,.5) 60%,rgba(255,255,255,0) 70%);
+	background: radial-gradient(rgba(255,255,255,.2) 0,rgba(255,255,255,.3) 40%,rgba(255,255,255,.4) 50%,rgba(255,255,255,.5) 60%,rgba(255,255,255,0) 70%)
+}
+.waves-effect.waves-classic .waves-ripple {
+	background: rgba(0,0,0,.2)
+}
+.waves-effect.waves-classic.waves-light .waves-ripple {
+	background: rgba(255,255,255,.4)
+}
+.waves-notransition {
+	-webkit-transition: none !important;
+	-moz-transition: none !important;
+	-o-transition: none !important;
+	transition: none !important
+}
+.waves-button, .waves-circle {
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	-o-transform: translateZ(0);
+	transform: translateZ(0);
+	/*-webkit-mask-image: -webkit-radial-gradient(circle,#fff 100%,#000 100%)*/
+}
+.waves-button, .waves-button:hover, .waves-button:visited, .waves-button-input {
+	white-space: nowrap;
+/*	vertical-align: middle;*/
+	cursor: pointer;
+/*	border: none;*/
+	outline: 0;
+	color: inherit;
+	background-color: transparent;
+/*	font-size: 1em;
+	line-height: 1em;
+	text-align: center;
+	text-decoration: none;*/
+	z-index: 1
+}
+.waves-button {
+/*	padding: .85em 1.1em;
+	border-radius: .2em*/
+}
+.waves-button-input {
+/*	margin: 0;
+	padding: .85em 1.1em*/
+}
+.waves-input-wrapper {
+/*	border-radius: .2em;*/
+	vertical-align: bottom
+}
+.waves-input-wrapper.waves-button {
+	padding: 0;
+}
+.waves-input-wrapper .waves-button-input {
+	position: relative;
+	top: 0;
+	left: 0;
+	z-index: 1
+}
+.waves-circle {
+	text-align: center;
+	width: 2.5em;
+	height: 2.5em;
+	line-height: 2.5em;
+	border-radius: 50%
+}
+.waves-float {
+	-webkit-mask-image: none;
+	/*box-shadow: 0 1px 1.5px 1px rgba(0,0,0,.12);*/
+	-webkit-transition: all 300ms;
+	-moz-transition: all 300ms;
+	-o-transition: all 300ms;
+	transition: all 300ms
+}
+.waves-float:active {
+	/*box-shadow: 0 8px 20px 1px rgba(0,0,0,.3)*/
+}
+.waves-block {
+	display: block
+}
+a.waves-effect .waves-ripple {
+	z-index: -1
 }

@@ -126,11 +126,7 @@ class MobileController extends BaseController {
 	{
 		Auth::logout();
 		Session::flush();
-		$practice1 = Practiceinfo::find(1);
-		Session::put('version', $practice1->version);
-		$this->layout->style = $this->css_assets();
-		$this->layout->script = $this->js_assets('base',true);
-		$this->layout->content = View::make('mobile.logout');
+		return Redirect::to('mobile');
 	}
 	
 	public function dashboard()
@@ -176,6 +172,7 @@ class MobileController extends BaseController {
 			$data1['number_tests'] = Tests::whereNull('pid')->where('practice_id', '=', $practice_id)->count();
 		}
 		$data['content'] = View::make('mobile.home_content', $data1)->render();
+		$data['form'] = '';
 		$left_panel_array = array(
 			array('Schedule', 'mobile_schedule'),
 			array('Inbox', 'mobile_inbox')
@@ -193,6 +190,117 @@ class MobileController extends BaseController {
 		$data['left_panel'] = $this->mobile_menu_build($left_panel_array, "left_panel_list", 'mobile_click_home');
 		$data['right_panel'] = '';
 		$this->layout->style = HTML::style('css/mobile.css');
+		$this->layout->style .= HTML::style('css/toastr.min.css');
+		$this->layout->script = $this->js_assets('base',true);
+		$this->layout->content = View::make('mobile.home', $data);
+	}
+	
+	public function schedule()
+	{
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
+		$query = DB::table('users')
+			->where('group_id', '=', '2')
+			->where('practice_id', '=', Session::get('practice_id'))
+			->where('active', '=', '1')
+			->select('displayname', 'id')
+			->distinct()
+			->get();
+		$providers = array();
+		$visit_types = array();
+		if ($query) {
+			foreach ($query as $row) {
+				$providers[$row->id] = $row->displayname;
+			}
+		}
+		if (Session::get('group_id') == '2') {
+			Session::put('provider_id', Session::get('user_id'));
+			$default = Session::get('user_id');
+			$query1 = DB::table('calendar')
+				->where('active', '=', 'y')
+				->where('practice_id', '=', Session::get('practice_id'))
+				->where(function($query_array1) {
+					$query_array1->where('provider_id', '=', '0')
+					->orWhere('provider_id', '=', Session::get('user_id'));
+				})
+				->get();
+			if ($query1) {
+				foreach ($query1 as $row1) {
+					$visit_types[$row1->visit_type] = $row1->visit_type;
+				}
+			} else {
+				$visit_types[''] = 'No visit types available.';
+			}
+		} else {
+			$default = '';
+		}
+		$data['header'] = $this->mobile_header_build(Session::get('displayname'));
+		$data['content'] = '<div id="provider_schedule1">';
+		$data['content'] .= Form::label('provider_list2', 'Provider:');
+		$data['content'] .= Form::select('provider_list2', $providers, $default);
+		$data['content'] .= '<div id="providers_datepicker"></div><div id="providers_events"><ul id="events" data-role="listview" data-inset="true"></ul></div></div>';
+		$left_panel_array = array(
+			array('Schedule', 'mobile_schedule'),
+			array('Inbox', 'mobile_inbox')
+		);
+		$data['form'] = '<form id="schedule_form">';
+		$data['form'] .= Form::hidden('pid', '', array('id'=>'schedule_pid'));
+		$data['form'] .= Form::hidden('event_id', '', array('id'=>'event_id'));
+		$data['form'] .= Form::hidden('title', '', array('id'=>'schedule_title'));
+		$data['form'] .= '<div id="delete_form">Event ID: <span id="event_id_span"></span> | Patient ID: <span id="pid_span"></span><br>';
+		$data['form'] .= '<span id="timestamp_span"></span><br><br>';
+		$data['form'] .= Form::label('status', 'Status');
+		$data['form'] .= Form::select('status', array(""=>"None.","Pending"=>"Pending","Reminder Sent"=>"Reminder Sent","Attended"=>"Attended","LMC"=>"Last Minute Cancellation","DNKA"=>"Did Not Keep Appointment"));
+		$data['form'] .= '</div><div id="start_form">';
+		if (Session::get('group_id') != '100') {
+			$data['form'] .= Form::label('start_date', 'Start Date');
+			$data['form'] .= Form::input('date', 'start_date', '', array('required'));
+			$data['form'] .= Form::label('start_time', 'Start Time');
+			$data['form'] .= Form::text('start_time', '', array('required'));
+		} else {
+			$data['form'] .= Form::label('start_date', 'Start Date');
+			$data['form'] .= Form::input('date', 'start_date', '', array('readonly'));
+			$data['form'] .= Form::label('start_time', 'Start Time');
+			$data['form'] .= Form::text('start_time', '', array('readonly'));
+		}
+		$data['form'] .= '</div><div id="patient_appt">';
+		if (Session::get('group_id') != '100') {
+			$data['form'] .= Form::label('patient_search', 'Patient');
+			$data['form'] .= Form::text('patient_search', '', array('class'=>'texthelper1', 'data-nosh-send'=>'pid', 'placeholder'=>'Type a few characters for search'));
+			$data['form'] .= Form::label('notes', 'Notes/Tasks');
+			$data['form'] .= Form::textarea('notes', '', array('class'=>'textdump_mobile', 'placeholder'=>'Enter room assignments, tasks, or alerts for the appointment'));
+		}
+		$data['form'] .= Form::label('visit_type', 'Visit Type');
+		$data['form'] .= Form::select('visit_type', $visit_types);
+		$data['form'] .= '</div><div id="reason_form">';
+		$data['form'] .= Form::label('reason', 'Reason');
+		$data['form'] .= Form::textarea('reason');
+		$data['form'] .= '</div><div id="other_event">';
+		$data['form'] .= Form::label('end', 'End Time');
+		$data['form'] .= Form::text('end', '', array('required'));
+		$data['form'] .= Form::label('repeat', 'Repeat');
+		$data['form'] .= Form::select('repeat', array(""=>"None","86400"=>"Every Day","604800"=>"Every Week","1209600"=>"Every Other Week"));
+		$data['form'] .= '<div id="until_row">';
+		$data['form'] .= Form::label('until', 'Until (Leave this field blank if repeat goes on forever)');
+		$data['form'] .= Form::text('until');
+		$data['form'] .= '</div></div>';
+		$data['form'] .= '<div class="ui-grid-a">';
+		$data['form'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Save', array('class'=>'mobile_form_action2 ui-shadow ui-btn ui-corner-all ui-icon-check ui-btn-icon-top', 'data-nosh-form'=>'schedule_form', 'data-nosh-action'=>'save')) . '</div></div>';
+		$data['form'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Cancel', array('class'=>'cancel_edit2 ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-top', 'data-nosh-form'=>'schedule_form')) . '</div></div>';
+		$data['form'] .= '</div></form>';
+		if(Session::get('group_id') != '100') {
+			$left_panel_array[] = array('Drafts', 'mobile_drafts');
+			$left_panel_array[] = array('Alerts', 'mobile_alerts');
+			if(Session::get('patient_centric') == 'n') {
+				$left_panel_array[] = array('Scans', 'mobile_scan');
+				if ($practice->fax_type != "") {
+					$left_panel_array[] = array('Faxes', 'mobile_fax');
+				}
+			}
+		}
+		$data['left_panel'] = $this->mobile_menu_build($left_panel_array, "left_panel_list", 'mobile_click_home');
+		$data['right_panel'] = '';
+		$this->layout->style = HTML::style('css/mobile.css');
+		$this->layout->style .= HTML::style('css/toastr.min.css');
 		$this->layout->script = $this->js_assets('base',true);
 		$this->layout->content = View::make('mobile.home', $data);
 	}
@@ -211,7 +319,8 @@ class MobileController extends BaseController {
 		$this->setpatient($pid);
 		
 		$data['header'] = $this->mobile_header_build(Session::get('ptname'));
-		$data['content'] = '';
+		$data['navigation_header'] = $this->mobile_navigation_header_build(Session::get('ptname'));
+		$data['content'] = $this->mobile_content_build();
 		$left_panel_array = array(
 			array('Demographics', 'mobile_demographics-list'),
 			array('Issues', 'mobile_issues-list'),
@@ -224,7 +333,9 @@ class MobileController extends BaseController {
 		$data['left_panel'] = $this->mobile_menu_build($left_panel_array, "left_panel_list", 'mobile_click_chart');
 		$data['right_panel'] = '';
 		$this->layout->style = HTML::style('css/mobile.css');
+		$this->layout->style .= HTML::style('css/toastr.min.css');
 		$this->layout->script = $this->js_assets('base',true);
+		$this->layout->script .= HTML::script('js/jquery.flipster.min.js');
 		$this->layout->content = View::make('mobile.chart', $data);
 	}
 	
@@ -287,6 +398,17 @@ class MobileController extends BaseController {
 		}
 		$data['content'] .= '</form>';
 		$data['header'] = $this->mobile_header_build(Session::get('ptname'));
+		$left_panel_array = array(
+			array('Demographics', 'mobile_demographics-list'),
+			array('Issues', 'mobile_issues-list'),
+			array('Medications', 'mobile_medications-list'),
+			array('Supplements', 'mobile_supplements-list'),
+			array('Immunizations', 'mobile_immunizations-list'),
+			array('Allergies', 'mobile_allergies-list'),
+			array('Alerts', 'mobile_alerts-list')
+		);
+		$data['left_panel'] = $this->mobile_menu_build($left_panel_array, "left_panel_list", 'mobile_click_chart');
+		$data['right_panel'] = '';
 		$this->layout->style = HTML::style('css/mobile.css');
 		$this->layout->script = $this->js_assets('base',true);
 		$this->layout->content = View::make('mobile.editpage', $data);

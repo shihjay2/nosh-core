@@ -3,24 +3,20 @@
 		<div align="center">
 			<h1 class="splash-head">Nosh</h1>
 			<div id="login_practice_logo" align="center"></div>
-			<div class="splash-subhead">Mobile Version <?php echo Session::get('version');?></div>
-			<div class="pure-g">
-				<div class="l-box-lrg pure-u-1">
-					<form method="POST" action="login_mobile">
-						<fieldset class="pure-group">
-							<input type="text" id="username" name="username" placeholder="Username"/>
-							<input type="password" id="password" name="password" placeholder="Password"/>
-							<?php if ($patient_centric == 'n') { echo $practices; }?>
-						</fieldset>
-						<div class="error_text">
-							<?php if ($error = $errors->first("password")) { echo $error . "<br><br>"; } ?>
-							<?php if (isset($attempts)) { echo $attempts . "<br><br>"; } ?>
-						</div> 
-						<input type="submit" id="login_button" value="Login" name="login" class="ui-btn"/>
-					</form>
-				</div>
-			</div>
+			<div class="splash-subhead">Mobile Version <?php echo Session::get('version');?></div><br><br>
 		</div>
+		<form method="POST" action="login_mobile">
+			<fieldset>
+				<input type="text" id="username" name="username" placeholder="Username"/>
+				<input type="password" id="password" name="password" placeholder="Password"/>
+				<?php if ($patient_centric == 'n') { echo $practices; }?>
+			</fieldset>
+			<div class="error_text">
+				<?php if ($error = $errors->first("password")) { echo $error . "<br><br>"; } ?>
+				<?php if (isset($attempts)) { echo $attempts . "<br><br>"; } ?>
+			</div> 
+			<input type="submit" id="login_button" value="Login" name="login" class="ui-btn"/>
+		</form>
 	</div>
 </div>
 <script type="text/javascript">

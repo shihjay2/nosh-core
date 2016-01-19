@@ -183,13 +183,15 @@ class AjaxChartController extends BaseController {
 				$list_array[] = [
 					'label' => 'Add Issue',
 					'pid' => Session::get('pid'),
-					'href' => action('MobileController@editpage', array('issues', $row_index, ''))
+					'href' => action('AjaxChartController@postMobileEditPage', array('issues', $row_index, '0')),
+					'origin' => '../ajaxchart/issues-list/true'
 				];
 				foreach ($query as $row) {
 					$list_array[] = [
 						'label' => $row->issue,
 						'pid' => Session::get('pid'),
-						'href' => action('MobileController@editpage', array('issues', $row_index, $row->$row_index))
+						'href' => action('AjaxChartController@postMobileEditPage', array('issues', $row_index, $row->$row_index)),
+						'origin' => '../ajaxchart/issues-list/true'
 					];
 				}
 				$result .= $this->mobile_result_build($list_array, 'mobile_issues_list');
@@ -208,38 +210,89 @@ class AjaxChartController extends BaseController {
 			->get();
 		$result = '';
 		if ($query) {
-			$result .= '<ul>';
-			foreach ($query as $row) {
-				if ($row->rxl_sig == '') {
-					$result .= '<li>' . $row->rxl_medication . ' ' . $row->rxl_dosage . ' ' . $row->rxl_dosage_unit . ', ' . $row->rxl_instructions . ' for ' . $row->rxl_reason . '</li>';
-				} else {
-					$result .= '<li>' . $row->rxl_medication . ' ' . $row->rxl_dosage . ' ' . $row->rxl_dosage_unit . ', ' . $row->rxl_sig . ' ' . $row->rxl_route . ' ' . $row->rxl_frequency . ' for ' . $row->rxl_reason . '</li>';
+			if ($mobile == false) {
+				$result .= '<ul>';
+				foreach ($query as $row) {
+					if ($row->rxl_sig == '') {
+						$result .= '<li>' . $row->rxl_medication . ' ' . $row->rxl_dosage . ' ' . $row->rxl_dosage_unit . ', ' . $row->rxl_instructions . ' for ' . $row->rxl_reason . '</li>';
+					} else {
+						$result .= '<li>' . $row->rxl_medication . ' ' . $row->rxl_dosage . ' ' . $row->rxl_dosage_unit . ', ' . $row->rxl_sig . ' ' . $row->rxl_route . ' ' . $row->rxl_frequency . ' for ' . $row->rxl_reason . '</li>';
+					}
 				}
+				$result .= '</ul>';
+			} else {
+				$list_array = [];
+				$form = [];
+				$i = 1;
+				$columns = Schema::getColumnListing('rx_list');
+				$row_index = $columns[0];
+				$list_array[] = [
+					'label' => 'Add Medication',
+					'pid' => Session::get('pid'),
+					'href' => action('AjaxChartController@postMobileEditPage', array('rx_list', $row_index, '0')),
+					'origin' => '../ajaxchart/medications-list/true'
+				];
+				foreach ($query as $row) {
+					if ($row->rxl_sig == '') {
+						$label = $row->rxl_medication . ' ' . $row->rxl_dosage . ' ' . $row->rxl_dosage_unit . ', ' . $row->rxl_instructions . ' for ' . $row->rxl_reason;
+					} else {
+						$label = $row->rxl_medication . ' ' . $row->rxl_dosage . ' ' . $row->rxl_dosage_unit . ', ' . $row->rxl_sig . ' ' . $row->rxl_route . ' ' . $row->rxl_frequency . ' for ' . $row->rxl_reason;
+					}
+					$list_array[] = [
+						'label' => $label,
+						'pid' => Session::get('pid'),
+						'href' => action('AjaxChartController@postMobileEditPage', array('rx_list', $row_index, $row->$row_index)),
+						'origin' => '../ajaxchart/medications-list/true'
+					];
+				}
+				$result .= $this->mobile_result_build($list_array, 'mobile_supplements_list');
 			}
-			$result .= '</ul>';
 		} else {
 			$result .= ' None.';
 		}
 		echo $result;
 	}
 	
-	public function postSupplementsList()
+	public function postSupplementsList($mobile=false)
 	{
 		$query = Sup_list::where('pid', '=', Session::get('pid'))->where('sup_date_inactive', '=', '0000-00-00 00:00:00')->get();
 		$result = '';
 		if ($query) {
-			$result .= '<ul>';
-			foreach ($query as $row) {
-				$result .= '<li>' . $row->sup_supplement . ' ' . $row->sup_dosage . ' ' . $row->sup_dosage_unit . ', ' . $row->sup_sig . ' ' . $row->sup_route . ' ' . $row->sup_frequency . ' for ' . $row->sup_reason . '</li>';
+			if ($mobile == false) {
+				$result .= '<ul>';
+				foreach ($query as $row) {
+					$result .= '<li>' . $row->sup_supplement . ' ' . $row->sup_dosage . ' ' . $row->sup_dosage_unit . ', ' . $row->sup_sig . ' ' . $row->sup_route . ' ' . $row->sup_frequency . ' for ' . $row->sup_reason . '</li>';
+				}
+				$result .= '</ul>';
+			} else {
+				$list_array = [];
+				$form = [];
+				$i = 1;
+				$columns = Schema::getColumnListing('sup_list');
+				$row_index = $columns[0];
+				$list_array[] = [
+					'label' => 'Add Supplement',
+					'pid' => Session::get('pid'),
+					'href' => action('AjaxChartController@postMobileEditPage', array('sup_list', $row_index, '0')),
+					'origin' => '../ajaxchart/supplements-list/true'
+				];
+				foreach ($query as $row) {
+					$list_array[] = [
+						'label' => $row->sup_supplement . ' ' . $row->sup_dosage . ' ' . $row->sup_dosage_unit . ', ' . $row->sup_sig . ' ' . $row->sup_route . ' ' . $row->sup_frequency . ' for ' . $row->sup_reason,
+						'pid' => Session::get('pid'),
+						'href' => action('AjaxChartController@postMobileEditPage', array('sup_list', $row_index, $row->$row_index)),
+						'origin' => '../ajaxchart/supplements-list/true'
+					];
+				}
+				$result .= $this->mobile_result_build($list_array, 'mobile_supplements_list');
 			}
-			$result .= '</ul>';
 		} else {
 			$result .= ' None.';
 		}
 		echo $result;
 	}
 	
-	public function postImmunizationsList()
+	public function postImmunizationsList($mobile=false)
 	{
 		$query = Immunizations::where('pid', '=', Session::get('pid'))
 			->orderBy('imm_immunization', 'asc')
@@ -247,50 +300,113 @@ class AjaxChartController extends BaseController {
 			->get();
 		$result = '';
 		if ($query) {
-			$result .= '<ul>';
-			foreach ($query as $row) {
-				$sequence = '';
-				if ($row->imm_sequence == '1') {
-					$sequence = ', first';
+			if ($mobile == false) {
+				$result .= '<ul>';
+				foreach ($query as $row) {
+					$sequence = '';
+					if ($row->imm_sequence == '1') {
+						$sequence = ', first';
+					}
+					if ($row->imm_sequence == '2') {
+						$sequence = ', second';
+					}
+					if ($row->imm_sequence == '3') {
+						$sequence = ', third';
+					}
+					if ($row->imm_sequence == '4') {
+						$sequence = ', fourth';
+					}
+					if ($row->imm_sequence == '5') {
+						$sequence = ', fifth';
+					}
+					$result .= '<li>' . $row->imm_immunization . $sequence . '</li>';
 				}
-				if ($row->imm_sequence == '2') {
-					$sequence = ', second';
+				$result .= '</ul>';
+			} else {
+				$list_array = [];
+				$form = [];
+				$i = 1;
+				$columns = Schema::getColumnListing('immunizations');
+				$row_index = $columns[0];
+				$list_array[] = [
+					'label' => 'Add Immunization',
+					'pid' => Session::get('pid'),
+					'href' => action('AjaxChartController@postMobileEditPage', array('immunizations', $row_index, '0')),
+					'origin' => '../ajaxchart/immunizations-list/true'
+				];
+				foreach ($query as $row) {
+					$sequence = '';
+					if ($row->imm_sequence == '1') {
+						$sequence = ', first';
+					}
+					if ($row->imm_sequence == '2') {
+						$sequence = ', second';
+					}
+					if ($row->imm_sequence == '3') {
+						$sequence = ', third';
+					}
+					if ($row->imm_sequence == '4') {
+						$sequence = ', fourth';
+					}
+					if ($row->imm_sequence == '5') {
+						$sequence = ', fifth';
+					}
+					$label = $row->imm_immunization . $sequence;
+					$list_array[] = [
+						'label' => $label,
+						'pid' => Session::get('pid'),
+						'href' => action('AjaxChartController@postMobileEditPage', array('immunizations', $row_index, $row->$row_index)),
+						'origin' => '../ajaxchart/immunizations-list/true'
+					];
 				}
-				if ($row->imm_sequence == '3') {
-					$sequence = ', third';
-				}
-				if ($row->imm_sequence == '4') {
-					$sequence = ', fourth';
-				}
-				if ($row->imm_sequence == '5') {
-					$sequence = ', fifth';
-				}
-				$result .= '<li>' . $row->imm_immunization . $sequence . '</li>';
+				$result .= $this->mobile_result_build($list_array, 'mobile_immunizations_list');
 			}
-			$result .= '</ul>';
 		} else {
 			$result .= ' None.';
 		}
 		echo $result;
 	}
 	
-	public function postAllergiesList()
+	public function postAllergiesList($mobile=false)
 	{
 		$query = Allergies::where('pid', '=', Session::get('pid'))->where('allergies_date_inactive', '=', '0000-00-00 00:00:00')->get();
 		$result = '';
 		if ($query) {
-			$result .= '<ul>';
-			foreach ($query as $row) {
-				$result .= '<li>' . $row->allergies_med . ' - ' . $row->allergies_reaction . '</li>';
+			if ($mobile == false) {
+				$result .= '<ul>';
+				foreach ($query as $row) {
+					$result .= '<li>' . $row->allergies_med . ' - ' . $row->allergies_reaction . '</li>';
+				}
+				$result .= '</ul>';
+			} else {
+				$list_array = [];
+				$form = [];
+				$i = 1;
+				$columns = Schema::getColumnListing('allergies');
+				$row_index = $columns[0];
+				$list_array[] = [
+					'label' => 'Add Allergy Item',
+					'pid' => Session::get('pid'),
+					'href' => action('AjaxChartController@postMobileEditPage', array('allergies', $row_index, '0')),
+					'origin' => '../ajaxchart/allergies-list/true'
+				];
+				foreach ($query as $row) {
+					$list_array[] = [
+						'label' => $row->allergies_med . ' - ' . $row->allergies_reaction,
+						'pid' => Session::get('pid'),
+						'href' => action('AjaxChartController@postMobileEditPage', array('allergies', $row_index, $row->$row_index)),
+						'origin' => '../ajaxchart/allergies-list/true'
+					];
+				}
+				$result .= $this->mobile_result_build($list_array, 'mobile_allergies_list');
 			}
-			$result .= '</ul>';
 		} else {
 			$result .= ' No known allergies.';
 		}
 		echo $result;
 	}
 	
-	public function postAlertsList()
+	public function postAlertsList($mobile=false)
 	{
 		$query = Alerts::where('pid', '=', Session::get('pid'))
 			->where('alert_date_active', '<=', date('Y-m-d H:i:s', time() + 1209600))
@@ -300,11 +416,34 @@ class AjaxChartController extends BaseController {
 			->get();
 		$result = '';
 		if ($query) {
-			$result .= '<ul>';
-			foreach ($query as $row) {
-				$result .= '<li>' . $row->alert . ' (Due ' . date('m/d/Y', $this->human_to_unix($row->alert_date_active)) . ') - ' . $row->alert_description . '</li>';
+			if ($mobile == false) {
+				$result .= '<ul>';
+				foreach ($query as $row) {
+					$result .= '<li>' . $row->alert . ' (Due ' . date('m/d/Y', $this->human_to_unix($row->alert_date_active)) . ') - ' . $row->alert_description . '</li>';
+				}
+				$result .= '</ul>';
+			} else {
+				$list_array = [];
+				$form = [];
+				$i = 1;
+				$columns = Schema::getColumnListing('alerts');
+				$row_index = $columns[0];
+				$list_array[] = [
+					'label' => 'Add Alert',
+					'pid' => Session::get('pid'),
+					'href' => action('AjaxChartController@postMobileEditPage', array('alerts', $row_index, '0')),
+					'origin' => '../ajaxchart/alerts-list/true'
+				];
+				foreach ($query as $row) {
+					$list_array[] = [
+						'label' => $row->alert . ' (Due ' . date('m/d/Y', $this->human_to_unix($row->alert_date_active)) . ') - ' . $row->alert_description,
+						'pid' => Session::get('pid'),
+						'href' => action('AjaxChartController@postMobileEditPage', array('alerts', $row_index, $row->$row_index)),
+						'origin' => '../ajaxchart/alerts-list/true'
+					];
+				}
+				$result .= $this->mobile_result_build($list_array, 'mobile_allergies_list');
 			}
-			$result .= '</ul>';
 		} else {
 			$result .= ' None.';
 		}
@@ -517,7 +656,7 @@ class AjaxChartController extends BaseController {
 				'pid' => $pid,
 				'rcopia_sync' => 'n',
 				'rxl_ndcid' => Input::get('rxl_ndcid')
-			);	
+			);
 			if(Input::get('rxl_id') == '') {
 				$id = DB::table('rx_list')->insertGetId($data);
 				$this->audit('Add');
@@ -5512,5 +5651,360 @@ class AjaxChartController extends BaseController {
 	{
 		$row = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();
 		echo $row->url;
+	}
+	
+	public function postMobileEditPage($type, $index, $id)
+	{
+		$data['content'] = '';
+		$origin = Input::get('origin');
+		// Search Bar
+		if ($type == 'issues') {
+			$data['search'] = 'searchicd';
+		}
+		if ($type == 'allergies') {
+			$data['search'] = 'searchallergies';
+		}
+		if ($type == 'rx_list') {
+			$data['search'] = 'searchmed';
+		}
+		if ($type == 'sup_list') {
+			$data['search'] = 'searchsupplement';
+		}
+		if ($type == 'immunizations') {
+			$data['search'] = 'searchimm';
+		}
+		$form_id = 'mobile_form_' . $type; 
+		$data['content'] .= '<form id="' . $form_id . '">';
+		if ($id == '') {
+			$data['content'] .= Form::hidden($index, null, array('required'));
+		} else {
+			$result = DB::table($type)->where($index, '=', $id)->first();
+			$data['content'] .= Form::hidden($index, $id, array('required'));
+		}
+		if ($type == 'issues') {
+			$data['search_to'] = 'issue';
+			if ($id == '0') {
+				$issue = [
+					'issue' => null,
+					'type' => null,
+					'issue_date_active' => date('Y-m-d'),
+					'issue_date_inactive' => '',
+					'issue_provider' => Session::get('displayname')
+				];
+			} else {
+				$issue = [
+					'issue' => $result->issue,
+					'type' => $result->type,
+					'issue_date_active' => date('Y-m-d', $this->human_to_unix($result->issue_date_active)),
+					'issue_provider' => $result->issue_provider
+				];
+				if ($result->issue_date_inactive == '0000-00-00 00:00:00') {
+					$issue['issue_date_inactive'] = '';
+				} else {
+					$issue['issue_date_inactive'] = date('Y-m-d', $this->human_to_unix($result->issue_date_inactive));
+				}
+			}
+			$data['content'] .= Form::label('issue', 'Issue');
+			$data['content'] .= Form::text('issue', $issue['issue'], array('required'));
+			$data['content'] .= Form::label('type', 'Type');
+			$data['content'] .= Form::select('type', array('Problem List'=>'Problem List', 'Medical History'=>'Medical History', 'Surgical History'=>'Surgical History'), $issue['type'], array('required'));
+			$data['content'] .= Form::label('issue_date_active', 'Date Active');
+			$data['content'] .= Form::input('date', 'issue_date_active', $issue['issue_date_active'], array('required'));
+			$data['content'] .= Form::hidden('issue_date_inactive', $issue['issue_date_inactive']);
+			$data['content'] .= Form::hidden('issue_provider', $issue['issue_provider']);
+			// Buttons
+			$data['content'] .= '<div class="ui-grid-a">';
+			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-icon-check ui-btn-icon-top', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-top', 'data-nosh-origin'=>$origin)) . '</div></div>';
+			if ($id != '0') {
+				$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Inactivate', array('class'=>'mobile_form_action inactivate_edit ui-shadow ui-btn ui-corner-all ui-icon-forbidden ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-orgin'=>$origin, 'data-nosh-action'=>'inactivate')) . '</div></div>';
+				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-icon-delete ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
+			}
+			$data['content'] .= '</div>';
+		}
+		if ($type == 'allergies') {
+			$data['search_to'] = 'allergies_med';
+			if ($id == '0') {
+				$allergy = [
+					'allergies_med' => null,
+					'allergies_reaction' => null,
+					'allergies_date_active' => date('Y-m-d'),
+					'allergies_date_inactive' => '',
+					'allergies_provider' => Session::get('displayname'),
+				];
+			} else {
+				$allergy = [
+					'allergies_med' => $result->allergies_med,
+					'allergies_reaction' => $result->allergies_reaction,
+					'allergies_date_active' => date('Y-m-d', $this->human_to_unix($result->allergies_date_active)),
+					'allergies_provider' => $result->allergies_provider,
+				];
+				if ($result->allergies_date_inactive == '0000-00-00 00:00:00') {
+					$allergy['allergies_date_inactive'] = '';
+				} else {
+					$allergy['allergies_date_inactive'] = date('Y-m-d', $this->human_to_unix($result->allergies_date_inactive));
+				}
+			}
+			$data['content'] .= Form::label('allergies_med', 'Medication');
+			$data['content'] .= Form::text('allergies_med', $allergy['allergies_med'], array('required'));
+			$data['content'] .= Form::label('allergies_reaction', 'Reaction');
+			$data['content'] .= '<div data-role="controlgroup" data-type="horizontal" class="adjust-width">';
+			$data['content'] .= Form::text('allergies_reaction', $allergy['allergies_reaction'], array('class'=>'texthelper', 'data-wrapper-class'=>'controlgroup-textinput ui-btn', 'placeholder'=>'Type a few characters and click on the right for some favorites'));
+			$data['content'] .= Form::button('>', array('data-icon'=>'heart', 'class'=>'texthelper_button', 'data-nosh-input'=>'allergies_reaction'));
+			$data['content'] .= '</div>';
+			$data['content'] .= Form::label('allergies_date_active', 'Date Active');
+			$data['content'] .= Form::input('date', 'allergies_date_active', $allergy['allergies_date_active'], array('required'));
+			$data['content'] .= Form::hidden('allergies_date_inactive', $allergy['allergies_date_inactive']);
+			$data['content'] .= Form::hidden('allergies_provider', $allergy['allergies_provider']);
+			// Buttons
+			$data['content'] .= '<div class="ui-grid-a">';
+			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-icon-check ui-btn-icon-top', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-top', 'data-nosh-origin'=>$origin)) . '</div></div>';
+			if ($id != '0') {
+				$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Inactivate', array('class'=>'mobile_form_action inactivate_edit ui-shadow ui-btn ui-corner-all ui-icon-forbidden ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-orgin'=>$origin, 'data-nosh-action'=>'inactivate')) . '</div></div>';
+				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-icon-delete ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
+			}
+			$data['content'] .= '</div>';
+		}
+		if ($type == 'rx_list') {
+			$data['search_to'] = 'rxl_medication';
+			if ($id == '0') {
+				$rx = [
+					'rxl_medication' => null,
+					'rxl_dosage' => null,
+					'rxl_dosage_unit' => null,
+					'rxl_sig' => null,
+					'rxl_route' => null,
+					'rxl_frequency' => null,
+					'rxl_instructions' => null,
+					'rxl_reason' => null,
+					'rxl_date_active' => date('Y-m-d'),
+					'rxl_date_prescribed' => '',
+					'rxl_date_inactive' => '',
+					'rxl_date_old' => '',
+					'rxl_provider' => Session::get('displayname'),
+					'id' => Session::get('user_id'),
+					'rxl_ndcid' => null
+				];
+			} else {
+				$rx = [
+					'rxl_medication' => $result->rxl_medication,
+					'rxl_dosage' => $result->rxl_dosage,
+					'rxl_dosage_unit' => $result->rxl_dosage_unit,
+					'rxl_sig' => $result->rxl_sig,
+					'rxl_route' => $result->rxl_route,
+					'rxl_frequency' => $result->rxl_frequency,
+					'rxl_instructions' => $result->rxl_instructions,
+					'rxl_reason' => $result->rxl_reason,
+					'rxl_date_active' => date('Y-m-d', strtotime($result->rxl_date_active)),
+					'rxl_provider' => Session::get('displayname'),
+					'id' => Session::get('user_id'),
+					'rxl_ndcid' => $result->rxl_ndcid
+				];
+				if ($result->rxl_date_inactive == '0000-00-00 00:00:00') {
+					$rx['rxl_date_inactive'] = '';
+				} else {
+					$rx['rxl_date_inactive'] = date('Y-m-d', $this->human_to_unix($result->rxl_date_inactive));
+				}
+				if ($result->rxl_date_prescribed == '0000-00-00 00:00:00') {
+					$rx['rxl_date_prescribed'] = '';
+				} else {
+					$rx['rxl_date_prescribed'] = date('Y-m-d', $this->human_to_unix($result->rxl_date_prescribed));
+				}
+				if ($result->rxl_date_old == '0000-00-00 00:00:00') {
+					$rx['rxl_date_old'] = '';
+				} else {
+					$rx['rxl_date_old'] = date('Y-m-d', $this->human_to_unix($result->rxl_date_old));
+				}
+			}
+			$data['content'] .= Form::label('rxl_medication', 'Medication');
+			$data['content'] .= Form::text('rxl_medication', $rx['rxl_medication'], array('required'));
+			$data['content'] .= Form::label('rxl_dosage', 'Dosage');
+			$data['content'] .= Form::text('rxl_dosage', $rx['rxl_dosage'], array('placeholder'=>'Test'));
+			$data['content'] .= Form::label('rxl_dosage_unit', 'Unit');
+			$data['content'] .= Form::text('rxl_dosage_unit', $rx['rxl_dosage_unit']);
+			$data['content'] .= Form::label('rxl_sig', 'Sig');
+			$data['content'] .= Form::text('rxl_sig', $rx['rxl_sig'], array('class'=>'texthelper', 'placeholder'=>'Type a few characters for favorites'));
+			$data['content'] .= Form::label('rxl_route', 'Route');
+			$data['content'] .= Form::select('rxl_route', array('by mouth'=>'PO', 'per rectum'=>'PR', 'transdermal'=>'TD', 'subcutaneously'=>'SC', 'intramuscularly'=>'IM', 'intravenously'=>'IV'), $rx['rxl_route']);
+			$data['content'] .= Form::label('rxl_frequency', 'Frequency');
+			$data['content'] .= Form::text('rxl_frequency', $rx['rxl_frequency'], array('class'=>'texthelper', 'placeholder'=>'Type a few characters for favorites'));
+			$data['content'] .= Form::label('rxl_instructions', 'Special Instructions');
+			$data['content'] .= Form::text('rxl_instructions', $rx['rxl_instructions'], array('class'=>'texthelper', 'placeholder'=>'Type a few characters for favorites'));
+			$data['content'] .= Form::label('rxl_reason', 'Reason');
+			$data['content'] .= Form::text('rxl_reason', $rx['rxl_reason'], array('class'=>'texthelper', 'placeholder'=>'Type a few characters for favorites'));
+			$data['content'] .= Form::label('rxl_date_active', 'Date Active');
+			$data['content'] .= Form::input('date', 'rxl_date_active', $rx['rxl_date_active'], array('required'));
+			$data['content'] .= Form::hidden('rxl_date_inactive', $rx['rxl_date_inactive']);
+			$data['content'] .= Form::hidden('rxl_provider', $rx['rxl_provider']);
+			$data['content'] .= Form::hidden('rxl_date_prescribed', $rx['rxl_date_prescribed']);
+			$data['content'] .= Form::hidden('rxl_date_old', $rx['rxl_date_old']);
+			$data['content'] .= Form::label('rxl_ndcid', 'NDC ID');
+			$data['content'] .= Form::text('rxl_ndcid', $rx['rxl_ndcid'],  array('readonly'));
+			// Buttons
+			$data['content'] .= '<div class="ui-grid-a">';
+			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-icon-check ui-btn-icon-top', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-top', 'data-nosh-origin'=>$origin)) . '</div></div>';
+			if ($id != '0') {
+				$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Inactivate', array('class'=>'mobile_form_action inactivate_edit ui-shadow ui-btn ui-corner-all ui-icon-forbidden ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-orgin'=>$origin, 'data-nosh-action'=>'inactivate')) . '</div></div>';
+				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-icon-delete ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
+			}
+			$data['content'] .= '</div>';
+		}
+		if ($type == 'sup_list') {
+			$data['search_to'] = 'sup_supplement';
+			if ($id == '0') {
+				$sup = [
+					'sup_supplement' => null,
+					'sup_dosage' => null,
+					'sup_dosage_unit' => null,
+					'sup_sig' => null,
+					'sup_route' => null,
+					'sup_frequency' => null,
+					'sup_instructions' => null,
+					'sup_reason' => null,
+					'sup_date_active' => date('Y-m-d'),
+					'sup_date_inactive' => '',
+					'sup_provider' => Session::get('displayname'),
+					'id' => Session::get('user_id'),
+					'supplement_id' => null
+				];
+			} else {
+				$sup = [
+					'sup_supplement' => $result->sup_supplement,
+					'sup_dosage' => $result->sup_dosage,
+					'sup_dosage_unit' => $result->sup_dosage_unit,
+					'sup_sig' => $result->sup_sig,
+					'sup_route' => $result->sup_route,
+					'sup_frequency' => $result->sup_frequency,
+					'sup_instructions' => $result->sup_instructions,
+					'sup_reason' => $result->sup_reason,
+					'sup_date_active' => date('Y-m-d', strtotime($result->sup_date_active)),
+					'sup_provider' => Session::get('displayname'),
+					'id' => Session::get('user_id'),
+					'supplement_id' => $result->supplement_id
+				];
+				if ($result->sup_date_inactive == '0000-00-00 00:00:00') {
+					$sup['sup_date_inactive'] = '';
+				} else {
+					$sup['sup_date_inactive'] = date('Y-m-d', $this->human_to_unix($result->sup_date_inactive));
+				}
+			}
+			$data['content'] .= Form::label('sup_supplement', 'Supplement');
+			$data['content'] .= Form::text('sup_supplement', $sup['sup_supplement'], array('required'));
+			$data['content'] .= Form::label('sup_dosage', 'Dosage');
+			$data['content'] .= Form::text('sup_dosage', $sup['sup_dosage']);
+			$data['content'] .= Form::label('sup_dosage_unit', 'Unit');
+			$data['content'] .= Form::text('sup_dosage_unit', $sup['sup_dosage_unit']);
+			$data['content'] .= Form::label('sup_sig', 'Sig');
+			$data['content'] .= Form::text('sup_sig', $sup['sup_sig'], array('class'=>'texthelper', 'placeholder'=>'Type a few characters for favorites'));
+			$data['content'] .= Form::label('sup_route', 'Route');
+			$data['content'] .= Form::select('sup_route', array('by mouth'=>'PO', 'per rectum'=>'PR', 'transdermal'=>'TD', 'subcutaneously'=>'SC', 'intramuscularly'=>'IM', 'intravenously'=>'IV'), $sup['sup_route']);
+			$data['content'] .= Form::label('sup_frequency', 'Frequency');
+			$data['content'] .= Form::text('sup_frequency', $sup['sup_frequency'], array('class'=>'texthelper', 'placeholder'=>'Type a few characters for favorites'));
+			$data['content'] .= Form::label('sup_instructions', 'Special Instructions');
+			$data['content'] .= Form::text('sup_instructions', $sup['sup_instructions'], array('class'=>'texthelper', 'placeholder'=>'Type a few characters for favorites'));
+			$data['content'] .= Form::label('sup_reason', 'Reason');
+			$data['content'] .= Form::text('sup_reason', $sup['sup_reason'], array('class'=>'texthelper', 'placeholder'=>'Type a few characters for favorites'));
+			$data['content'] .= Form::label('sup_date_active', 'Date Active');
+			$data['content'] .= Form::input('date', 'sup_date_active', $sup['sup_date_active'], array('required'));
+			$data['content'] .= Form::hidden('sup_date_inactive', $sup['sup_date_inactive']);
+			$data['content'] .= Form::hidden('sup_provider', $sup['sup_provider']);
+			$data['content'] .= Form::hidden('supplement_id', $sup['supplement_id']);
+			// Buttons
+			$data['content'] .= '<div class="ui-grid-a">';
+			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-icon-check ui-btn-icon-top', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-top', 'data-nosh-origin'=>$origin)) . '</div></div>';
+			if ($id != '0') {
+				$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Inactivate', array('class'=>'mobile_form_action inactivate_edit ui-shadow ui-btn ui-corner-all ui-icon-forbidden ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-orgin'=>$origin, 'data-nosh-action'=>'inactivate')) . '</div></div>';
+				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-icon-delete ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
+			}
+			$data['content'] .= '</div>';
+		}
+		if ($type == 'immunizations') {
+			$data['search_to'] = 'imm_immunization';
+			if ($id == '0') {
+				$imm = [
+					'imm_immunization' => null,
+					'imm_sequence' => null,
+					'imm_body_site' => null,
+					'imm_route' => null,
+					'imm_dosage' => null,
+					'imm_dosage_unit' => null,
+					'imm_lot' => null,
+					'imm_expiration' => null,
+					'imm_date' => date('Y-m-d'),
+					'imm_elsewhere' => null,
+					'imm_vis' => '',
+					'imm_manufacturer' => null,
+					'imm_provider' => Session::get('displayname'),
+					'imm_cvxcode' => null
+				];
+			} else {
+				$imm = [
+					'imm_immunization' => $result->imm_immunization,
+					'imm_sequence' => $result->imm_sequence,
+					'imm_body_site' => $result->imm_body_site,
+					'imm_route' => $result->imm_route,
+					'imm_dosage' => $result->imm_dosage,
+					'imm_dosage_unit' => $result->imm_dosage_unit,
+					'imm_lot' => $result->imm_lot,
+					'imm_expiration' => date('Y-m-d', strtotime($result->imm_expiration)),
+					'imm_date' => date('Y-m-d', strtotime($result->imm_date)),
+					'imm_elsewhere' => $result->imm_elsewhere,
+					'imm_vis' => $result->imm_vis,
+					'imm_manufacturer' => $result->imm_manufacturer,
+					'imm_provider' => Session::get('displayname'),
+					'imm_cvxcode' => $result->imm_cvxcode
+				];
+			}
+			if ($imm['imm_elsewhere'] == 'Yes') {
+				$elsewhere = true;
+			} else {
+				$elsewhere = false;
+			}
+			$data['content'] .= Form::label('imm_immunization', 'Immunization');
+			$data['content'] .= Form::text('imm_immunization', $imm['imm_immunization'], array('required'));
+			$data['content'] .= Form::label('imm_sequence', 'Sequence');
+			$data['content'] .= Form::select('imm_sequence', array(''=>'','1'=>'First','2'=>'Second','3'=>'Third','4'=>'Fourth','5'=>'Fifth'), $imm['imm_sequence']);
+			$data['content'] .= Form::label('imm_elsewhere', 'Given Elsewhere');
+			$data['content'] .= Form::checkbox('imm_elsewhere', 'Yes', $elsewhere);
+			$data['content'] .= Form::label('imm_body_site', 'Body Site');
+			$data['content'] .= Form::select('imm_body_site', array(''=>'','Right Deltoid'=>'Right Deltoid','Left Deltoid'=>'Left Deltoid','Right Thigh'=>'Right Thigh','Left Thigh'=>'Left Thigh'), $imm['imm_body_site']);
+			$data['content'] .= Form::label('imm_route', 'Route');
+			$data['content'] .= Form::select('imm_route', array(''=>'','intramuscularly'=>'IM','subcutaneously'=>'SC','by mouth'=>'PO','intravenously'=>'IV'), $imm['imm_route']);
+			$data['content'] .= Form::label('imm_dosage', 'Dosage');
+			$data['content'] .= Form::text('imm_dosage', $imm['imm_dosage']);
+			$data['content'] .= Form::label('imm_dosage_unit', 'Unit');
+			$data['content'] .= Form::text('imm_dosage_unit', $imm['imm_dosage_unit']);
+			$data['content'] .= Form::label('imm_lot', 'Lot Number');
+			$data['content'] .= Form::text('imm_lot', $imm['imm_lot']);
+			$data['content'] .= Form::label('imm_manufacturer', 'Manufacturer');
+			$data['content'] .= Form::text('imm_manufacturer', $imm['imm_manufacturer']);
+			$data['content'] .= Form::label('imm_expiration', 'Expiration Date');
+			$data['content'] .= Form::input('date', 'imm_expiration', $imm['imm_expiration']);
+			$data['content'] .= Form::label('imm_date', 'Date Active');
+			$data['content'] .= Form::input('date', 'imm_date', $imm['imm_date'], array('required'));
+			$data['content'] .= Form::label('imm_cvxcode', 'CVX Code');
+			$data['content'] .= Form::text('imm_cvxcode', $imm['imm_cvxcode'],  array('readonly'));
+			$data['content'] .= Form::hidden('imm_provider', $imm['imm_provider']);
+			// Buttons
+			$data['content'] .= '<div class="ui-grid-a">';
+			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-icon-check ui-btn-icon-top', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-top', 'data-nosh-origin'=>$origin)) . '</div></div>';
+			if ($id != '0') {
+				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-icon-delete ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
+			}
+			$data['content'] .= '</div>';
+		}
+		$data['content'] .= '</form>';
+		$data['form'] = $form_id;
+		echo json_encode($data);
+	}
+	
+	public function postRefreshTimeline()
+	{
+		$data = $this->mobile_content_build();
+		echo $data;
 	}
 }

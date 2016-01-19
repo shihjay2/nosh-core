@@ -1255,16 +1255,26 @@ class AjaxSearchController extends BaseController {
 		echo $ndcid;
 	}
 	
-	public function postRxSearch($item)
+	public function postRxSearch($item, $mobile=false)
 	{
 		$q = strtolower(Input::get('term'));
-		if (!$q) return;
-		$data['response'] = 'false';
-		$query = DB::table('rx_list')
+		if (!$q) {
+			if (!$mobile) {
+				return;
+			} else {
+				$query = DB::table('rx_list')
+				->select($item)
+				->distinct()
+				->get();
+			}
+		} else {
+			$query = DB::table('rx_list')
 			->where($item, 'LIKE', "%$q%")
 			->select($item)
 			->distinct()
 			->get();
+		}
+		$data['response'] = 'false';
 		if ($query) {
 			$data['message'] = array();
 			$data['response'] = 'true';
@@ -1625,16 +1635,26 @@ class AjaxSearchController extends BaseController {
 		echo $query->displayname;
 	}
 	
-	public function postReaction()
+	public function postReaction($mobile=false)
 	{
 		$q = strtolower(Input::get('term'));
-		if (!$q) return;
-		$data['response'] = 'false';
-		$query = DB::table('allergies')
+		if (!$q) {
+			if (!$mobile) {
+				return;
+			} else {
+				$query = DB::table('allergies')
+				->select('allergies_reaction')
+				->distinct()
+				->get();
+			}
+		} else {
+			$query = DB::table('allergies')
 			->where('allergies_reaction', 'LIKE', "%$q%")
 			->select('allergies_reaction')
 			->distinct()
 			->get();
+		}
+		$data['response'] = 'false';
 		if ($query) {
 			$data['message'] = array();
 			$data['response'] = 'true';
@@ -3494,214 +3514,7 @@ class AjaxSearchController extends BaseController {
 	
 	public function postTimeline()
 	{
-		$pid = Session::get('pid');
-		$json = array();
-		$date_arr = array();
-		$query0 = DB::table('encounters')->where('pid', '=', $pid)->where('addendum', '=', 'n')->get();
-		if ($query0) {
-			foreach ($query0 as $row0) {
-				$description = '';
-				$procedureInfo = Procedure::find($row0->eid);
-				if ($procedureInfo) {
-					$description .= '<br><h4>Procedures:</h4><p class="view">';
-					if ($procedureInfo->proc_type != '') {
-						$description .= '<strong>Procedure: </strong>';
-						$description .= nl2br($procedureInfo->proc_type);
-						$description .= '<br /><br />';
-					}
-					$description .= '</p>';
-				}
-				$assessmentInfo = Assessment::find($row0->eid);
-				if ($assessmentInfo) {
-					$description .= '<br><h4>Assessment:</h4><p class="view">';
-					if ($assessmentInfo->assessment_1 != '') {
-						$description .= '<strong>' . $assessmentInfo->assessment_1 . '</strong><br />';
-						if ($assessmentInfo->assessment_2 == '') {
-							$description .= '<br />';
-						}
-					}
-					if ($assessmentInfo->assessment_2 != '') {
-						$description .= '<strong>' . $assessmentInfo->assessment_2 . '</strong><br />';
-						if ($assessmentInfo->assessment_3 == '') {
-							$description .= '<br />';
-						}
-					}
-					if ($assessmentInfo->assessment_3 != '') {
-						$description .= '<strong>' . $assessmentInfo->assessment_3 . '</strong><br />';
-						if ($assessmentInfo->assessment_4 == '') {
-							$description .= '<br />';
-						}
-					}
-					if ($assessmentInfo->assessment_4 != '') {
-						$description .= '<strong>' . $assessmentInfo->assessment_4 . '</strong><br />';
-						if ($assessmentInfo->assessment_5 == '') {
-							$description .= '<br />';
-						}
-					}
-					if ($assessmentInfo->assessment_5 != '') {
-						$description .= '<strong>' . $assessmentInfo->assessment_5 . '</strong><br />';
-						if ($assessmentInfo->assessment_6 == '') {
-							$description .= '<br />';
-						}
-					}
-					if ($assessmentInfo->assessment_6 != '') {
-						$description .= '<strong>' . $assessmentInfo->assessment_6 . '</strong><br />';
-						if ($assessmentInfo->assessment_7 == '') {
-							$description .= '<br />';
-						}
-					}
-					if ($assessmentInfo->assessment_7 != '') {
-						$description .= '<strong>' . $assessmentInfo->assessment_7 . '</strong><br />';
-						if ($assessmentInfo->assessment_8 == '') {
-							$description .= '<br />';
-						}
-					}
-					if ($assessmentInfo->assessment_8 != '') {
-						$description .= '<strong>' . $assessmentInfo->assessment_8 . '</strong><br /><br />';
-					}
-					if ($assessmentInfo->assessment_other != '') {
-						if ($row0->encounter_template == 'standardmtm') {
-							$description .= '<strong>SOAP Note: </strong>';
-						} else {
-							$description .= '<strong>Additional Diagnoses: </strong>';
-						}
-						$description .= nl2br($assessmentInfo->assessment_other);
-						$description .= '<br /><br />';
-					}
-					if ($assessmentInfo->assessment_ddx != '') {
-						if ($row0->encounter_template == 'standardmtm') {
-							$description .= '<strong>MAP2: </strong>';
-						} else {
-							$description .= '<strong>Differential Diagnoses Considered: </strong>';
-						}
-						$description .= nl2br($assessmentInfo->assessment_ddx);
-						$description .= '<br /><br />';
-					}
-					if ($assessmentInfo->assessment_notes != '') {
-						if ($row0->encounter_template == 'standardmtm') {
-							$description .= '<strong>Pharmacist Note: </strong>';
-						} else {
-							$description .= '<strong>Assessment Discussion: </strong>';
-						}
-						$description .= nl2br($assessmentInfo->assessment_notes);
-						$description .= '<br /><br />';
-					}
-					$description .= '</p>';
-				}
-				$json[] = array(
-					'title' => "<span class='timeline_event' value='" . $row0->eid . "' type='eid' status='" . $row0->encounter_signed ."'>Encounter: " . $row0->encounter_cc . "</span>",
-					'description' => $description,
-					'startDate' => $this->human_to_unix($row0->encounter_DOS)
-				);
-				$date_arr[] = $this->human_to_unix($row0->encounter_DOS);
-			}
-		}
-		$query1 = DB::table('t_messages')->where('pid', '=', $pid)->get();
-		if ($query1) {
-			foreach ($query1 as $row1) {
-				$json[] = array(
-					'title' => "<span class='timeline_event' value='" . $row1->t_messages_id . "' type='t_messages_id' status='" . $row1->t_messages_signed . "'>Message: " . $row1->t_messages_subject . "</span>",
-					'description' => substr($row1->t_messages_message, 0, 500) . '...',
-					'startDate' => $this->human_to_unix($row1->t_messages_dos)
-				);
-				$date_arr[] = $this->human_to_unix($row1->t_messages_dos);
-			}
-		}
-		$query2 = DB::table('rx_list')->where('pid', '=', $pid)->orderBy('rxl_date_active','asc')->groupBy('rxl_medication')->get();
-		if ($query2) {
-			foreach ($query2 as $row2) {
-				$row2a = DB::table('rx_list')->where('rxl_id', '=', $row2->rxl_id)->first();
-				if ($row2->rxl_sig == '') {
-					$instructions = $row2->rxl_instructions;
-				} else {
-					$instructions = $row2->rxl_sig . ' ' . $row2->rxl_route . ' ' . $row2->rxl_frequency;
-				}
-				$description2 = $row2->rxl_medication . ' ' . $row2->rxl_dosage . ' ' . $row2->rxl_dosage_unit . ', ' . $instructions . ' for ' . $row2->rxl_reason;
-				$json[] = array(
-					'title' => "<span class='timeline_event' value='" . $row2->rxl_id . "' type='rxl_id'>New Medication Started</span>",
-					'description' => $description2,
-					'startDate' => $this->human_to_unix($row2->rxl_date_active)
-				);
-				$date_arr[] = $this->human_to_unix($row2->rxl_date_active);
-			}
-		}
-		$query3 = DB::table('issues')->where('pid', '=', $pid)->get();
-		if ($query3) {
-			foreach ($query3 as $row3) {
-				if ($row3->type == 'Problem List') {
-					$title = 'New Problem';
-				}
-				if ($row3->type == 'Medical History') {
-					$title = 'New Medical Event';
-				}
-				if ($row3->type == 'Problem List') {
-					$title = 'New Surgical Event';
-				}
-				$json[] = array(
-					'title' => "<span class='timeline_event' value='" . $row3->issue_id . "' type='issue_id'>" . $title . "</span>",
-					'description' => $row3->issue,
-					'startDate' => $this->human_to_unix($row3->issue_date_active)
-				);
-				$date_arr[] = $this->human_to_unix($row3->issue_date_active);
-			}
-		}
-		$query4 = DB::table('immunizations')->where('pid', '=', $pid)->get();
-		if ($query4) {
-			foreach ($query4 as $row4) {
-				$json[] = array(
-					'title' => "<span class='timeline_event' value='" . $row4->imm_id . "' type='imm_id'>Immunization Given</span>",
-					'description' => $row4->imm_immunization,
-					'startDate' => $this->human_to_unix($row4->imm_date)
-				);
-				$date_arr[] = $this->human_to_unix($row4->imm_date);
-			}
-		}
-		$query5 = DB::table('rx_list')->where('pid', '=', $pid)->where('rxl_date_inactive', '!=', '0000-00-00 00:00:00')->get();
-		if ($query5) {
-			foreach ($query5 as $row5) {
-				$row5a = DB::table('rx_list')->where('rxl_id', '=', $row5->rxl_id)->first();
-				if ($row5->rxl_sig == '') {
-					$instructions5 = $row5->rxl_instructions;
-				} else {
-					$instructions5 = $row5->rxl_sig . ' ' . $row5->rxl_route . ' ' . $row5->rxl_frequency;
-				}
-				$description5 = $row5->rxl_medication . ' ' . $row5->rxl_dosage . ' ' . $row5->rxl_dosage_unit . ', ' . $instructions5 . ' for ' . $row5->rxl_reason;
-				$json[] = array(
-					'title' => "<span class='timeline_event' value='" . $row5->rxl_id . "' type='rxl_id'>Medication Stopped</span>",
-					'description' => $description5,
-					'startDate' => $this->human_to_unix($row5->rxl_date_inactive)
-				);
-				$date_arr[] = $this->human_to_unix($row5->rxl_date_inactive);
-			}
-		}
-		$query6 = DB::table('allergies')->where('pid', '=', $pid)->where('allergies_date_inactive', '=', '0000-00-00 00:00:00')->get();
-		if ($query6) {
-			foreach ($query6 as $row6) {
-				$json[] = array(
-					'title' => "<span class='timeline_event' value='" . $row6->allergies_id . "' type='allergies_id'>New Allergy</span>",
-					'description' => $row6->allergies_med,
-					'startDate' => $this->human_to_unix($row6->allergies_date_active)
-				);
-				$date_arr[] = $this->human_to_unix($row6->allergies_date_active);
-			}
-		}
-		foreach ($json as $key => $value) {
-			$item[$key]  = $value['startDate'];
-		}
-		array_multisort($item, SORT_ASC, $json);
-		asort($date_arr);
-		$arr['start'] = reset($date_arr);
-		$arr['end'] = end($date_arr);
-		if ($arr['end'] - $arr['start'] >= 315569260) {
-			$arr['granular'] = 'decade';
-		}
-		if ($arr['end'] - $arr['start'] > 31556926 && $arr['end'] - $arr['start'] < 315569260) {
-			$arr['granular'] = 'year';
-		}
-		if ($arr['end'] - $arr['start'] <= 31556926) {
-			$arr['granular'] = 'month';
-		}
-		$arr['json'] = $json;
+		$arr = $this->timeline();
 		echo json_encode($arr);
 	}
 	

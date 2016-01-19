@@ -1151,18 +1151,51 @@ class AjaxCommonController extends BaseController {
 	{
 		$date_convert_array = array(
 			'issue_date_active',
-			
+			'issue_date_inactive',
+			'allergies_date_active',
+			'allergies_date_inactive',
+			'rxl_date_active',
+			'imm_date',
+			'imm_expiration'
 		);
 		$rcopia_tables = array(
 			'issues',
+			'allergies'
 		);
 		$api_tables = array(
 			'issues',
+			'allergies'
 		);
+		$mtm_tables = array(
+			'issues',
+		);
+		$ndc_tables = array(
+			'allergies'
+		);
+		if ($table == 'issues') {
+			$message = 'Issue ';
+		}
+		if ($table == 'allergies') {
+			$message = 'Allergy ';
+		}
+		if ($table == 'rx_list') {
+			$message = 'Medication ';
+		}
+		if ($table == 'sup_list') {
+			$message = 'Supplement ';
+		}
+		if ($table == 'immunizations') {
+			$message = 'Immunization ';
+		}
+		$arr = array();
+		$practice = Practiceinfo::find(Session::get('practice_id'));
+		$pid = Session::get('pid');
 		$data = Input::all();
 		foreach ($date_convert_array as $key) {
 			if (array_key_exists($key, $data)) {
-				$data[$date_convert_item] = date('Y-m-d H:i:s', strtotime($data[$date_convert_item]));
+				if ($data[$key] !== '') {
+					$data[$key] = date('Y-m-d H:i:s', strtotime($data[$key]));
+				}
 			}
 		}
 		foreach ($rcopia_tables as $rcopia_table) {
@@ -1170,15 +1203,100 @@ class AjaxCommonController extends BaseController {
 				$data['rcopia_sync'] = 'n';
 			}
 		}
+		foreach ($ndc_tables as $ndc_table) {
+			if ($ndc_table == $table) {
+				if (strpos($data['allergies_med'], ', ') === false) {
+					$ndcid = '';
+				} else {
+					$med_name = explode(", ", $data['allergies_med'], -1);
+					$ndcid = "";
+					if ($med_name[0]) {
+						$med_result = DB::table('meds_full_package')
+							->join('meds_full', 'meds_full.PRODUCTNDC', '=', 'meds_full_package.PRODUCTNDC')
+							->select('meds_full_package.NDCPACKAGECODE')
+							->where('meds_full.PROPRIETARYNAME', '=', $med_name[0])
+							->first();
+						if ($med_result) {
+							$ndcid = $this->ndc_convert($med_result->NDCPACKAGECODE);
+						}
+					}
+				}
+				if ($table == 'allergies') {
+					$data['meds_ndcid'] = $ndcid;
+				}
+			}
+		}
 		if ($action == 'save') {
-			if ($row_id == 'new') {
-				DB::table($table)->insert($data);
+			if ($row_id == '0') {
+				$data['pid'] = $pid;
+				$row_id1 = DB::table($table)->insertGetId($data);
 				$this->audit('Add');
+				foreach ($api_tables as $api_table) {
+					if ($api_table == $table) {
+						$this->api_data('add', $table, $row_index, $row_id1);
+					}
+				}
+				if ($practice->mtm_extension == 'y') {
+					foreach ($mtm_tables as $mtm_table) {
+						if ($mtm_table == $table) {
+							$this->add_mtm_alert($pid, $table);
+						}
+					}
+				}
+				$arr['message'] = $message . 'added!';
 			} else {
 				DB::table($table)->where($row_index, '=', $row_id)->update($data);
 				$this->audit('Update');
+				foreach ($api_tables as $api_table) {
+					if ($api_table == $table) {
+						$this->api_data('update', $table, $row_index, $row_id);
+					}
+				}
+				$arr['message'] = $message . 'updated!';
 			}
 		}
+		if ($action == 'inactivate') {
+			if ($table == 'issues') {
+				$data1 = array(
+					'issue_date_inactive' => date('Y-m-d H:i:s', time()),
+					'rcopia_sync' => 'nd1'
+				);
+			}
+			DB::table($table)->where($row_index, '=', $row_id)->update($data1);
+			$this->audit('Update');
+			foreach ($api_tables as $api_table) {
+				if ($api_table == $table) {
+					$this->api_data('update', $table, $row_index, $row_id);
+				}
+			}
+			$arr['message'] = $message . 'inactivated!';
+		}
+		if ($action == 'delete') {
+			if($practice->rcopia_extension == 'y') {
+				foreach ($rcopia_tables as $rcopia_table) {
+					if ($rcopia_table == $table) {
+						$data2 = array(
+							'rcopia_sync' => 'nd'
+						);
+						DB::table($table)->where($row_index, '=', $row_id)->update($data);
+						$this->audit('Update');
+						while(!$this->check_rcopia_delete($table, $row_id)) {
+							sleep(2);
+						}
+					}
+				}
+			}
+			DB::table($table)->where($row_index, '=', $row_id)->delete();
+			$this->audit('Delete');
+			foreach ($api_tables as $api_table) {
+				if ($api_table == $table) {
+					$this->api_data('delete', $table, $row_index, $row_id);
+				}
+			}
+			$arr['message'] = $message . 'deleted!';
+		}
+		$arr['response'] = 'OK';
+		echo json_encode($arr);
 	}
 	
 	public function postGetProviderNosh()
@@ -1192,7 +1310,7 @@ class AjaxCommonController extends BaseController {
 		$query = DB::table('uma')->get();
 		$html = 'No resources registered.';
 		if ($query) {
-			$html = '<table class="pure-table pure-table-horizontal"><thead><tr><th>Resource</th><th>Action</th></tr></thead>';
+			$html = '<table class="pure-table pure-table-horizontal"><thead><tr><th>Resource</th><th>Edit</th></tr></thead>';
 			foreach ($query as $row) {
 				$name_arr = explode('/', $row->scope);
 				$name = end($name_arr);
@@ -1236,7 +1354,7 @@ class AjaxCommonController extends BaseController {
 					$title = 'This resource is your list of associated medical documents in PDF format';
 					$resource = 'Documents';
 				}
-				$html .= '<tr class="uma_table1"><td><span class="nosh_tooltip" title="' . $title . '">' . $resource . '</span></td><td><i class="fa fa-pencil-square-o fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add/Edit Permitted Users" nosh-id="' . $row->resource_set_id . '"></i><i class="fa fa-openid fa-fw fa-2x edit_user_access nosh_tooltip" style="vertical-align:middle;padding:2px" title="Edit Policy in the pNOSH UMA Server Webapp" nosh-url="' . $row->user_access_policy_uri . '"></i></td></tr>';
+				$html .= '<tr class="uma_table1"><td><span class="nosh_tooltip" title="' . $title . '">' . $resource . '</span></td><td><i class="fa fa-pencil-square-o fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add/Edit Permitted Users" nosh-id="' . $row->resource_set_id . '"></i></td></tr>';
 			}
 			$html .= '</table>';
 		}

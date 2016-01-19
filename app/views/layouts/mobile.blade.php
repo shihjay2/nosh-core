@@ -24,14 +24,18 @@
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/pure/0.6.0/grids-responsive-min.css">
 -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-		<?php echo HTML::style('css/nosh-mobile.min.css');?>
-		<?php echo HTML::style('css/jquery.mobile.icons.min.css');?>
-		<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+		
 <!--
-		<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+		<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
 -->
-		<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+		<?php echo HTML::style('css/nativedroid.css');?>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico">
 		{{ $style }}
+		<?php echo HTML::style('css/nosh-timeline.css');?>
+		<?php echo HTML::style('css/fullcalendar.css');?>
+		<?php echo HTML::style('css/flexboxgrid.min.css');?>
 		<script type="text/javascript">
 			document.documentElement.className = 'js';
 			var noshdata = {
@@ -46,7 +50,7 @@
 				'calendar': '<?php echo asset('images/calendar.gif','Calendar', array('border' => '0')); ?>',
 				'error': '<?php echo route('home'); ?>',
 				'path': "/<?php $path = explode('/', route('home')); echo $path[3];?>/js/",
-				'logout_url': '<?php echo route('logout'); ?>',
+				'logout_url': '<?php echo route('logout_mobile'); ?>',
 				'login_url': '<?php echo route('home'); ?>',
 				'login_shake': '',
 				'images': '<?php echo url('images'); ?>/',
@@ -81,9 +85,11 @@
 					linkBindingEnabled: false,
 					ajaxEnabled: false
 				});
+				$.mobile.ignoreContentEnabled = true;
 			});
 		</script>
 		<script type="text/javascript" src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.1/moment.min.js"></script>
 		{{ $script }}
 	</head>
 	<body>

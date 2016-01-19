@@ -69,10 +69,6 @@ Route::group(array('before' => 'force.ssl|csrf_header|session_check|acl6'), func
 });
 Route::group(array('before' => 'auth|force.ssl|acl1|pid_check|uma_check'), function() {
 	Route::get('chart', array('as' => 'chart', 'uses' => 'ChartController@main'));
-	Route::get('messaging', array('as' => 'messaging', 'uses' => 'HomeController@showWelcome'));
-	Route::get('schedule', array('as' => 'schedule', 'uses' => 'HomeController@showWelcome'));
-	Route::get('billing', array('as' => 'billing', 'uses' => 'HomeController@showWelcome'));
-	Route::get('office', array('as' => 'office', 'uses' => 'HomeController@showWelcome'));
 	Route::get('closechart', array('as' => 'closechart', function()
 	{
 		Session::forget('age');
@@ -117,6 +113,7 @@ Route::group(array('before' => 'auth|force.ssl|acl1'), function() {
 	Route::get('chart_mobile/{pid}', array('as' => 'chart_mobile', 'uses' => 'MobileController@chart_mobile'));
 	Route::get('editpage/{type}/{index}/{id}', array('as' => 'editpage', 'uses' => 'MobileController@editpage'));
 	Route::get('submitdata/{type}', array('as' => 'submitdata', 'uses' => 'MobileController@submitdata'));
+	Route::get('mobile_schedule', array('as' => 'mobile_schedule', 'uses' => 'MobileController@schedule'));
 });
 Route::group(array('before' => 'force.ssl|acl2'), function() {
 	Route::get('encounter', array('as' => 'encounter', function()
@@ -154,6 +151,7 @@ Route::group(array('before' => 'force.ssl|acl6'), function() {
 Route::get('logout', array('as' => 'logout', 'before' => 'force.ssl|needinstall|logout_type', 'uses' => 'LoginController@logout'));
 Route::get('uma_logout', array('as' => 'uma_logout', 'before' => 'force.ssl|needinstall', 'uses' => 'LoginController@uma_logout'));
 Route::get('oidc_logout', array('as' => 'oidc_logout', 'before' => 'force.ssl|needinstall', 'uses' => 'LoginController@oidc_logout'));
+Route::get('logout_mobile', array('as' => 'logout_mobile', 'before' => 'force.ssl', 'uses' => 'MobileController@logout'));
 Route::get('reminder', array('as' => 'reminder', 'uses' => 'ReminderController@reminder'));
 Route::get('fax', array('as' => 'fax', 'uses' => 'FaxController@fax'));
 Route::get('footerpdf', array("as" => "footerpdf", function()

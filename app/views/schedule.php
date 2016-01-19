@@ -15,7 +15,7 @@
 				</div>
 			<?php }?>
 		</div>
-		<div style="width:620px;float:left;"><div id="providers_calendar" ></div></div>
+		<div style="width:620px;float:left;"><div id="providers_calendar"></div></div>
 	</div>
 </div>
 <div id="event_dialog" title="">
