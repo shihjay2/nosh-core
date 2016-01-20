@@ -1313,7 +1313,7 @@ class AjaxCommonController extends BaseController {
 			$html = '<table class="pure-table pure-table-horizontal"><thead><tr><th>Resource</th><th>Edit</th></tr></thead>';
 			foreach ($query as $row) {
 				$name_arr = explode('/', $row->scope);
-				$name = end($name_arr);
+				$name = $name_arr[5];
 				if ($name == 'Patient') {
 					$title = 'This resource is your demographic information.';
 					$resource = 'Demographics';
