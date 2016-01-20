@@ -1369,7 +1369,7 @@ class AjaxCommonController extends BaseController {
 			$i = 0;
 			foreach ($query as $row) { 
 				$name_arr = explode('/', $row->scope);
-				$name = end($name_arr);
+				$name = $name_arr[5];
 				if ($name == 'Patient') {
 					$resource = 'Demographics';
 				}
