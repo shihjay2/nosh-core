@@ -143,6 +143,11 @@ class OpenIDConnectClient
 	 * @var array holds scopes
 	 */
 	private $scopes = array();
+	
+	/**
+	 * @var array holds grant types
+	 */
+	private $grant_types = array();
 
 	/**
 	 * @var array holds a cache of info returned from the user info endpoint
