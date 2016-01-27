@@ -998,9 +998,10 @@ class OpenIDConnectClient
 	
 	public function introspect($token) {
 		$introspect_endpoint = $this->getProviderConfigValue('introspection_endpoint',true);
-		$send_object = (object)array(
+		$send_object = array(
 			'token' => $token
 		);
+		$send_object = http_build_query($send_object, null, '&');
 		$response = $this->fetchURL($introspect_endpoint, $send_object, $this->accessToken);
 		$json_response = json_decode($response, true);
 		return $json_response;
