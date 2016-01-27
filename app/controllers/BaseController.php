@@ -9695,9 +9695,9 @@ class BaseController extends Controller {
 			);
 			$claim_ids[] = DB::connection('oic')->table('claim')->insertGetId($data1a);
 			if ($query->email_verified == '1') {
-				$email_verified = true;
+				$email_verified = 'true';
 			} else {
-				$email_verified = false;
+				$email_verified = 'false';
 			}
 			$data1b = array(
 				'name' => 'email_verified',
