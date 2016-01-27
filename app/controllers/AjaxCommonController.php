@@ -1307,54 +1307,58 @@ class AjaxCommonController extends BaseController {
 	
 	public function postGetPatientResources()
 	{
-		$query = DB::table('uma')->get();
+		$query = DB::table('uma')->groupBy('resource_set_id')->get();
 		$html = 'No resources registered.';
 		if ($query) {
 			$html = '<table class="pure-table pure-table-horizontal"><thead><tr><th>Resource</th><th>Edit</th></tr></thead>';
+			$row_id = '';
 			foreach ($query as $row) {
-				$name_arr = explode('/', $row->scope);
-				$name = $name_arr[5];
-				if ($name == 'Patient') {
-					$title = 'This resource is your demographic information.';
-					$resource = 'Demographics';
+				if ($row->resource_set_id != $row_id) {
+					$name_arr = explode('/', $row->scope);
+					$name = $name_arr[5];
+					if ($name == 'Patient') {
+						$title = 'This resource is your demographic information.';
+						$resource = 'Demographics';
+					}
+					if ($name == 'Medication') {
+						$title = 'This resource is the RXNorm medication database.  This is NOT your active medication list.';
+						$resource = 'Medication Database';
+					}
+					if ($name == 'Practitioner') {
+						$title = 'This resource is a list of your participating medical providers.';
+						$resource = 'Providers';
+					}
+					if ($name == 'Condition') {
+						$title = 'This resource is a list of your medical history, active problem list, surgical history, and encounter diagnoses.';
+						$resource = 'Conditions';
+					}
+					if ($name == 'MedicationStatement') {
+						$title = 'This resource is a list of your active medications.';
+						$resource = 'Medications';
+					}
+					if ($name == 'AllergyIntolerance') {
+						$title = 'This resource is a list of your allergies.';
+						$resource = 'Allergies';
+					}
+					if ($name == 'Immunization') {
+						$title = 'This resource is a list of your immunizations given.';
+						$resource = 'Immunizations';
+					}
+					if ($name == 'Encounter') {
+						$title = 'This resource is a list of your medical encounters.';
+						$resource = 'Encounters';
+					}
+					if ($name == 'FamilyHistory') {
+						$title = 'This resource is your family medical history.';
+						$resource = 'Family History';
+					}
+					if ($name == 'Binary') {
+						$title = 'This resource is your list of associated medical documents in PDF format';
+						$resource = 'Documents';
+					}
+					$html .= '<tr class="uma_table1"><td><span class="nosh_tooltip" title="' . $title . '">' . $resource . '</span></td><td><i class="fa fa-pencil-square-o fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add/Edit Permitted Users" nosh-id="' . $row->resource_set_id . '"></i></td></tr>';
+					$row_id = $row->resource_set_id;
 				}
-				if ($name == 'Medication') {
-					$title = 'This resource is the RXNorm medication database.  This is NOT your active medication list.';
-					$resource = 'Medication Database';
-				}
-				if ($name == 'Practitioner') {
-					$title = 'This resource is a list of your participating medical providers.';
-					$resource = 'Providers';
-				}
-				if ($name == 'Condition') {
-					$title = 'This resource is a list of your medical history, active problem list, surgical history, and encounter diagnoses.';
-					$resource = 'Conditions';
-				}
-				if ($name == 'MedicationStatement') {
-					$title = 'This resource is a list of your active medications.';
-					$resource = 'Medications';
-				}
-				if ($name == 'AllergyIntolerance') {
-					$title = 'This resource is a list of your allergies.';
-					$resource = 'Allergies';
-				}
-				if ($name == 'Immunization') {
-					$title = 'This resource is a list of your immunizations given.';
-					$resource = 'Immunizations';
-				}
-				if ($name == 'Encounter') {
-					$title = 'This resource is a list of your medical encounters.';
-					$resource = 'Encounters';
-				}
-				if ($name == 'FamilyHistory') {
-					$title = 'This resource is your family medical history.';
-					$resource = 'Family History';
-				}
-				if ($name == 'Binary') {
-					$title = 'This resource is your list of associated medical documents in PDF format';
-					$resource = 'Documents';
-				}
-				$html .= '<tr class="uma_table1"><td><span class="nosh_tooltip" title="' . $title . '">' . $resource . '</span></td><td><i class="fa fa-pencil-square-o fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add/Edit Permitted Users" nosh-id="' . $row->resource_set_id . '"></i></td></tr>';
 			}
 			$html .= '</table>';
 		}

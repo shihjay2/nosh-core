@@ -178,7 +178,7 @@ class OpenIDConnectClient
 	 * @return bool
 	 * @throws OpenIDConnectClientException
 	 */
-	public function authenticate($uma=false) {
+	public function authenticate($uma=false, $type='') {
 
 		// Do a preemptive check to see if the provider has thrown an error from a previous redirect
 		if (isset($_REQUEST['error'])) {
@@ -232,7 +232,7 @@ class OpenIDConnectClient
 			if ($uma == false) {
 				$this->requestAuthorization();
 			} else {
-				$this->requestUmaAuthorization();
+				$this->requestUmaAuthorization($type);
 			}
 			return false;
 		}
@@ -274,6 +274,13 @@ class OpenIDConnectClient
 	 */
 	public function addScope($scope) {
 		$this->scopes = array_merge($this->scopes, (array)$scope);
+	}
+	
+	/**
+	 * @param $grant_type - example: authorization_code, implicit, password, client_credentials, refresh_token, urn:ietf:params:oauth:grant-type:jwt-bearer, urn:ietf:params:oauth:grant-type:saml2-bearer
+	 */
+	public function addGrantType($grant_type) {
+		$this->grant_types = array_merge($this->grant_types, (array)$grant_type);
 	}
 
 	/**
@@ -418,6 +425,24 @@ class OpenIDConnectClient
 		// Convert token params to string format
 		$token_params = http_build_query($token_params, null, '&');
 		return json_decode($this->fetchURL($token_endpoint, $token_params));
+	}
+	
+	public function requestAAT() {
+		$token_endpoint = $this->getProviderConfigValue("token_endpoint", true);
+		$token_params = array(
+			'grant_type' => 'client_credentials',
+			'scope' => 'uma_authorization',
+			'client_id' => $this->clientID,
+			'client_secret' => $this->clientSecret
+		);
+		// Convert token params to string format
+		$token_params = http_build_query($token_params, null, '&');
+		$token_json = json_decode($this->fetchURL($token_endpoint, $token_params));
+		// Throw an error if the server returns one
+		if (isset($token_json->error)) {
+			throw new OpenIDConnectClientException($token_json->error_description);
+		}
+		$this->accessToken = $token_json->access_token;
 	}
 
 	/**
@@ -742,21 +767,30 @@ class OpenIDConnectClient
 	public function register($uma=false) {
 		if ($uma == false) {
 			$registration_endpoint = $this->getProviderConfigValue('registration_endpoint');
-			$send_object = (object)array(
+			$send_array = (object)array(
 				'redirect_uris' => array($this->getRedirectURL(), str_replace('oidc', 'fhir/oidc', $this->getRedirectURL())),
 				'client_name' => $this->getClientName(),
 				'logo_uri' => 'https://www.noshchartingsystem.com/SAAS-Logo.jpg'
 			);
 		} else {
 			$registration_endpoint = $this->getProviderConfigValue('dynamic_client_endpoint', $uma);
-			$send_object = (object)array(
+			$send_array = (object)array(
 				'redirect_uris' => array($this->getRedirectURL(), 
-					str_replace('uma_get_refresh_token', 'uma_api', $this->getRedirectURL())
+					str_replace('uma_auth', 'uma_api', $this->getRedirectURL())
 				),
 				'client_name' => $this->getClientName(),
-				'logo_uri' => 'https://www.noshchartingsystem.com/SAAS-Logo.jpg'
+				'logo_uri' => 'https://www.noshchartingsystem.com/SAAS-Logo.jpg',
+				'claims_redirect_uris' => array($this->getRedirectURL())
 			);
 		}
+		// If the client has been registered with additional scopes
+		if (sizeof($this->grant_types) > 0) {
+			$send_array = array_merge($send_array, array('grant_types' => $this->grant_types));
+		}
+		if (sizeof($this->scopes) > 0) {
+			$auth_params = array_merge($auth_params, array('scope' => implode(' ', $this->scopes)));
+		}
+		$send_object = (object) $send_array;
 		$response = $this->fetchURL($registration_endpoint, json_encode($send_object));
 		$json_response = json_decode($response);
 
@@ -848,7 +882,7 @@ class OpenIDConnectClient
 	/**
 	 * @param $resourceID
 	 */
-	private function requestUmaAuthorization() {
+	private function requestUmaAuthorization($type) {
 		$auth_endpoint = $this->getProviderConfigValue("authorization_endpoint", true);
 		$response_type = "code";
 
@@ -861,14 +895,34 @@ class OpenIDConnectClient
 		$state = $this->generateRandString();
 		$_SESSION['openid_connect_state'] = $state;
 		
-		$auth_params = array_merge($this->authParams, array(
-			'response_type' => $response_type,
-			'redirect_uri' => $this->getRedirectURL(),
-			'client_id' => $this->clientID,
-			'nonce' => $nonce,
-			'state' => $state,
-			'scope' => 'openid'
-		));
+		if ($type == 'user1') {
+			$auth_params = array_merge($this->authParams, array(
+				'response_type' => $response_type,
+				'redirect_uri' => $this->getRedirectURL(),
+				'client_id' => $this->clientID,
+				'nonce' => $nonce,
+				'state' => $state,
+				'scope' => 'openid offline_access uma_protection email profile'
+			));
+		} elseif ($type == 'user') {
+			$auth_params = array_merge($this->authParams, array(
+				'response_type' => $response_type,
+				'redirect_uri' => $this->getRedirectURL(),
+				'client_id' => $this->clientID,
+				'nonce' => $nonce,
+				'state' => $state,
+				'scope' => 'openid email profile'
+			));
+		} else {
+			$auth_params = array_merge($this->authParams, array(
+				'response_type' => $response_type,
+				'redirect_uri' => $this->getRedirectURL(),
+				'client_id' => $this->clientID,
+				'nonce' => $nonce,
+				'state' => $state,
+				'scope' => 'uma_authorization email profile'
+			));
+		}
 		
 		// If the client has been registered with additional scopes
 		if (sizeof($this->scopes) > 0) {
@@ -924,6 +978,27 @@ class OpenIDConnectClient
 		$return['user_access_policy_uri'] = $json_response->{'user_access_policy_uri'};
 		return $return;
 	}
+	
+	public function update_resource_set($id, $name, $icon, $scopes) {
+		$resource_set_endpoint = $this->getProviderConfigValue('resource_set_registration_endpoint',true);
+		$send_object = (object)array(
+			'name' => $name,
+			'icon_uri' => $icon,
+			'scopes' => $scopes
+		);
+		$response = $this->fetchURL($resource_set_endpoint . '/resource_set/' . $id, json_encode($send_object), $this->accessToken, 'PUT');
+		$json_response = json_decode($response);
+		if ($json_response === false) {
+			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
+		} elseif (isset($json_response->{'error_description'})) {
+			$return['error'] = $json_response->{'error'};
+			$return['error_description'] = $json_response->{'error_description'};
+			throw new OpenIDConnectClientException($json_response->{'error_description'});
+		}
+		$return['resource_set_id'] = $json_response->{'_id'};
+		$return['user_access_policy_uri'] = $json_response->{'user_access_policy_uri'};
+		return $return;
+	}
 
 	/**
 	 * UMA - Permission Request
@@ -948,6 +1023,21 @@ class OpenIDConnectClient
 		$return['ticket'] = $json_response->{'ticket'};
 		return $return;
 	}
+	
+	/**
+	 * UMA - Requesting Party Claims Request
+	 *
+	 * @throws OpenIDConnectClientException
+	 */
+	public function rqp_claims($permission_ticket) {
+		$requesting_party_claims_endpoint = $this->getProviderConfigValue('requesting_party_claims_endpoint',true);
+		$state = $this->generateRandString();
+		$_SESSION['rpt_state'] = $state;
+		$requesting_party_claims_endpoint .= "?ticket=" . $permission_ticket . "&redirect_uri=" . $this->getRedirectURL() . "&client_id=" . $this->clientID . "&state=" . $state;
+		$this->redirect($requesting_party_claims_endpoint);
+	}
+	
+	/**
 	
 	/**
 	 * UMA - Requesting Party Token Request
@@ -975,25 +1065,12 @@ class OpenIDConnectClient
 			'ticket' => $permission_ticket
 		);
 		$response = $this->fetchURL($rpt_request_endpoint, json_encode($send_object), $this->accessToken);
-		$json_response = json_decode($response);
+		$json_response = json_decode($response, true);
 		// Throw some errors if we encounter them
 		if ($json_response === false) {
 			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
-		} elseif (isset($json_response->{'error_details'})) {
-			// Check if needing requesting party claims
-			if ($json_response->{'error'} == 'need_info') {
-				$ticket = $json_response->{'error_details'}->{'requesting_party_claims'}->{'ticket'};
-				$requesting_party_claims_endpoint = $this->getProviderConfigValue('requesting_party_claims_endpoint',true);
-				$state = $this->generateRandString();
-				$_SESSION['rpt_state'] = $state;
-				$requesting_party_claims_endpoint .= "?ticket=" . $ticket . "&redirect_uri=" . $this->getRedirectURL() . "&client_id=" . $this->clientID . "&state=" . $state;
-				$this->redirect($requesting_party_claims_endpoint);
-			} else {
-				$return['error'] = 'Error in getting RPT.';
-			}
 		}
-		$return['ticket'] = $json_response->{'ticket'};
-		return $return;
+		return $json_response;
 	}
 	
 	public function introspect($token) {

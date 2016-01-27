@@ -642,56 +642,56 @@ class LoginController extends BaseController {
 						'name' => 'Condition',
 						'icon' => 'https://noshchartingsystem.com/i-condition.png',
 						'scopes' => array(
-							URL::to('/') . '/fhir/Condition'
+							URL::to('/') . '/fhir/Condition/?subject:Patient=1'
 						)
 					);
 					$resource_set_array[] = array(
 						'name' => 'Medication List',
 						'icon' => 'https://noshchartingsystem.com/i-pharmacy.png',
 						'scopes' => array(
-							URL::to('/') . '/fhir/MedicationStatement'
+							URL::to('/') . '/fhir/MedicationStatement/?subject:Patient=1'
 						)
 					);
 					$resource_set_array[] = array(
 						'name' => 'Allergy',
 						'icon' => 'https://noshchartingsystem.com/i-allergy.png',
 						'scopes' => array(
-							URL::to('/') . '/fhir/AllergyIntolerance'
+							URL::to('/') . '/fhir/AllergyIntolerance/?subject:Patient=1'
 						)
 					);
 					$resource_set_array[] = array(
 						'name' => 'Immunization',
 						'icon' => 'https://noshchartingsystem.com/i-immunization.png',
 						'scopes' => array(
-							URL::to('/') . '/fhir/Immunization'
+							URL::to('/') . '/fhir/Immunization/?subject:Patient=1'
 						)
 					);
 					$resource_set_array[] = array(
 						'name' => 'Encounter',
 						'icon' => 'https://noshchartingsystem.com/i-medical-records.png',
 						'scopes' => array(
-							URL::to('/') . '/fhir/Encounter'
+							URL::to('/') . '/fhir/Encounter/?subject:Patient=1'
 						)
 					);
 					$resource_set_array[] = array(
 						'name' => 'Family History',
 						'icon' => 'https://noshchartingsystem.com/i-family-practice.png',
 						'scopes' => array(
-							URL::to('/') . '/fhir/FamilyHistory'
+							URL::to('/') . '/fhir/FamilyHistory/?subject:Patient=1'
 						)
 					);
 					$resource_set_array[] = array(
 						'name' => 'Binary Files',
 						'icon' => 'https://noshchartingsystem.com/i-file.png',
 						'scopes' => array(
-							URL::to('/') . '/fhir/Binary'
+							URL::to('/') . '/fhir/Binary/?subject:Patient=1'
 						)
 					);
 					$resource_set_array[] = array(
 						'name' => 'Observation',
 						'icon' => 'https://noshchartingsystem.com/i-cardiology.png',
 						'scopes' => array(
-							URL::to('/') . '/fhir/Observation'
+							URL::to('/') . '/fhir/Observation/?subject:Patient=1'
 						)
 					);
 					$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
