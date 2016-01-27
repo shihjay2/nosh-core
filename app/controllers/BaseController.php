@@ -9710,6 +9710,7 @@ class BaseController extends Controller {
 			);
 			$claim_ids[] = DB::connection('oic')->table('claim')->insertGetId($data1c);
 			$query1 = DB::connection('oic')->table('policy')->where('id', '=', $policy_id)->first();
+			$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
 			if ($policy_id != '' && $query1) {
 				DB::connection('oic')->table('policy_scope')->where('owner_id', '=', $policy_id)->delete();
 				DB::connection('oic')->table('claim_to_policy')->where('policy_id', '=', $policy_id)->delete();
@@ -9732,6 +9733,11 @@ class BaseController extends Controller {
 					'claim_id' => $claim_id
 				);
 				DB::connection('oic')->table('claim_to_policy')->insert($data4);
+				$data5 = array(
+					'owner_id' => $claim_id,
+					'issuer' => $open_id_url
+				);
+				DB::connection('oic')->table('claim_issuer')->insert($data5);
 			}
 		} else {
 			$return = 'Email address or user is not registered!';

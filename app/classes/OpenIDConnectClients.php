@@ -1001,7 +1001,7 @@ class OpenIDConnectClient
 		$send_object = (object)array(
 			'token' => $token
 		);
-		$response = $this->fetchURL($introspect_endpoint, json_encode($send_object), $this->accessToken);
+		$response = $this->fetchURL($introspect_endpoint, $send_object, $this->accessToken);
 		$json_response = json_decode($response, true);
 		return $json_response;
 	}

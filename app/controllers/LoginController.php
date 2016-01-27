@@ -896,7 +896,7 @@ class LoginController extends BaseController {
 		$oidc->addScope('openid');
 		$oidc->addScope('email');
 		$oidc->addScope('profile');
-		$oidc->addScope('offline');
+		$oidc->addScope('offline_access');
 		$oidc->addScope('uma_authorization');
 		$oidc->authenticate(true);
 		$firstname = $oidc->requestUserInfo('given_name');
