@@ -8712,7 +8712,7 @@ class BaseController extends Controller {
 			if ($row->rxl_ndcid != '') {
 				$rxnormapi = new RxNormApi();
 				$rxnormapi->output_type = 'json';
-				$rxnorm = json_decode($rxnormapi->findRxcuiById("NDC", $med_row->rxl_ndcid), true);
+				$rxnorm = json_decode($rxnormapi->findRxcuiById("NDC", $row->rxl_ndcid), true);
 				if (isset($rxnorm['idGroup']['rxnormId'][0])) {
 					$rxnorm1 = json_decode($rxnormapi->getRxConceptProperties($rxnorm['idGroup']['rxnormId'][0]), true);
 					$response['medicationReference'] = [
@@ -8739,7 +8739,7 @@ class BaseController extends Controller {
 			} else {
 				$response['text']['div'] = '<div>' . $row->rxl_medication . ' ' . $row->rxl_dosage . ' ' . $row->rxl_dosage_unit . ', ' . $row->rxl_sig . ' ' . $row->rxl_route . ' ' . $row->rxl_frequency . ' for ' . $row->rxl_reason . '</div>';
 				$dosage_text = $row->rxl_sig . ' ' . $row->rxl_route . ' ' . $row->rxl_frequency . ' for ' . $row->rxl_reason;
-				$med_dosage_parts = explode(" ", $med_row->rxl_sig);
+				$med_dosage_parts = explode(" ", $row->rxl_sig);
 				$med_dosage = $med_dosage_parts[0];
 				if (count($med_dosage_parts) > 1) {
 					$med_dosage_unit = $med_dosage_parts[1];
