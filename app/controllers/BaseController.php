@@ -8781,32 +8781,32 @@ class BaseController extends Controller {
 				$med_freq_array_6 = array("every three hours", "every 3 hours", "eight times a day", "8 times a day", "eight times daily", "8 times daily", "q3h", "Q3h");
 				$med_freq_array_7 = array("every two hours", "every 2 hours", "twelve times a day", "12 times a day", "twelve times daily", "12 times daily", "q2h", "Q2h");
 				$med_freq_array_8 = array("every hour", "every 1 hour", "every one hour", "q1h", "Q1h");
-				if (in_array($med_row->rxl_frequency, $med_freq_array_1)) {
+				if (in_array($row->rxl_frequency, $med_freq_array_1)) {
 					$med_period = "24";
 				}
-				if (in_array($med_row->rxl_frequency, $med_freq_array_2)) {
+				if (in_array($row->rxl_frequency, $med_freq_array_2)) {
 					$med_period = "12";
 				}
-				if (in_array($med_row->rxl_frequency, $med_freq_array_3)) {
+				if (in_array($row->rxl_frequency, $med_freq_array_3)) {
 					$med_period = "8";
 				}
-				if (in_array($med_row->rxl_frequency, $med_freq_array_4)) {
+				if (in_array($row->rxl_frequency, $med_freq_array_4)) {
 					$med_period = "6";
 				}
-				if (in_array($med_row->rxl_frequency, $med_freq_array_5)) {
+				if (in_array($row->rxl_frequency, $med_freq_array_5)) {
 					$med_period = "4";
 				}
-				if (in_array($med_row->rxl_frequency, $med_freq_array_6)) {
+				if (in_array($row->rxl_frequency, $med_freq_array_6)) {
 					$med_period = "3";
 				}
-				if (in_array($med_row->rxl_frequency, $med_freq_array_7)) {
+				if (in_array($row->rxl_frequency, $med_freq_array_7)) {
 					$med_period = "2";
 				}
-				if (in_array($med_row->rxl_frequency, $med_freq_array_8)) {
+				if (in_array($row->rxl_frequency, $med_freq_array_8)) {
 					$med_period = "1";
 				}
 				$asNeededBoolean = false;
-				if (in_array($med_row->rxl_frequency, $med_prn_array)) {
+				if (in_array($row->rxl_frequency, $med_prn_array)) {
 					$asNeededBoolean = true;
 				}
 				$dosage_array = [
