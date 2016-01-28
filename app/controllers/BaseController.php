@@ -8748,27 +8748,27 @@ class BaseController extends Controller {
 				}
 				$med_code = '';
 				$med_code_description = '';
-				if ($med_row->rxl_route == "by mouth") {
+				if ($row->rxl_route == "by mouth") {
 					$med_code = "C1522409";
 					$med_code_description = "Oropharyngeal Route of Administration";
 				}
-				if ($med_row->rxl_route == "per rectum") {
+				if ($row->rxl_route == "per rectum") {
 					$med_code = "C1527425";
 					$med_code_description = "Rectal Route of Administration";
 				}
-				if ($med_row->rxl_route == "transdermal") {
+				if ($row->rxl_route == "transdermal") {
 					$med_code = "C0040652";
 					$med_code_description = "Transdermal Route of Administration";
 				}
-				if ($med_row->rxl_route == "subcutaneously") {
+				if ($row->rxl_route == "subcutaneously") {
 					$med_code = "C1522438";
 					$med_code_description = "Subcutaneous Route of Administration";
 				}
-				if ($med_row->rxl_route == "intravenously") {
+				if ($row->rxl_route == "intravenously") {
 					$med_code = "C2960476";
 					$med_code_description = "Intravascular Route of Administration";
 				}
-				if ($med_row->rxl_route == "intramuscularly") {
+				if ($row->rxl_route == "intramuscularly") {
 					$med_code = "C1556154";
 					$med_code_description = "Intramuscular Route of Administration";
 				}
