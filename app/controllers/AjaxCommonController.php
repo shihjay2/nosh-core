@@ -1367,48 +1367,52 @@ class AjaxCommonController extends BaseController {
 	
 	public function postGetPatientResources1()
 	{
-		$query = DB::table('uma')->get();
+		$query = DB::table('uma')->groupBy('resource_set_id')->get();
 		$html = 'No resources registered.';
 		if ($query) {
 			$i = 0;
+			$row_id = '';
 			foreach ($query as $row) { 
-				$name_arr = explode('/', $row->scope);
-				$name = $name_arr[5];
-				if ($name == 'Patient') {
-					$resource = 'Demographics';
+				if ($row->resource_set_id != $row_id) {
+					$name_arr = explode('/', $row->scope);
+					$name = $name_arr[5];
+					if ($name == 'Patient') {
+						$resource = 'Demographics';
+					}
+					if ($name == 'Medication') {
+						$resource = 'Medication Database';
+					}
+					if ($name == 'Practitioner') {
+						$resource = 'Providers';
+					}
+					if ($name == 'Condition') {
+						$resource = 'Conditions';
+					}
+					if ($name == 'MedicationStatement') {
+						$resource = 'Medications';
+					}
+					if ($name == 'AllergyIntolerance') {
+						$resource = 'Allergies';
+					}
+					if ($name == 'Immunization') {
+						$resource = 'Immunizations';
+					}
+					if ($name == 'Encounter') {
+						$resource = 'Encounters';
+					}
+					if ($name == 'FamilyHistory') {
+						$resource = 'Family History';
+					}
+					if ($name == 'Binary') {
+						$resource = 'Documents';
+					}
+					$html .= '<label for="mdnosh_provider_' . $i . '" class="pure-checkbox" style="display:block;margin-left:20px;">';
+					$html .= Form::checkbox('resources[]', $row->resource_set_id, true, ['id' => 'mdnosh_resource_' . $i, 'style' => 'float:left; margin-left:-20px; margin-right:7px;', 'class' => 'mdnosh_resource_select']);
+					$html .= ' ' . $resource;
+					$html .= '</label>';
+					$i++;
+					$row_id = $row->resource_set_id;
 				}
-				if ($name == 'Medication') {
-					$resource = 'Medication Database';
-				}
-				if ($name == 'Practitioner') {
-					$resource = 'Providers';
-				}
-				if ($name == 'Condition') {
-					$resource = 'Conditions';
-				}
-				if ($name == 'MedicationStatement') {
-					$resource = 'Medications';
-				}
-				if ($name == 'AllergyIntolerance') {
-					$resource = 'Allergies';
-				}
-				if ($name == 'Immunization') {
-					$resource = 'Immunizations';
-				}
-				if ($name == 'Encounter') {
-					$resource = 'Encounters';
-				}
-				if ($name == 'FamilyHistory') {
-					$resource = 'Family History';
-				}
-				if ($name == 'Binary') {
-					$resource = 'Documents';
-				}
-				$html .= '<label for="mdnosh_provider_' . $i . '" class="pure-checkbox" style="display:block;margin-left:20px;">';
-				$html .= Form::checkbox('resources[]', $row->resource_set_id, true, ['id' => 'mdnosh_resource_' . $i, 'style' => 'float:left; margin-left:-20px; margin-right:7px;', 'class' => 'mdnosh_resource_select']);
-				$html .= ' ' . $resource;
-				$html .= '</label>';
-				$i++;
 			}
 		}
 		echo $html;

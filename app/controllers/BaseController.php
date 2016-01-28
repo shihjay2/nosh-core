@@ -8281,7 +8281,7 @@ class BaseController extends Controller {
 			if ($value1 == 'false') {
 				$value1 = '0';
 			}
-			if (is_array($table_key[$key1])) {
+			if (isset($table_key[$key1]) && is_array($table_key[$key1])) {
 				if ($or == false) {
 					$query->where(function($query_array1) use ($table_key, $key1, $value1) {
 						$a = 0;
