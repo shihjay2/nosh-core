@@ -45,21 +45,25 @@ class ConditionController extends BaseController {
 				$response['type'] = 'searchset';
 				$response['id'] = 'urn:uuid:' . $this->gen_uuid();
 				$response['total'] = $count;
-				foreach ($result['data'] as $row_id) {
-					$row = DB::table($table)->where($table_primary_key, '=', $row_id)->first();
-					$resource_content = $this->resource_detail($row, $resource);
-					$response['entry'][] = [
-						'fullUrl' => Request::url() . '/issue_id_' . $row_id,
-						'resource' => $resource_content
-					];
+				if (isset($result['data'])) {
+					foreach ($result['data'] as $row_id) {
+						$row = DB::table($table)->where($table_primary_key, '=', $row_id)->first();
+						$resource_content = $this->resource_detail($row, $resource);
+						$response['entry'][] = [
+							'fullUrl' => Request::url() . '/issue_id_' . $row_id,
+							'resource' => $resource_content
+						];
+					}
 				}
-				foreach ($result1['data'] as $row_id1) {
-					$row1 = DB::table($table1)->where($table1_primary_key, '=', $row_id1)->first();
-					$resource_content1 = $this->resource_detail($row1, $resource);
-					$response['entry'][] = [
-						'fullUrl' => Request::url() . '/eid_' . $row_id,
-						'resource' => $resource_content1
-					];
+				if (isset($result1['data'])) {
+					foreach ($result1['data'] as $row_id1) {
+						$row1 = DB::table($table1)->where($table1_primary_key, '=', $row_id1)->first();
+						$resource_content1 = $this->resource_detail($row1, $resource);
+						$response['entry'][] = [
+							'fullUrl' => Request::url() . '/eid_' . $row_id,
+							'resource' => $resource_content1
+						];
+					}
 				}
 			} else {
 				$response = [
