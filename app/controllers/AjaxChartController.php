@@ -99,6 +99,11 @@ class AjaxChartController extends BaseController {
 		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, true);
 	}
 	
+	public function getModalViewMobile($eid)
+	{
+		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, true, true);
+	}
+	
 	// Menu Lists
 	public function postDemographicsList()
 	{
@@ -5714,11 +5719,11 @@ class AjaxChartController extends BaseController {
 			$data['content'] .= Form::hidden('issue_provider', $issue['issue_provider']);
 			// Buttons
 			$data['content'] .= '<div class="ui-grid-a">';
-			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-icon-check ui-btn-icon-top', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
-			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-top', 'data-nosh-origin'=>$origin)) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-check zmdi-hc-2x"></i><br>Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-close zmdi-hc-2x"></i><br>Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-origin'=>$origin)) . '</div></div>';
 			if ($id != '0') {
-				$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Inactivate', array('class'=>'mobile_form_action inactivate_edit ui-shadow ui-btn ui-corner-all ui-icon-forbidden ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-orgin'=>$origin, 'data-nosh-action'=>'inactivate')) . '</div></div>';
-				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-icon-delete ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
+				$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-block-alt zmdi-hc-2x"></i><br>Inactivate', array('class'=>'mobile_form_action inactivate_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-orgin'=>$origin, 'data-nosh-action'=>'inactivate')) . '</div></div>';
+				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-delete zmdi-hc-2x"></i><br>Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
 			}
 			$data['content'] .= '</div>';
 		}
@@ -5758,11 +5763,11 @@ class AjaxChartController extends BaseController {
 			$data['content'] .= Form::hidden('allergies_provider', $allergy['allergies_provider']);
 			// Buttons
 			$data['content'] .= '<div class="ui-grid-a">';
-			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-icon-check ui-btn-icon-top', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
-			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-top', 'data-nosh-origin'=>$origin)) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-check zmdi-hc-2x"></i><br>Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-close zmdi-hc-2x"></i><br>Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-origin'=>$origin)) . '</div></div>';
 			if ($id != '0') {
-				$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Inactivate', array('class'=>'mobile_form_action inactivate_edit ui-shadow ui-btn ui-corner-all ui-icon-forbidden ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-orgin'=>$origin, 'data-nosh-action'=>'inactivate')) . '</div></div>';
-				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-icon-delete ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
+				$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-block-alt zmdi-hc-2x"></i><br>Inactivate', array('class'=>'mobile_form_action inactivate_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-orgin'=>$origin, 'data-nosh-action'=>'inactivate')) . '</div></div>';
+				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-delete zmdi-hc-2x"></i><br>Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
 			}
 			$data['content'] .= '</div>';
 		}
@@ -5843,11 +5848,11 @@ class AjaxChartController extends BaseController {
 			$data['content'] .= Form::text('rxl_ndcid', $rx['rxl_ndcid'],  array('readonly'));
 			// Buttons
 			$data['content'] .= '<div class="ui-grid-a">';
-			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-icon-check ui-btn-icon-top', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
-			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-top', 'data-nosh-origin'=>$origin)) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-check zmdi-hc-2x"></i><br>Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-close zmdi-hc-2x"></i><br>Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-origin'=>$origin)) . '</div></div>';
 			if ($id != '0') {
-				$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Inactivate', array('class'=>'mobile_form_action inactivate_edit ui-shadow ui-btn ui-corner-all ui-icon-forbidden ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-orgin'=>$origin, 'data-nosh-action'=>'inactivate')) . '</div></div>';
-				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-icon-delete ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
+				$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-block-alt zmdi-hc-2x"></i><br>Inactivate', array('class'=>'mobile_form_action inactivate_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-orgin'=>$origin, 'data-nosh-action'=>'inactivate')) . '</div></div>';
+				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-delete zmdi-hc-2x"></i><br>Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
 			}
 			$data['content'] .= '</div>';
 		}
@@ -5913,11 +5918,11 @@ class AjaxChartController extends BaseController {
 			$data['content'] .= Form::hidden('supplement_id', $sup['supplement_id']);
 			// Buttons
 			$data['content'] .= '<div class="ui-grid-a">';
-			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-icon-check ui-btn-icon-top', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
-			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-top', 'data-nosh-origin'=>$origin)) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-check zmdi-hc-2x"></i><br>Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-close zmdi-hc-2x"></i><br>Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-origin'=>$origin)) . '</div></div>';
 			if ($id != '0') {
-				$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Inactivate', array('class'=>'mobile_form_action inactivate_edit ui-shadow ui-btn ui-corner-all ui-icon-forbidden ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-orgin'=>$origin, 'data-nosh-action'=>'inactivate')) . '</div></div>';
-				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-icon-delete ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
+				$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-block-alt zmdi-hc-2x"></i><br>Inactivate', array('class'=>'mobile_form_action inactivate_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-orgin'=>$origin, 'data-nosh-action'=>'inactivate')) . '</div></div>';
+				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-delete zmdi-hc-2x"></i><br>Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
 			}
 			$data['content'] .= '</div>';
 		}
@@ -5990,10 +5995,10 @@ class AjaxChartController extends BaseController {
 			$data['content'] .= Form::hidden('imm_provider', $imm['imm_provider']);
 			// Buttons
 			$data['content'] .= '<div class="ui-grid-a">';
-			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-icon-check ui-btn-icon-top', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
-			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-top', 'data-nosh-origin'=>$origin)) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-check zmdi-hc-2x"></i><br>Save', array('class'=>'mobile_form_action save_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-origin'=>$origin, 'data-nosh-form'=>$form_id, 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-action'=>'save')) . '</div></div>';
+			$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-close zmdi-hc-2x"></i><br>Cancel', array('class'=>'cancel_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-origin'=>$origin)) . '</div></div>';
 			if ($id != '0') {
-				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-icon-delete ui-btn-icon-top', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
+				$data['content'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-delete zmdi-hc-2x"></i><br>Delete', array('class'=>'mobile_form_action delete_edit ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-table'=>$type, 'data-nosh-index'=>$index, 'data-nosh-id'=>$id, 'data-nosh-origin'=>$origin, 'data-nosh-action'=>'delete')) . '</div></div>';
 			}
 			$data['content'] .= '</div>';
 		}

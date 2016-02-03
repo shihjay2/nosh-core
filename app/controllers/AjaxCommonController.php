@@ -918,6 +918,11 @@ class AjaxCommonController extends BaseController {
 		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, false);
 	}
 	
+	public function getModalView2Mobile($eid)
+	{
+		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, false, true);
+	}
+	
 	public function getTmessagesView($t_messages_id)
 	{
 		$row = DB::table('t_messages')->where('t_messages_id', '=', $t_messages_id)->first();

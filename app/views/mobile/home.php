@@ -1,8 +1,10 @@
 <div data-role="page" class="ui-responsive-panel" id="panel-responsive-page1" data-title="NOSH Mobile Home Page">
 	<div data-role="header" data-position="fixed" class="wow fadeIn"><?php echo $header;?></div>
 	<div role="main" class="ui-content" id="content">
-		<ul id="searchpt" data-role="listview" data-inset="true" data-filter="true" data-filter-placeholder="Search patient..." data-filter-theme="a"></ul>
 		<?php echo $content;?>
+	</div>
+	<div role="main" class="ui-content" id="view_content" style="display:none">
+		<?php echo $view;?>
 	</div>
 	<div role="main" class="ui-content" id="edit_content" style="display:none">
 		<?php echo $form;?>

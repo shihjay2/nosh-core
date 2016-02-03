@@ -261,4 +261,10 @@ class HomeController extends BaseController {
 		$file = $this->print_chart($pid, 'file', '', 'all');
 		return Response::download($file);
 	}
+	
+	public function pnosh_provider()
+	{
+		$this->setpatient('1');
+		return Redirect::to('chart');
+	}
 }

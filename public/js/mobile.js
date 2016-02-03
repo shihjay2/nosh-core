@@ -380,72 +380,135 @@ function loadcalendar (y,m,d,view) {
 		}
 	});
 }
-function open_schedule() {
-	$('#providers_datepicker').datepicker({
-		inline: true,
-		onSelect: function(dateText, inst) {
-			var starttime = Math.round(+new Date(dateText)/1000);
-			var endtime = starttime+86400;
-			$ul = $("#events");
-			$.mobile.loading("show");
-			var html = '<li><a href="#" id="patient_appt_button" class="nosh_schedule_event">Add Appointment</a></li>';
-			html += '<li><a href="#" id="event_appt_button" class="nosh_schedule_event">Add Event</a></li>';
-			$.ajax({
-				type: "POST",
-				url: "ajaxschedule/provider-schedule",
-				dataType: 'json',
-				data: "start=" + starttime + "&end=" + endtime
-			})
-			.then(function(response) {
-				$.each(response, function ( i, val ) {
-					var label = '<h3>' + val.title + '</h3>';
-					if (val.reason != val.title) {
-						label += '<p>Reason: ' + val.reason + '</p>';
-					}
-					if (val.visit_type != undefined) {
-						label += '<p>Visit Type: ' + val.visit_type + '</p>';
-					}
-					var date = $.datepicker.formatDate('M dd, yy, ', new Date(val.start));
-					var start_time = moment(new Date(val.start)).format('HH:mmA');
-					var end_time = moment(new Date(val.end)).format('HH:mmA');
-					var start_date = moment(new Date(val.start)).format('MM/DD/YYYY');
-					var color1 = 'clr-black';
-					if(val.className==" colorred"){
-						color1 = 'clr-red';
-					}
-					if(val.className==" colororange"){
-						color1 = "clr-orange";
-					}
-					if(val.className==" coloryellow"){
-						color1 = "clr-yellow";
-					}
-					if(val.className==" colorgreen"){
-						color1 = "clr-green";
-					}
-					if(val.className==" colorblue"){
-						color1 = "clr-blue";
-					}
-					if(val.className==" colorpurple"){
-						color1 = "clr-purple";
-					}
-					if(val.className==" colorbrown"){
-						color1 = "clr-brown"
-					}
-					label += '<span class="'+ color1 + '">' + date + start_time + '-' + end_time + '</span>';
-					html += '<li><a href="#" class="nosh_schedule_event" data-nosh-event-id="' + val.id + '" data-nosh-pid="' + val.pid + '" data-nosh-title="' + val.title + '" data-nosh-start-date="' + start_date + '" data-nosh-start-time="' + start_time + '" data-nosh-end-time="' + end_time + '" data-nosh-visit-type="' + val.visit_type + '" data-nosh-timestamp="' + val.timestamp + '" data-nosh-repeat="' + val.repeat + '" data-nosh-reason="' + val.reason + '" data-nosh-until="' + val.until + '" data-nosh-notes="' + val.notes + '" data-nosh-status="' + val.status + '" data-nosh-editable="' + val.editable + '">' + label + '</a></li>';
-				});
-				$ul.html(html);
-				$ul.listview("refresh");
-				$ul.trigger("updatelayout");
-				$.mobile.loading("hide");
-				$('html, body').animate({
-					scrollTop: $("#patient_appt_button").offset().top
-				});
+function open_schedule_list(dateText, inst, load) {
+	var starttime = Math.round(+new Date(dateText)/1000);
+	var endtime = starttime+86400;
+	var startday = moment(starttime*1000).format('YYYY-MM-DD');
+	var startday1 = 'Appointments for ' + moment(starttime*1000).format('MMMM Do YYYY') + ":";
+	$ul = $("#events");
+	$.mobile.loading("show");
+	$("#providers_date").html(startday1);
+	var html = '<li><a href="#" id="patient_appt_button" class="nosh_schedule_event" data-nosh-start="' + startday + '">Add Appointment</a></li>';
+	html += '<li><a href="#" id="event_appt_button" class="nosh_schedule_event" data-nosh-start="' + startday + '">Add Event</a></li>';
+	$.ajax({
+		type: "POST",
+		url: "ajaxschedule/provider-schedule",
+		dataType: 'json',
+		data: "start=" + starttime + "&end=" + endtime
+	})
+	.then(function(response) {
+		$.each(response, function ( i, val ) {
+			var label = '<h3>' + val.title + '</h3>';
+			if (val.reason != val.title) {
+				label += '<p>Reason: ' + val.reason + '</p>';
+			}
+			if (val.visit_type != undefined) {
+				label += '<p>Visit Type: ' + val.visit_type + '</p>';
+			}
+			var date = $.datepicker.formatDate('M dd, yy, ', new Date(val.start));
+			var start_time = moment(new Date(val.start)).format('HH:mmA');
+			var end_time = moment(new Date(val.end)).format('HH:mmA');
+			var start_date = moment(new Date(val.start)).format('MM/DD/YYYY');
+			var color1 = 'clr-black';
+			if(val.className==" colorred"){
+				color1 = 'clr-red';
+			}
+			if(val.className==" colororange"){
+				color1 = "clr-orange";
+			}
+			if(val.className==" coloryellow"){
+				color1 = "clr-yellow";
+			}
+			if(val.className==" colorgreen"){
+				color1 = "clr-green";
+			}
+			if(val.className==" colorblue"){
+				color1 = "clr-blue";
+			}
+			if(val.className==" colorpurple"){
+				color1 = "clr-purple";
+			}
+			if(val.className==" colorbrown"){
+				color1 = "clr-brown"
+			}
+			label += '<span class="'+ color1 + '">' + date + start_time + '-' + end_time + '</span>';
+			html += '<li><a href="#" class="nosh_schedule_event" data-nosh-event-id="' + val.id + '" data-nosh-pid="' + val.pid + '" data-nosh-title="' + val.title + '" data-nosh-start-date="' + start_date + '" data-nosh-start-time="' + start_time + '" data-nosh-end-time="' + end_time + '" data-nosh-visit-type="' + val.visit_type + '" data-nosh-timestamp="' + val.timestamp + '" data-nosh-repeat="' + val.repeat + '" data-nosh-reason="' + val.reason + '" data-nosh-until="' + val.until + '" data-nosh-notes="' + val.notes + '" data-nosh-status="' + val.status + '" data-nosh-editable="' + val.editable + '">' + label + '</a></li>';
+		});
+		$ul.html(html);
+		$ul.listview("refresh");
+		$ul.trigger("updatelayout");
+		$.mobile.loading("hide");
+		if (load !== undefined) {
+			$('html, body').animate({
+				scrollTop: $("#patient_appt_button").offset().top
 			});
 		}
 	});
+}
+
+function open_schedule(startdate) {
+	$('#providers_datepicker').datepicker({
+		inline: true,
+		onSelect: function (dateText, inst) {
+			open_schedule_list(dateText, inst, true);
+		}
+	});
+	if (startdate == null) {
+		$("#providers_datepicker").datepicker("setDate", new Date());
+		var date = moment().valueOf();
+	} else {
+		var date = moment(startdate).valueOf();
+		$("#providers_datepicker").datepicker("setDate", new Date(date));
+	}
+	open_schedule_list(date);
 	$("#provider_list2").focus();
 }
+
+function open_messaging(type) {
+	$.mobile.loading("show");
+	$ul = $("#"+type);
+	var command = type.replace('_', '-');
+	$.ajax({
+		type: "POST",
+		url: "ajaxmessaging/" + command,
+		data: "sidx=date&sord=desc&rows=1000000&page=1",
+		dataType: 'json'
+	}).then(function(response) {
+		if (type == 'internal_inbox') {
+			var col = ['message-id','message-to','read','date','message-from','message-from-label','subject','body','cc','pid','patient_name','bodytext','t-messages-id','documents-id'];
+		}
+		if (type == 'internal_draft') {
+			var col = ['message-id','date','message-to','cc','subject','body','pid','patient_name'];
+		}
+		if (type == 'internal_outbox') {
+			var col = ['message-id','date','message-to','cc','subject','pid','body'];
+		}
+		var html = '';
+		if (response.rows != '') {
+			$.each(response.rows, function ( i, item ) {
+				var obj = {};
+				$.each(item.cell, function ( j, val ) {
+					obj[col[j]] = val;
+				});
+				if (type == 'internal_inbox') {
+					var label = '<h3>' + obj['message-from-label'] + '</h3><p>' + obj['subject'] + '</p>';
+				} else {
+					var label = '<h3>' + obj['message-to'] + '</h3><p>' + obj['subject'] + '</p>';
+				}
+				var datastring = '';
+				$.each(obj, function ( key, value ) {
+					datastring += 'data-nosh-' + key + '="' + value + '" ';
+				});
+				html += '<li><a href="#" class="nosh_messaging_item" ' + datastring + ' data-origin="' + type + '">' + label + '</a></li>';
+			});
+		}
+		$ul.html(html);
+		$ul.listview("refresh");
+		$ul.trigger("updatelayout");
+		$.mobile.loading("hide");
+	});
+}
+
 function chart_notification() {
 	if (noshdata.group_id == '2') {
 		$.ajax({
@@ -1605,13 +1668,15 @@ $.fn.clearForm = function() {
 		}
 		if (type == 'text' || type == 'password' || type == 'hidden' || tag == 'textarea') {
 			this.value = '';
-			$('#'+this.id).removeClass("ui-state-error");
+			$(this).removeClass("ui-state-error");
 		} else if (type == 'checkbox' || type == 'radio') {
 			this.checked = false;
-			$('#'+this.id).removeClass("ui-state-error");
+			$(this).removeClass("ui-state-error");
+			$(this).checkboxradio('refresh');
 		} else if (tag == 'select') {
 			this.selectedIndex = 0;
-			$('#'+this.id).removeClass("ui-state-error");
+			$(this).removeClass("ui-state-error");
+			$(this).selectmenu('refresh');
 		}
 	});
 };
@@ -1623,13 +1688,15 @@ $.fn.clearDiv = function() {
 		}
 		if (type == 'text' || type == 'password' || type == 'hidden' || tag == 'textarea') {
 			this.value = '';
-			$('#'+this.id).removeClass("ui-state-error");
+			$(this).removeClass("ui-state-error");
 		} else if (type == 'checkbox' || type == 'radio') {
 			this.checked = false;
-			$('#'+this.id).removeClass("ui-state-error");
+			$(this).removeClass("ui-state-error");
+			$(this).checkboxradio('refresh');
 		} else if (tag == 'select') {
 			this.selectedIndex = 0;
-			$('#'+this.id).removeClass("ui-state-error");
+			$(this).removeClass("ui-state-error");
+			$(this).selectmenu('refresh');
 		}
 	});
 };
@@ -1692,6 +1759,13 @@ $(document).ready(function() {
 	if ($("#provider_schedule1").length) {
 		open_schedule();
 	}
+	$('.cd-read-more').css('color', '#000000');
+	if ($('#internal_inbox').length) {
+		open_messaging('internal_inbox');
+	}
+	$(".headericon").offset({top: 23});
+	$(".headericon1").offset({top: 7});
+	
 	//refresh_timeline();
 	//$('.js').show();
 	//loadbuttons();
@@ -4034,19 +4108,28 @@ $(document).on('click', '.mobile_link', function(e) {
 $(document).on('click', '#navigation_header_back', function(e) {
 	$.mobile.loading("show");
 	var origin = $(this).attr('data-nosh-origin');
-	$.ajax({
-		type: "POST",
-		url: origin,
-		success: function(data){
-			$("#content_inner").html(data).trigger('create');
-			$("#edit_content").hide();
-			$("#navigation_header").hide();
-			$("#content").show();
-			$("#chart_header").show();
-			$.mobile.loading("hide");
-		}
-	});
-	
+	if (origin == 'Chart') {
+		$("#navigation_header").hide();
+		$("#content_inner").hide();
+		$("#chart_header").show();
+		$("#content_inner_main").show();
+		$.mobile.loading("hide");
+		var scroll = parseInt($(this).attr('data-nosh-scroll'));
+		$.mobile.silentScroll(scroll-70);
+	} else {
+		$.ajax({
+			type: "POST",
+			url: origin,
+			success: function(data){
+				$("#content_inner").html(data).trigger('create');
+				$("#edit_content").hide();
+				$("#navigation_header").hide();
+				$("#content").show();
+				$("#chart_header").show();
+				$.mobile.loading("hide");
+			}
+		});
+	}
 });
 $(document).on('click', '.cancel_edit', function(e) {
 	$.mobile.loading("show");
@@ -4076,26 +4159,50 @@ $(document).on('click', '.nosh_schedule_event', function(e) {
 		var id = $(this).attr('id');
 		if (id == 'patient_appt_button') {
 			loadappt();
+			var startday = $(this).attr('data-nosh-start');
+			$('#start_date').val(startday);
+			$("#edit_content").show();
+			$("#content").hide();
+			$("#title").focus();
+			$.mobile.silentScroll(0);
+			return false;
 		}
 		if (id == 'event_appt_button') {
 			loadevent();
+			var startday = $(this).attr('data-nosh-start');
+			$('#start_date').val(startday);
+			$("#edit_content").show();
+			$("#content").hide();
+			$("#title").focus();
+			$.mobile.silentScroll(0);
+			return false;
 		}
 		var form = {};
-		form.event_id = $(this).attr('data-nosh-event-id');
-		form.pid = $(this).attr('data-nosh-pid');
-		form.start_date = moment(new Date($(this).attr('data-nosh-start-date'))).format('YYYY-MM-DD');;
-		form.start_time = $(this).attr('data-nosh-start-time');
-		form.end = $(this).attr('data-nosh-end-time');
-		form.visit_type = $(this).attr('data-nosh-visit-type');
-		form.title = $(this).attr('data-nosh-title');
-		form.repeat = $(this).attr('data-nosh-repeat');
-		form.reason = $(this).attr('data-nosh-reason');
-		form.until = $(this).attr('data-nosh-until');
-		form.notes = $(this).attr('data-nosh-notes');
-		form.status = $(this).attr('data-nosh-status');
-		$.each(form, function(key, value){
-			if (value != 'undefined') {
-				$('#'+key).val(value);
+		$.each($(this).get(0).attributes, function(i, attr) {
+			if (attr.name.indexOf("data-nosh-") == '0') {
+				var field = attr.name.replace('data-nosh-','');
+				field = field.replace('-', '_');
+				if (field == 'visit_type') {
+					form.visit_type = attr.value;
+				}
+				if (field == 'title') {
+					form.title = attr.value;
+				}
+				if (attr.value != 'undefined') {
+					if (field != 'timestamp') {
+						var value = attr.value;
+						if (field.indexOf('_date') > 0) {
+							value = moment(new Date(value)).format('YYYY-MM-DD');
+						}
+						if (field == 'pid') {
+							field = 'schedule_pid';
+						}
+						if (field == 'title') {
+							field = 'schedule_title';
+						}
+						$('#' + field).val(value);
+					}
+				}
 			}
 		});
 		var timestamp = $(this).attr('data-nosh-timestamp');
@@ -4121,14 +4228,150 @@ $(document).on('click', '.nosh_schedule_event', function(e) {
 		$("#edit_content").show();
 		$("#content").hide();
 		$("#title").focus();
-		$('html, body').animate({
-			scrollTop: $("#edit_content").offset().top
-		});
+		$.mobile.silentScroll(0);
 		return false;
 	} else {
 		toastr.error('You cannot edit this entry!');
 		return false;
 	}
+});
+$(document).on('click', '.nosh_messaging_item', function(e) {
+	var form = {};
+	var datastring = '';
+	var label = $(this).html();
+	label = label.replace('<h3>','<h3 class="card-primary-title">');
+	label = label.replace('<p>','<h5 class="card-subtitle">');
+	label = label.replace('</p>','</h5>');
+	var origin = $(this).attr('data-origin');
+	var id = $(this).attr('data-nosh-message-id');
+	$.each($(this).get(0).attributes, function(i, attr) {
+		if (attr.name.indexOf("data-nosh-") == '0') {
+			datastring += attr.name + '="' + attr.value + '" ';
+			var field = attr.name.replace('data-nosh-','');
+			if (field == 'message-from-label') {
+				form.displayname = attr.value;
+			}
+			if (field == 'date') {
+				form.date = attr.value;
+			}
+			if (field == 'subject') {
+				form.subject = attr.value;
+			}
+			if (field == 'body') {
+				form.body = attr.value;
+			}
+			if (field == 'bodytext') {
+				form.bodytext = attr.value;
+			}
+		}
+	});
+	var text = '<br><strong>From:</strong> ' + form.displayname + '<br><br><strong>Date:</strong> ' + form.date + '<br><br><strong>Subject:</strong> ' + form.subject + '<br><br><strong>Message:</strong> ' + form.bodytext; 
+	var action = '<div class="card-action">';
+		action += '<div class="row between-xs">';
+			action += '<div class="col-xs-4">';
+				action += '<div class="box">';
+					action += '<a href="#" class="ui-btn ui-btn-inline ui-btn-fab back_message" data-origin="' + origin + '" data-origin-id="' + id + '"><i class="zmdi zmdi-arrow-left"></i></a>';
+				action += '</div>'
+			action += '</div>'
+			if (origin == 'internal_inbox') {
+				action += '<div class="col-xs-8 align-right">';
+					action += '<div class="box">';
+						action += '<a href="#" class="ui-btn ui-btn-inline ui-btn-fab reply_message"' + datastring + '><i class="zmdi zmdi-mail-reply"></i></a>';
+						action += '<a href="#" class="ui-btn ui-btn-inline ui-btn-fab reply_all_message"' + datastring + '><i class="zmdi zmdi-mail-reply-all"></i></a>';
+						action += '<a href="#" class="ui-btn ui-btn-inline ui-btn-fab forward_message"' + datastring + '><i class="zmdi zmdi-forward"></i></a>';
+						action += '<a href="#" class="ui-btn ui-btn-inline ui-btn-fab export_message"' + datastring + '><i class="zmdi zmdi-sign-in"></i></a>';
+					action += '</div>';
+				action += '</div>';
+			}
+		action += '</div>';
+	action += '</div>';
+	var html = '<div class="nd2-card">';
+		html += '<div class="card-title">' + label + '</div>' + action;
+		html += '<div class="card-supporting-text">' + text + '</div>' + action;
+	html += '</div>';
+	$("#message_view1").html(html);
+	//$("#message_view_rawtext").val(rawtext);
+	//$("#message_view_message_id").val(id);
+	//$("#message_view_from").val(row['message_from']);
+	//$("#message_view_to").val(row['message_to']);
+	//$("#message_view_cc").val(row['cc']);
+	//$("#message_view_subject").val(row['subject']);
+	//$("#message_view_body").val(row['body']);
+	//$("#message_view_date").val(row['date']);
+	//$("#message_view_pid").val(row['pid']);
+	//$("#message_view_patient_name").val(row['patient_name']);
+	//$("#message_view_t_messages_id").val(row['t_messages_id']);
+	//$("#message_view_documents_id").val(row['documents_id']);
+	//messages_tags();
+	//if (row['pid'] == '' || row['pid'] == "0") {
+		//$("#export_message").hide();
+	//} else {
+		//$("#export_message").show();
+	//}
+	//$("#internal_messages_view_dialog").dialog('open');
+	//setTimeout(function() {
+		//var a = $("#internal_messages_view_dialog" ).dialog("isOpen");
+		//if (a) {
+			//var id = $("#message_view_message_id").val();
+			//var documents_id = $("#message_view_documents_id").val();
+			//if (documents_id == '') {
+				//documents_id = '0';
+			//}
+			//$.ajax({
+				//type: "POST",
+				//url: "ajaxmessaging/read-message/" + id + "/" + documents_id,
+				//success: function(data){
+					//$.jGrowl(data);
+					//reload_grid("internal_inbox");
+				//}
+			//});
+		//}
+	//}, 3000);
+	//form.event_id = $(this).attr('data-nosh-event-id');
+	//form.pid = $(this).attr('data-nosh-pid');
+	//form.start_date = moment(new Date($(this).attr('data-nosh-start-date'))).format('YYYY-MM-DD');
+	//form.start_time = $(this).attr('data-nosh-start-time');
+	//form.end = $(this).attr('data-nosh-end-time');
+	//form.visit_type = $(this).attr('data-nosh-visit-type');
+	//form.title = $(this).attr('data-nosh-title');
+	//form.repeat = $(this).attr('data-nosh-repeat');
+	//form.reason = $(this).attr('data-nosh-reason');
+	//form.until = $(this).attr('data-nosh-until');
+	//form.notes = $(this).attr('data-nosh-notes');
+	//form.status = $(this).attr('data-nosh-status');
+	//$.each(form, function(key, value){
+		//if (value != 'undefined') {
+			//$('#'+key).val(value);
+		//}
+	//});
+	//var timestamp = $(this).attr('data-nosh-timestamp');
+	//$("#event_id_span").text(form.event_id);
+	//$("#pid_span").text(form.pid);
+	//$("#timestamp_span").text(timestamp);
+	//if (form.visit_type){
+		//loadappt();
+		//$("#patient_search").val(form.title);
+		//$("#end").val('');
+	//} else {
+		//loadevent();
+	//}
+	//var repeat_select = $("#repeat").val();
+	//if (repeat_select != ''){
+		//$("#until_row").show();
+	//} else {
+		//$("#until_row").hide();
+		//$("#until").val('');
+	//}
+	//$("#delete_form").show();
+	//$("#schedule_form select").selectmenu('refresh');
+	$("#view_content").show();
+	$("#content").hide();
+	$("#edit_content").hide();
+	$('html, body').animate({
+		scrollTop: $("#view_content").offset().top
+	});
+	return false;
+	
 });
 $(document).on('click', '.mobile_form_action', function(e) {
 	var form_id = $(this).attr('data-nosh-form');
@@ -4177,6 +4420,86 @@ $(document).on('click', '.mobile_form_action', function(e) {
 });
 $(document).on('click', '.mobile_form_action2', function(e) {
 	var form_id = $(this).attr('data-nosh-form');
+	var action = $(this).attr('data-nosh-action');
+	var refresh_url = $(this).attr('data-nosh-origin');
+	if (refresh_url == 'mobile_schedule') {
+		var start_date = $("#start_date").val();
+		var end = $("#end").val();
+		var visit_type = $("#visit_type").val();
+		var pid = $("#pid").val();
+		if (pid == '') {
+			var reason = $("#reason").val();
+			$("#title").val(reason);
+		}
+		if ($("#repeat").val() != '' && $("#event_id").val() != '' && $("#event_id").val().indexOf("R") === -1) {
+			var event_id = $("#event_id").val();
+			$("#event_id").val("N" + event_id);
+		}
+		if ($("#repeat").val() == '' && $("#event_id").val() != '' && $("#event_id").val().indexOf("R") !== -1) {
+			var event_id1 = $("#event_id").val();
+			$("#event_id").val("N" + event_id1);
+		}
+		var str = $("#"+form_id).serialize();
+		if (visit_type == '' || visit_type == null && end == '') {
+			toastr.error("No visit type or end time selected!");
+		} else {
+			$.mobile.loading("show");
+			$.ajax({
+				type: "POST",
+				url: "ajaxschedule/edit-event",
+				data: str,
+				success: function(data){
+					open_schedule(start_date);
+					$("#"+form_id).clearForm();
+					$("#edit_content").hide();
+					$("#content").show();
+					$.mobile.loading("hide");
+				}
+			});
+		}
+	}
+	if (refresh_url == 'mobile_inbox') {
+		if (action == 'save') {
+			var bValid = true;
+			$("#"+form_id).find("[required]").each(function() {
+				var input_id = $(this).attr('id');
+				var id1 = $("#" + input_id); 
+				var text = $("label[for='" + input_id + "']").html();
+				bValid = bValid && checkEmpty(id1, text);
+			});
+			if (bValid) {
+				$.mobile.loading("show");
+				var str = $("#"+form_id).serialize();
+				$.ajax({
+					type: "POST",
+					url: "ajaxmessaging/send-message",
+					data: str,
+					success: function(data){
+						toastr.success(data);
+						$("#"+form_id).clearForm();
+						$("#edit_content").hide();
+						$("#content").show();
+						$.mobile.loading("hide");
+					}
+				});
+			}
+		}
+		if (action == 'draft') {
+			var str = $("#"+form_id).serialize();
+			$.ajax({
+				type: "POST",
+				url: "ajaxmessaging/draft-message",
+				data: str,
+				success: function(data){
+					toastr.success(data);
+					$("#"+form_id).clearForm();
+					$("#edit_content").hide();
+					$("#content").show();
+					$.mobile.loading("hide");
+				}
+			});
+		}
+	}
 	// more stuff
 	$("#edit_content").hide();
 	$("#content").show();
@@ -4328,6 +4651,12 @@ $(document).on("click", "#nosh_fab", function(e) {
 	$(".nosh_fab_child").toggle('fade');
 	return false;
 });
+$(document).on("click", "#nosh_fab1", function(e) {
+	$("#view_content").hide();
+	$("#content").hide();
+	$("#edit_content").show();
+	return false;
+});
 $(document).on("change", "#provider_list2", function(e) {
 	var id = $('#provider_list2').val();
 	if(id){
@@ -4354,9 +4683,276 @@ $(document).on("change", "#provider_list2", function(e) {
 		});
 	} 
 });
-
-
-
+$(document).on("click", ".cd-read-more", function(e) {
+	$.mobile.loading("show");
+	var type = $(this).attr('data-nosh-type');
+	var value = $(this).attr('data-nosh-value');
+	var status = $(this).attr('data-nosh-status');
+	var scroll = $(this).closest('.cd-timeline-block').offset().top;
+	var acl = false;
+	if (noshdata.group_id == '2' || noshdata.group_id == '3') {
+		acl = true;
+	}
+	if (type == 'eid') {
+		if (status == 'Yes') {
+			if (acl) {
+				$("#content_inner_main").hide();
+				$.ajax({
+					type: "GET",
+					url: "../ajaxchart/modal-view-mobile/" + value,
+					success: function(data){
+						$("#content_inner").html(data).trigger('create').show();
+						$('#content_inner').find('h4').css('color','blue');
+						$("#navigation_header_back").attr('data-nosh-origin', 'Chart');
+						$("#navigation_header_back").attr('data-nosh-scroll', scroll);
+						$("#chart_header").hide();
+						$("#navigation_header").show();
+						$("#left_panel").panel('close');
+						$.mobile.loading("hide");
+					}
+				});
+			} else {
+				$("#content_inner_main").hide();
+				$.ajax({
+					type: "POST",
+					url: "../ajaxcommon/opennotes",
+					success: function(data){
+						if (data == 'y') {
+							$.ajax({
+								type: "GET",
+								url: "../ajaxcommon/modal-view2-mobile/" + value,
+								success: function(data){
+									$("#content_inner").html(data).trigger('create').show();
+									$('#content_inner').find('h4').css('color','blue');
+									$("#navigation_header_back").attr('data-nosh-origin', 'Chart');
+									$("#navigation_header_back").attr('data-nosh-scroll', scroll);
+									$("#chart_header").hide();
+									$("#navigation_header").show();
+									$("#left_panel").panel('close');
+									$.mobile.loading("hide");
+								}
+							});
+						} else {
+							$toastr.error('You cannot view the encounter as your provider has not activated OpenNotes.');
+							$.mobile.loading("hide");
+							return false;
+						}
+					}
+				});
+			}
+		} else {
+			toastr.error('Encounter is not signed.  You cannot view it at this time.');
+			$.mobile.loading("hide");
+			return false;
+		}
+	} else if (type == 't_messages_id') {
+		if (status == 'Yes') {
+			if (acl) {
+				$("#content_inner_main").hide();
+				$.ajax({
+					type: "GET",
+					url: "../ajaxcommon/tmessages-view/" + value,
+					success: function(data){
+						$("#content_inner").html(data).trigger('create').show();
+						$('#content_inner').find('strong').css('color','blue');
+						$("#navigation_header_back").attr('data-nosh-origin', 'Chart');
+						$("#navigation_header_back").attr('data-nosh-scroll', scroll);
+						$("#chart_header").hide();
+						$("#navigation_header").show();
+						$("#left_panel").panel('close');
+						$.mobile.loading("hide");
+					}
+				});
+				//$("#message_view").load('ajaxcommon/tmessages-view/' + value);
+				//$("#t_messages_id").val(value);
+				//t_messages_tags();
+				//$("#messages_view_dialog").dialog('open');
+			} else {
+				$("#content_inner_main").hide();
+				$.ajax({
+					type: "POST",
+					url: "../ajaxcommon/opennotes",
+					success: function(data){
+						if (data == 'y') {
+							$.ajax({
+								type: "GET",
+								url: "../ajaxcommon/tmessages-view/" + value,
+								success: function(data){
+									$("#content_inner").html(data).trigger('create').show();
+									$('#content_inner').find('strong').css('color','blue');
+									$("#navigation_header_back").attr('data-nosh-origin', 'Chart');
+									$("#navigation_header_back").attr('data-nosh-scroll', scroll);
+									$("#chart_header").hide();
+									$("#navigation_header").show();
+									$("#left_panel").panel('close');
+									$.mobile.loading("hide");
+								}
+							});
+							//$("#t_messages_id").val(value);
+							//$("#messages_view_dialog").dialog('open');
+						} else {
+							toastr.error('You cannot view the message as your provider has not activated OpenNotes.');
+							$.mobile.loading("hide");
+							return false;
+						}
+					}
+				});
+			}
+		} else {
+			toastr.error('Message is not signed.  You cannot view it at this time.');
+			$.mobile.loading("hide");
+			return false;
+		}
+	}
+});
+$(document).on("click", ".messaging_tab", function(e) {
+	var tab = $(this).attr('data-tab');
+	open_messaging(tab);
+	$("#edit_content").hide();
+	$("#content").show();
+});
+$(document).on("click", ".back_message", function(e) {
+	var tab = $(this).attr('data-origin');
+	var id = $(this).attr('data-origin-id');
+	open_messaging(tab);
+	$("#view_content").hide();
+	$("#edit_content").hide();
+	$("#content").show();
+	var scroll = parseInt($('.nosh_messaging_item[data-nosh-message-id="' + id + '"]').offset().top);
+	$.mobile.silentScroll(scroll-70);
+});
+$(document).on("click", ".reply_message", function(e) {
+	var form = {};
+	$.each($(this).get(0).attributes, function(i, attr) {
+		if (attr.name.indexOf("data-nosh-") == '0') {
+			var field = attr.name.replace('data-nosh-','');
+			field = field.replace(/-/g, '_');
+			form[field] = attr.value;
+			if (attr.value != 'undefined') {
+				if (attr.value != 'null') {
+					if (field != 'timestamp') {
+						var value = attr.value;
+						if (field == 'date') {
+							value = moment(new Date(value)).format('YYYY-MM-DD');
+						}
+						$('input[name="' + field + '"]').val(value);
+					}
+				}
+			}
+		}
+	});
+	$.ajax({
+		type: "POST",
+		url: "ajaxmessaging/get-displayname",
+		data: "id=" + form['message_from'],
+		success: function(data){
+			$('select[name="messages_to[]"]').val(data);
+			$('select[name="messages_to[]"]').selectmenu('refresh');
+			var subject = 'Re: ' + form['subject'];
+			$('input[name="subject"]').val(subject);
+			var newbody = '\n\n' + 'On ' + form['date'] + ', ' + data + ' wrote:\n---------------------------------\n' + form['body'];
+			$('textarea[name="body"]').val(newbody).caret(0);
+			$('textarea[name="body"]').focus();
+			$("#view_content").hide();
+			$("#content").hide();
+			$("#edit_content").show();
+		}
+	});
+});
+$(document).on("click", ".reply_all_message", function(e) {
+	var form = {};
+	$.each($(this).get(0).attributes, function(i, attr) {
+		if (attr.name.indexOf("data-nosh-") == '0') {
+			var field = attr.name.replace('data-nosh-','');
+			field = field.replace(/-/g, '_');
+			form[field] = attr.value;
+			if (attr.value != 'undefined') {
+				if (attr.value != 'null') {
+					if (field != 'timestamp') {
+						var value = attr.value;
+						if (field == 'date') {
+							value = moment(new Date(value)).format('YYYY-MM-DD');
+						}
+						$('input[name="' + field + '"]').val(value);
+					}
+				}
+			}
+		}
+	});
+	if (form['cc'] == ''){
+		$.ajax({
+			type: "POST",
+			url: "ajaxmessaging/get-displayname",
+			data: "id=" + form['message_from'],
+			success: function(data){
+				$('select[name="messages_to[]"]').val(data);
+				$('select[name="messages_to[]"]').selectmenu('refresh');
+				var subject = 'Re: ' + form['subject'];
+				$('input[name="subject"]').val(subject);
+				var newbody = '\n\n' + 'On ' + form['date'] + ', ' + data + ' wrote:\n---------------------------------\n' + form['body'];
+				$('textarea[name="body"]').val(newbody).caret(0);
+				$('textarea[name="body"]').focus();
+				$("#view_content").hide();
+				$("#content").hide();
+				$("#edit_content").show();
+			}
+		});
+	} else {
+		var to1 = to + ';' + cc;
+		$.ajax({
+			type: "POST",
+			url: ".ajaxmessaging/get-displayname1",
+			data: "id=" + form['message_from'] + ';' + form['cc'],
+			success: function(data){
+				var a_array = String(data).split(";");
+				$('select[name="messages_to[]"]').val(a_array);
+				$('select[name="messages_to[]"]').selectmenu('refresh');
+				//var a_length = a_array.length;
+				//for (var i = 0; i < a_length; i++) {
+					//$('select[name="messages_to[]"]').selectOptions(a_array[i]);
+				//}
+				var subject = 'Re: ' + form['subject'];
+				$('input[name="subject"]').val(subject);
+				var newbody = '\n\n' + 'On ' + form['date'] + ', ' + data + ' wrote:\n---------------------------------\n' + form['body'];
+				$('textarea[name="body"]').val(newbody).caret(0);
+				$('textarea[name="body"]').focus();
+				$("#view_content").hide();
+				$("#content").hide();
+				$("#edit_content").show();
+			}
+		});
+	}
+});
+$(document).on("click", ".forward_message", function(e) {
+	var form = {};
+	$.each($(this).get(0).attributes, function(i, attr) {
+		if (attr.name.indexOf("data-nosh-") == '0') {
+			var field = attr.name.replace('data-nosh-','');
+			field = field.replace(/-/g, '_');
+			form[field] = attr.value;
+			if (attr.value != 'undefined') {
+				if (attr.value != 'null') {
+					if (field != 'timestamp') {
+						var value = attr.value;
+						if (field == 'date') {
+							value = moment(new Date(value)).format('YYYY-MM-DD');
+						}
+						$('input[name="' + field + '"]').val(value);
+					}
+				}
+			}
+		}
+	});
+	var rawtext = 'From:  ' + form['message_from_label'] + '\nDate: ' + form['date'] + '\nSubject: ' + form['subject'] + '\n\nMessage: ' + form['body']; 
+	var subject = 'Fwd: ' + form['subject'];
+	$('input[name="subject"]').val(subject);
+	var newbody = '\n\n' + 'On ' + form['date'] + ', ' + data + ' wrote:\n---------------------------------\n' + form['body'];
+	$('input[name="body"]').val(newbody).caret(0);
+	$('input[name="messages_to"]').focus();
+	$("#view_content").hide();
+	$("#content").hide();
+	$("#edit_content").show();
+});
 
 /*! jQuery UI - v1.11.1 - 2014-09-10
 * http://jqueryui.com

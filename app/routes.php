@@ -11,7 +11,7 @@
 |
 */
 
-Route::any('/', array('as' => 'home', 'before' => 'force.ssl|version_check|installfix|googlecheck|needinstall|update|openid|auth|google', 'uses' => 'HomeController@dashboard'));
+Route::any('/', array('as' => 'home', 'before' => 'force.ssl|version_check|installfix|googlecheck|needinstall|update|openid|auth|google|pnosh', 'uses' => 'HomeController@dashboard'));
 Route::any('login', array('as' => 'login', 'before' => 'force.ssl', 'uses' => 'LoginController@action'));
 Route::any('mobile', array('as' => 'mobile', 'before' => 'force.ssl|version_check|installfix|needinstall|update|openid|auth.mobile', 'uses' => 'MobileController@dashboard'));
 Route::any('login_mobile', array('as' => 'login_mobile', 'before' => 'force.ssl', 'uses' => 'MobileController@action'));
@@ -39,6 +39,7 @@ Route::get('schedule_widget_start/{practicehandle}', function($practicehandle = 
 });
 Route::get('install', array('as' => 'install', 'before' => 'force.ssl|installfix|noinstall', 'uses' => 'InstallController@view'));
 Route::get('install_fix', array('as' => 'install_fix', 'uses' => 'InstallController@install_fix'));
+Route::get('install_oidc', array('as' => 'install_oidc', 'before' => 'force.ssl|installfix|noinstall', 'uses' => 'InstallController@view'));
 Route::get('reset_database', array('as' => 'reset_database', 'uses' => 'InstallController@reset_database'));
 Route::get('google_start', array('as' => 'google_start', 'uses' => 'InstallController@google_start'));
 Route::post('google_upload', array('as' => 'google_upload', 'uses' => 'AjaxInstallController@google_upload'));
@@ -114,6 +115,8 @@ Route::group(array('before' => 'auth|force.ssl|acl1'), function() {
 	Route::get('editpage/{type}/{index}/{id}', array('as' => 'editpage', 'uses' => 'MobileController@editpage'));
 	Route::get('submitdata/{type}', array('as' => 'submitdata', 'uses' => 'MobileController@submitdata'));
 	Route::get('mobile_schedule', array('as' => 'mobile_schedule', 'uses' => 'MobileController@schedule'));
+	Route::get('mobile_inbox', array('as' => 'mobile_inbox', 'uses' => 'MobileController@inbox'));
+	Route::get('pnosh_provider', array('as' => 'pnosh_provider', 'uses' => 'HomeController@pnosh_provider'));
 });
 Route::group(array('before' => 'force.ssl|acl2'), function() {
 	Route::get('encounter', array('as' => 'encounter', function()
@@ -335,6 +338,13 @@ Route::filter('openid', function()
 		if ($row->openidconnect_client_id == '') {
 			return Redirect::to('oidc_register_client');
 		}
+	}
+});
+
+Route::filter('pnosh', function()
+{
+	if (Session::get('group_id') != '100' && Session::get('patient_centric') == 'yp') {
+		return Redirect::to('pnosh_provider');
 	}
 });
 

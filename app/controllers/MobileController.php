@@ -171,7 +171,9 @@ class MobileController extends BaseController {
 			$data1['number_bills'] = Encounters::where('bill_submitted', '=', 'No')->where('user_id', '=', $user_id)->count();
 			$data1['number_tests'] = Tests::whereNull('pid')->where('practice_id', '=', $practice_id)->count();
 		}
-		$data['content'] = View::make('mobile.home_content', $data1)->render();
+		$data['content'] = '<ul id="searchpt" data-role="listview" data-inset="true" data-filter="true" data-filter-placeholder="Search patient..." data-filter-theme="a"></ul>';
+		$data['content'] .= View::make('mobile.home_content', $data1)->render();
+		$data['view'] = '';
 		$data['form'] = '';
 		$left_panel_array = array(
 			array('Schedule', 'mobile_schedule'),
@@ -237,11 +239,12 @@ class MobileController extends BaseController {
 		$data['content'] = '<div id="provider_schedule1">';
 		$data['content'] .= Form::label('provider_list2', 'Provider:');
 		$data['content'] .= Form::select('provider_list2', $providers, $default);
-		$data['content'] .= '<div id="providers_datepicker"></div><div id="providers_events"><ul id="events" data-role="listview" data-inset="true"></ul></div></div>';
+		$data['content'] .= '<div id="providers_datepicker"></div><div id="providers_events"><h4 id="providers_date" style="color:blue;"></h4><ul id="events" data-role="listview" data-inset="true"></ul></div></div>';
 		$left_panel_array = array(
 			array('Schedule', 'mobile_schedule'),
 			array('Inbox', 'mobile_inbox')
 		);
+		$data['view'] = '';
 		$data['form'] = '<form id="schedule_form">';
 		$data['form'] .= Form::hidden('pid', '', array('id'=>'schedule_pid'));
 		$data['form'] .= Form::hidden('event_id', '', array('id'=>'event_id'));
@@ -283,9 +286,89 @@ class MobileController extends BaseController {
 		$data['form'] .= Form::label('until', 'Until (Leave this field blank if repeat goes on forever)');
 		$data['form'] .= Form::text('until');
 		$data['form'] .= '</div></div>';
-		$data['form'] .= '<div class="ui-grid-a">';
-		$data['form'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('Save', array('class'=>'mobile_form_action2 ui-shadow ui-btn ui-corner-all ui-icon-check ui-btn-icon-top', 'data-nosh-form'=>'schedule_form', 'data-nosh-action'=>'save')) . '</div></div>';
-		$data['form'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('Cancel', array('class'=>'cancel_edit2 ui-shadow ui-btn ui-corner-all ui-icon-back ui-btn-icon-top', 'data-nosh-form'=>'schedule_form')) . '</div></div>';
+		$data['form'] .= '<div class="ui-grid-b">';
+		$data['form'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-check zmdi-hc-2x"></i><br>Save', array('class'=>'mobile_form_action2 ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-form'=>'schedule_form', 'data-nosh-action'=>'save', 'data-nosh-origin'=>'mobile_schedule')) . '</div></div>';
+		$data['form'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-delete zmdi-hc-2x"></i><br>Remove', array('class'=>'mobile_form_action2 ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-form'=>'schedule_form', 'data-nosh-action'=>'delete', 'data-nosh-origin'=>'mobile_schedule')) . '</div></div>';
+		$data['form'] .= '<div class="ui-block-c"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-close zmdi-hc-2x"></i><br>Cancel', array('class'=>'cancel_edit2 ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-form'=>'schedule_form')) . '</div></div>';
+		$data['form'] .= '</div></form>';
+		if(Session::get('group_id') != '100') {
+			$left_panel_array[] = array('Drafts', 'mobile_drafts');
+			$left_panel_array[] = array('Alerts', 'mobile_alerts');
+			if(Session::get('patient_centric') == 'n') {
+				$left_panel_array[] = array('Scans', 'mobile_scan');
+				if ($practice->fax_type != "") {
+					$left_panel_array[] = array('Faxes', 'mobile_fax');
+				}
+			}
+		}
+		$data['left_panel'] = $this->mobile_menu_build($left_panel_array, "left_panel_list", 'mobile_click_home');
+		$data['right_panel'] = '';
+		$this->layout->style = HTML::style('css/mobile.css');
+		$this->layout->style .= HTML::style('css/toastr.min.css');
+		$this->layout->script = $this->js_assets('base',true);
+		$this->layout->content = View::make('mobile.home', $data);
+	}
+	
+	public function inbox()
+	{
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
+		$data['header'] = $this->mobile_header_build(Session::get('displayname'));
+		$data['header'] .= '<ul data-role="nd2tabs" data-swipe="true" class="nd2tabs">';
+		$data['header'] .= '<li data-tab="internal_inbox" class="messaging_tab" data-tab-active="true">Inbox</li>';
+		$data['header'] .= '<li data-tab="internal_draft" class="messaging_tab">Drafts</li>';
+		$data['header'] .= '<li data-tab="internal_outbox" class="messaging_tab">Outbox</li></ul>';
+		$data['content'] = '<div data-role="nd2tab" data-tab="internal_inbox"><ul id="internal_inbox" data-role="listview" data-inset="true"></ul></div>';
+		$data['content'] .= '<div data-role="nd2tab" data-tab="internal_draft"><ul id="internal_draft" data-role="listview" data-inset="true"></ul></div>';
+		$data['content'] .= '<div data-role="nd2tab" data-tab="internal_outbox"><ul id="internal_outbox" data-role="listview" data-inset="true"></ul></div>';
+		$data['content'] .= '<div id="fab_container" class="ui-btn-fab-bottom"><a href="#" id="nosh_fab1" class="ui-btn ui-btn-fab ui-btn-raised clr-primary nosh_fab"><i class="zmdi zmdi-plus zmdi-hc-2x nosh_fab_i"> </i></a></div>';
+		$left_panel_array = array(
+			array('Schedule', 'mobile_schedule'),
+			array('Inbox', 'mobile_inbox')
+		);
+		$data['view'] = '<div id="message_view1"></div>';
+		$data['form'] = '<form id="message_form">';
+		$data['form'] .= Form::hidden('message_id', '');
+		$data['form'] .= Form::hidden('pid', '');
+		$data['form'] .= Form::hidden('t_messages_id', '');
+		$data['form'] .= Form::label('subject', 'Subject');
+		$data['form'] .= Form::text('subject', '', array('required'));
+		if(Session::get('group_id') != '100') {
+			$data['form'] .= Form::label('patient_name', 'Concerning this patient (optional)');
+			$data['form'] .= Form::text('patient_name', '', array('class'=>'texthelper1', 'data-nosh-send'=>'pid', 'placeholder'=>'Type a few characters for search'));
+		}
+		$data1 = array(
+			'' => ''
+		);
+		if (Session::get('group_id') == '100') {
+			if (Session::get('patient_centric') == 'y') {
+				$query = DB::table('users')->where('group_id', '!=', '100')->where('group_id', '!=', '1')->get();
+			} else {
+				$query = DB::table('users')->where('group_id', '!=', '100')->where('group_id', '!=', '1')->where('practice_id', '=', Session::get('practice_id'))->get();
+			}
+		} else {
+			if (Session::get('patient_centric') == 'yp') {
+				$query = DB::table('users')->where('group_id', '!=', '1')->get();
+			} else {
+				$query = DB::table('users')->where('group_id', '!=', '1')->where('practice_id', '=', Session::get('practice_id'))->get();
+			}
+		}
+		
+		if ($query) {
+			foreach ($query as $row) {
+				$records = $row->displayname . ' (' . $row->id . ')';
+				$data1[$records] = $records;
+			}
+		}
+		$data['form'] .= Form::label('messages_to[]', 'To', array('class'=>'select'));
+		$data['form'] .= Form::select('messages_to[]', $data1, null, array('data-native-menu'=>'false', 'multiple'=>'multiple', 'data-icon'=>'grid', 'data-iconpos'=>'right'));
+		$data['form'] .= Form::label('cc[]', 'CC', array('class'=>'select'));
+		$data['form'] .= Form::select('cc[]', $data1, null, array('data-native-menu'=>'false', 'multiple'=>'multiple', 'data-icon'=>'grid', 'data-iconpos'=>'right'));
+		$data['form'] .= Form::label('body', 'Message');
+		$data['form'] .= Form::textarea('body');
+		$data['form'] .= '<div class="ui-grid-b">';
+		$data['form'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-check zmdi-hc-2x"></i><br>Save', array('class'=>'mobile_form_action2 ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-form'=>'message_form', 'data-nosh-action'=>'save', 'data-nosh-origin'=>'mobile_inbox')) . '</div></div>';
+		$data['form'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-time zmdi-hc-2x"></i><br>Draft', array('class'=>'mobile_form_action2 ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-form'=>'message_form', 'data-nosh-action'=>'draft', 'data-nosh-origin'=>'mobile_inbox')) . '</div></div>';
+		$data['form'] .= '<div class="ui-block-c"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-close zmdi-hc-2x"></i><br>Cancel', array('class'=>'cancel_edit2 ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-form'=>'message_form')) . '</div></div>';
 		$data['form'] .= '</div></form>';
 		if(Session::get('group_id') != '100') {
 			$left_panel_array[] = array('Drafts', 'mobile_drafts');

@@ -30,11 +30,11 @@
 		<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
 -->
 		<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+
 		<?php echo HTML::style('css/nativedroid.css');?>
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico">
 		{{ $style }}
 		<?php echo HTML::style('css/nosh-timeline.css');?>
-		<?php echo HTML::style('css/fullcalendar.css');?>
 		<?php echo HTML::style('css/flexboxgrid.min.css');?>
 		<script type="text/javascript">
 			document.documentElement.className = 'js';
@@ -77,8 +77,14 @@
 			var flags = {"":"Not Applicable","L":"Below low normal","H":"Above high normal","LL":"Below lower panic limits","HH":"Above upper panic limits","<":"Below absolute low-off instrument scale",">":"Above absolute high-off instrument scale","N":"Normal","A":"Abnormal","AA":"Very abnormal","U":"Significant change up","D":"Significant change down","B":"Better--use when direction not relevant","W":"Worse--use when direction not relevant","S":"Susceptible","R":"Resistant","I":"Intermediate","MS":"Moderately susceptible","VS":"Very susceptible"};
 			var availableMonths = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 		</script>
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<!--
 		<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+-->
+		<script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<!--
 		<script type="text/javascript" src="https://code.jquery.com/ui/1.11.0/jquery-ui.min.js"></script>
+-->
 		<script type="text/javascript">
 			$(document).on("mobileinit", function () {
 				$.extend($.mobile, {

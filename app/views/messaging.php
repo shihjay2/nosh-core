@@ -73,7 +73,7 @@
 			<select id="messages_to" name="message_to[]" style="width:400px" multiple="multiple" class="text multiselect"></select>
 		</div>
 		<div class="pure-control-group">
-			<label for="">CC:</label>
+			<label for="messages_cc">CC:</label>
 			<select id="messages_cc" name="cc[]" style="width:400px" multiple="multiple" class="text multiselect"></select>
 		</div>
 		<div class="pure-control-group">

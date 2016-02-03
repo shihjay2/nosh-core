@@ -24,6 +24,14 @@ class InstallController extends BaseController {
 		$this->layout->content = View::make('install_fix_db_conn');
 	}
 	
+	public function install_oidc()
+	{
+		$this->layout->title = "NOSH ChartingSystem - Patient Version Installation";
+		$this->layout->style = '';
+		$this->layout->script = HTML::script('/js/install_oidc.js');
+		$this->layout->content = View::make('install_oidc');
+	}
+	
 	public function practiceregister($api)
 	{
 		$this->layout->title = "NOSH ChartingSystem Practice Registration";

@@ -1,5 +1,5 @@
 <div id="outer_box">
-	<div class="box" class="is-center">
+	<div class="login_box" class="is-center">
 		<div align="center">
 			<h1 class="splash-head">Nosh</h1>
 			<div id="login_practice_logo" align="center"></div>

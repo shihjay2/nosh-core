@@ -135,6 +135,7 @@ class BaseController extends Controller {
 				'/js/nativedroid.js',
 				'/js/jquery.timepicker.min.js',
 				'/js/jquery.selectboxes.js',
+				'/js/jquery-textrange.js',
 				'/js/mobile.js'
 			);
 		}
@@ -680,7 +681,7 @@ class BaseController extends Controller {
 		}
 	}
 	
-	protected function encounters_view($eid, $pid, $practice_id, $modal=false, $addendum=false)
+	protected function encounters_view($eid, $pid, $practice_id, $modal=false, $addendum=false, $mobile=false)
 	{
 		$encounterInfo = Encounters::find($eid);
 		$data['patientInfo'] = Demographics::find($pid);
@@ -1609,6 +1610,11 @@ class BaseController extends Controller {
 				$data['addendum'] = true;
 			} else {
 				$data['addendum'] = false;
+			}
+			if ($mobile == true) {
+				$data['mobile'] = true;
+			} else {
+				$data['mobile'] = false;
 			}
 			return View::make('modal_view', $data);
 		} else {
@@ -9375,16 +9381,16 @@ class BaseController extends Controller {
 	
 	protected function mobile_header_build($title)
 	{
-		$return = '<a href="#left_panel" class="ui-btn ui-btn-left" data-role="button" role="button"><i class="zmdi zmdi-menu"></i></a>';
-		$return .= '<a href="#right_panel" class="ui-btn ui-btn-right" data-role="button" role="button"><i class="zmdi zmdi-settings"></i></a>';
+		$return = '<a href="#left_panel" class="ui-btn-left ui-btn" data-role="button" role="button"><i class="zmdi zmdi-menu headericon"></i></a>';
+		$return .= '<a href="#right_panel" class="ui-btn-right ui-btn" data-role="button" role="button"><i class="zmdi zmdi-settings headericon"></i></a>';
 		$return .= '<h1 role="heading">' . $title . '</h1>';
 		return $return;
 	}
 	
 	protected function mobile_navigation_header_build($title)
 	{
-		$return = '<a href="#" id="navigation_header_back" class="ui-btn ui-btn-left waves-effect waves-button" data-role="button" role="button" data-nosh-origin="" title="Back"><i class="zmdi zmdi-arrow-left"></i></a>';
-		$return .= '<a href="#" id="navigation_header_fav" class="ui-btn ui-btn-right waves-effect waves-button" data-role="button" role="button" data-nosh-form="" data-nosh-origin="" title="Text Favorites" style="display:none"><i class="zmdi zmdi-favorite"></i></a>';
+		$return = '<a href="#" id="navigation_header_back" class="ui-btn ui-btn-left waves-effect waves-button" data-role="button" role="button" data-nosh-origin="" data-nosh-scroll="" title="Back"><i class="zmdi zmdi-arrow-left headericon1"></i></a>';
+		$return .= '<a href="#" id="navigation_header_fav" class="ui-btn ui-btn-right waves-effect waves-button" data-role="button" role="button" data-nosh-form="" data-nosh-origin="" title="Text Favorites" style="display:none"><i class="zmdi zmdi-favorite headericon"></i></a>';
 		$return .= '<h1 role="heading">' . $title . '</h1>';
 		return $return;
 	}
