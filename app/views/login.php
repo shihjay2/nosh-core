@@ -19,7 +19,7 @@
 					<div class="pure-u-1-2"><?php echo link_to_route('oidc', "I'm a Provider", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
 					<div class="pure-u-1"><br><br><a href="#" id="open_regular_box">Standard Login for Administrator</a></div>
 					<?php if (route('home') == 'https://shihjay.xyz/nosh') { ?>
-						<div class="pure-u-1"><?php echo link_to_route('reset_demo', "Reset Demo", $parameters = array(), $attributes = array('class'=>'nosh_button'));?>/div>
+						<div class="pure-u-1"><br><br><?php echo link_to_route('reset_demo', "Reset Demo", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
 					<?php }?>
 				</div>
 				<div id="regular_box" style="display:none">
