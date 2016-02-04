@@ -969,7 +969,7 @@ class AjaxDashboardController extends BaseController {
 			exit("You cannot do this.");
 		} else {
 			$file = Input::get('file');
-			$config_file = __DIR__."/../.env.php";
+			$config_file = __DIR__."/../../.env.php";
 			$config = require($config_file);
 			$command = "mysql -u " . $config['mysql_username'] . " -p". $config['mysql_password'] . " " . $config['mysql_database'] . " < " . $file;
 			system($command);

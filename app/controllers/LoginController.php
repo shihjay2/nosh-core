@@ -973,7 +973,7 @@ class LoginController extends BaseController {
 	
 	public function reset_demo()
 	{
-		$config_file = __DIR__."/../.env.php";
+		$config_file = __DIR__."/../../.env.php";
 		$config = require($config_file);
 		$file = '/noshdocuments/demo.sql';
 		$file1 = '/noshdocuments/demo_oic.sql';
