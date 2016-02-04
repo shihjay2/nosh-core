@@ -344,7 +344,7 @@ Route::filter('openid', function()
 Route::filter('pnosh', function()
 {
 	if (Session::get('group_id') != '100' && Session::get('patient_centric') == 'yp') {
-		return Redirect::to('pnosh_provider');
+		return Redirect::to('pnosh_provider_redirect');
 	}
 });
 
