@@ -970,4 +970,17 @@ class LoginController extends BaseController {
 			exit;
 		}
 	}
+	
+	public function reset_demo()
+	{
+		$config_file = __DIR__."/../.env.php";
+		$config = require($config_file);
+		$file = '/noshdocuments/demo.sql';
+		$file1 = '/noshdocuments/demo_oic.sql';
+		$command = "mysql -u " . $config['mysql_username'] . " -p". $config['mysql_password'] . " nosh < " . $file;
+		$command1 = "mysql -u " . $config['mysql_username'] . " -p". $config['mysql_password'] . " oic_production < " . $file1;
+		system($command);
+		system($command1);
+		return Redirect::to('/');
+	}
 }

@@ -195,6 +195,7 @@ Route::any('uma_invitation_request', array('as' => 'uma_invitation_request', 'be
 Route::get('uma_auth', array('as' => 'uma_auth', 'uses' => 'LoginController@uma_auth'));
 Route::get('uma_register_client', array('as' => 'uma_register_client', 'uses' => 'LoginController@uma_register_client'));
 Route::get('uma_get_refresh_token', array('as' => 'uma_get_refresh_token', 'uses' => 'LoginController@uma_get_refresh_token'));
+Route::get('reset_demo', array('as' => 'reset_demo', 'uses' => 'LoginController@reset_demo'));
 Route::group(array('prefix' => 'uma_api'), function()
 {
 	Route::controller('', 'UMAAPIController');
@@ -319,7 +320,9 @@ Route::filter('google', function()
 {
 	$row = Practiceinfo::find(1);
 	if ($row->google_refresh_token == '' && Session::get('group_id') == '1') {
-		return Redirect::to('googleoauth');
+		if (route('home') != 'http://localhost/nosh') {
+			return Redirect::to('googleoauth');
+		}
 	}
 });
 
