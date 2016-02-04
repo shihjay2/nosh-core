@@ -2,7 +2,7 @@
 <div id="mainborder_full" class="ui-corner-all ui-tabs ui-widget ui-widget-content">
 	<div id="installcontent">
 		<input type="hidden" id="progress_input"/>
-		<h3>Welcome to the NOSH ChartingSystem Installation for Patients</h3>
+		<h3>Welcome to the NOSH ChartingSystem Installation for Patients through HIEofOne</h3>
 		<form id="install" class="pure-form pure-form-aligned" style="display:none">
 			<p style="font-size:13px;">Please fill out the entries to complete the installation of NOSH ChartingSystem.</p>
 			<p style="font-size:13px;">You will need to establish a Google Gmail account to be able to send e-mail from the system for patient appointment reminders, non-Protected Health Information messages, and faxes.</p>

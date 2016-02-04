@@ -262,7 +262,7 @@ class HomeController extends BaseController {
 		return Response::download($file);
 	}
 	
-	public function pnosh_provider()
+	public function pnosh_provider_redirect()
 	{
 		$this->setpatient('1');
 		return Redirect::to('chart');

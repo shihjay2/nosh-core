@@ -49,7 +49,7 @@ class AjaxInstallController extends BaseController {
 			'practice_id' => '1'
 		);
 		$user_id = DB::table('users')->insertGetId($data1);
-		// Check if patient-centric is also tied to a UMA oAUTH server
+		// Check if patient-centric is also tied to a UMA server
 		$client_id = '';
 		$client_secret = '';
 		$sub = '';

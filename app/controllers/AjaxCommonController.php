@@ -1326,7 +1326,7 @@ class AjaxCommonController extends BaseController {
 						$resource = 'Demographics';
 					}
 					if ($name == 'Medication') {
-						$title = 'This resource is the RXNorm medication database.  This is NOT your active medication list.';
+						$title = 'This resource is the RXNorm medication database.  This is NOT your active medication list.';  //UMA do we need this?
 						$resource = 'Medication Database';
 					}
 					if ($name == 'Practitioner') {

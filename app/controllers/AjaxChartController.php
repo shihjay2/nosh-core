@@ -563,6 +563,7 @@ class AjaxChartController extends BaseController {
 				if ($result->mtm_extension == 'y') {
 					$this->add_mtm_alert($pid, 'issues');
 				}
+				// UMA placeholder
 				$arr = "Issue added!";
 			} else {
 				DB::table('issues')->where('issue_id', '=', Input::get('issue_id'))->update($data);
@@ -617,6 +618,7 @@ class AjaxChartController extends BaseController {
 			DB::table('issues')->where('issue_id', '=', $issue_id)->delete();
 			$this->audit('Delete');
 			$this->api_data('delete', 'issues', 'issue_id', $issue_id);
+			// UMA placeholder
 			echo "Issue deleted!";
 		}
 	}
@@ -670,6 +672,7 @@ class AjaxChartController extends BaseController {
 				if ($result->mtm_extension == 'y') {
 					$this->add_mtm_alert($pid, 'medications');
 				}
+				// UMA placeholder
 				$arr = "Medication added!";
 			} else {
 				DB::table('rx_list')->where('rxl_id', '=', Input::get('rxl_id'))->update($data);
@@ -752,6 +755,7 @@ class AjaxChartController extends BaseController {
 			DB::table('rx_list')->where('rxl_id', '=', Input::get('rxl_id'))->delete();
 			$this->audit('Delete');
 			$this->api_data('delete', 'rx_list', 'rxl_id', Input::get('rxl_id'));
+			// UMA placeholder
 			echo "Medication deleted!";
 		}
 	}
@@ -844,6 +848,7 @@ class AjaxChartController extends BaseController {
 				if ($practice_result->mtm_extension == 'y') {
 					$this->add_mtm_alert($pid, 'medications');
 				}
+				// UMA placeholder
 				if (Input::get('rxl_sig') == '') {
 					$instructions = Input::get('rxl_instructions');
 				} else {
@@ -1105,6 +1110,7 @@ class AjaxChartController extends BaseController {
 			DB::table('rx_list')->where('rxl_id', '=', $old_rxl_id)->delete();
 			$this->audit('Delete');
 			$this->api_data('delete', 'rx_list', 'rxl_id', $old_rxl_id);
+			// UMA placeholder
 			$result['message'] = "Entered medication in error process complete!";
 			echo json_encode($result);
 		}
@@ -1472,6 +1478,7 @@ class AjaxChartController extends BaseController {
 				$sup_id = DB::table('sup_list')->insertGetId($data);
 				$this->audit('Add');
 				$this->api_data('update', 'sup_list', 'sup_id', $sup_id);
+				// UMA placeholder
 				$result = array(
 					'message' => 'Supplement added!',
 					'medtext' => Input::get('sup_supplement') . ' ' . Input::get('sup_dosage')
@@ -1549,6 +1556,7 @@ class AjaxChartController extends BaseController {
 			DB::table('sup_list')->where('sup_id', '=', Input::get('sup_id'))->delete();
 			$this->audit('Delete');
 			$this->api_data('delete', 'sup_list', 'sup_id', Input::get('sup_id'));
+			// UMA placeholder
 			echo "Supplement deleted!";
 		}
 	}
@@ -2095,6 +2103,7 @@ class AjaxChartController extends BaseController {
 				$id = DB::table('allergies')->insertGetId($data);
 				$this->audit('Add');
 				$this->api_data('add', 'allergies', 'allergies_id', $id);
+				// UMA placeholder
 				$result['message'] = "Allergy added!";
 			} else {
 				DB::table('allergies')->where('allergies_id', '=', Input::get('allergies_id'))->update($data);
@@ -2148,6 +2157,7 @@ class AjaxChartController extends BaseController {
 			DB::table('allergies')->where('allergies_id', '=', $allergies_id)->delete();
 			$this->audit('Delete');
 			$this->api_data('delete', 'allergies', 'allergies_id', $allergies_id);
+			// UMA placeholder
 			echo "Allergy deleted!";
 		}
 	}
@@ -2774,6 +2784,7 @@ class AjaxChartController extends BaseController {
 				$id = DB::table('immunizations')->insertGetId($data);
 				$this->audit('Add');
 				$this->api_data('add', 'immunizations', 'imm_id', $id);
+				// UMA placeholder
 				$result['message'] = "Immunization added!";
 			} else {
 				DB::table('immunizations')->where('imm_id', '=', Input::get('imm_id'))->update($data);
@@ -2865,6 +2876,7 @@ class AjaxChartController extends BaseController {
 			$this->chart_model->deleteImmunization(Input::get('imm_id'));
 			$this->audit('Delete');
 			$this->api_data('delete', 'immunizations', 'imm_id', Input::get('imm_id'));
+			// UMA placeholder
 			echo "Immunization deleted!";
 		}
 	}

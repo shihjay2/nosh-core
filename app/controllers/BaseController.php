@@ -9865,6 +9865,7 @@ class BaseController extends Controller {
 	
 	protected function timeline()
 	{
+		// Will need to remove soon
 		$pid = Session::get('pid');
 		$json = array();
 		$date_arr = array();

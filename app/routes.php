@@ -116,7 +116,7 @@ Route::group(array('before' => 'auth|force.ssl|acl1'), function() {
 	Route::get('submitdata/{type}', array('as' => 'submitdata', 'uses' => 'MobileController@submitdata'));
 	Route::get('mobile_schedule', array('as' => 'mobile_schedule', 'uses' => 'MobileController@schedule'));
 	Route::get('mobile_inbox', array('as' => 'mobile_inbox', 'uses' => 'MobileController@inbox'));
-	Route::get('pnosh_provider', array('as' => 'pnosh_provider', 'uses' => 'HomeController@pnosh_provider'));
+	Route::get('pnosh_provider_redirect', array('as' => 'pnosh_provider_redirect', 'uses' => 'HomeController@pnosh_provider_redirect'));
 });
 Route::group(array('before' => 'force.ssl|acl2'), function() {
 	Route::get('encounter', array('as' => 'encounter', function()
@@ -602,4 +602,5 @@ Route::filter('auth.mobile', function()
 {
 	if (Auth::guest()) return Redirect::guest('login_mobile');
 });
+
 //Route::any('test1', array('as' => 'test1', 'uses' => 'ReminderController@test'));

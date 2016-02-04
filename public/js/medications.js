@@ -121,11 +121,13 @@ $(document).ready(function() {
 	$("#rxl_route").selectOptions();
 	$("#rxl_dosage").focus(function(){
 		var rx_name = $("#rxl_name").val();
-		if (rx_name == '') {
-			$.jGrowl('Medication field empty!');
-		} else {
-			rx_name = rx_name + ";" + $("#rxl_form").val();
+		var rx_form = $("#rxl_form").val();
+		if (rx_name != '' && rx_form != '') {
+			rx_name = rx_name + ";" + rx_form;
+			$("#rxl_dosage").autocomplete("enable");
 			$("#rxl_dosage").autocomplete("search", rx_name);
+		} else {
+			$("#rxl_dosage").autocomplete("disable");
 		}
 	});
 	$("#add_rx").click(function(){
@@ -929,9 +931,13 @@ $(document).ready(function() {
 	$("#messages_rxl_route").selectOptions();
 	$("#messages_rxl_dosage").focus(function(){
 		var rx_name = $("#messages_rxl_name").val();
-		if (rx_name != '') {
-			rx_name = rx_name + ";" + $("#messages_rxl_form").val();
+		var rx_form = $("$messages_rxl_form").val();
+		if (rx_name != '' && rx_form != '') {
+			rx_name = rx_name + ";" + rx_form;
+			$("#messages_rxl_dosage").autocomplete("enable");
 			$("#messages_rxl_dosage").autocomplete("search", rx_name);
+		} else {
+			$("#messages_rxl_dosage").autocomplete("disable");
 		}
 	});
 	$("#messages_add_rx").click(function(){
