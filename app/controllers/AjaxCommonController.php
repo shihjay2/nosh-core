@@ -1442,7 +1442,7 @@ class AjaxCommonController extends BaseController {
 		$data_message['temp_url'] = URL::to('oidc');
 		$data_message['patient'] = Session::get('displayname');
 		$mesg  = $this->send_mail('emails.apiregister', $data_message, 'URGENT: Invitation to access the personal electronic medical record of ' . Session::get('displayname'), Input::get('email'), '1');
-		echo 'Invitation sent to ' . Input::get('email') . '!' . $mesg;
+		echo 'Invitation sent to ' . Input::get('email') . '!';
 	}
 	
 	public function postRemovePatientResourceUser()
