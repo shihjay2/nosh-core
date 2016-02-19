@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
-		<title><?php echo 'NOS'.'H Ch'.'art'.'ing'.'Sys'.'tem';?></title>
+		<title><?php if(Session::has('ptname')) { echo Session::get('ptname'); } else { echo 'NOS'.'H Ch'.'art'.'ing'.'Sys'.'tem'; }?></title>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 		<meta name="author" content="root"/>
 		<meta name="description" content="NOSH (New, Open Source, Health) Record System" />
