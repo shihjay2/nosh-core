@@ -336,7 +336,7 @@ Route::filter('googlecheck', function()
 
 Route::filter('openid', function()
 {
-	if(route('home') == 'https://hieofone.com/nosh' || route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh' || route('home') == 'https://shihjay.xyz/nosh') {
+	if(route('home') == 'https://hieofone.com/nosh' || route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh' || route('home') == 'https://shihjay.xyz/nosh' || route('home') == 'https://agropper.xyz/nosh') {
 		$row = Practiceinfo::find(1);
 		if ($row->openidconnect_client_id == '') {
 			return Redirect::to('oidc_register_client');
