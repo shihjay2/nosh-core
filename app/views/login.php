@@ -62,7 +62,7 @@
 				</form>
 			</div>
 			<br>
-			<?php if ($patient_centric == 'n') {?>
+			<?php if ($patient_centric == 'n' && route('home') != 'http://demo.noshchartingsystem.com:444/nosh') {?>
 				<a href="#" id="register" style="font-size:14px;">Are you new to the Patient Portal?</a><br><br>
 			<?php }?>
 		<?php }?>
