@@ -10363,7 +10363,7 @@ class BaseController extends Controller {
 				} else {
 					$data_message['message'] = 'You have a new medication prescribed to you: ' . $rx . '; For more details, click here: ' . $link;
 				}
-				$this->send_mail(array('text' => 'emails.remindertext'), $data_message, 'New Medication', $to, Session::get('practice_id'));
+				$this->send_mail(array('text' => 'emails.blank'), $data_message, 'New Medication', $to, Session::get('practice_id'));
 			}
 		}
 	}
