@@ -267,9 +267,11 @@ class HomeController extends BaseController {
 		$this->setpatient('1');
 		$query = DB::table('demographics_relate')->where('practice_id', '=', Session::get('practice_id'))->where('pid', '=', '1')->first();
 		if (!$query) {
+			$query1 = DB::table('demographics_relate')->where('practice_id', '=', '1')->where('pid', '=', '1')->first();
 			$data = array(
 				'pid' => '1',
-				'practice_id' => Session::get('practice_id')
+				'practice_id' => Session::get('practice_id'),
+				'id' => $query1->id
 			);
 			DB::table('demographics_relate')->insert($data);
 			$this->audit('Add');
