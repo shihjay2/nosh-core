@@ -1765,7 +1765,11 @@ $(document).ready(function() {
 	}
 	$(".headericon").offset({top: 23});
 	$(".headericon1").offset({top: 7});
-	
+	if ($('.template_class').length) {
+		var width = $('.template_class').width();
+		$('.template_class').wrap('<div class="template_class_wrap" style="position:relative;width:100%"></div>');
+		$('.template_class_wrap').append('<i class="template_click zmdi zmdi-favorite zmdi-hc-lg" style="position:absolute;right:5px;top:5px;width:30px;color:red;"></i>');
+	}
 	//refresh_timeline();
 	//$('.js').show();
 	//loadbuttons();
@@ -4952,6 +4956,51 @@ $(document).on("click", ".forward_message", function(e) {
 	$("#view_content").hide();
 	$("#content").hide();
 	$("#edit_content").show();
+});
+
+$(document).on("click", ".template_click", function(e) {
+	//var id = $(this).prev().attr('id');
+	//console.log(id);
+	var id = 'hpi';
+	$.mobile.loading("show");
+	$.ajax({
+		url: "ajaxsearch/textdump-group/" + id,
+		type: "POST"
+	})
+	.then(function(response) {
+		$("#textdump_group_html").html('');
+		$("#textdump_group_html").append(response);
+		$(".edittextgroup").html('<i class="zmdi zmdi-edit"></i>');
+		$(".deletetextgroup").html('<i class="zmdi zmdi-delete"></i>');
+		$(".normaltextgroup").html('<i class="zmdi zmdi-check"></i>');
+		$(".restricttextgroup").html('<i class="zmdi zmdi-close"></i>');
+		$('.textdump_group_item_text').editable('destroy');
+		$('.textdump_group_item_text').editable({
+			toggle:'manual',
+			ajaxOptions: {
+				headers: {"cache-control":"no-cache"},
+				beforeSend: function(request) {
+					return request.setRequestHeader("X-CSRF-Token", $("meta[name='token']").attr('content'));
+				},
+				error: function(xhr) {
+					if (xhr.status == "404" ) {
+						alert("Route not found!");
+						//window.location.replace(noshdata.error);
+					} else {
+						if(xhr.responseText){
+							var response1 = $.parseJSON(xhr.responseText);
+							var error = "Error:\nType: " + response1.error.type + "\nMessage: " + response1.error.message + "\nFile: " + response1.error.file;
+							alert(error);
+						}
+					}
+				}
+			}
+		});
+		$("#textdump_group_target").val(id);
+		$("#right_panel").width("500px");
+		$.mobile.loading("hide");
+		$("#right_panel").panel('open');
+	});
 });
 
 

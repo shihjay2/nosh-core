@@ -364,7 +364,7 @@ class MobileController extends BaseController {
 		$data['form'] .= Form::label('cc[]', 'CC', array('class'=>'select'));
 		$data['form'] .= Form::select('cc[]', $data1, null, array('data-native-menu'=>'false', 'multiple'=>'multiple', 'data-icon'=>'grid', 'data-iconpos'=>'right'));
 		$data['form'] .= Form::label('body', 'Message');
-		$data['form'] .= Form::textarea('body');
+		$data['form'] .= Form::textarea('body', '', array('class'=>'template_class'));
 		$data['form'] .= '<div class="ui-grid-b">';
 		$data['form'] .= '<div class="ui-block-a"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-check zmdi-hc-2x"></i><br>Save', array('class'=>'mobile_form_action2 ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-form'=>'message_form', 'data-nosh-action'=>'save', 'data-nosh-origin'=>'mobile_inbox')) . '</div></div>';
 		$data['form'] .= '<div class="ui-block-b"><div class="button_wrap">' . Form::button('<i class="zmdi zmdi-time zmdi-hc-2x"></i><br>Draft', array('class'=>'mobile_form_action2 ui-shadow ui-btn ui-corner-all ui-btn-icon-block', 'data-nosh-form'=>'message_form', 'data-nosh-action'=>'draft', 'data-nosh-origin'=>'mobile_inbox')) . '</div></div>';

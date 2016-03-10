@@ -910,6 +910,7 @@ class AjaxChartController extends BaseController {
 					'medtext' => Input::get('rxl_medication') . ' ' . Input::get('rxl_dosage') . ' ' . Input::get('rxl_dosage_unit') . ', ' . $instructions . ' for ' . Input::get('rxl_reason') . ', Quantity: ' . Input::get('rxl_quantity') . ', Refills: ' . Input::get('rxl_refill')
 				);
 			}
+			$this->goodrx_notification(Input::get('rxl_medication'), Input::get('rxl_dosage') . Input::get('rxl_dosage_unit'));
 			echo json_encode($result);
 		}
 	}

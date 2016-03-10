@@ -136,6 +136,7 @@ class BaseController extends Controller {
 				'/js/jquery.timepicker.min.js',
 				'/js/jquery.selectboxes.js',
 				'/js/jquery-textrange.js',
+				'/js/jqueryui-editable.min.js',
 				'/js/mobile.js'
 			);
 		}
@@ -10318,5 +10319,52 @@ class BaseController extends Controller {
 		}
 		$arr['json'] = $json;
 		return $arr;
+	}
+	
+	protected function goodrx($rx, $command, $api_key='46e983ffba', $secret_key='3QmFl8W7Y2Mb655bn++NNA==')
+	{
+		$url = 'https://api.goodrx.com/' . $command;
+		$query_string = 'name=' . $rx . '&api_key=' . $api_key;
+		$hash = hash_hmac('sha256', $query_string, $secret_key, true);
+		$encoded = base64_encode($hash);
+		$search = array('+','/');
+		$sig = str_replace($search, '_', $encoded);
+		$url .= '?' . $query_string . '&sig=' . $sig;
+		$ch = curl_init();
+		curl_setopt($ch,CURLOPT_URL, $url);
+		curl_setopt($ch,CURLOPT_FAILONERROR,1);
+		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch,CURLOPT_TIMEOUT, 60);
+		curl_setopt($ch,CURLOPT_CONNECTTIMEOUT ,0);
+		$result = curl_exec($ch);
+		$result_array = json_decode($result, true);
+		curl_close($ch);
+		return $result_array;
+	}
+	
+	protected function goodrx_notification($rx, $dose)
+	{
+		$row = Demographics::find(Session::get('pid'));
+		$row2 = Practiceinfo::find(Session::get('practice_id'));
+		$to = $row->reminder_to;
+		$rx_array = explode(',', $rx);
+		$dose_array = explode('/', $dose);
+		if ($to != '') {
+			$result = $this->goodrx($rx_array[0], 'drug-info');
+			if ($result['success'] == true) {
+				if (isset($result['data']['drugs']['tablet'][$dose_array[0]])) {
+					$link = $result['data']['drugs']['tablet'][$dose_array[0]];
+				} else {
+					$link = reset($result['data']['drugs']['tablet']);
+				}
+				if ($row->reminder_method == 'Cellular Phone') {
+					$data_message['message'] = 'New Medication: ' . $rx . '; ' . $link;
+				} else {
+					$data_message['message'] = 'You have a new medication prescribed to you: ' . $rx . '; For more details, click here: ' . $link;
+				}
+				$this->send_mail('emails.blank', $data_message, 'Appointment Reminder', $to, Session::get('practice_id'));
+			}
+		}
 	}
 }

@@ -1,1 +1,1 @@
-Fax
+{{ $message }}

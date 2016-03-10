@@ -15,6 +15,7 @@
 		<div id="right_panel_selections">
 			<ul id="search_results" data-role="listview" data-inset="true"></ul>
 		</div>
+		<div id="textdump_group_html"></div>
 		<?php echo $right_panel;?>
 	</div>
 </div>
