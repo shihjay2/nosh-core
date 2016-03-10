@@ -276,6 +276,15 @@ class HomeController extends BaseController {
 			DB::table('demographics_relate')->insert($data);
 			$this->audit('Add');
 		}
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->first();
+		if ($practice->google_refresh_token == '') {
+			$practice1 = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+			$data1 = array(
+				'google_refresh_token' => $practice->google_refresh_token
+			);
+			DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->update($data1);
+			$this->audit('Update');
+		}
 		return Redirect::to('chart');
 	}
 }
