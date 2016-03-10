@@ -10348,7 +10348,8 @@ class BaseController extends Controller {
 		$row = Demographics::find(Session::get('pid'));
 		$row2 = Practiceinfo::find(Session::get('practice_id'));
 		$to = $row->reminder_to;
-		$rx_array = explode(',', $rx);
+		$rx1 = explode(',', $rx);
+		$rx_array = explode(' ', $rx1[0]);
 		$dose_array = explode('/', $dose);
 		if ($to != '') {
 			$result = $this->goodrx($rx_array[0], 'drug-info');
