@@ -44,7 +44,8 @@
 					<button type="button" id="rcopia_orders_rx" class="nosh_button">Update from RCopia</button> 
 				<?php }?>
 				<button type="button" id="save_orders_rx" class="nosh_button_save">Save Prescriptions</button> 
-				<button type="button" id="cancel_orders_rx_helper"  class="nosh_button_cancel">Cancel</button> 
+				<button type="button" id="cancel_orders_rx_helper"  class="nosh_button_cancel">Cancel</button>
+				<img src="https://d4fuqqd5l3dbz.cloudfront.net/static/images/powered-by-goodrx-black-xs.png" style="height:30px;vertical-align:text-top;" title="Prescribing a new medicaion will send your patient a link to GoodRX regarding medication pricing and information." class="nosh_tooltip">
 				<br><br>
 			</div>
 			<div id="messages_rx_header" style="display:none">
