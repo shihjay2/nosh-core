@@ -3718,4 +3718,22 @@ class AjaxDashboardController extends BaseController {
 		}
 		echo "OK";
 	}
+	
+	public function postTestReminderEmail()
+	{
+		$row = Demographics::find(Session::get('pid'));
+		$to = $row->reminder_to;
+		if ($to != '') {
+			if ($row->reminder_method == 'Cellular Phone') {
+				$data_message['item'] = 'This is a test';
+				$result = $this->send_mail(array('text' => 'emails.blank'), $data_message, 'Test Notification', $to, Session::get('practice_id'));
+			} else {
+				$data_message['item'] = 'This is a test';
+				$result = $this->send_mail('emails.blank', $data_message, 'Test Notification', $to, Session::get('practice_id'));
+			}
+		} else {
+			$result = 'No reminder method set!';
+		}
+		echo $result;
+	}
 }

@@ -56,6 +56,7 @@
 					<div class="pure-u-1-3"></div>
 					<div class="pure-u-1-3"><label for="menu_reminder_method">Appointment Reminder Method:</label><select name="reminder_method" id="menu_reminder_method" class="text pure-input-1"></select></div>
 					<div class="pure-u-1-3"><label for="menu_cell_carrier">Cellular Phone Carrier:</label><select name="cell_carrier" id="menu_cell_carrier" class="text pure-input-1"></select></div>
+					<div class="pure-u-1-3"><br><button type="button" id="test_reminder_email" class="nosh_button pure-input-1">Test Reminder Notification</button></div>
 				</div>
 			</div>
 			<h3>Guardian</h3>

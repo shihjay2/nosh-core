@@ -929,4 +929,13 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
+	$("#test_reminder_email").click(function(){
+		$.ajax({
+			type: "POST",
+			url: "ajaxdashboard/test-reminder-email",
+			success: function(data){
+				$.jGrowl(data);
+			}
+		});
+	});
 });
