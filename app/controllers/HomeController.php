@@ -265,6 +265,15 @@ class HomeController extends BaseController {
 	public function pnosh_provider_redirect()
 	{
 		$this->setpatient('1');
+		$query = DB::table('demographics_relate')->where('practice_id', '=', Session::get('practice_id'))->where('pid', '=', '1')->first();
+		if (!$query) {
+			$data = array(
+				'pid' => '1',
+				'practice_id' => Session::get('practice_id')
+			);
+			DB::table('demographics_relate')->insert($data);
+			$this->audit('Add');
+		}
 		return Redirect::to('chart');
 	}
 }
