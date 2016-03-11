@@ -120,15 +120,7 @@ $(document).ready(function() {
 	$("#rxl_route").addOption({"by mouth":"PO","per rectum":"PR","transdermal":"TD","subcutaneously":"SC","intramuscularly":"IM","intravenously":"IV"}, false);
 	$("#rxl_route").selectOptions();
 	$("#rxl_dosage").focus(function(){
-		var rx_name = $("#rxl_name").val();
-		var rx_form = $("#rxl_form").val();
-		if (rx_name != '' && rx_form != '') {
-			rx_name = rx_name + ";" + rx_form;
-			$("#rxl_dosage").autocomplete("enable");
-			$("#rxl_dosage").autocomplete("search", rx_name);
-		} else {
-			$("#rxl_dosage").autocomplete("disable");
-		}
+		$("#rxl_dosage").autocomplete("search", '');
 	});
 	$("#add_rx").click(function(){
 		$('#edit_rx_form').clearForm();
@@ -250,11 +242,23 @@ $(document).ready(function() {
 			});
 			$("#rxl_dosage").autocomplete({
 				source: function (req, add){
+					var term = req.term;
+					var med = $('#rxl_medication').val();
+					var name = $("#rxl_name").val();
+					var form = $("#rxl_form").val();
+					if (med == '') {
+						if (name != '' && form != '') {
+							med = name + ";" + form;
+						}
+					} else {
+						med = med.replace(', ', ';');
+					}
+					var req1 = 'term=' + term + '&med=' + encodeURIComponent(med);
 					$.ajax({
 						url: "ajaxsearch/rx-dosage",
 						dataType: "json",
 						type: "POST",
-						data: req,
+						data: req1,
 						success: function(data){
 							if(data.response =='true'){
 								add(data.message);
@@ -614,11 +618,23 @@ $(document).ready(function() {
 			});
 			$("#messages_rxl_dosage").autocomplete({
 				source: function (req, add){
+					var term = req.term;
+					var med = $('#messages_rxl_medication').val();
+					var name = $("#messages_rxl_name").val();
+					var form = $("#messages_rxl_form").val();
+					if (med == '') {
+						if (name != '' && form != '') {
+							med = name + ";" + form;
+						}
+					} else {
+						med = med.replace(', ', ';');
+					}
+					var req1 = 'term=' + term + '&med=' + encodeURIComponent(med);
 					$.ajax({
 						url: "ajaxsearch/rx-dosage",
 						dataType: "json",
 						type: "POST",
-						data: req,
+						data: req1,
 						success: function(data){
 							if(data.response =='true'){
 								add(data.message);
@@ -930,15 +946,7 @@ $(document).ready(function() {
 	$("#messages_rxl_route").addOption({"by mouth":"PO","per rectum":"PR","transdermal":"TD","subcutaneously":"SC","intramuscularly":"IM","intravenously":"IV"}, false);
 	$("#messages_rxl_route").selectOptions();
 	$("#messages_rxl_dosage").focus(function(){
-		var rx_name = $("#messages_rxl_name").val();
-		var rx_form = $("$messages_rxl_form").val();
-		if (rx_name != '' && rx_form != '') {
-			rx_name = rx_name + ";" + rx_form;
-			$("#messages_rxl_dosage").autocomplete("enable");
-			$("#messages_rxl_dosage").autocomplete("search", rx_name);
-		} else {
-			$("#messages_rxl_dosage").autocomplete("disable");
-		}
+		$("#messages_rxl_dosage").autocomplete("search", '');
 	});
 	$("#messages_add_rx").click(function(){
 		$('#messages_edit_rx_form').clearForm();

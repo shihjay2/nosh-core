@@ -21,8 +21,8 @@
 	<form name="edit_rx_form" id="edit_rx_form" class="pure-form pure-form-stacked">
 		<input type="hidden" name="rxl_id" id="rxl_id"/>
 		<input type="hidden" name="rxl_ndcid" id="rxl_ndcid"/>
-		<input type="hidden" id="rxl_name"/>
-		<input type="hidden" id="rxl_form"/>
+		<input type="hidden" id="rxl_name" value=""/>
+		<input type="hidden" id="rxl_form" value=""/>
 		<div class="pure-g">
 			<div class="pure-u-1-2"><label for="rxl_medication">Medication:</label><input type="text" name="rxl_medication" id="rxl_medication" class="text pure-input-1" required/></div>
 			<div class="pure-u-1-4"><label for="rxl_dosage">Dosage:</label><input type="text" name="rxl_dosage" id="rxl_dosage" class="text pure-input-1"/></div>
@@ -80,8 +80,8 @@
 			<input type="hidden" name="rxl_id" id="messages_rxl_id"/>
 			<input type="hidden" name="rxl_ndcid" id="messages_rxl_ndcid"/>
 			<input type="hidden" id="messages_rxl_medication_list"/>
-			<input type="hidden" id="messages_rxl_name"/>
-			<input type="hidden" id="messages_rxl_form"/>
+			<input type="hidden" id="messages_rxl_name" value=""/>
+			<input type="hidden" id="messages_rxl_form" value=""/>
 			<div class="pure-g">
 				<div class="pure-u-1 messages_rx_provider_div"><label for="messages_rx_provider">Prescribing Provider:</label><select name="id" id="messages_rx_provider" class="text pure-input-1" required/></select></div>
 				<div class="pure-u-1-2"><label for="messages_rxl_medication">Medication:</label><input type="text" name="rxl_medication" id="messages_rxl_medication" class="text pure-input-1" required/></div>

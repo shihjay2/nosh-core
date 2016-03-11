@@ -1217,31 +1217,45 @@ class AjaxSearchController extends BaseController {
 	
 	public function postRxDosage()
 	{
-		$q = Input::get('term');
+		$p = Input::get('term');
+		$q = Input::get('med');
 		if (!$q) return;
 		$data['response'] = 'false';
 		$q_parts = explode(";", $q);
-		$query = DB::table('meds_full')
-			->where('PROPRIETARYNAME', '=', $q_parts[0])
-			->where('DOSAGEFORMNAME', '=', $q_parts[1])
-			->select('ACTIVE_NUMERATOR_STRENGTH', 'ACTIVE_INGRED_UNIT', 'PRODUCTNDC')
-			->orderBy('ACTIVE_NUMERATOR_STRENGTH', 'asc')
-			->distinct()
-			->get();
-		if ($query) {
-			$data['message'] = array();
-			$data['response'] = 'true';
-			foreach ($query as $row) {
-				$dosage = trim($row->ACTIVE_NUMERATOR_STRENGTH);
-				$unit = trim($row->ACTIVE_INGRED_UNIT);
-				$label = $dosage . ' ' . $unit;
-				if ($this->recursive_array_search($label, $data) === FALSE) {
-					$data['message'][] = array(
-						'label' => $label,
-						'value' => $dosage,
-						'unit' => $unit,
-						'ndc' => $row->PRODUCTNDC
-					);
+		if (count($q_parts) > 1) {
+			if ($p != '') {
+				$query = DB::table('meds_full')
+					->where('PROPRIETARYNAME', '=', $q_parts[0])
+					->where('DOSAGEFORMNAME', '=', $q_parts[1])
+					->where('ACTIVE_NUMERATOR_STRENGTH', 'LIKE', "%$p%")
+					->select('ACTIVE_NUMERATOR_STRENGTH', 'ACTIVE_INGRED_UNIT', 'PRODUCTNDC')
+					->orderBy('ACTIVE_NUMERATOR_STRENGTH', 'asc')
+					->distinct()
+					->get();
+			} else {
+				$query = DB::table('meds_full')
+					->where('PROPRIETARYNAME', '=', $q_parts[0])
+					->where('DOSAGEFORMNAME', '=', $q_parts[1])
+					->select('ACTIVE_NUMERATOR_STRENGTH', 'ACTIVE_INGRED_UNIT', 'PRODUCTNDC')
+					->orderBy('ACTIVE_NUMERATOR_STRENGTH', 'asc')
+					->distinct()
+					->get();
+			}
+			if ($query) {
+				$data['message'] = array();
+				$data['response'] = 'true';
+				foreach ($query as $row) {
+					$dosage = trim($row->ACTIVE_NUMERATOR_STRENGTH);
+					$unit = trim($row->ACTIVE_INGRED_UNIT);
+					$label = $dosage . ' ' . $unit;
+					if ($this->recursive_array_search($label, $data) === FALSE) {
+						$data['message'][] = array(
+							'label' => $label,
+							'value' => $dosage,
+							'unit' => $unit,
+							'ndc' => $row->PRODUCTNDC
+						);
+					}
 				}
 			}
 		}
