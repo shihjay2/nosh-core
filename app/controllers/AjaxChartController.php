@@ -5,7 +5,7 @@ class AjaxChartController extends BaseController {
 	/**
 	* NOSH ChartingSystem Chart Ajax Functions
 	*/
-	
+
 	public function postDemographicsLoad()
 	{
 		$data['id'] = Session::get('pid');
@@ -18,7 +18,7 @@ class AjaxChartController extends BaseController {
 		$data['dob'] = date('F jS, Y', $dob);
 		if ($row->sex == 'm') {
 			$data['gender'] = 'Male';
-		} 
+		}
 		if ($row->sex == 'f') {
 			$data['gender'] = 'Female';
 		}
@@ -33,7 +33,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postDocumentsUpload()
 	{
 		$data = array(
@@ -47,7 +47,7 @@ class AjaxChartController extends BaseController {
 		$this->audit('Update');
 		echo 'Document updated!';
 	}
-	
+
 	public function postDeleteUpload()
 	{
 		$result = Documents::find(Input::get('documents_id'));
@@ -58,10 +58,10 @@ class AjaxChartController extends BaseController {
 			$arr = 'Document deleted!';
 		} else {
 			$arr = 'Error deleting document!';
-		}	
+		}
 		echo $arr;
 	}
-	
+
 	public function postNewMessage()
 	{
 		$data = array(
@@ -73,7 +73,7 @@ class AjaxChartController extends BaseController {
 		$id = DB::table('t_messages')->insertGetId($data);
 		echo $id;
 	}
-	
+
 	public function postGetPrenatal()
 	{
 		$row = Demographics::find(Session::get('pid'));
@@ -83,7 +83,7 @@ class AjaxChartController extends BaseController {
 			echo 'n';
 		}
 	}
-	
+
 	public function postEditPregnancy()
 	{
 		$data = array(
@@ -93,17 +93,17 @@ class AjaxChartController extends BaseController {
 		$this->audit('Update');
 		echo "Patient infomration updated.";
 	}
-	
+
 	public function getModalView($eid)
 	{
 		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, true);
 	}
-	
+
 	public function getModalViewMobile($eid)
 	{
 		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, true, true);
 	}
-	
+
 	// Menu Lists
 	public function postDemographicsList()
 	{
@@ -144,13 +144,13 @@ class AjaxChartController extends BaseController {
 				foreach ($query1 as $row1) {
 					$result .= '<br>' . $row1->insurance_plan_name . '; ID: ' . $row1->insurance_id_num . '; Group: ' . $row1->insurance_group;
 					if ($row1->insurance_copay != '') {
-						$result .= '; Copay: ' . $row1->insurance_copay; 
+						$result .= '; Copay: ' . $row1->insurance_copay;
 					}
 					if ($row1->insurance_deductible != '') {
-						$result .= '; Deductible: ' . $row1->insurance_deductible; 
+						$result .= '; Deductible: ' . $row1->insurance_deductible;
 					}
 					if ($row1->insurance_comments != '') {
-						$result .= '; Comments: ' . $row1->insurance_comments; 
+						$result .= '; Comments: ' . $row1->insurance_comments;
 					}
 				}
 				$result .= '</p>';
@@ -167,7 +167,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo $result;
 	}
-	
+
 	public function postIssuesList($mobile=false)
 	{
 		$query = Issues::where('pid', '=', Session::get('pid'))->where('issue_date_inactive', '=', '0000-00-00 00:00:00')->get();
@@ -206,7 +206,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo $result;
 	}
-	
+
 	public function postMedicationsList($mobile=false)
 	{
 		$query = Rx_list::where('pid', '=', Session::get('pid'))
@@ -257,7 +257,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo $result;
 	}
-	
+
 	public function postSupplementsList($mobile=false)
 	{
 		$query = Sup_list::where('pid', '=', Session::get('pid'))->where('sup_date_inactive', '=', '0000-00-00 00:00:00')->get();
@@ -296,7 +296,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo $result;
 	}
-	
+
 	public function postImmunizationsList($mobile=false)
 	{
 		$query = Immunizations::where('pid', '=', Session::get('pid'))
@@ -371,7 +371,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo $result;
 	}
-	
+
 	public function postAllergiesList($mobile=false)
 	{
 		$query = Allergies::where('pid', '=', Session::get('pid'))->where('allergies_date_inactive', '=', '0000-00-00 00:00:00')->get();
@@ -410,7 +410,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo $result;
 	}
-	
+
 	public function postAlertsList($mobile=false)
 	{
 		$query = Alerts::where('pid', '=', Session::get('pid'))
@@ -454,13 +454,13 @@ class AjaxChartController extends BaseController {
 		}
 		echo $result;
 	}
-	
+
 	public function postPrevention()
 	{
 		$row = Demographics::find(Session::get('pid'));
 		if ($row->sex == 'm') {
 			$gender = 'Male';
-		} 
+		}
 		if ($row->sex == 'f' || $row->sex == 'u') {
 			$gender = 'Female';
 		}
@@ -476,14 +476,14 @@ class AjaxChartController extends BaseController {
 		}
 		$result = '';
 		$cr = curl_init('http://epss.ahrq.gov/ePSS/ePSSwidget.jsp');
-		curl_setopt($cr, CURLOPT_RETURNTRANSFER, true); 
+		curl_setopt($cr, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($cr, CURLOPT_COOKIEJAR, 'cookie.txt');
 		curl_setopt($cr, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
 		$data1 = curl_exec($cr);
 		curl_close($cr);
 		$fields_string = 'age=' . $age . '&sex=' . $gender . $pregnant1 . '&sexuallyActive=' . $sexuallyactive . '&tobacco=' . $tobacco . '&x=22&y=12';
 		$cr1 = curl_init('http://epss.ahrq.gov/ePSS/GetResults.do?' . $fields_string);
-		curl_setopt($cr1, CURLOPT_RETURNTRANSFER, true); 
+		curl_setopt($cr1, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($cr1, CURLOPT_COOKIEFILE, 'cookie.txt');
 		curl_setopt($cr1, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
 		$data = curl_exec($cr1);
@@ -502,7 +502,7 @@ class AjaxChartController extends BaseController {
 						if (isset($td)) {
 							$text = $td->innertext;
 							$result .= '<li>' . $text . '</li>';
-						}	
+						}
 					}
 					$result .= '</ul>';
 				}
@@ -520,7 +520,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo $result;
 	}
-	
+
 	// Encounters functions
 	public function postEncounterIdSet()
 	{
@@ -535,7 +535,7 @@ class AjaxChartController extends BaseController {
 		Session::put('encounter_template', $encounter->encounter_template);
 		Session::put('encounter_DOS', $encounter->encounter_DOS);
 	}
-	
+
 	// Issues functions
 	public function postEditIssue()
 	{
@@ -574,7 +574,7 @@ class AjaxChartController extends BaseController {
 			echo $arr;
 		}
 	}
-	
+
 	public function postInactivateIssue()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -593,7 +593,7 @@ class AjaxChartController extends BaseController {
 			echo "Issue inactivated!";
 		}
 	}
-	
+
 	public function postDeleteIssue()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -622,7 +622,7 @@ class AjaxChartController extends BaseController {
 			echo "Issue deleted!";
 		}
 	}
-	
+
 	public function postReactivateIssue()
 	{
 		$data = array(
@@ -634,7 +634,7 @@ class AjaxChartController extends BaseController {
 		$this->api_data('update', 'issues', 'issue_id', Input::get('issue_id'));
 		echo "Issue reactivated!";
 	}
-	
+
 	// Medications functions
 	public function postEditMedication()
 	{
@@ -683,7 +683,7 @@ class AjaxChartController extends BaseController {
 			echo $arr;
 		}
 	}
-	
+
 	public function postPastMedication()
 	{
 		$rxl_medication = Input::get('rxl_medication');
@@ -704,7 +704,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($result);
 	}
-	
+
 	public function postInactivateMedication()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -731,7 +731,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($result);
 		}
 	}
-	
+
 	public function postDeleteMedication()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -786,7 +786,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($result);
 		}
 	}
-	
+
 	public function postPrescribeMedication()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -810,7 +810,7 @@ class AjaxChartController extends BaseController {
 				$daw = 'Dispense As Written';
 			} else {
 				$daw = '';
-			}	
+			}
 			$date = strtotime(Input::get('rxl_date_prescribed'));
 			$date_active = date('Y-m-d H:i:s', $date);
 			$duedate1 = Input::get('rxl_days') * 86400;
@@ -948,7 +948,7 @@ class AjaxChartController extends BaseController {
 				$comp_array = array();
 				$query1 = "http://www.medscape.com/api/quickreflookup/LookupService.ashx?q=" . $rx[0] . "&all=false&sz=500&limit=500&type=10417&metadata=has-interactions&format=json";
 				$cr1 = curl_init($query1);
-				curl_setopt($cr1, CURLOPT_RETURNTRANSFER, true); 
+				curl_setopt($cr1, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($cr1, CURLOPT_COOKIEJAR, 'cookie.txt');
 				curl_setopt($cr1, CURLOPT_ENCODING, "");
 				curl_setopt($cr1, CURLOPT_FOLLOWLOCATION, true);
@@ -966,7 +966,7 @@ class AjaxChartController extends BaseController {
 						$result['info'] .= '</div>';
 						echo json_encode($result);
 						exit (0);
-					}	
+					}
 				} else {
 					$result['message'] = 'Multiple';
 					$result['info'] = '<div class="ui-state-error ui-corner-all" style="padding: 0.7em;"><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>';
@@ -980,7 +980,7 @@ class AjaxChartController extends BaseController {
 					$query2 = "http://www.medscape.com/api/quickreflookup/LookupService.ashx?q=" . $rx1[0] . "&all=false&sz=500&limit=500&type=10417&metadata=has-interactions&format=json";
 					$cr2 = curl_init($query2);
 					$cookie = __DIR__.'/../../public/cookie.txt';
-					curl_setopt($cr2, CURLOPT_RETURNTRANSFER, true); 
+					curl_setopt($cr2, CURLOPT_RETURNTRANSFER, true);
 					curl_setopt($cr2, CURLOPT_COOKIEJAR, $cookie);
 					curl_setopt($cr2, CURLOPT_ENCODING, "");
 					curl_setopt($cr2, CURLOPT_FOLLOWLOCATION, true);
@@ -993,13 +993,13 @@ class AjaxChartController extends BaseController {
 							$med2 = $data2_array['types'][0]["references"][0]["id"];
 						} else {
 							$med2 = '0';
-						}	
+						}
 					} else {
 						$med2 = '0';
 					}
 					$query3 = "http://www.medscape.com/druginteraction.do?action=getMultiInteraction&ids=" . $med1 . "," . $med2;
 					$cr3 = curl_init($query3);
-					curl_setopt($cr3, CURLOPT_RETURNTRANSFER, true); 
+					curl_setopt($cr3, CURLOPT_RETURNTRANSFER, true);
 					curl_setopt($cr3, CURLOPT_COOKIEJAR, $cookie);
 					curl_setopt($cr3, CURLOPT_ENCODING, "");
 					curl_setopt($cr3, CURLOPT_FOLLOWLOCATION, true);
@@ -1064,7 +1064,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($result);
 		}
 	}
-	
+
 	public function postEieMedication()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1116,7 +1116,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($result);
 		}
 	}
-	
+
 	public function postRxFaxList()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1136,10 +1136,10 @@ class AjaxChartController extends BaseController {
 			$query = DB::table('pages')
 				->where('job_id', '=', $job_id)
 				->get();
-			if($query) { 
+			if($query) {
 				$count = count($query);
-				$total_pages = ceil($count/$limit); 
-			} else { 
+				$total_pages = ceil($count/$limit);
+			} else {
 				$count = 0;
 				$total_pages = 0;
 			}
@@ -1163,7 +1163,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($response);
 		}
 	}
-	
+
 	public function postStartFaxMedication()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1196,7 +1196,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($result);
 		}
 	}
-	
+
 	public function postSendFaxMedication()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1210,7 +1210,7 @@ class AjaxChartController extends BaseController {
 			echo $result_message;
 		}
 	}
-	
+
 	public function postCancelFaxMedication()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1234,7 +1234,7 @@ class AjaxChartController extends BaseController {
 			}
 		}
 	}
-	
+
 	public function postAddPharmacy()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1253,7 +1253,7 @@ class AjaxChartController extends BaseController {
 			echo "Pharmacy added!";
 		}
 	}
-	
+
 	public function postRcopiaUpdateMedication($origin)
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1301,7 +1301,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($arr);
 		}
 	}
-	
+
 	// Supplements functions
 	public function postCheckSupplementInventory()
 	{
@@ -1321,7 +1321,7 @@ class AjaxChartController extends BaseController {
 			echo $result;
 		}
 	}
-	
+
 	public function postEditSupplement($origin_orders)
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1523,7 +1523,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($result);
 		}
 	}
-	
+
 	public function postInactivateSupplement()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1545,7 +1545,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($result);
 		}
 	}
-	
+
 	public function postDeleteSupplement()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1583,7 +1583,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($result);
 		}
 	}
-	
+
 	public function postOrdersSupSave()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1710,7 +1710,7 @@ class AjaxChartController extends BaseController {
 			echo $result;
 		}
 	}
-	
+
 	// Messages functions
 	public function postMessages()
 	{
@@ -1726,10 +1726,10 @@ class AjaxChartController extends BaseController {
 			$query->where('practice_id', '=', $practice_id);
 		}
 		$result = $query->get();
-		if($result) { 
+		if($result) {
 			$count = count($result);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -1750,7 +1750,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postAlerts1()
 	{
 		$pid = Session::get('pid');
@@ -1770,10 +1770,10 @@ class AjaxChartController extends BaseController {
 				->orWhere('alert', '=', 'Cardiopulmonary results pending');
 			})
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -1804,7 +1804,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postAlerts2()
 	{
 		$pid = Session::get('pid');
@@ -1824,10 +1824,10 @@ class AjaxChartController extends BaseController {
 				->orWhere('alert', '=', 'Cardiopulmonary results pending - NEED TO OBTAIN');
 			})
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -1858,7 +1858,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postInternalMessageReply()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1877,7 +1877,7 @@ class AjaxChartController extends BaseController {
 			$data_message = array(
 				'displayname' => Session::get('displayname'),
 				'email' => $row1->email,
-				'patient_portal' => $row1->patient_portal 
+				'patient_portal' => $row1->patient_portal
 			);
 			if ($row_relate->id == '') {
 				if ($row->email == '') {
@@ -1934,7 +1934,7 @@ class AjaxChartController extends BaseController {
 			}
 		}
 	}
-	
+
 	public function postLetterReply()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -1969,7 +1969,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($arr);
 		}
 	}
-	
+
 	public function postEditMessage()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -2018,7 +2018,7 @@ class AjaxChartController extends BaseController {
 			echo "Telephone message updated!";
 		}
 	}
-	
+
 	public function postSignMessage()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -2049,7 +2049,7 @@ class AjaxChartController extends BaseController {
 			}
 		}
 	}
-	
+
 	public function postDeleteMessage()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -2063,7 +2063,7 @@ class AjaxChartController extends BaseController {
 			echo "Telephone message deleted!";
 		}
 	}
-	
+
 	// Allergies functions
 	public function postEditAllergy()
 	{
@@ -2099,7 +2099,7 @@ class AjaxChartController extends BaseController {
 				'pid' => $pid,
 				'rcopia_sync' => 'n',
 				'meds_ndcid' => $ndcid
-			);	
+			);
 			if(Input::get('allergies_id') == '') {
 				$id = DB::table('allergies')->insertGetId($data);
 				$this->audit('Add');
@@ -2115,7 +2115,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($result);
 		}
 	}
-	
+
 	public function postInactivateAllergy()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -2134,7 +2134,7 @@ class AjaxChartController extends BaseController {
 			echo "Allergy inactivated!";
 		}
 	}
-	
+
 	public function postDeleteAllergy()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -2181,7 +2181,7 @@ class AjaxChartController extends BaseController {
 			echo "Allergy reactivated!";
 		}
 	}
-	
+
 	public function postRcopiaUpdateAllergy()
 	{
 		$pid = Session::get('pid');
@@ -2215,7 +2215,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo $response;
 	}
-	
+
 	// Alerts functions
 	public function postAlerts()
 	{
@@ -2231,10 +2231,10 @@ class AjaxChartController extends BaseController {
 			->where('alert_reason_not_complete', '=', '')
 			->where('practice_id', '=', $practice_id)
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -2260,7 +2260,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postAlertsComplete()
 	{
 		$pid = Session::get('pid');
@@ -2275,10 +2275,10 @@ class AjaxChartController extends BaseController {
 			->where('alert_reason_not_complete', '=', '')
 			->where('practice_id', '=', $practice_id)
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -2304,7 +2304,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postAlertsNotComplete()
 	{
 		$pid = Session::get('pid');
@@ -2319,10 +2319,10 @@ class AjaxChartController extends BaseController {
 			->where('alert_reason_not_complete', '!=', '')
 			->where('practice_id', '=', $practice_id)
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -2348,7 +2348,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postEditAlert()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -2388,7 +2388,7 @@ class AjaxChartController extends BaseController {
 			}
 		}
 	}
-	
+
 	public function postDeleteAlert()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -2403,7 +2403,7 @@ class AjaxChartController extends BaseController {
 			echo "Alert/Task deleted!";
 		}
 	}
-	
+
 	public function postCompleteAlert()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -2429,7 +2429,7 @@ class AjaxChartController extends BaseController {
 			echo "Alert/Task marked completed!";
 		}
 	}
-	
+
 	public function postIncompleteAlert()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -2447,7 +2447,7 @@ class AjaxChartController extends BaseController {
 			echo "Alert/Task marked incomplete!";
 		}
 	}
-	
+
 	public function postCompleteAlertOrder($orders_id)
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -2470,7 +2470,7 @@ class AjaxChartController extends BaseController {
 			}
 		}
 	}
-	
+
 	public function postAlertsPending()
 	{
 		$pid = Session::get('pid');
@@ -2486,10 +2486,10 @@ class AjaxChartController extends BaseController {
 			->where('alert', 'LIKE', "%NEED TO OBTAIN%")
 			->where('practice_id', '=', $practice_id)
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -2516,7 +2516,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	// Documents functions
 	public function postDeleteDocument()
 	{
@@ -2544,7 +2544,7 @@ class AjaxChartController extends BaseController {
 			echo $arr;
 		}
 	}
-	
+
 	public function postEditDocument()
 	{
 		$data = array(
@@ -2558,7 +2558,7 @@ class AjaxChartController extends BaseController {
 		$this->audit('Update');
 		echo 'Document updated!';
 	}
-	
+
 	public function postLetterTemplateSelectList()
 	{
 		$user_id = Session::get('user_id');
@@ -2601,14 +2601,14 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postGetLetterTemplate($id)
 	{
 		$row = Templates::find($id);
 		$data = unserialize($row->array);
 		echo json_encode($data);
 	}
-	
+
 	public function postLetterTemplateConstruct()
 	{
 		$pid = Session::get('pid');
@@ -2628,7 +2628,7 @@ class AjaxChartController extends BaseController {
 		$arr['firstname'] = $row->firstname;
 		echo json_encode($arr);
 	}
-	
+
 	public function postPrintLetter()
 	{
 		ini_set('memory_limit','196M');
@@ -2659,14 +2659,14 @@ class AjaxChartController extends BaseController {
 		$arr['message'] = 'OK';
 		echo json_encode($arr);
 	}
-	
+
 	public function postTests($mask='')
 	{
 		$pid = Session::get('pid');
 		$page = Input::get('page');
 		$limit = Input::get('rows');
 		$sidx = Input::get('sidx');
-		$sord = Input::get('sord'); 
+		$sord = Input::get('sord');
 		if($mask == ''){
 			$query = DB::table('tests')->where('pid', '=', $pid)->get();
 		} else {
@@ -2675,10 +2675,10 @@ class AjaxChartController extends BaseController {
 				->where('test_name', 'LIKE', "%$mask%")
 				->get();
 		}
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -2712,7 +2712,7 @@ class AjaxChartController extends BaseController {
 		echo json_encode($response);
 		exit( 0 );
 	}
-	
+
 	public function postChartTest($tests_id)
 	{
 		$pid = Session::get('pid');
@@ -2741,7 +2741,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	// Immunizations functions
 	public function postEditImmunization()
 	{
@@ -2796,7 +2796,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($result);
 		}
 	}
-	
+
 	public function postEditImmunization1()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -2832,7 +2832,7 @@ class AjaxChartController extends BaseController {
 				'pid' => $pid,
 				'eid' => $eid,
 				'cpt' => Input::get('cpt')
-			);	
+			);
 			$medtext .= '<br>' . Input::get('imm_immunization') . '; Sequence: ' . Input::get('imm_sequence') . '; Dosage: ' . Input::get('imm_dosage') . ' ' . Input::get('imm_dosage_unit') . ' ' . Input::get('imm_route') . ' administered to the ' . Input::get('imm_body_site');
 			$medtext .= '<br>Manufacturer: ' . Input::get('imm_manufacturer') . '; Lot number: ' . Input::get('imm_lot') . '; Expiration date: ' . Input::get('imm_expiration');
 			if(Input::get('imm_id') == '') {
@@ -2865,7 +2865,7 @@ class AjaxChartController extends BaseController {
 			echo json_encode($result);
 		}
 	}
-	
+
 	public function postDeleteImmunization()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -2881,7 +2881,7 @@ class AjaxChartController extends BaseController {
 			echo "Immunization deleted!";
 		}
 	}
-	
+
 	public function postGetImmNotes()
 	{
 		$pid = Session::get('pid');
@@ -2892,7 +2892,7 @@ class AjaxChartController extends BaseController {
 			echo nl2br($result->imm_notes) . '<br><br>';
 		}
 	}
-	
+
 	public function postGetImmNotes1()
 	{
 		$pid = Session::get('pid');
@@ -2903,7 +2903,7 @@ class AjaxChartController extends BaseController {
 			echo $result->imm_notes;
 		}
 	}
-	
+
 	public function postEditImmNotes()
 	{
 		$pid = Session::get('pid');
@@ -2914,7 +2914,7 @@ class AjaxChartController extends BaseController {
 		$this->audit('Update');
 		echo "Immunization notes updated!";
 	}
-	
+
 	public function postConsentImmunizations()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -2981,7 +2981,7 @@ class AjaxChartController extends BaseController {
 			}
 		}
 	}
-	
+
 	// HIPPA functions
 	public function postRecordsRelease()
 	{
@@ -2996,10 +2996,10 @@ class AjaxChartController extends BaseController {
 			->where('other_hippa_id', '=', '0')
 			->where('practice_id', '=', $practice_id)
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -3024,7 +3024,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postPrintChartSave()
 	{
 		$pid = Session::get('pid');
@@ -3048,13 +3048,13 @@ class AjaxChartController extends BaseController {
 		}
 		echo $id;
 	}
-	
+
 	public function postGetRelease($hippa_id)
 	{
 		$result = DB::table('hippa')->where('hippa_id', '=', $hippa_id)->where('other_hippa_id', '=', '0')->first();
 		echo json_encode($result);
 	}
-	
+
 	public function postGetReleaseStats()
 	{
 		$hippa_id = Input::get('hippa_id');
@@ -3062,7 +3062,7 @@ class AjaxChartController extends BaseController {
 		$text = "<strong>Date of Release: </strong>" . date('F jS, Y', $this->human_to_unix($result->hippa_date_release)) . "<br><strong>Reason: </strong>" . $result->hippa_reason . "<br><strong>To Whom: </strong>" . $result->hippa_provider;
 		echo $text;
 	}
-	
+
 	public function postPrintQueue($id)
 	{
 		$pid = Session::get('pid');
@@ -3073,10 +3073,10 @@ class AjaxChartController extends BaseController {
 		$query = DB::table('hippa')
 			->where('other_hippa_id', '=', $id)
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -3113,13 +3113,13 @@ class AjaxChartController extends BaseController {
 				$row['date'] = $result3->documents_date;
 				$row['type'] = $result3->documents_type;
 			}
-			$response['rows'][$i]['id']=$row['hippa_id']; 
+			$response['rows'][$i]['id']=$row['hippa_id'];
 			$response['rows'][$i]['cell']=array($row['hippa_id'],$row['date'],$row['type'],$row['description']);
-			$i++; 
+			$i++;
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postAddAllContact()
 	{
 		$data = array(
@@ -3130,7 +3130,7 @@ class AjaxChartController extends BaseController {
 		$this->audit('Add');
 		echo "Contact added!";
 	}
-	
+
 	public function postFaxChart($hippa_id, $type)
 	{
 		$pid = Session::get('pid');
@@ -3138,21 +3138,21 @@ class AjaxChartController extends BaseController {
 		$result['message'] = $this->fax_document($pid, 'Medical Record', 'yes', $filename, '', Input::get('faxnumber'), Input::get('faxrecipient'), '', 'yes');
 		echo json_encode($result);
 	}
-	
+
 	public function postDeleteChartItem()
 	{
 		DB::table('hippa')->where('hippa_id', '=', Input::get('hippa_id'))->delete();
 		$this->audit('Delete');
 		echo 'Item removed from queue!';
 	}
-	
+
 	public function postClearQueue()
 	{
 		DB::table('hippa')->where('other_hippa_id', '=', Input::get('other_hippa_id'))->delete();
 		$this->audit('Delete');
 		echo 'Queue cleared!';
 	}
-	
+
 	public function postPrintEncounters()
 	{
 		$practice_id = Session::get('practice_id');
@@ -3166,10 +3166,10 @@ class AjaxChartController extends BaseController {
 			->where('practice_id', '=', $practice_id)
 			->where('encounter_signed', '=', 'Yes')
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -3194,7 +3194,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postPrintMessages()
 	{
 		$practice_id = Session::get('practice_id');
@@ -3208,10 +3208,10 @@ class AjaxChartController extends BaseController {
 			->where('practice_id', '=', $practice_id)
 			->where('t_messages_signed', '=', 'Yes')
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -3236,7 +3236,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postAddPrintQueue()
 	{
 		$data = array(
@@ -3249,7 +3249,7 @@ class AjaxChartController extends BaseController {
 		$this->audit('Add');
 		echo "Item added to queue!";
 	}
-	
+
 	public function postAddPrintQueue1()
 	{
 		$data = array(
@@ -3262,7 +3262,7 @@ class AjaxChartController extends BaseController {
 		$this->audit('Add');
 		echo "Item added to queue!";
 	}
-	
+
 	public function postAddPrintQueue2()
 	{
 		$data = array(
@@ -3275,7 +3275,7 @@ class AjaxChartController extends BaseController {
 		$this->audit('Add');
 		echo "Item added to queue!";
 	}
-	
+
 	public function postRecordsRequest()
 	{
 		$practice_id = Session::get('practice_id');
@@ -3288,10 +3288,10 @@ class AjaxChartController extends BaseController {
 			->where('pid', '=', $pid)
 			->where('practice_id', '=', $practice_id)
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -3315,7 +3315,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postRecordsRequestSave()
 	{
 		$pid = Session::get('pid');
@@ -3350,7 +3350,7 @@ class AjaxChartController extends BaseController {
 		$this->generate_pdf($html, $file_path);
 		echo $url;
 	}
-	
+
 	public function postRequestReceived($id)
 	{
 		$data = array(
@@ -3360,7 +3360,7 @@ class AjaxChartController extends BaseController {
 		$this->audit('Update');
 		echo 'Marked as recieved!';
 	}
-	
+
 	// Billing functions
 	public function postBillingEncounters()
 	{
@@ -3375,10 +3375,10 @@ class AjaxChartController extends BaseController {
 			->where('addendum', '=', 'n')
 			->where('practice_id', '=', $practice_id)
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -3413,13 +3413,13 @@ class AjaxChartController extends BaseController {
 				$row['balance'] = 0;
 				$row['charges'] = 0;
 			}
-			$response['rows'][$i]['id'] = $row['eid']; 
+			$response['rows'][$i]['id'] = $row['eid'];
 			$response['rows'][$i]['cell'] = array($row['eid'],$row['encounter_DOS'],$row['encounter_cc'],$row['charges'],$row['balance']);
-			$i++; 
+			$i++;
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postBillingOther()
 	{
 		$practice_id = Session::get('practice_id');
@@ -3434,10 +3434,10 @@ class AjaxChartController extends BaseController {
 			->where('payment', '=', '0')
 			->where('practice_id', '=', $practice_id)
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -3470,19 +3470,19 @@ class AjaxChartController extends BaseController {
 			} else {
 				$row['balance'] = 0;
 			}
-			$response['rows'][$i]['id'] = $row['other_billing_id']; 
+			$response['rows'][$i]['id'] = $row['other_billing_id'];
 			$response['rows'][$i]['cell'] = array($row['other_billing_id'],$row['dos_f'],$row['reason'],$row['cpt_charge'] * $row['unit'],$row['balance']);
-			$i++; 
+			$i++;
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postGetPayment()
 	{
 		$result = DB::table('billing_core')->where('billing_core_id', '=', Input::get('id'))->first();
 		echo json_encode($result);
 	}
-	
+
 	public function postBillingPaymentHistory1($eid)
 	{
 		$page = Input::get('page');
@@ -3493,10 +3493,10 @@ class AjaxChartController extends BaseController {
 			->where('eid', '=', $eid)
 			->where('payment', '!=', '0')
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -3526,7 +3526,7 @@ class AjaxChartController extends BaseController {
 		$response['userdata']['payment'] = $total;
 		echo json_encode($response);
 	}
-	
+
 	public function postBillingPaymentHistory2($id)
 	{
 		$page = Input::get('page');
@@ -3537,10 +3537,10 @@ class AjaxChartController extends BaseController {
 			->where('other_billing_id', '=', $id)
 			->where('payment', '!=', '0')
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -3571,7 +3571,7 @@ class AjaxChartController extends BaseController {
 		$response['userdata']['payment'] = $total;
 		echo json_encode($response);
 	}
-	
+
 	public function postPaymentSave()
 	{
 		$encounter = Encounters::find(Input::get('eid'));
@@ -3605,7 +3605,7 @@ class AjaxChartController extends BaseController {
 		$result['other_billing_id'] = Input::get('other_billing_id');
 		echo json_encode($result);
 	}
-	
+
 	public function postDeletePayment1()
 	{
 		$pid = Session::get('pid');
@@ -3629,7 +3629,7 @@ class AjaxChartController extends BaseController {
 		$arr['message'] = "Payment deleted!";
 		echo json_encode($arr);
 	}
-	
+
 	public function postDeletePayment2()
 	{
 		$pid = Session::get('pid');
@@ -3653,7 +3653,7 @@ class AjaxChartController extends BaseController {
 		$arr['message'] = "Payment deleted!";
 		echo json_encode($arr);
 	}
-	
+
 	public function postTotalBalance()
 	{
 		$practice_id = Session::get('practice_id');
@@ -3675,7 +3675,7 @@ class AjaxChartController extends BaseController {
 				} else {
 					$balance1 += 0;
 				}
-				$i++; 
+				$i++;
 			}
 		} else {
 			$balance1 = 0;
@@ -3694,7 +3694,7 @@ class AjaxChartController extends BaseController {
 					}
 				}
 				$balance2 = $charge2 - $payment2;
-				$j++; 
+				$j++;
 			}
 		} else {
 			$balance2 = 0;
@@ -3715,7 +3715,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo $note;
 	}
-	
+
 	public function postBillingSave($eid)
 	{
 		$pid = Session::get('pid');
@@ -3748,20 +3748,20 @@ class AjaxChartController extends BaseController {
 		}
 		echo $result;
 	}
-	
+
 	public function postBillingSave1()
 	{
 		$result = $this->billing_save_common(Input::get('insurance_id_1'), Input::get('insurance_id_2'), Input::get('eid'));
 		echo $result;
 	}
-	
+
 	public function postRemoveCpt()
 	{
 		DB::table('billing_core')->where('billing_core_id', '=', Input::get('billing_core_id'))->delete();
 		$this->audit('Delete');
 		echo "Row deleted.";
 	}
-	
+
 	public function postGetCptCharge()
 	{
 		$result = DB::table('cpt')->where('cpt', '=', Input::get('cpt'))->first();
@@ -3772,7 +3772,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo $arr;
 	}
-	
+
 	public function postBillingOtherSave()
 	{
 		$id = Input::get('other_billing_id');
@@ -3803,7 +3803,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($result);
 	}
-	
+
 	public function postProcedureCodes($eid='')
 	{
 		if ($eid == '') {
@@ -3819,10 +3819,10 @@ class AjaxChartController extends BaseController {
 			->where('cpt_relate.practice_id', '=', Session::get('practice_id'))
 			->select('billing_core.*', 'cpt_relate.cpt_description')
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -3848,7 +3848,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postDefineIcd($id='')
 	{
 		if ($id == '') {
@@ -3883,7 +3883,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postGetBilling($eid='')
 	{
 		if ($eid == '') {
@@ -3935,7 +3935,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($data1);
 	}
-	
+
 	public function postGetPrevention($eid)
 	{
 		$pid = Session::get('pid');
@@ -3974,7 +3974,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postGetInsuranceId($eid='')
 	{
 		if ($eid == '') {
@@ -3986,7 +3986,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postGetInsuranceInfo()
 	{
 		$insurance_id_1 = Input::get('insurance_id_1');
@@ -4012,13 +4012,13 @@ class AjaxChartController extends BaseController {
 				$arr['result2'] = $result2->insurance_plan_name;
 			} else {
 				$arr['result2'] = 'None chosen.';
-			}	
+			}
 		} else {
 			$arr['result2'] = 'None chosen.';
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postGetAssessment($eid)
 	{
 		$data = DB::table('assessment')->where('eid', '=', $eid)->first();
@@ -4027,13 +4027,13 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postGetEncounterDate($eid)
 	{
 		$data = DB::table('encounters')->where('eid', '=', $eid)->first();
 		echo $data->encounter_DOS;
 	}
-	
+
 	public function postGetBillingNotes()
 	{
 		$result = DB::table('demographics_notes')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();
@@ -4043,7 +4043,7 @@ class AjaxChartController extends BaseController {
 			echo $result->billing_notes;
 		}
 	}
-	
+
 	public function postEditBillingNotes()
 	{
 		$data = array(
@@ -4053,7 +4053,7 @@ class AjaxChartController extends BaseController {
 		$this->audit('Update');
 		echo "Billing notes updated!";
 	}
-	
+
 	public function postDeleteOtherBill()
 	{
 		if (Input::get('billing_core_id') == '0') {
@@ -4068,7 +4068,7 @@ class AjaxChartController extends BaseController {
 			exit (0);
 		}
 	}
-	
+
 	public function postUpdateCptCharge()
 	{
 		$data = array(
@@ -4089,7 +4089,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo 'CPT charge updated!';
 	}
-	
+
 	// MTM functions
 	public function postMtm()
 	{
@@ -4103,10 +4103,10 @@ class AjaxChartController extends BaseController {
 			->where('pid', '=', $pid)
 			->where('practice_id', '=', $practice_id)
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -4130,7 +4130,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postEditMtm()
 	{
 		$data = array(
@@ -4167,7 +4167,7 @@ class AjaxChartController extends BaseController {
 			}
 		}
 	}
-	
+
 	public function postPrintMtm()
 	{
 		ini_set('memory_limit','196M');
@@ -4234,7 +4234,7 @@ class AjaxChartController extends BaseController {
 		$arr['message'] = 'OK';
 		echo json_encode($arr);
 	}
-	
+
 	public function postPrintMtmProvider($type)
 	{
 		ini_set('memory_limit','196M');
@@ -4269,7 +4269,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postEncounterMtm()
 	{
 		$practice_id = Session::get('practice_id');
@@ -4299,7 +4299,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	// Labs, Radiology, Cardiopulmonary, and Referral Orders functions
 	public function postOrdersList($type)
 	{
@@ -4326,10 +4326,10 @@ class AjaxChartController extends BaseController {
 			$query->where('eid', '=', $eid);
 		}
 		$result = $query->get();
-		if($result) { 
+		if($result) {
 			$count = count($result);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -4350,7 +4350,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postOrderType($id)
 	{
 		$data = Orders::find($id)->toArray();
@@ -4365,14 +4365,14 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postAddressdefine()
 	{
 		$row = Addressbook::find(Input::get('address_id'));
 		$result['item'] = $row->displayname . ' (' . Input::get('address_id') . ')';
 		echo json_encode($result);
 	}
-	
+
 	public function postImportOrders($type)
 	{
 		$pid = Session::get('pid');
@@ -4392,12 +4392,12 @@ class AjaxChartController extends BaseController {
 		if ($query) {
 			foreach ($query as $row) {
 				$row1 = Addressbook::find($row->address_id);
-				$result .= $text . ' sent to ' . $row1->displayname . ': '. $row->$field . "\n\n"; 
+				$result .= $text . ' sent to ' . $row1->displayname . ': '. $row->$field . "\n\n";
 			}
-		} 
+		}
 		echo $result;
 	}
-	
+
 	public function postDeleteOrders($type)
 	{
 		DB::table('orders')->where('orders_id', '=', Input::get('orders_id'))->delete();
@@ -4405,7 +4405,7 @@ class AjaxChartController extends BaseController {
 		$result = $type . " order deleted.";
 		echo $result;
 	}
-	
+
 	// $type can be labs, radiology, cp, referrals
 	public function postAddOrders($type)
 	{
@@ -4508,7 +4508,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($result);
 	}
-	
+
 	public function postGetRefTemplatesList()
 	{
 		$user_id = Session::get('user_id');
@@ -4552,14 +4552,14 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postGetRefTemplate($id)
 	{
 		$row = DB::table('templates')->where('template_id', '=', $id)->first();
 		$data = unserialize($row->array);
 		echo json_encode($data);
 	}
-	
+
 	public function postMakeReferral()
 	{
 		$pid = Session::get('pid');
@@ -4593,7 +4593,7 @@ class AjaxChartController extends BaseController {
 		$result['displayname'] = Session::get('displayname');
 		echo json_encode($result);
 	}
-	
+
 	public function postElectronicOrders()
 	{
 		$pid = Session::get('pid');
@@ -4694,7 +4694,7 @@ class AjaxChartController extends BaseController {
 			}
 		}
 	}
-	
+
 	public function postFaxOrders()
 	{
 		$pid = Session::get('pid');
@@ -4702,7 +4702,7 @@ class AjaxChartController extends BaseController {
 			$job_id = '';
 		} else {
 			$job_id = Session::get('job_id');
-		}	
+		}
 		$orders_id = Input::get('orders_id');
 		$html = $this->page_orders($orders_id)->render();
 		$filename = __DIR__."/../../public/temp/orders_" . time() . "_" . Session::get('user_id') . ".pdf";
@@ -4729,7 +4729,7 @@ class AjaxChartController extends BaseController {
 		unlink($filename);
 		echo $result_message;
 	}
-	
+
 	// $type can be Laboratory, Radiology, Cardiopulmonary, Referrral
 	public function postEditOrdersProvider($type)
 	{
@@ -4792,7 +4792,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($result);
 	}
-	
+
 	public function postAddOrderslist()
 	{
 		$data = array(
@@ -4813,7 +4813,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo $message;
 	}
-	
+
 	public function documentsupload()
 	{
 		$pid = Session::get('pid');
@@ -4843,7 +4843,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function ccrupload()
 	{
 		$pid = Session::get('pid');
@@ -4971,7 +4971,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo $i . ' Continuity of Care Record(s) Imported!';
 	}
-	
+
 	public function ccdaupload()
 	{
 		$pid = Session::get('pid');
@@ -5010,14 +5010,14 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postGetCcda($id)
 	{
 		$row = DB::table('documents')->where('documents_id', '=', $id)->first();
 		$file = File::get($row->documents_url);
 		echo $file;
 	}
-	
+
 	public function postPrintVivacare1($link)
 	{
 		set_time_limit(0);
@@ -5069,13 +5069,17 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postPrintVivacare($link)
 	{
 		set_time_limit(0);
 		ini_set('memory_limit','196M');
 		$practice = Practiceinfo::find(Session::get('practice_id'));
-		$html = new Htmldom("http://informationrx.com/" . $practice->vivacare . "/HealthTopic/" . $link);
+		$cr1 = curl_init("http://informationrx.com/" . $practice->vivacare . "/HealthTopic/" . $link);
+		curl_setopt($cr1, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($cr1, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+		$data1 = curl_exec($cr1);
+		$html = new Htmldom($data1);
 		if (isset($html)) {
 			$final_html = $this->page_intro('Patient Instructions', Session::get('practice_id'))->render();
 			$title = $html->find('h1',0);
@@ -5114,7 +5118,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postImageLoad()
 	{
 		$query = DB::table('image')->where('eid', '=', Session::get('eid'))->get();
@@ -5134,14 +5138,14 @@ class AjaxChartController extends BaseController {
 		}
 		echo $html;
 	}
-	
+
 	public function postImageGet($image_id)
 	{
 		$query = DB::table('image')->where('image_id', '=', $image_id)->first();
 		$row = (array) $query;
 		echo json_encode($row);
 	}
-	
+
 	public function postImageSave()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -5177,7 +5181,7 @@ class AjaxChartController extends BaseController {
 			echo $result;
 		}
 	}
-	
+
 	public function postDeleteImage()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -5204,7 +5208,7 @@ class AjaxChartController extends BaseController {
 			echo $arr;
 		}
 	}
-	
+
 	public function photoupload()
 	{
 		$result = Practiceinfo::find(Session::get('practice_id'));
@@ -5232,7 +5236,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo 'Photos uploaded!';
 	}
-	
+
 	public function import_csv()
 	{
 		$pid = Session::get('pid');
@@ -5286,7 +5290,7 @@ class AjaxChartController extends BaseController {
 		}
 		return $arr;
 	}
-	
+
 	public function postImportCsv()
 	{
 		$pid = Session::get('pid');
@@ -5375,7 +5379,7 @@ class AjaxChartController extends BaseController {
 			if (!empty($billing)) {
 				if (!empty($billing['dos_f'])) {
 					$billing['dos_f'] = date('m/d/Y', strtotime($billing['dos_f']));
-					$billing_query_enc = DB::table('billing_core')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->where('eid', '!=', '0')->where('dos_f', '=', $billing['dos_f'])->first(); 
+					$billing_query_enc = DB::table('billing_core')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->where('eid', '!=', '0')->where('dos_f', '=', $billing['dos_f'])->first();
 					$billing_query_oth = DB::table('billing_core')->where('pid', '=', $pid)->where('practice_id', '=', Session::get('practice_id'))->where('eid', '=', '0')->where('dos_f', '=', $billing['dos_f'])->first();
 					$billing['practice_id'] = Session::get('practice_id');
 					$billing['pid'] = $pid;
@@ -5398,7 +5402,7 @@ class AjaxChartController extends BaseController {
 					} else {
 						$message .= 'Unable to import bill since Date of Service did not match any previous encounters or miscellaneous bills for this patient.<br>';
 					}
-					
+
 				} else {
 					$message .= 'Unable to import bill since Date of Service was not provided.<br>';
 				}
@@ -5529,7 +5533,7 @@ class AjaxChartController extends BaseController {
 		$message .= 'Read ' . $i . ' lines in the CSV file.';
 		return $message;
 	}
-	
+
 	public function postGetCreditcard()
 	{
 		$query = DB::table('demographics')->select('creditcard_number', 'creditcard_expiration', 'creditcard_type', 'creditcard_key')->where('pid', '=', Session::get('pid'))->first();
@@ -5550,7 +5554,7 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSaveCreditcard()
 	{
 		$data = array();
@@ -5570,20 +5574,20 @@ class AjaxChartController extends BaseController {
 		$this->audit('Update');
 		echo "Credit Card Information Updated!";
 	}
-	
+
 	public function postCloseencounter()
 	{
 		Session::forget('eid');
 		Session::forget('encounter_active');
 		echo 'OK';
 	}
-	
+
 	public function postGetTestForm($tests_id) {
 		$result = DB::table('tests')->where('tests_id', '=', $tests_id)->first();
 		$result_arr = (array) $result;
 		echo json_encode($result_arr);
 	}
-	
+
 	public function postSaveTestForm()
 	{
 		$test_data = array(
@@ -5610,14 +5614,14 @@ class AjaxChartController extends BaseController {
 		}
 		echo $result;
 	}
-	
+
 	public function postDeleteTest($tests_id)
 	{
 		DB::table('tests')->where('tests_id', '=', $tests_id)->delete();
 		$this->audit('Delete');
 		echo 'Result deleted!';
 	}
-	
+
 	public function postHedisChartAudit($type)
 	{
 		if ($type == 'spec') {
@@ -5626,7 +5630,7 @@ class AjaxChartController extends BaseController {
 		$html = $this->hedis_audit($type, 'chart', Session::get('pid'));
 		echo $html;
 	}
-	
+
 	public function postNotification()
 	{
 		$pid = Session::get('pid');
@@ -5664,13 +5668,13 @@ class AjaxChartController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postGetPatientCentric()
 	{
 		$row = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();
 		echo $row->url;
 	}
-	
+
 	public function postMobileEditPage($type, $index, $id)
 	{
 		$data['content'] = '';
@@ -5691,7 +5695,7 @@ class AjaxChartController extends BaseController {
 		if ($type == 'immunizations') {
 			$data['search'] = 'searchimm';
 		}
-		$form_id = 'mobile_form_' . $type; 
+		$form_id = 'mobile_form_' . $type;
 		$data['content'] .= '<form id="' . $form_id . '">';
 		if ($id == '') {
 			$data['content'] .= Form::hidden($index, null, array('required'));
@@ -6019,7 +6023,7 @@ class AjaxChartController extends BaseController {
 		$data['form'] = $form_id;
 		echo json_encode($data);
 	}
-	
+
 	public function postRefreshTimeline()
 	{
 		$data = $this->mobile_content_build();

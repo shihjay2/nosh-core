@@ -1,9 +1,9 @@
 $(document).ready(function() {
-	$("#immunizations_list_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#immunizations_list_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -56,11 +56,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#immunizations_vis_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 600, 
+	$("#immunizations_vis_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 600,
 		draggable: false,
 		resizable: false,
 		position: { my: 'center', at: 'center', of: '#maincontent' }
@@ -113,7 +113,7 @@ $(document).ready(function() {
 			$('#edit_immunization_dialog').dialog('open');
 			$("#imm_immunization").focus();
 		} else {
-			$.jGrowl("Please select immunization to edit!")
+			$.jGrowl("Please select immunization to edit!");
 		}
 	});
 	$("#delete_immunization").click(function(){
@@ -132,7 +132,7 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			$.jGrowl("Please select immunization to delete!")
+			$.jGrowl("Please select immunization to delete!");
 		}
 	});
 	$("#add_immunization1").click(function(){
@@ -154,7 +154,7 @@ $(document).ready(function() {
 			$('#edit_immunization_dialog1').dialog('open');
 			$("#imm_immunization1").focus();
 		} else {
-			$.jGrowl("Please select immunization to edit!")
+			$.jGrowl("Please select immunization to edit!");
 		}
 	});
 	$("#delete_immunization1").click(function(){
@@ -172,7 +172,7 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			$.jGrowl("Please select immunization to delete!")
+			$.jGrowl("Please select immunization to delete!");
 		}
 	});
 	$("#vis_immunization1").click(function(){
@@ -194,190 +194,173 @@ $(document).ready(function() {
 					}
 				}
 			});
-			if (noshdata.success_doc == true) {
+			if (noshdata.success_doc === true) {
 				window.open("print_consent");
 				noshdata.success_doc = false;
 			}
 		} else {
-			$.jGrowl("Please click at least one vaccine information sheet!")
+			$.jGrowl("Please click at least one vaccine information sheet!");
 		}
 	});
 	$("#vis_dtap").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'DTaP';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_hep_a").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'Hepatitis A';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_hep_b").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'Hepatitis B';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_hib").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'Hib';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$(".vis_hpv").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'HPV';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_flulive").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'Flu (intranasal, live)';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_flu").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'Flu (inactivated)';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_mmr").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'MMR';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_mening").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'Meningococcal';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_pcv").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'PCV13';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_ppv").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'Pneumococcal';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_ipv").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'Polio';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_rotavirus").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'Rotavirus';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_shingles").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'Shingles';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_tdap").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'Tdap';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_td").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'Td';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
 	$("#vis_varicella").click(function(){
 		var old = $("#consent_vaccine_list").val();
-		if (old != '') {
-			var a = ', ';
-		} else {
-			var a = '';
+		var a = '';
+		if (old !== '') {
+			a = ', ';
 		}
 		var b = 'Varicella';
 		$("#consent_vaccine_list").val(old+a+b);
 	});
-	
-	$("#edit_immunization_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+
+	$("#edit_immunization_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -408,7 +391,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_immunization_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -440,11 +423,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#edit_immunization_dialog1").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#edit_immunization_dialog1").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -466,7 +449,7 @@ $(document).ready(function() {
 				},
 				minLength: 0,
 				select: function(event, ui){
-					if (ui.item.value != '') {
+					if (ui.item.value !== '') {
 						$("#imm_cpt").val(ui.item.cpt);
 						var edit_date = editDate1(ui.item.expiration);
 						$("#imm_expiration1").val(edit_date);
@@ -483,7 +466,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_immunization_form1").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -518,10 +501,9 @@ $(document).ready(function() {
 	});
 	$('#save_orders_imm').click(function(){
 		var a = $("#imm_text").val();
+		var a1 = '';
 		if(a){
-			var a1 = a + '\n\n';
-		} else {
-			var a1 = '';
+			a1 = a + '\n\n';
 		}
 		$.ajax({
 			type: "POST",
@@ -558,11 +540,11 @@ $(document).ready(function() {
 	$("#csv_immunizations1").click(function() {
 		window.open("csv_immunization");
 	});
-	$("#imm_notes_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 600, 
+	$("#imm_notes_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 600,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -574,7 +556,7 @@ $(document).ready(function() {
 				url: "ajaxchart/get-imm-notes1",
 				success: function(data){
 					$('#imm_notes').val(data.trim());
-					$('#imm_notes_old').val(data.trim())
+					$('#imm_notes_old').val(data.trim());
 				}
 			});
 		},

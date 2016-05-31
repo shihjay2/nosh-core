@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	$("#messages_rad_accordion").accordion({ 
+	$("#messages_rad_accordion").accordion({
 		heightStyle: "content" ,
 		activate: function (event, ui) {
 			var id = ui.newPanel[0].id;
@@ -18,11 +18,11 @@ $(document).ready(function() {
 			}
 		});
 	});
-	$("#messages_rad_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#messages_rad_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -68,11 +68,10 @@ $(document).ready(function() {
 						success: function(data){
 							var old = $("#t_messages_message").val();
 							var old1 = old.trim();
-							if(data != ''){
-								if (old1 != '') {
-									var a = old1+'\n\n'+data;
-								} else {
-									var a = data;
+							var a = data;
+							if(data !== ''){
+								if (old1 !== '') {
+									a = old1+'\n\n'+data;
 								}
 								$("#t_messages_message").val(a);
 							}
@@ -93,17 +92,17 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	
+
 	$("#messages_add_rad").click(function(){
 		load_outside_providers('rad','add');
 		var a = $("#messages_rad_t_messages_id_origin").val();
-		if (a == '') {
+		if (a === '') {
 			$("#messages_rad_eid").val(noshdata.eid);
 		} else {
 			$("#messages_rad_t_messages_id").val(a);
 		}
 		$("#messages_rad_status").html('');
-		if ($("#messages_rad_provider_list").val() == '' && noshdata.group_id == '2') {
+		if ($("#messages_rad_provider_list").val() === '' && noshdata.group_id === '2') {
 			$("#messages_rad_provider_list").val(noshdata.user_id);
 		}
 		$("#messages_rad_location").val('');
@@ -119,14 +118,14 @@ $(document).ready(function() {
 			jQuery("#messages_rad_list").GridToForm(item,"#edit_messages_rad_form");
 			var status = 'Details for Radiology Order #' + item;
 			$("#messages_rad_status").html(status);
-			if ($("#messages_rad_provider_list").val() == '' && noshdata.group_id == '2') {
+			if ($("#messages_rad_provider_list").val() === '' && noshdata.group_id === '2') {
 				$("#messages_rad_provider_list").val(noshdata.user_id);
 			}
 			var date = $('#messages_rad_orders_pending_date').val();
 			var edit_date = editDate1(date);
 			$('#messages_rad_orders_pending_date').val(edit_date);
 			var a = $("#messages_rad_t_messages_id_origin").val();
-			if (a == '') {
+			if (a === '') {
 				$("#messages_rad_eid").val(noshdata.eid);
 			} else {
 				$("#messages_rad_t_messages_id").val(a);
@@ -167,11 +166,11 @@ $(document).ready(function() {
 			$.jGrowl("Please select order to delete!");
 		}
 	});
-	$("#messages_rad_edit_fields").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#messages_rad_edit_fields").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -223,25 +222,24 @@ $(document).ready(function() {
 						type: "POST",
 						success: function(data){
 							var text = insurance_plan_name + '; Payor ID: ' + data + '; ID: ' + insurance_id_num;
-							if(insurance_group != ''){
+							if(insurance_group !== ''){
 								text += "; Group: " + insurance_group;
 							}
 							text += "; " + insurance_insu_lastname + ", " + insurance_insu_firstname;
 							var old = $("#messages_rad_insurance").val();
+							var old1 = '';
 							if(old){
 								var pos = old.lastIndexOf('\n');
 								if (pos == -1) {
-									var old1 = old + '\n';
+									old1 = old + '\n';
 								} else {
 									var a = old.slice(pos);
-									if (a == '') {
-										var old1 = old;
+									if (a === '') {
+										old1 = old;
 									} else {
-										var old1 = old + '\n';
+										old1 = old + '\n';
 									}
 								}
-							} else {
-								var old1 = '';
 							}
 							$("#messages_rad_insurance").val(old1+text);
 						}
@@ -335,7 +333,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_messages_rad_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -355,12 +353,11 @@ $(document).ready(function() {
 							$("#messages_rad_edit_fields").dialog('close');
 							reload_grid("alerts");
 							reload_grid("messages_rad_list");
-							if(noshdata.pending_orders_id != '') {
+							if(noshdata.pending_orders_id !== '') {
 								var old = $("#situation").val();
-								if (old != '') {
-									var b = old + '\n\n' + data.pending;
-								} else {
-									var b = data.pending;
+								var b = data.pending;
+								if (old !== '') {
+									b = old + '\n\n' + data.pending;
 								}
 								$("#situation").val(b);
 								$.ajax({
@@ -384,11 +381,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#messages_rad_action_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 200, 
-		width: 500, 
+	$("#messages_rad_action_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 200,
+		width: 500,
 		modal: true,
 		closeOnEscape: false,
 		dialogClass: "noclose",
@@ -418,20 +415,19 @@ $(document).ready(function() {
 	$("#messages_rad_insurance_client").click(function(){
 		var text = "Bill Client";
 		var old = $("#messages_rad_insurance").val();
+		var old1 = '';
 		if(old){
 			var pos = old.lastIndexOf('\n');
 			if (pos == -1) {
-				var old1 = old + '\n';
+				old1 = old + '\n';
 			} else {
 				var a = old.slice(pos);
-				if (a == '') {
-					var old1 = old;
+				if (a === '') {
+					old1 = old;
 				} else {
-					var old1 = old + '\n';
+					old1 = old + '\n';
 				}
 			}
-		} else {
-			var old1 = '';
 		}
 		$("#messages_rad_insurance").val(old1+text);
 	});
@@ -473,11 +469,11 @@ $(document).ready(function() {
 		$("#messages_rad_orders_id").val('');
 		reload_grid("messages_rad_list");
 	});
-	$("#messages_edit_rad_location").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#messages_edit_rad_location").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -523,7 +519,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#messages_edit_rad_location_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -570,11 +566,11 @@ $(document).ready(function() {
 	});
 	var user_id = noshdata.user_id;
 	$("#messages_rad_orders_type").addOption({"0":'Global',user_id:'Personal'}, false);
-	$("#add_test_cpt1").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#add_test_cpt1").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,

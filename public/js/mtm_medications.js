@@ -77,11 +77,11 @@ $(document).ready(function() {
 				colNames:['Medication'],
 				colModel:[
 					{name:"mtm_medication",index:"mtm_medication",width:600}
-				], 
+				],
 				rowNum:10,
 				pager: pager_id,
-				sortname: 'mtm_medication', 
-				sortorder: "asc", 
+				sortname: 'mtm_medication',
+				sortorder: "asc",
 				height: '100%',
 				jsonReader: { repeatitems : false, id: "0" }
 			});
@@ -113,7 +113,7 @@ $(document).ready(function() {
 			$('#edit_medications_dialog').dialog('open');
 			$("#rxl_medication").focus();
 		} else {
-			$.jGrowl("Please select medication to edit!")
+			$.jGrowl("Please select medication to edit!");
 		}
 	});
 	$("#inactivate_mtm_rx").click(function(){
@@ -131,13 +131,13 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select medication to inactivate!")
+			$.jGrowl("Please select medication to inactivate!");
 		}
 	});
 	$("#delete_mtm_rx").click(function(){
 		var item = jQuery("#mtm_medications").getGridParam('selrow');
 		if(item){
-			if(confirm('Are you sure you want to delete this medication?  This is not recommended unless entering the medication was a mistake!')){ 
+			if(confirm('Are you sure you want to delete this medication?  This is not recommended unless entering the medication was a mistake!')){
 				var id = $("#mtm_medications").getCell(item,'rxl_id');
 				$.ajax({
 					type: "POST",
@@ -150,7 +150,7 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			$.jGrowl("Please select medication to inactivate!")
+			$.jGrowl("Please select medication to inactivate!");
 		}
 	});
 	$("#mtm_medications_reviewed").click(function(){

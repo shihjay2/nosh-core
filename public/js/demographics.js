@@ -26,11 +26,11 @@ $(document).ready(function() {
 		$('#menu_guardian_phone_cell').val($('#menu_phone_cell').val());
 		$('#menu_guardian_phone_work').val($('#menu_phone_work').val());
 	});
-	$("#demographics_list_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#demographics_list_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -56,7 +56,7 @@ $(document).ready(function() {
 						if (key != 'label' || key != 'value') {
 							$("#edit_demographics_form :input[name='" + key + "']").val(value);
 						}
-						
+
 					});
 				}
 			});
@@ -191,11 +191,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#demographics_insurance_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#demographics_insurance_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -240,20 +240,20 @@ $(document).ready(function() {
 					var deductible = $("#demographics_insurance").getCell(id,'insurance_deductible');
 					var comments = $("#demographics_insurance").getCell(id,'insurance_comments');
 					var text = '<strong>Additional insurance information for ' + $("#demographics_insurance").getCell(id,'insurance_plan_name') + ":</strong><br>";
-					if(copay != ''){
+					if(copay !== ''){
 						text += "Copay: " + copay + "<br>";
 					}
-					if(deductible != ''){
+					if(deductible !== ''){
 						text += "Deductible: " + deductible + "<br>";
 					}
-					if (comments != ''){
+					if (comments !== ''){
 						text += "Comments: " + comments;
 					}
 					$("#demographics_insurance_details").html(text);
 				},
 			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#demographics_insurance_pager',{search:false,edit:false,add:false,del:false});
-			$("#demographics_insurance_inactive").jqGrid('GridUnload')
+			$("#demographics_insurance_inactive").jqGrid('GridUnload');
 			$("#demographics_insurance_inactive").jqGrid({
 				url: "ajaxdashboard/insurance-inactive",
 				datatype: "json",
@@ -293,13 +293,13 @@ $(document).ready(function() {
 					var deductible = $("#demographics_insurance").getCell(id,'insurance_deductible');
 					var comments = $("#demographics_insurance").getCell(id,'insurance_comments');
 					var text = '<strong>Additional insurance information for ' + $("#demographics_insurance").getCell(id,'insurance_plan_name') + ":</strong><br>";
-					if(copay != ''){
+					if(copay !== ''){
 						text += "Copay: " + copay + "<br>";
 					}
-					if(deductible != ''){
+					if(deductible !== ''){
 						text += "Deductible: " + deductible + "<br>";
 					}
-					if (comments != ''){
+					if (comments !== ''){
 						text += "Comments: " + comments;
 					}
 					$("#demographics_insurance_details").html(text);
@@ -325,7 +325,7 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	
+
 	$("#menu_gender").addOption(gender, false);
 	$("#menu_marital_status").addOption(marital, false);
 	$("#menu_state").addOption(states, false);
@@ -392,17 +392,17 @@ $(document).ready(function() {
 		var c = $("#menu_email").val();
 		var d = false;
 		var regexp = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i;
-		if ( c != '') {
+		if ( c !== '') {
 			if ( !( regexp.test( c ) ) ) {
 				$.jGrowl("Email format is incorrect!");
 				d = true;
 			}
 		}
-		if (a == "Cellular Phone" && b == "") {
+		if (a === "Cellular Phone" && b === "") {
 			$.jGrowl("Cellular carrier needs to be completed for cellular phone appointment reminders!");
 			d = true;
 		}
-		if (d == false) {
+		if (d === false) {
 			var str = $("#edit_demographics_form").serialize();
 			if(str){
 				$.ajax({
@@ -468,7 +468,7 @@ $(document).ready(function() {
 			$("#add_insurance_plan span").text("Edit Insurance Provider");
 			$('#menu_insurance_main_dialog').dialog('open');
 		} else {
-			$.jGrowl("Please select insurance to edit!")
+			$.jGrowl("Please select insurance to edit!");
 		}
 	});
 	function updateinsurance() {
@@ -494,13 +494,13 @@ $(document).ready(function() {
 			});
 			$("#demographics_insurance").delRowData(item);
 		} else {
-			$.jGrowl("Please select insurance to inactivate!")
+			$.jGrowl("Please select insurance to inactivate!");
 		}
 	});
 	$("#demographics_delete_insurance").button().click(function(){
 		var item = $("#demographics_insurance").getGridParam('selrow');
 		if(item){
-			if(confirm('Are you sure you want to delete this insurance?  This is not recommended unless entering the insurance was a mistake!')){ 
+			if(confirm('Are you sure you want to delete this insurance?  This is not recommended unless entering the insurance was a mistake!')){
 				var id = $("#demographics_insurance").getCell(item,'insurance_id');
 				$.ajax({
 					type: "POST",
@@ -513,7 +513,7 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			$.jGrowl("Please select insurance to delete!")
+			$.jGrowl("Please select insurance to delete!");
 		}
 	});
 	$("#demographics_reactivate_insurance").button().click(function(){
@@ -530,14 +530,14 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select medication to reactivate!")
+			$.jGrowl("Please select medication to reactivate!");
 		}
 	});
-	$("#menu_insurance_main_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#menu_insurance_main_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -582,7 +582,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_menu_insurance_main_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -615,11 +615,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#demographics_insurance_plan_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#demographics_insurance_plan_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -659,7 +659,7 @@ $(document).ready(function() {
 			});
 			$("#menu_insurance_plan_facility").focus();
 			var id = $("#menu_insurance_plan_select").val();
-			if (id != "") {
+			if (id !== "") {
 				$("#demographics_insurance_plan_dialog").dialog("option", "title", "Edit Insurance Provider");
 				$.ajax({
 					type: "POST",
@@ -683,7 +683,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_menu_insurance_plan_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -735,7 +735,7 @@ $(document).ready(function() {
 		$("#demographics_insurance_plan_dialog").dialog('open');
 	});
 	$('#menu_insurance_plan_select').change(function() {
-		if ($(this).val() != ""){
+		if ($(this).val() !== ""){
 			$("#menu_insurance_plan_name").val($("#menu_insurance_plan_select option:selected").text());
 			$("#add_insurance_plan span").text("Edit Insurance Provider");
 		} else {
@@ -767,7 +767,7 @@ $(document).ready(function() {
 					$("#menu_insurance_insu_city").val(data.city);
 					$("#menu_insurance_insu_state").val(data.state);
 					$("#menu_insurance_insu_zip").val(data.zip);
-					if (data.phone_home != '') {
+					if (data.phone_home !== '') {
 						$("#menu_insurance_insu_phone").val(data.phone_home);
 					} else {
 						$("#menu_insurance_insu_phone").val(data.phone_cell);
@@ -775,7 +775,7 @@ $(document).ready(function() {
 				}
 			});
 		}
-	});	
+	});
 	$("#insurance_copy").button().click(function(){
 		$.ajax({
 			type: "POST",
@@ -786,7 +786,7 @@ $(document).ready(function() {
 				$("#menu_insurance_insu_city").val(data.city);
 				$("#menu_insurance_insu_state").val(data.state);
 				$("#menu_insurance_insu_zip").val(data.zip);
-				if (data.phone_home != '') {
+				if (data.phone_home !== '') {
 					$("#menu_insurance_insu_phone").val(data.phone_home);
 				} else {
 					$("#menu_insurance_insu_phone").val(data.phone_cell);
@@ -827,7 +827,7 @@ $(document).ready(function() {
 			starto.setTime(starto.getTime() + ((c * daymsecs) - daymsecs*14));
 			codate.setTime(starto.getTime());
 			var month = new Array("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12");
-			var a = "" + month[starto.getMonth()] + "/" + starto.getDate() + "/" + starto.getFullYear() + ";LMP " + string + " " + c;	
+			a = "" + month[starto.getMonth()] + "/" + starto.getDate() + "/" + starto.getFullYear() + ";LMP " + string + " " + c;
 			var a1 = month[starto.getMonth()] + "/" + starto.getDate() + "/" + starto.getFullYear();
 			$('#pregnancy_edc').val(a);
 			$('#edc_text').html(a1);
@@ -838,7 +838,7 @@ $(document).ready(function() {
 		var bValid = true;
 		bValid = bValid && checkEmpty(a,"Ultrasound EDC");
 		if (bValid) {
-			var a = $('#pregnancy_us').val() + ";Ultrasound";
+			a = $('#pregnancy_us').val() + ";Ultrasound";
 			$('#pregnancy_edc').val(a);
 			$('#edc_text').html($('#pregnancy_us').val());
 		}
@@ -857,7 +857,10 @@ $(document).ready(function() {
 					$.jGrowl(data);
 					var origin = $("#prenatal_dialog_origin").val();
 					var a = $("#pregnancy_edc").val();
-					if (a != 'no') {
+					var b = '';
+					var c = '';
+					var intro = '';
+					if (a !== 'no') {
 						var result1 = a.split(";");
 						var string = result1[0];
 						var result = string.split("/");
@@ -868,35 +871,34 @@ $(document).ready(function() {
 						var daymsecs = 86400000;
 						var timenow = new Date();
 						var elapsed = Math.round((timenow.getTime()-starto.getTime())/daymsecs);
-						var b = "" + (Math.floor(elapsed/7)+2) + " weeks, " + Math.floor(elapsed%7) + " days";
-						var duedate = new Date(); 
+						b = "" + (Math.floor(elapsed/7)+2) + " weeks, " + Math.floor(elapsed%7) + " days";
+						var duedate = new Date();
 						duedate.setTime(starto.getTime() + daymsecs*266);
 						var month = new Array("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12");
-						var c = "" + month[duedate.getMonth()] + "/" + duedate.getDate() + "/" + duedate.getFullYear();
-						var intro = "Pregnancy status: Pregnant.\nEstimated date of conception: " + string + "\nEstimated gestational age: " + b + "\nEstimated due date: " + c;
+						c = "" + month[duedate.getMonth()] + "/" + duedate.getDate() + "/" + duedate.getFullYear();
+						intro = "Pregnancy status: Pregnant.\nEstimated date of conception: " + string + "\nEstimated gestational age: " + b + "\nEstimated due date: " + c;
 					} else {
-						var intro = "Pregnancy status: Not pregnant.";
+						intro = "Pregnancy status: Not pregnant.";
 					}
 					if (origin == "1") {
 						var old = $("#hpi").val();
+						var old1 = '';
 						if(old){
 							var pos = old.lastIndexOf('\n');
 							if (pos == -1) {
-								var old1 = old + '\n\n';
+								old1 = old + '\n\n';
 							} else {
-								var a = old.slice(pos);
-								if (a == '') {
-									var old1 = old + '\n';
+								var d = old.slice(pos);
+								if (d === '') {
+									old1 = old + '\n';
 								} else {
-									var old1 = old + '\n\n';
+									old1 = old + '\n\n';
 								}
 							}
-						} else {
-							var old1 = '';
 						}
 						$("#hpi").val(old1+intro);
 					} else {
-						if (a != 'no') {
+						if (a !== 'no') {
 							$("#prenatal_ega").val(b);
 							$("#prenatal_duedate").val(c);
 						}
@@ -906,12 +908,12 @@ $(document).ready(function() {
 				}
 			});
 		}
-	} 
-	$("#prenatal_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 500, 
+	}
+	$("#prenatal_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 500,
 		closeOnEscape: false,
 		dialogClass: "noclose",
 		buttons: {

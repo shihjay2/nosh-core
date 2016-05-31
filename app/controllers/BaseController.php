@@ -14,7 +14,7 @@ class BaseController extends Controller {
 			$this->layout = View::make($this->layout);
 		}
 	}
-	
+
 	protected function css_assets()
 	{
 		$current_version = File::get(__DIR__."/../../.version");
@@ -66,7 +66,7 @@ class BaseController extends Controller {
 		}
 		return $response;
 	}
-	
+
 	protected function js_assets($type,$mobile=false)
 	{
 		$current_version = File::get(__DIR__."/../../.version");
@@ -136,7 +136,6 @@ class BaseController extends Controller {
 				'/js/jquery.timepicker.min.js',
 				'/js/jquery.selectboxes.js',
 				'/js/jquery-textrange.js',
-				'/js/jqueryui-editable.min.js',
 				'/js/mobile.js'
 			);
 		}
@@ -255,7 +254,7 @@ class BaseController extends Controller {
 		}
 		return $response;
 	}
-	
+
 	protected function audit($action)
 	{
 		$queries = DB::getQueryLog();
@@ -277,7 +276,7 @@ class BaseController extends Controller {
 		);
 		DB::table('audit')->insert($data);
 	}
-	
+
 	protected function rcopia($command, $practice_id)
 	{
 		$practice = Practiceinfo::find($practice_id);
@@ -309,7 +308,7 @@ class BaseController extends Controller {
 		curl_close($ch);
 		return $result;
 	}
-	
+
 	protected function rcopia_update_medication_xml($pid, $result1, $origin)
 	{
 		$xml = new SimpleXMLElement($result1);
@@ -429,7 +428,7 @@ class BaseController extends Controller {
 		$this->audit('Update');
 		return $rx_rx;
 	}
-	
+
 	protected function rcopia_update_allergy_xml($pid, $result1)
 	{
 		$xml = new SimpleXMLElement($result1);
@@ -471,7 +470,7 @@ class BaseController extends Controller {
 		$this->audit('Update');
 		return "Allergy list updated with DrFirst RCopia";
 	}
-	
+
 	protected function generate_pdf($html, $filepath, $footer='footerpdf', $header='', $type='1', $headerparam='')
 	{
 		$pdf = PDF::loadHTML($html);
@@ -498,7 +497,7 @@ class BaseController extends Controller {
 		if ($type == '1') {
 			$pdf_options['margin-left'] = 26;
 			$pdf_options['margin-right'] = 26;
-		} 
+		}
 		if ($type == '2') {
 			$pdf_options['margin-left'] = 16;
 			$pdf_options['margin-right'] = 16;
@@ -509,7 +508,7 @@ class BaseController extends Controller {
 		}
 		return true;
 	}
-	
+
 	/**
 	 *	Print chart
 	 *
@@ -681,7 +680,7 @@ class BaseController extends Controller {
 			echo "OK";
 		}
 	}
-	
+
 	protected function encounters_view($eid, $pid, $practice_id, $modal=false, $addendum=false, $mobile=false)
 	{
 		$encounterInfo = Encounters::find($eid);
@@ -695,7 +694,7 @@ class BaseController extends Controller {
 		$data['age'] = $this->current_age($pid);
 		if ($data['patientInfo']->sex == 'm') {
 			$data['gender'] = 'Male';
-		} 
+		}
 		if ($data['patientInfo']->sex == 'f') {
 			$data['gender'] = 'Female';
 		}
@@ -1327,12 +1326,12 @@ class BaseController extends Controller {
 				$data['labs'] .= '<strong>Urine HcG: </strong>';
 				$data['labs'] .= $labsInfo->labs_upt;
 				$data['labs'] .= '<br /><br />';
-			} 
+			}
 			if ($labsInfo->labs_strep != '') {
 				$data['labs'] .= '<strong>Rapid Strep: </strong>';
 				$data['labs'] .= $labsInfo->labs_strep;
 				$data['labs'] .= '<br /><br />';
-			} 
+			}
 			if ($labsInfo->labs_mono != '') {
 				$data['labs'] .= '<strong>Mono Spot: </strong>';
 				$data['labs'] .= $labsInfo->labs_mono;
@@ -1523,7 +1522,7 @@ class BaseController extends Controller {
 		} else {
 			$data['orders'] = '';
 		}
-		
+
 		$rxInfo = Rx::find($eid);
 		if ($rxInfo) {
 			$data['rx'] = '<br><h4>Prescriptions and Immunizations:</h4><p class="view">';
@@ -1546,7 +1545,7 @@ class BaseController extends Controller {
 			$data['rx'] .= '</p>';
 		} else {
 			$data['rx'] = '';
-		}		
+		}
 		$planInfo = Plan::find($eid);
 		if ($planInfo) {
 			$data['plan'] = '<br><h4>Plan:</h4><p class="view">';
@@ -1578,7 +1577,7 @@ class BaseController extends Controller {
 			$data['plan'] .= '</p>';
 		} else {
 			$data['plan'] = '';
-		}		
+		}
 		$billing_query = Billing_core::where('eid', '=', $eid)->get();
 		if ($billing_query) {
 			$data['billing'] = '<p class="view">';
@@ -1622,7 +1621,7 @@ class BaseController extends Controller {
 			return View::make('encounter_view', $data);
 		}
 	}
-	
+
 	protected function t_messages_view($t_messages_id)
 	{
 		$row = T_messages::find($t_messages_id);
@@ -1632,7 +1631,7 @@ class BaseController extends Controller {
 		$text .= '</td></tr></table>';
 		return $text;
 	}
-	
+
 	protected function page_intro($title, $practice_id)
 	{
 		$practice = Practiceinfo::find($practice_id);
@@ -1649,7 +1648,7 @@ class BaseController extends Controller {
 		$data['title'] = $title;
 		return View::make('pdf.intro', $data);
 	}
-	
+
 	protected function page_results($pid, $results, $patient_name)
 	{
 		$body = '';
@@ -1667,7 +1666,7 @@ class BaseController extends Controller {
 		$body .= '</body></html>';
 		return $body;
 	}
-	
+
 	protected function page_ccr($pid)
 	{
 		$data['patientInfo'] = Demographics::find($pid);
@@ -1757,7 +1756,7 @@ class BaseController extends Controller {
 		$data['letter'] = $body;
 		return View::make('pdf.ccr_page',$data);
 	}
-	
+
 	protected function page_coverpage($job_id, $totalpages, $faxrecipients, $date)
 	{
 		$row = Sendfax::find($job_id);
@@ -1771,7 +1770,7 @@ class BaseController extends Controller {
 		);
 		return View::make('pdf.coverpage',$data);
 	}
-	
+
 	protected function page_letter_reply($body)
 	{
 		$pid = Session::get('pid');
@@ -1793,7 +1792,7 @@ class BaseController extends Controller {
 		$data['date'] = date('F jS, Y');
 		return View::make('pdf.letter_page', $data);
 	}
-	
+
 	protected function page_letter($letter_to, $letter_body, $address_id)
 	{
 		$body = '';
@@ -1814,10 +1813,10 @@ class BaseController extends Controller {
 		$body .= '</body></html>';
 		return $body;
 	}
-	
+
 	protected function page_immunization_list()
 	{
-		$pid = Session::get('pid');	
+		$pid = Session::get('pid');
 		$practice = Practiceinfo::find(Session::get('practice_id'));
 		$data['practiceName'] = $practice->practice_name;
 		$data['website'] = $practice->website;
@@ -1863,7 +1862,7 @@ class BaseController extends Controller {
 		$data['signature'] = $this->signature(Session::get('user_id'));
 		return View::make('pdf.letter_page', $data);
 	}
-	
+
 	protected function page_orders($orders_id)
 	{
 		$pid = Session::get('pid');
@@ -1926,7 +1925,7 @@ class BaseController extends Controller {
 			return View::make('pdf.order_page', $data);
 		}
 	}
-	
+
 	protected function page_plan($eid)
 	{
 		$pid = Session::get('pid');
@@ -2060,14 +2059,14 @@ class BaseController extends Controller {
 		}
 		return View::make('pdf.instruction_page', $data);
 	}
-	
+
 	protected function getNumberAppts($id)
 	{
 		$start_time = strtotime("today 00:00:00");
 		$end_time = $start_time + 86400;
 		return Schedule::where('provider_id', '=', $id)->whereBetween('start', array($start_time, $end_time))->count();
 	}
-	
+
 	protected function getSearchData()
 	{
 		$search_data = array();
@@ -2092,7 +2091,7 @@ class BaseController extends Controller {
 		}
 		return $search_data;
 	}
-	
+
 	protected function getMenuData()
 	{
 		$menu_data = array();
@@ -2173,7 +2172,7 @@ class BaseController extends Controller {
 		$menu_data['immunizations'] = $row->immunizations_menu_item;
 		return $menu_data;
 	}
-	
+
 	protected function human_to_unix($datestr = '')
 	{
 		if ($datestr == '') {
@@ -2208,7 +2207,7 @@ class BaseController extends Controller {
 		}
 		return mktime($hour, $min, $sec, $month, $day, $year);
 	}
-	
+
 	protected function timespan($seconds = 1, $time = '')
 	{
 		$lang['date_year'] = "Year";
@@ -2282,43 +2281,43 @@ class BaseController extends Controller {
 		}
 		return substr(trim($str), 0, -1);
 	}
-	
-	protected function rpHash($value) 
-	{ 
+
+	protected function rpHash($value)
+	{
 		switch(PHP_INT_SIZE) {
 			case 4:
-				$hash = 5381; 
-				$value = strtoupper($value); 
-				for($i = 0; $i < strlen($value); $i++) { 
+				$hash = 5381;
+				$value = strtoupper($value);
+				for($i = 0; $i < strlen($value); $i++) {
 					$hash = (($hash << 5) + $hash) + ord(substr($value, $i));
 				}
 				break;
 			case 8:
-				$hash = 5381; 
-				$value = strtoupper($value); 
-				for($i = 0; $i < strlen($value); $i++) { 
-					$hash = ($this->leftShift32($hash, 5) + $hash) + ord(substr($value, $i)); 
-				} 
+				$hash = 5381;
+				$value = strtoupper($value);
+				for($i = 0; $i < strlen($value); $i++) {
+					$hash = ($this->leftShift32($hash, 5) + $hash) + ord(substr($value, $i));
+				}
 				break;
 		}
 		return $hash;
 	}
-	
+
 	protected function leftShift32($number, $steps)
 	{
-		$binary = decbin($number); 
-		$binary = str_pad($binary, 32, "0", STR_PAD_LEFT); 
-		$binary = $binary.str_repeat("0", $steps); 
-		$binary = substr($binary, strlen($binary) - 32); 
-		return ($binary{0} == "0" ? bindec($binary) : -(pow(2, 31) - bindec(substr($binary, 1)))); 
+		$binary = decbin($number);
+		$binary = str_pad($binary, 32, "0", STR_PAD_LEFT);
+		$binary = $binary.str_repeat("0", $steps);
+		$binary = substr($binary, strlen($binary) - 32);
+		return ($binary{0} == "0" ? bindec($binary) : -(pow(2, 31) - bindec(substr($binary, 1))));
 	}
-	
+
 	protected function strstrb($h, $n)
 	{
 		$arr = explode($n,$h,2);
 		return array_shift($arr);
 	}
-	
+
 	protected function recursive_array_search($needle, $haystack)
 	{
 		foreach ($haystack as $key=>$value) {
@@ -2329,7 +2328,7 @@ class BaseController extends Controller {
 		}
 		return FALSE;
 	}
-	
+
 	protected function ndc_convert($ndc)
 	{
 		$pos1 = strpos($ndc, '-');
@@ -2347,7 +2346,7 @@ class BaseController extends Controller {
 		$new = $parts[0] . $parts[1] . $parts[2];
 		return $new;
 	}
-	
+
 	protected function setpatient($pid)
 	{
 		$row = Demographics::find($pid);
@@ -2369,7 +2368,7 @@ class BaseController extends Controller {
 		$agealldays = substr($agediff, 0, $pos4);
 		if ($row->sex == 'm') {
 			$gender = 'male';
-		} 
+		}
 		if ($row->sex == 'f') {
 			$gender = 'female';
 		}
@@ -2383,7 +2382,7 @@ class BaseController extends Controller {
 		Session::put('ptname', $ptname);
 		return true;
 	}
-	
+
 	protected function current_age($pid)
 	{
 		$row = Demographics::find($pid);
@@ -2401,11 +2400,11 @@ class BaseController extends Controller {
 		}
 		return $age;
 	}
-	
+
 	/**
 	 *	Signature to Image: A supplemental script for Signature Pad that
 	 *	generates an image of the signatureâs JSON output server-side using PHP.
-	 *	
+	 *
 	 *	@project	ca.thomasjbradley.applications.signaturetoimage
 	 *	@author		Thomas J Bradley <hey@thomasjbradley.ca>
 	 *	@link		http://thomasjbradley.ca/lab/signature-to-image
@@ -2431,7 +2430,7 @@ class BaseController extends Controller {
 	 *
 	 *	@return	object
 	 */
- 
+
 	protected function sigJsonToImage($json, $options = array())
 	{
 		$defaultOptions = array(
@@ -2472,9 +2471,9 @@ class BaseController extends Controller {
 	 *
 	 *	@return	void
 	 */
-	protected function drawThickLine($img, $startX, $startY, $endX, $endY, $colour, $thickness) 
+	protected function drawThickLine($img, $startX, $startY, $endX, $endY, $colour, $thickness)
 	{
-		$angle = (atan2(($startY - $endY), ($endX - $startX))); 
+		$angle = (atan2(($startY - $endY), ($endX - $startX)));
 		$dist_x = $thickness * (sin($angle));
 		$dist_y = $thickness * (cos($angle));
 		$p1x = ceil(($startX + $dist_x));
@@ -2488,7 +2487,7 @@ class BaseController extends Controller {
 		$array = array(0=>$p1x, $p1y, $p2x, $p2y, $p3x, $p3y, $p4x, $p4y);
 		imagefilledpolygon($img, $array, (count($array)/2), $colour);
 	}
-	
+
 	protected function string_format($str, $len)
 	{
 		if (strlen((string)$str) < $len) {
@@ -2499,7 +2498,7 @@ class BaseController extends Controller {
 		$str1 = strtoupper((string)$str1);
 		return $str1;
 	}
-	
+
 	protected function billing_save_common($insurance_id_1, $insurance_id_2, $eid)
 	{
 		DB::table('billing')->where('eid', '=', $eid)->delete();
@@ -2722,7 +2721,7 @@ class BaseController extends Controller {
 		if ($auto == 'Yes') {
 			$bill_Box10B1 = "X      ";
 			$bill_Box10B1P = 'Yes';
-			$bill_Box10B2 = $encounterInfo->encounter_condition_auto_state;	
+			$bill_Box10B2 = $encounterInfo->encounter_condition_auto_state;
 		} else {
 			$bill_Box10B1 = "      X";
 			$bill_Box10B1P = 'No';
@@ -2889,7 +2888,7 @@ class BaseController extends Controller {
 				'bill_Box9'					=> $bill_Box9, 		//Other Insured Name
 				'bill_Box11'				=> $bill_Box11, 	//Insured Group Number
 				'bill_Box9A'				=> $bill_Box9A, 	//Other Insured Group Number
-				'bill_Box10'				=> $bill_Box10, 
+				'bill_Box10'				=> $bill_Box10,
 				'bill_Box10A'				=> $bill_Box10A,	//Condition Employment
 				'bill_Box10AP'				=> $bill_Box10AP,	//Condition Employment
 				'bill_Box11A1'				=> $bill_Box11A1,	//Insured Date of Birth
@@ -3067,7 +3066,7 @@ class BaseController extends Controller {
 					'bill_Box9'					=> $bill_Box9, 		//Other Insured Name
 					'bill_Box11'				=> $bill_Box11, 	//Insured Group Number
 					'bill_Box9A'				=> $bill_Box9A, 	//Other Insured Group Number
-					'bill_Box10'				=> $bill_Box10, 
+					'bill_Box10'				=> $bill_Box10,
 					'bill_Box10A'				=> $bill_Box10A,	//Condition Employment
 					'bill_Box10AP'				=> $bill_Box10AP,	//Condition Employment
 					'bill_Box11A1'				=> $bill_Box11A1,	//Insured Date of Birth
@@ -3183,14 +3182,14 @@ class BaseController extends Controller {
 				unset($cpt_final[3]);
 				unset($cpt_final[4]);
 				unset($cpt_final[5]);
-			}	
+			}
 		} else {
 			return "No CPT charges filed. Billing not saved.";
 			exit (0);
 		}
 		return 'Billing saved and waiting to be submitted!';
 	}
-	
+
 	protected function compile_procedure_billing($cpt, $eid, $pid, $dos2, $icd_pointer, $practice_id)
 	{
 		$query = DB::table('billing_core')->where('cpt', '=', $cpt)->where('eid', '=', $eid)->first();
@@ -3223,7 +3222,7 @@ class BaseController extends Controller {
 			}
 		}
 	}
-	
+
 	protected function add_mtm_alert($pid, $type)
 	{
 		$practice_id = Session::get('practice_id');
@@ -3256,7 +3255,7 @@ class BaseController extends Controller {
 			}
 		}
 	}
-	
+
 	protected function check_rcopia_delete($table, $id)
 	{
 		if ($table == 'rx_list') {
@@ -3275,7 +3274,7 @@ class BaseController extends Controller {
 			return TRUE;
 		}
 	}
-	
+
 	protected function check_practice_id($pid, $practice_id)
 	{
 		$query = DB::table('demographics_relate')->where('pid', '=', $pid)->where('practice_id', '=', $practice_id)->first();
@@ -3285,57 +3284,57 @@ class BaseController extends Controller {
 			return FALSE;
 		}
 	}
-	
-	protected function convert_number($number) 
-	{ 
-		if (($number < 0) || ($number > 999999999)) { 
+
+	protected function convert_number($number)
+	{
+		if (($number < 0) || ($number > 999999999)) {
 			$res = "not a valid number";
 			return $res;
-		} 
-		$Gn = floor($number / 1000000);  /* Millions (giga) */ 
-		$number -= $Gn * 1000000; 
-		$kn = floor($number / 1000);     /* Thousands (kilo) */ 
-		$number -= $kn * 1000; 
-		$Hn = floor($number / 100);      /* Hundreds (hecto) */ 
-		$number -= $Hn * 100; 
-		$Dn = floor($number / 10);       /* Tens (deca) */ 
-		$n = $number % 10;               /* Ones */ 
-		$res = ""; 
-		if ($Gn) { 
-			$res .= $this->convert_number($Gn) . " Million"; 
-		} 
-		if ($kn) { 
-			$res .= (empty($res) ? "" : " ") . $this->convert_number($kn) . " Thousand"; 
-		} 
-		if ($Hn) { 
-			$res .= (empty($res) ? "" : " ") . $this->convert_number($Hn) . " Hundred"; 
-		} 
-		$ones = array("", "One", "Two", "Three", "Four", "Five", "Six", 
-			"Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", 
-			"Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", 
-			"Nineteen"); 
-		$tens = array("", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", 
-			"Seventy", "Eighty", "Ninety"); 
+		}
+		$Gn = floor($number / 1000000);  /* Millions (giga) */
+		$number -= $Gn * 1000000;
+		$kn = floor($number / 1000);     /* Thousands (kilo) */
+		$number -= $kn * 1000;
+		$Hn = floor($number / 100);      /* Hundreds (hecto) */
+		$number -= $Hn * 100;
+		$Dn = floor($number / 10);       /* Tens (deca) */
+		$n = $number % 10;               /* Ones */
+		$res = "";
+		if ($Gn) {
+			$res .= $this->convert_number($Gn) . " Million";
+		}
+		if ($kn) {
+			$res .= (empty($res) ? "" : " ") . $this->convert_number($kn) . " Thousand";
+		}
+		if ($Hn) {
+			$res .= (empty($res) ? "" : " ") . $this->convert_number($Hn) . " Hundred";
+		}
+		$ones = array("", "One", "Two", "Three", "Four", "Five", "Six",
+			"Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen",
+			"Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen",
+			"Nineteen");
+		$tens = array("", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty",
+			"Seventy", "Eighty", "Ninety");
 
-		if ($Dn || $n) { 
-			if (!empty($res)) { 
-				$res .= " and "; 
-			} 
-			if ($Dn < 2) { 
-				$res .= $ones[$Dn * 10 + $n]; 
-			} else { 
-				$res .= $tens[$Dn]; 
-				if ($n) { 
-				    $res .= "-" . $ones[$n]; 
-				} 
-			} 
-		} 
-		if (empty($res)) { 
-			$res = "zero"; 
-		} 
-		return $res; 
+		if ($Dn || $n) {
+			if (!empty($res)) {
+				$res .= " and ";
+			}
+			if ($Dn < 2) {
+				$res .= $ones[$Dn * 10 + $n];
+			} else {
+				$res .= $tens[$Dn];
+				if ($n) {
+				    $res .= "-" . $ones[$n];
+				}
+			}
+		}
+		if (empty($res)) {
+			$res = "zero";
+		}
+		return $res;
 	}
-	
+
 	protected function practice_logo($practice_id)
 	{
 		$practice = Practiceinfo::find($practice_id);
@@ -3347,7 +3346,7 @@ class BaseController extends Controller {
 		}
 		return $logo;
 	}
-	
+
 	protected function signature($id)
 	{
 		$signature = Providers::find($id);
@@ -3360,7 +3359,7 @@ class BaseController extends Controller {
 		}
 		return $sig;
 	}
-	
+
 	protected function page_medication($rxl_id)
 	{
 		$pid = Session::get('pid');
@@ -3408,7 +3407,7 @@ class BaseController extends Controller {
 		$data['signature'] = $this->signature($data['rx']->id);
 		return View::make('pdf.prescription_page', $data);
 	}
-	
+
 	protected function page_medication_list()
 	{
 		$pid = Session::get('pid');
@@ -3445,14 +3444,14 @@ class BaseController extends Controller {
 		$data['signature'] = $this->signature(Session::get('user_id'));
 		return View::make('pdf.letter_page', $data);
 	}
-	
+
 	protected function pagecount($filename)
 	{
 		$pdftext = file_get_contents($filename);
   		$pagecount = preg_match_all("/\/Page\W/", $pdftext, $dummy);
 		return $pagecount;
 	}
-	
+
 	protected function fax_document($pid, $type, $coverpage, $filename, $file_original, $faxnumber, $faxrecipient, $job_id, $sendnow)
 	{
 		$demo_row = Demographics::find($pid);
@@ -3491,7 +3490,7 @@ class BaseController extends Controller {
 		}
 		return $message;
 	}
-	
+
 	protected function send_fax($job_id, $faxnumber, $faxrecipient)
 	{
 		$fax_data = Sendfax::find($job_id);
@@ -3609,7 +3608,7 @@ class BaseController extends Controller {
 		Session::forget('job_id');
 		return 'Fax Job ' . $job_id . ' Sent';
 	}
-	
+
 	protected function send_mail_old($template, $data_message, $subject, $to, $practice_id)
 	{
 		$practice = Practiceinfo::find($practice_id);
@@ -3632,7 +3631,7 @@ class BaseController extends Controller {
 		});
 		return "E-mail sent.";
 	}
-	
+
 	protected function send_mail($template, $data_message, $subject, $to, $practice_id)
 	{
 		if ($this->googleoauth_refresh($practice_id)) {
@@ -3668,7 +3667,7 @@ class BaseController extends Controller {
 			return "No refresh token available to create access token!";
 		}
 	}
-	
+
 	protected function googleoauth_refresh($practice_id)
 	{
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', $practice_id)->first();
@@ -3690,7 +3689,7 @@ class BaseController extends Controller {
 			return false;
 		}
 	}
-	
+
 	protected function generate_ccda($hippa_id='',$pid='')
 	{
 		$ccda = file_get_contents(__DIR__.'/../../public/ccda.xml');
@@ -4538,7 +4537,7 @@ class BaseController extends Controller {
 					$vitals_file = str_replace('?vitals_unit?', "mmHg", $vitals_file);
 					$vitals_random_id3 = $this->gen_uuid();
 					$vitals_file = str_replace('?vitals_random_id1?', $vitals_random_id3, $vitals_file);
-				} 
+				}
 				$vitals_table .= '</tbody>';
 				$vitals_file_final .= '                  </organizer>';
 				$vitals_file_final .= '               </entry>';
@@ -4548,7 +4547,7 @@ class BaseController extends Controller {
 		$ccda = str_replace('?vitals_file?', $vitals_file_final, $ccda);
 		return $ccda;
 	}
-	
+
 	protected function gen_uuid()
 	{
 		return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -4559,23 +4558,23 @@ class BaseController extends Controller {
 			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
 		);
 	}
-	
+
 	protected function gen_secret()
 	{
 		$length = 512;
 		$val = '';
 		for ($i = 0; $i < $length; $i++) {
 			$val .= rand(0,9);
-		} 
+		}
 		$fp = fopen('/dev/urandom','rb');
 		$val = fread($fp, 32);
 		fclose($fp);
 		$val .= uniqid(mt_rand(), true);
 		$hash = hash('sha512', $val, true);
-		$result = rtrim(strtr(base64_encode($hash), '+/', '-_'), '='); 
+		$result = rtrim(strtr(base64_encode($hash), '+/', '-_'), '=');
 		return $result;
 	}
-	
+
 	protected function deltree($dir, $emptyonly=false)
 	{
 		$files = array_diff(scandir($dir), array('.','..'));
@@ -4588,7 +4587,7 @@ class BaseController extends Controller {
 			return rmdir($dir);
 		}
 	}
-	
+
 	protected function get_snomed_code($item, $date, $id)
 	{
 		$pos = strpos($item, ", SNOMED : ");
@@ -4626,7 +4625,7 @@ class BaseController extends Controller {
 		}
 		return $orders_file;
 	}
-	
+
 	protected function page_invoice1($eid)
 	{
 		$pid = Session::get('pid');
@@ -4681,7 +4680,7 @@ class BaseController extends Controller {
 		} else {
 			$data['assessment'] = '';
 		}
-		$result1 = DB::table('billing_core')->where('eid', '=', $eid)->orderBy('cpt_charge', 'desc')->get(); 
+		$result1 = DB::table('billing_core')->where('eid', '=', $eid)->orderBy('cpt_charge', 'desc')->get();
 		if ($result1) {
 			$charge = 0;
 			$payment = 0;
@@ -4705,7 +4704,7 @@ class BaseController extends Controller {
 					$payment = $payment + $result1a->payment;
 				}
 			}
-			
+
 			$balance = $charge - $payment;
 			$charge = number_format($charge, 2, '.', ',');
 			$payment = number_format($payment, 2, '.', ',');
@@ -4759,7 +4758,7 @@ class BaseController extends Controller {
 		$this->audit('Update');
 		return View::make('pdf.invoice_page', $data);
 	}
-	
+
 	protected function page_invoice2($id)
 	{
 		$pid = Session::get('pid');
@@ -4776,7 +4775,7 @@ class BaseController extends Controller {
 					$data['text'] .= '<tr><td>Date of Payment:</td><td>' . $row2->dos_f . '</td><td>' . $row2->payment_type . '</td><td>$(' . $row2->payment . ')</td></tr>';
 					$payment += $row2->payment;
 				}
-			}	
+			}
 			$balance = $charge - $payment;
 			$charge = number_format($charge, 2, '.', ',');
 			$payment = number_format($payment, 2, '.', ',');
@@ -4820,7 +4819,7 @@ class BaseController extends Controller {
 		$this->audit('Update');
 		return View::make('pdf.invoice_page2', $data);
 	}
-	
+
 	protected function page_financial_results($results)
 	{
 		$body = '<br><br><table class="pure-table"><tr><th>Date</th><th>Last Name</th><th>First Name</th><th>Amount</th><th>Type</th></tr>';
@@ -4831,7 +4830,7 @@ class BaseController extends Controller {
 		$body .= '</table></body></html>';
 		return $body;
 	}
-	
+
 	protected function page_hippa_request($id)
 	{
 		$result = DB::table('hippa_request')->where('hippa_request_id', '=', $id)->first();
@@ -4905,7 +4904,7 @@ class BaseController extends Controller {
 		}
 		return View::make('pdf.hippa_request', $data);
 	}
-	
+
 	protected function page_mtm_cp($pid)
 	{
 		$practice = Practiceinfo::find(Session::get('practice_id'));
@@ -4927,7 +4926,7 @@ class BaseController extends Controller {
 		$data['providerSignature'] = $this->signature(Session::get('user_id'));
 		return View::make('pdf.mtm_cp_page', $data);
 	}
-	
+
 	protected function page_mtm_map($pid)
 	{
 		$practice_id = Session::get('practice_id');
@@ -4960,7 +4959,7 @@ class BaseController extends Controller {
 		}
 		return View::make('pdf.mtm_map_page', $data);
 	}
-	
+
 	protected function page_mtm_pml($pid)
 	{
 		$practice = Practiceinfo::find(Session::get('practice_id'));
@@ -5010,7 +5009,7 @@ class BaseController extends Controller {
 		}
 		return View::make('pdf.mtm_pml_page', $data);
 	}
-	
+
 	protected function page_mtm_provider($pid)
 	{
 		$practice_id = Session::get('practice_id');
@@ -5044,10 +5043,10 @@ class BaseController extends Controller {
 		$data['providerSignature'] = $this->signature(Session::get('user_id'));
 		return View::make('pdf.mtm_provider_page', $data);
 	}
-	
+
 	protected function add_closed1($day, $minTime, $day2, $events, $start, $end)
 	{
-		$repeat_start = strtotime('this ' . $day . ' ' . $minTime, $start); 
+		$repeat_start = strtotime('this ' . $day . ' ' . $minTime, $start);
 		$repeat_end = strtotime('this ' . $day . ' ' . $day2, $start);
 		while ($repeat_start <= $end) {
 			$repeat_start1 = date('c', $repeat_start);
@@ -5069,10 +5068,10 @@ class BaseController extends Controller {
 		}
 		return $events;
 	}
-	
+
 	protected function add_closed2($day, $maxTime, $day2, $events, $start, $end)
 	{
-		$repeat_start = strtotime('this ' . $day . ' ' . $day2, $start); 
+		$repeat_start = strtotime('this ' . $day . ' ' . $day2, $start);
 		$repeat_end = strtotime('this ' . $day . ' ' . $maxTime, $start);
 		while ($repeat_start <= $end) {
 			$repeat_start1 = date('c', $repeat_start);
@@ -5094,10 +5093,10 @@ class BaseController extends Controller {
 		}
 		return $events;
 	}
-	
+
 	protected function add_closed3($day, $minTime, $maxTime, $events, $start, $end)
 	{
-		$repeat_start = strtotime('this ' . $day . ' ' . $minTime, $start); 
+		$repeat_start = strtotime('this ' . $day . ' ' . $minTime, $start);
 		$repeat_end = strtotime('this ' . $day . ' ' . $maxTime, $start);
 		while ($repeat_start <= $end) {
 			$repeat_start1 = date('c', $repeat_start);
@@ -5119,7 +5118,7 @@ class BaseController extends Controller {
 		}
 		return $events;
 	}
-	
+
 	protected function schedule_notification($appt_id)
 	{
 		$row1 = Schedule::find($appt_id);
@@ -5147,7 +5146,7 @@ class BaseController extends Controller {
 			}
 		}
 	}
-	
+
 	protected function flattenParts($messageParts, $flattenedParts = array(), $prefix = '', $index = 1, $fullPrefix = true)
 	{
 		foreach($messageParts as $part) {
@@ -5168,7 +5167,7 @@ class BaseController extends Controller {
 		}
 		return $flattenedParts;
 	}
-	
+
 	protected function getPart($connection, $messageNumber, $partNumber, $encoding)
 	{
 		$data = imap_fetchbody($connection, $messageNumber, $partNumber);
@@ -5181,7 +5180,7 @@ class BaseController extends Controller {
 			case 5: return $data; // OTHER
 		}
 	}
-	
+
 	protected function getFilenameFromPart($part)
 	{
 		$filename = '';
@@ -5201,7 +5200,7 @@ class BaseController extends Controller {
 		}
 		return $filename;
 	}
-	
+
 	protected function printimage($eid)
 	{
 		$query = DB::table('billing')->where('eid', '=', $eid)->get();
@@ -5209,10 +5208,10 @@ class BaseController extends Controller {
 		foreach ($query as $result) {
 			$template = file_get_contents(__DIR__.'/../../public/billing.txt');
 			$search = array(
-				"^Bx11c**********************^",            
-				"^Pay^",                                    
-				"^InsuranceAddress***********^",           
-				"^InsuranceAddress2**********^",           
+				"^Bx11c**********************^",
+				"^Pay^",
+				"^InsuranceAddress***********^",
+				"^InsuranceAddress2**********^",
 				"^Bx1****************************************^",
 				"^Bx1a***********************^",
 				"^Bx2***********************^",
@@ -5225,19 +5224,19 @@ class BaseController extends Controller {
 				"^Bx5b******************^",
 				"^5^",
 				"^Bx7b*****************^",
-				"^7*^",  
+				"^7*^",
 				"^Bx5d******^",
 				"^Bx5e********^",
 				"^Bx8b*******^",
 				"^Bx7d******^",
-				"^Bx7e********^", 
+				"^Bx7e********^",
 				"^Bx9***********************^",
 				"^Bx10*************^",
 				"^Bx11***********************^",
 				"^Bx9a**********************^",
 				"^Bx10a^",
 				"^Bx11a***^",
-				"^Bx11aa^",    
+				"^Bx11aa^",
 				"^Bx10b^",
 				"^b^",
 				"^Bx11b**********************^",
@@ -5278,7 +5277,7 @@ class BaseController extends Controller {
 				"^e2^",
 				"^f2****^",
 				"^g2*^",
-				"^j2*******^", 
+				"^j2*******^",
 				"^DOS3F*^",
 				"^DOS3T*^",
 				"^a3*^",
@@ -5465,7 +5464,7 @@ class BaseController extends Controller {
 		$this->audit('Update');
 		return $new_template;
 	}
-	
+
 	protected function hcfa($eid, $flatten)
 	{
 		$query = DB::table('billing')->where('eid', '=', $eid)->get();
@@ -5553,7 +5552,7 @@ class BaseController extends Controller {
 			return FALSE;
 		}
 	}
-	
+
 	protected function getWeightChart($pid)
 	{
 		$query = DB::table('vitals')
@@ -5611,7 +5610,7 @@ class BaseController extends Controller {
 			return FALSE;
 		}
 	}
-	
+
 	protected function getHCChart($pid)
 	{
 		$query = DB::table('vitals')
@@ -5640,7 +5639,7 @@ class BaseController extends Controller {
 			return FALSE;
 		}
 	}
-	
+
 	protected function getBMIChart($pid)
 	{
 		$query = DB::table('vitals')
@@ -5663,7 +5662,7 @@ class BaseController extends Controller {
 			return FALSE;
 		}
 	}
-	
+
 	protected function getWeightHeightChart($pid)
 	{
 		$query = DB::table('vitals')
@@ -5697,7 +5696,7 @@ class BaseController extends Controller {
 			return FALSE;
 		}
 	}
-	
+
 	protected function getSpline($style, $sex)
 	{
 		$query = DB::table('gc')
@@ -5711,7 +5710,7 @@ class BaseController extends Controller {
 		}
 		return $result;
 	}
-	
+
 	protected function getLMS($style, $sex, $age)
 	{
 		$query = DB::table('gc')
@@ -5722,7 +5721,7 @@ class BaseController extends Controller {
 		$result = (array) $query;
 		return $result;
 	}
-	
+
 	protected function getLMS1($style, $sex, $length)
 	{
 		$query = DB::table('gc')
@@ -5733,7 +5732,7 @@ class BaseController extends Controller {
 		$result = (array) $query;
 		return $result;
 	}
-	
+
 	protected function getLMS2($style, $sex, $height)
 	{
 		$query = DB::table('gc')
@@ -5744,10 +5743,10 @@ class BaseController extends Controller {
 		$result = (array) $query;
 		return $result;
 	}
-	
+
 	protected function erf($x)
 	{
-		$pi = 3.1415927; 
+		$pi = 3.1415927;
 		$a = (8*($pi - 3))/(3*$pi*(4 - $pi));
 		$x2 = $x * $x;
 		$ax2 = $a * $x2;
@@ -5757,16 +5756,16 @@ class BaseController extends Controller {
 		$erf2 = 1 - exp($inner);
 		return sqrt($erf2);
 	}
-	
+
 	protected function cdf($n)
 	{
 		if($n < 0) {
-			return (1 - $this->erf($n / sqrt(2)))/2; 
+			return (1 - $this->erf($n / sqrt(2)))/2;
 		} else {
-			return (1 + $this->erf($n / sqrt(2)))/2; 
+			return (1 + $this->erf($n / sqrt(2)))/2;
 		}
 	}
-	
+
 	protected function getImageFile($file)
 	{
 		$type =  exif_imagetype($file);
@@ -5786,7 +5785,7 @@ class BaseController extends Controller {
 		}
 		return $img;
 	}
-	
+
 	protected function getDimensions($width, $height, $frameWidth, $frameHeight)
 	{
 		//scale the longer side first and the shorter side as per the ratio
@@ -5800,7 +5799,7 @@ class BaseController extends Controller {
 		}
 		return array('scaledWidth' => $newWidth , 'scaledHeight' => $newHeight);
 	}
-	
+
 	protected function saveImage($img, $finalDestination)
 	{
 		//get the filetype of the file to be saved to determine the format of the output image
@@ -5857,7 +5856,7 @@ class BaseController extends Controller {
 		}
 		return $result;
 	}
-	
+
 	protected function rxnorm_name_search($name)
 	{
 		$rxnormapi = new RxNormApi();
@@ -5883,7 +5882,7 @@ class BaseController extends Controller {
 		}
 		return $result;
 			//$rxcui = $rxnormapi->getRxConceptProperties($rxnorm['drugGroup']['conceptGroup'][2]['conceptProperties'][5]['rxcui']);
-			
+
 			//$rxnorm1 = json_decode($rxnormapi->getRxConceptProperties($rxnorm['idGroup']['rxnormId'][0]), true);
 					//$med_rxnorm_code = $rxnorm['idGroup']['rxnormId'][0];
 					//$med_name = $rxnorm1['properties']['name'];
@@ -5892,7 +5891,7 @@ class BaseController extends Controller {
 			//return $ndc['ndcGroup']['ndcList']['ndc'][0];
 		//}
 	}
-	
+
 	protected function github_all()
 	{
 		$client = new \Github\Client(
@@ -5906,7 +5905,7 @@ class BaseController extends Controller {
 		$result = $client->api('repo')->commits()->all('shihjay2', 'nosh-core', array('sha' => 'master'));
 		return $result;
 	}
-	
+
 	protected function github_single($sha)
 	{
 		$client = new \Github\Client(
@@ -5920,7 +5919,7 @@ class BaseController extends Controller {
 		$result = $commit = $client->api('repo')->commits()->show('shihjay2', 'nosh-core', $sha);
 		return $result;
 	}
-	
+
 	protected function clinithink($text)
 	{
 		$url = 'http://clinithink.api.mashery.com/v1/prd/encoding/Document?profileId=3&apiKey=gaaedrzjnyhtga7vc576xqjt';
@@ -5959,7 +5958,7 @@ class BaseController extends Controller {
 		curl_close($ch);
 		return $return_array;
 	}
-	
+
 	protected function clinithink_crossmap($id, $type)
 	{
 		$url = 'http://clinithink.api.mashery.com/v1/prd/search/CrossMaps?apiKey=gaaedrzjnyhtga7vc576xqjt';
@@ -5992,7 +5991,7 @@ class BaseController extends Controller {
 		curl_close($ch);
 		return $ret;
 	}
-	
+
 	protected function getCSVDelimiter($fileName)
 	{
 		//detect these delimeters
@@ -6039,7 +6038,7 @@ class BaseController extends Controller {
 		$delimiter = $delA[$delKey];
 		return $delimiter;
 	}
-	
+
 	protected function age_calc($num, $type)
 	{
 		if ($type == 'year') {
@@ -6051,7 +6050,7 @@ class BaseController extends Controller {
 		$b = time() - $a;
 		return $b;
 	}
-	
+
 	protected function hedis_assessment_query($pid, $type, $assessment_item_array)
 	{
 		$query = DB::table('assessment')
@@ -6083,7 +6082,7 @@ class BaseController extends Controller {
 		$result = $query->get();
 		return $result;
 	}
-	
+
 	protected function hedis_issue_query($pid, $issues_item_array)
 	{
 		$query = DB::table('issues')
@@ -6104,7 +6103,7 @@ class BaseController extends Controller {
 			->first();
 		return $query;
 	}
-	
+
 	protected function hedis_aba($pid)
 	{
 		$data = array();
@@ -6144,7 +6143,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_wcc($pid)
 	{
 		$data = array();
@@ -6248,7 +6247,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_cis($pid)
 	{
 		$data = array();
@@ -6486,7 +6485,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_ima($pid)
 	{
 		$data = array();
@@ -6548,7 +6547,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_hpv($pid)
 	{
 		$data = array();
@@ -6598,7 +6597,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_lsc($pid)
 	{
 		$data = array();
@@ -6636,7 +6635,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_bcs($pid)
 	{
 		$data = array();
@@ -6674,7 +6673,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_ccs($pid)
 	{
 		$data = array();
@@ -6712,7 +6711,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_col($pid)
 	{
 		$data = array();
@@ -6794,7 +6793,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_chl($pid)
 	{
 		$data = array();
@@ -6832,7 +6831,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_gso($pid)
 	{
 		$data = array();
@@ -6870,7 +6869,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_cwp($cwp_result)
 	{
 		$data = array();
@@ -6927,7 +6926,7 @@ class BaseController extends Controller {
 		$data['percent_abx_no_test'] = round($data['abx_no_test']/$data['count']*100);
 		return $data;
 	}
-	
+
 	protected function hedis_uri($uri_result)
 	{
 		$data = array();
@@ -6955,7 +6954,7 @@ class BaseController extends Controller {
 		$data['percent_abx'] = round($data['abx']/$data['count']*100);
 		return $data;
 	}
-	
+
 	protected function hedis_aab($aab_result)
 	{
 		$data = array();
@@ -6983,7 +6982,7 @@ class BaseController extends Controller {
 		$data['percent_abx'] = round($data['abx']/$data['count']*100);
 		return $data;
 	}
-	
+
 	protected function hedis_spr($pid)
 	{
 		$data = array();
@@ -7021,7 +7020,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_pce($pce_result)
 	{
 		$data = array();
@@ -7057,7 +7056,7 @@ class BaseController extends Controller {
 		$data['percent_tx'] = round($data['tx']/$data['count']*100);
 		return $data;
 	}
-	
+
 	protected function hedis_asm($pid)
 	{
 		$data = array();
@@ -7087,7 +7086,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_amr($pid)
 	{
 		$data = array();
@@ -7127,7 +7126,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_cmc($pid)
 	{
 		$data = array();
@@ -7180,7 +7179,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_cbp($pid)
 	{
 		$data = array();
@@ -7210,7 +7209,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_pbh($pid)
 	{
 		$data = array();
@@ -7236,7 +7235,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_cdc($pid)
 	{
 		$data = array();
@@ -7403,7 +7402,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_art($pid)
 	{
 		$data = array();
@@ -7429,7 +7428,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_omw($pid)
 	{
 		$data = array();
@@ -7491,7 +7490,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_lbp($lbp_result)
 	{
 		$data = array();
@@ -7538,7 +7537,7 @@ class BaseController extends Controller {
 		$data['percent_no_rad'] = round($data['no_rad']/$data['count']*100);
 		return $data;
 	}
-	
+
 	protected function hedis_amm($pid)
 	{
 		$data = array();
@@ -7564,7 +7563,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_add($pid, $date)
 	{
 		$data = array();
@@ -7609,7 +7608,7 @@ class BaseController extends Controller {
 		}
 		return $data;
 	}
-	
+
 	protected function hedis_audit($type, $function, $pid)
 	{
 		$html = '';
@@ -7792,7 +7791,7 @@ class BaseController extends Controller {
 			return $return;
 		}
 	}
-	
+
 	protected function parse_era_2100(&$return, $cb)
 	{
 		if ($return['loopid'] == '2110' || $return['loopid'] == '2100') {
@@ -7842,7 +7841,7 @@ class BaseController extends Controller {
 			$cb($return);
 		}
 	}
-	
+
 	function parse_era($era_string)
 	{
 		$return = array();
@@ -8098,7 +8097,7 @@ class BaseController extends Controller {
 		}
 		return $return;
 	}
-	
+
 	protected function claim_reason_code($code)
 	{
 		$url = 'http://www.wpc-edi.com/reference/codelists/healthcare/claim-adjustment-reason-codes/';
@@ -8122,7 +8121,7 @@ class BaseController extends Controller {
 			return $description;
 		}
 	}
-	
+
 	public function send_api_data($url, $data, $username, $password)
 	{
 		if (is_array($data)) {
@@ -8151,15 +8150,15 @@ class BaseController extends Controller {
 		curl_close($ch);
 		return $result_arr;
 	}
-	
+
 	public function api_sync_data()
 	{
 		$check = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->whereNotNull('api_key')->first();
 		if ($check) {
-			
+
 		}
 	}
-	
+
 	public function api_data($action, $table, $primary, $id)
 	{
 		$check = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->whereNotNull('api_key')->first();
@@ -8218,7 +8217,7 @@ class BaseController extends Controller {
 			}
 		}
 	}
-	
+
 	// FHIR base controller functions
 	protected function composite_array($value)
 	{
@@ -8235,7 +8234,7 @@ class BaseController extends Controller {
 		}
 		return $return_value;
 	}
-	
+
 	protected function query_build($query, $table_key, $key1, $comparison, $value1, $or, $resource, $table)
 	{
 		$proceed = false;
@@ -8341,7 +8340,7 @@ class BaseController extends Controller {
 		}
 		return $query;
 	}
-	
+
 	// $data is Input array, $table_key is key translation for associated table, $is_date is boolean
 	protected function resource_translation($data, $table, $table_primary_key, $table_key)
 	{
@@ -8458,7 +8457,7 @@ class BaseController extends Controller {
 										'comparison' => $comparison,
 										'value' => $value2
 									];
-									
+
 								} else {
 									$code[$j] = [
 										'key' => $key1,
@@ -8531,7 +8530,7 @@ class BaseController extends Controller {
 		}
 		return $return;
 	}
-	
+
 	protected function resource_detail($row, $resource_type)
 	{
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
@@ -8631,7 +8630,7 @@ class BaseController extends Controller {
 			}
 			$response['text']['div'] .= '</tbody></table></div>';
 		}
-		
+
 		// Condition
 		if ($resource_type == 'Condition') {
 			$patient = DB::table('demographics')->where('pid', '=', $row->pid)->first();
@@ -8698,7 +8697,7 @@ class BaseController extends Controller {
 			// missing location
 			// missing relatedItem
 		}
-		
+
 		// MedicationStatement
 		if ($resource_type == 'MedicationStatement') {
 			$response['id'] = $row->rxl_id;
@@ -8956,7 +8955,7 @@ class BaseController extends Controller {
 		}
 		return $response;
 	}
-	
+
 	protected function encounter_template_names_array()
 	{
 		$array = array(
@@ -8969,7 +8968,7 @@ class BaseController extends Controller {
 		);
 		return $array;
 	}
-	
+
 	protected function full_fields_array()
 	{
 		$array = array(
@@ -9086,7 +9085,7 @@ class BaseController extends Controller {
 		);
 		return $array;
 	}
-	
+
 	protected function encounter_template_array()
 	{
 		$standardmedical = array(
@@ -9279,7 +9278,7 @@ class BaseController extends Controller {
 		);
 		return $template;
 	}
-	
+
 	protected function install_template($csv, $practice_id)
 	{
 		$csv_line = explode("\n", $csv);
@@ -9311,7 +9310,7 @@ class BaseController extends Controller {
 		}
 		return $ret;
 	}
-	
+
 	protected function vaccine_supplement_alert($practice_id)
 	{
 		$time_exp = date('Y-m-d H:i:s', time() + (28 * 24 * 60 * 60));
@@ -9363,7 +9362,7 @@ class BaseController extends Controller {
 		}
 		return $return;
 	}
-	
+
 	protected function mobile_menu_build($list_array, $id, $type)
 	{
 		$return = '<ul data-role="listview" id="' . $id . '">';
@@ -9379,7 +9378,7 @@ class BaseController extends Controller {
 		$return .= '</ul>';
 		return $return;
 	}
-	
+
 	protected function mobile_header_build($title)
 	{
 		$return = '<a href="#left_panel" class="ui-btn-left ui-btn" data-role="button" role="button"><i class="zmdi zmdi-menu headericon"></i></a>';
@@ -9387,7 +9386,7 @@ class BaseController extends Controller {
 		$return .= '<h1 role="heading">' . $title . '</h1>';
 		return $return;
 	}
-	
+
 	protected function mobile_navigation_header_build($title)
 	{
 		$return = '<a href="#" id="navigation_header_back" class="ui-btn ui-btn-left waves-effect waves-button" data-role="button" role="button" data-nosh-origin="" data-nosh-scroll="" title="Back"><i class="zmdi zmdi-arrow-left headericon1"></i></a>';
@@ -9395,7 +9394,7 @@ class BaseController extends Controller {
 		$return .= '<h1 role="heading">' . $title . '</h1>';
 		return $return;
 	}
-	
+
 	protected function mobile_result_build($list_array, $id)
 	{
 		//$list_array[] = [
@@ -9412,7 +9411,7 @@ class BaseController extends Controller {
 		$return .= '</ul>';
 		return $return;
 	}
-	
+
 	protected function mobile_content_build()
 	{
 		$return = '<section id="cd-timeline" class="cd-container">';
@@ -9423,7 +9422,7 @@ class BaseController extends Controller {
 		$return .= '</section>';
 		return $return;
 	}
-	
+
 	protected function mobile_form_build($form)
 	{
 		$return = '';
@@ -9539,7 +9538,7 @@ class BaseController extends Controller {
 		}
 		return $return;
 	}
-	
+
 	protected function uma_api_build($command, $url, $send_object = null, $put_delete = null)
 	{
 		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
@@ -9553,7 +9552,7 @@ class BaseController extends Controller {
 		$response = $oidc->api($command, $api_endpoint, $send_object, $put_delete);
 		return $response;
 	}
-	
+
 	protected function uma_resource_set($url, $name = null, $icon = null, $scopes = null)
 	{
 		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
@@ -9571,7 +9570,7 @@ class BaseController extends Controller {
 		$response = $oidc->resource_set($name, $icon, $scopes);
 		return $response;
 	}
-	
+
 	protected function uma_permission_request($resource_set_id = null, $scopes = null)
 	{
 		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
@@ -9583,7 +9582,7 @@ class BaseController extends Controller {
 		$response = $oidc->permission_request($resource_set_id, $scopes);
 		return $response;
 	}
-	
+
 	protected function uma_introspect($token)
 	{
 		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
@@ -9595,7 +9594,7 @@ class BaseController extends Controller {
 		$response = $oidc->introspect($token);
 		return $response;
 	}
-	
+
 	protected function syncuser($token)
 	{
 		$url = 'https://noshchartingsystem.com/nosh-sso/syncuser?token=' . $token;
@@ -9631,7 +9630,7 @@ class BaseController extends Controller {
 		}
 		return $return;
 	}
-	
+
 	protected function uma_users()
 	{
 		$query = DB::table('users')->where('id', '=', Session::get('user_id'))->first();
@@ -9645,7 +9644,7 @@ class BaseController extends Controller {
 		}
 		return $return;
 	}
-	
+
 	protected function uma_scopes($resource_set_id)
 	{
 		$query = DB::table('uma')->where('resource_set_id', '=', $resource_set_id)->get();
@@ -9662,7 +9661,7 @@ class BaseController extends Controller {
 		}
 		return $html;
 	}
-	
+
 	protected function get_uma_policy($resource_set_id)
 	{
 		$query = DB::connection('oic')->table('policy')->where('resource_set_id', '=', $resource_set_id)->get();
@@ -9690,7 +9689,7 @@ class BaseController extends Controller {
 		}
 		return $html;
 	}
-	
+
 	protected function uma_policy($resource_set_id, $email, $scopes, $policy_id='')
 	{
 		$query = DB::connection('oic')->table('user_info')->where('email', '=', $email)->first();
@@ -9751,7 +9750,7 @@ class BaseController extends Controller {
 		}
 		return $return;
 	}
-	
+
 	protected function register_scope($id, $type, $table)
 	{
 		if ($type == 'Condition') {
@@ -9858,12 +9857,12 @@ class BaseController extends Controller {
 					'table' => $table
 				);
 				DB::table('uma')->insert($response_data1);
-				$this->audit('Add'); 
+				$this->audit('Add');
 			}
 		}
 		return true;
 	}
-	
+
 	protected function timeline()
 	{
 		// Will need to remove soon
@@ -10077,7 +10076,7 @@ class BaseController extends Controller {
 		$arr['json'] = $json;
 		return $arr;
 	}
-	
+
 	protected function timeline_item($value, $type, $category, $date, $title, $p, $status='')
 	{
 		$div = '<div class="cd-timeline-block" data-nosh-category="' . $category . '">';
@@ -10110,7 +10109,7 @@ class BaseController extends Controller {
 		$div .= '</div></div>';
 		return $div;
 	}
-	
+
 	protected function timeline_new()
 	{
 		$pid = Session::get('pid');
@@ -10320,7 +10319,7 @@ class BaseController extends Controller {
 		$arr['json'] = $json;
 		return $arr;
 	}
-	
+
 	protected function goodrx($rx, $command, $api_key='46e983ffba', $secret_key='3QmFl8W7Y2Mb655bn++NNA==')
 	{
 		$url = 'https://api.goodrx.com/' . $command;
@@ -10342,7 +10341,7 @@ class BaseController extends Controller {
 		curl_close($ch);
 		return $result_array;
 	}
-	
+
 	protected function goodrx_notification($rx, $dose)
 	{
 		$row = Demographics::find(Session::get('pid'));

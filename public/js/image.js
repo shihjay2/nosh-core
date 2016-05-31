@@ -7,7 +7,7 @@ $(document).ready(function() {
 	});
 	$("#image_select").change(function() {
 		var a = $("#image_select").val();
-		if (a != '') {
+		if (a !== '') {
 			$.ajax({
 				url: "ajaxsearch/image-select-dimensions",
 				data: "file=" + a,
@@ -35,16 +35,16 @@ $(document).ready(function() {
 					$("#image_eid").val(noshdata.eid);
 					$("#image_pid").val(noshdata.pid);
 					$("#image_dialog").dialog('open');
-					
+
 				}
 			});
 		}
 	});
-	$("#image_dialog_preview").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#image_dialog_preview").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -65,11 +65,11 @@ $(document).ready(function() {
 	$("#image_encounter").click(function(){
 		$("#image_dialog_preview").dialog('open');
 	});
-	$("#image_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#image_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,

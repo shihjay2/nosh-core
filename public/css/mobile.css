@@ -117,11 +117,11 @@
 
 /*!
  * Waves v0.7.2
- * http://fian.my.id/Waves 
- * 
- * Copyright 2014 Alfiana E. Sibuea and other contributors 
- * Released under the MIT license 
- * https://github.com/fians/Waves/blob/master/LICENSE 
+ * http://fian.my.id/Waves
+ *
+ * Copyright 2014 Alfiana E. Sibuea and other contributors
+ * Released under the MIT license
+ * https://github.com/fians/Waves/blob/master/LICENSE
  */
 
 .waves-effect {
@@ -248,4 +248,7 @@
 }
 a.waves-effect .waves-ripple {
 	z-index: -1
+}
+.editable{
+	background: #fff68f
 }

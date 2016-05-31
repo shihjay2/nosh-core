@@ -5,7 +5,7 @@ class AjaxSearchController extends BaseController {
 	/**
 	* NOSH ChartingSystem Search Ajax Functions
 	*/
-	
+
 	public function postSearch()
 	{
 		$q = strtolower(Input::get('term'));
@@ -37,7 +37,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postOpenchart()
 	{
 		$oldpid = Session::get('pid');
@@ -48,14 +48,14 @@ class AjaxSearchController extends BaseController {
 			Session::forget('gender');
 			Session::forget('pid');
 			Session::forget('eid');
-		}	
+		}
 		$pid = Input::get('pid');
 		$this->setpatient($pid);
 		$data['message'] = 'OK';
 		$data['url'] = route('chart');
 		echo json_encode($data);
 	}
-	
+
 	public function postEidset()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -77,7 +77,7 @@ class AjaxSearchController extends BaseController {
 			echo json_encode($data);
 		}
 	}
-	
+
 	public function postTmessagesidset()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -95,7 +95,7 @@ class AjaxSearchController extends BaseController {
 			echo json_encode($data);
 		}
 	}
-	
+
 	public function postAlertidset()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -113,7 +113,7 @@ class AjaxSearchController extends BaseController {
 			echo json_encode($data);
 		}
 	}
-	
+
 	public function postMtmset()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -131,7 +131,7 @@ class AjaxSearchController extends BaseController {
 			echo json_encode($data);
 		}
 	}
-	
+
 	public function postMtmunset()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -144,7 +144,7 @@ class AjaxSearchController extends BaseController {
 			echo 'OK';
 		}
 	}
-	
+
 	public function postHedisSet()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -162,7 +162,7 @@ class AjaxSearchController extends BaseController {
 			echo json_encode($data);
 		}
 	}
-	
+
 	public function postHedisUnset()
 	{
 		if (Session::get('group_id') != '2' && Session::get('group_id') != '3') {
@@ -175,7 +175,7 @@ class AjaxSearchController extends BaseController {
 			echo 'OK';
 		}
 	}
-	
+
 	public function postNewpatient()
 	{
 		$dob = date('Y-m-d', strtotime(Input::get('DOB')));
@@ -215,7 +215,7 @@ class AjaxSearchController extends BaseController {
 		);
 		echo json_encode($json);
 	}
-	
+
 	public function postAddress()
 	{
 		$q = strtolower(Input::get('term'));
@@ -238,7 +238,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postCity()
 	{
 		$q = strtolower(Input::get('term'));
@@ -261,7 +261,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postGuardianRelationship()
 	{
 		$q = strtolower(Input::get('term'));
@@ -285,7 +285,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postLanguage()
 	{
 		$q = strtolower(Input::get('term'));
@@ -309,7 +309,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postProvider()
 	{
 		$q = strtolower(Input::get('term'));
@@ -335,7 +335,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postProviderSelect()
 	{
 		$query = DB::table('users')
@@ -353,7 +353,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postProviderSelect1()
 	{
 		$query = DB::table('users')
@@ -374,7 +374,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSpecialty()
 	{
 		$q = strtolower(Input::get('term'));
@@ -398,7 +398,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSpecialty1()
 	{
 		$q = strtolower(Input::get('term'));
@@ -426,7 +426,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postPos()
 	{
 		$q = strtolower(Input::get('term'));
@@ -446,7 +446,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postAllContacts()
 	{
 		$q = strtolower(Input::get('term'));
@@ -470,7 +470,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postAllContacts1()
 	{
 		$q = strtolower(Input::get('term'));
@@ -494,7 +494,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postAllContacts2()
 	{
 		$q = strtolower(Input::get('term'));
@@ -523,13 +523,13 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postInsurance1()
 	{
 		$row = Addressbook::find(Input::get('address_id'))->toArray();
 		echo json_encode($row);
 	}
-	
+
 	public function postInsurance3()
 	{
 		$query = Addressbook::where('specialty', '=', 'Insurance')->get();
@@ -543,7 +543,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postPharmacy()
 	{
 		$q = strtolower(Input::get('term'));
@@ -568,7 +568,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postDocumentFrom()
 	{
 		$q = strtolower(Input::get('term'));
@@ -604,7 +604,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postDocumentDescription()
 	{
 		$q = strtolower(Input::get('term'));
@@ -626,7 +626,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postDemographicsCopy()
 	{
 		$q = strtolower(Input::get('term'));
@@ -667,7 +667,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postCc()
 	{
 		$q = strtolower(Input::get('term'));
@@ -690,7 +690,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postGetAppointments($user_id)
 	{
 		$start_time = time() - 604800;
@@ -709,7 +709,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postGetCopay()
 	{
 		$query = Insurance::where('pid', '=', Session::get('pid'))->where('insurance_plan_active', '=', 'Yes')->get();
@@ -722,13 +722,13 @@ class AjaxSearchController extends BaseController {
 				}
 				$result .= 'Insurance: ' . $row->insurance_plan_name . '; ID: ' . $row->insurance_id_num . '; Group: ' . $row->insurance_group;
 				if ($row->insurance_copay != '') {
-					$result .= '<br>Copay: ' . $row->insurance_copay; 
+					$result .= '<br>Copay: ' . $row->insurance_copay;
 				}
 				if ($row->insurance_deductible != '') {
-					$result .= '<br>Deductible: ' . $row->insurance_deductible; 
+					$result .= '<br>Deductible: ' . $row->insurance_deductible;
 				}
 				if ($row->insurance_comments != '') {
-					$result .= '<br>Comments: ' . $row->insurance_comments; 
+					$result .= '<br>Comments: ' . $row->insurance_comments;
 				}
 				$i++;
 			}
@@ -737,7 +737,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo $result;
 	}
-	
+
 	public function postGetTags($type, $id)
 	{
 		$query = Tags_relate::where($type, '=', $id)->get();
@@ -762,7 +762,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postAllUsers()
 	{
 		$q = strtolower(Input::get('term'));
@@ -790,7 +790,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postAllUsers2()
 	{
 		$data = array();
@@ -815,7 +815,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postPatientIsUser()
 	{
 		$pid = Session::get('pid');
@@ -834,7 +834,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	// Tag Functions
 	public function postSearchTags()
 	{
@@ -861,7 +861,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSearchTags1()
 	{
 		$query = DB::table('tags')
@@ -881,7 +881,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSaveTag($type, $id)
 	{
 		$row1 = Tags::where('tag', '=', Input::get('tag'))->first();
@@ -903,14 +903,14 @@ class AjaxSearchController extends BaseController {
 		DB::table('tags_relate')->insert($data2);
 		$this->audit('Add');
 	}
-	
+
 	public function postRemoveTag($type, $id)
 	{
 		$row = Tags::where('tag', '=', Input::get('tag'))->first();
 		DB::table('tags_relate')->where('tags_id', '=', $row->tags_id)->where($type, '=', $id)->delete();
 		$this->audit('Delete');
 	}
-	
+
 	// SNOMED functions
 	public function postSnomed($type)
 	{
@@ -937,7 +937,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSnomedParent($type)
 	{
 		$query = DB::table('curr_relationship_f')
@@ -972,7 +972,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postSnomedChild($id)
 	{
 		$query = DB::table('curr_relationship_f')
@@ -995,7 +995,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postCpt()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1025,7 +1025,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postCpt1()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1086,7 +1086,7 @@ class AjaxSearchController extends BaseController {
 				foreach ($pos1 as $p) {
 					$query1->where('cpt_description', 'LIKE', "%$p%");
 				}
-			}	
+			}
 			$query1->orWhere('cpt','LIKE', "%$q%");
 			$result1 = $query1->get();
 			if ($result1) {
@@ -1105,7 +1105,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postIcd()
 	{
 		$practice = Practiceinfo::find(Session::get('practice_id'));
@@ -1161,7 +1161,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postRxName($alt='0')
 	{
 		$q = strtolower(Input::get('term'));
@@ -1214,7 +1214,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postRxDosage()
 	{
 		$p = Input::get('term');
@@ -1261,14 +1261,14 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postRxNdcConvert($ndc)
 	{
 		$result = DB::table('meds_full_package')->where('PRODUCTNDC', '=', $ndc)->take(1)->first();
 		$ndcid = $this->ndc_convert($result->NDCPACKAGECODE);
 		echo $ndcid;
 	}
-	
+
 	public function postRxSearch($item, $mobile=false)
 	{
 		$q = strtolower(Input::get('term'));
@@ -1301,7 +1301,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSupplements($order)
 	{
 		$q = strtolower(Input::get('term'));
@@ -1416,7 +1416,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSupDosage()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1444,7 +1444,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSupSig()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1467,7 +1467,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSupFrequency()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1490,7 +1490,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSupInstructions()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1513,7 +1513,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSupReason()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1536,7 +1536,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSupCpt()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1563,7 +1563,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSubject()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1587,7 +1587,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postUsers()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1616,7 +1616,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postUsers1()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1642,13 +1642,13 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postUsers2($id)
 	{
 		$query = DB::table('users')->where('id', '=', $id)->first();
 		echo $query->displayname;
 	}
-	
+
 	public function postReaction($mobile=false)
 	{
 		$q = strtolower(Input::get('term'));
@@ -1681,7 +1681,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postAlert()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1705,7 +1705,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postAlertDescription()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1729,7 +1729,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postAlertReasonNotComplete()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1753,7 +1753,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postDocumentsCount()
 	{
 		$pid = Session::get('pid');
@@ -1805,7 +1805,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postImm()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1830,7 +1830,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postImm1()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1868,7 +1868,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postHippaReason()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1892,7 +1892,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postRequestReason()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1916,7 +1916,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postPaymentType()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1975,7 +1975,7 @@ class AjaxSearchController extends BaseController {
 		);
 		echo json_encode($data);
 	}
-	
+
 	public function postBillingReason()
 	{
 		$q = strtolower(Input::get('term'));
@@ -1999,7 +1999,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postSearchIssues()
 	{
 		$q = strtolower(Input::get('term'));
@@ -2024,7 +2024,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postPayorId($address_id)
 	{
 		$row = Addressbook::find($address_id);
@@ -2035,7 +2035,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo $arr;
 	}
-	
+
 	public function postOrdersProvider($type)
 	{
 		$query = DB::table('addressbook')->where('specialty', '=', $type)->get();
@@ -2049,13 +2049,13 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postOrdersProvider1()
 	{
 		$row = DB::table('addressbook')->where('address_id', '=', Input::get('address_id'))->first();
 		echo json_encode($row);
 	}
-	
+
 	public function postRefProvider($specialty)
 	{
 		$query = DB::table('addressbook');
@@ -2079,7 +2079,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postRefProvider1($specialty)
 	{
 		$arr['html'] = '<label for="hippa_address_id">Records Release To (Provider):</label>';
@@ -2143,7 +2143,7 @@ class AjaxSearchController extends BaseController {
 		$arr['html1'] .= '<button type="button" id="hippa_request_address_id2" class="nosh_button_add">Add/Edit</button>';
 		return $arr;
 	}
-	
+
 	public function postRefProviderSpecialty()
 	{
 		$query = DB::table('addressbook')
@@ -2165,7 +2165,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postLab()
 	{
 		$q = strtolower(Input::get('term'));
@@ -2248,7 +2248,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postRad()
 	{
 		$q = strtolower(Input::get('term'));
@@ -2304,7 +2304,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postCp()
 	{
 		$q = strtolower(Input::get('term'));
@@ -2360,7 +2360,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postVisitTypes($id)
 	{
 		$query = DB::table('calendar')
@@ -2381,7 +2381,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postNpiLookup()
 	{
 		$q = Input::get('term');
@@ -2427,7 +2427,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postNpiLookupPractice()
 	{
 		$q = Input::get('term');
@@ -2475,7 +2475,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postProcedureType()
 	{
 		$q = strtolower(Input::get('term'));
@@ -2502,7 +2502,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postVivacareData1()
 	{
 		set_time_limit(0);
@@ -2546,7 +2546,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postVivacareData()
 	{
 		set_time_limit(0);
@@ -2554,7 +2554,11 @@ class AjaxSearchController extends BaseController {
 		$practice = Practiceinfo::find(Session::get('practice_id'));
 		$data['response'] = "false";
 		if ($practice->vivacare != "") {
-			$html = new Htmldom("http://informationrx.com/" . $practice->vivacare);
+			$cr1 = curl_init("http://informationrx.com/" . $practice->vivacare);
+			curl_setopt($cr1, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($cr1, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+			$data1 = curl_exec($cr1);
+			$html = new Htmldom($data1);
 			if (isset($html)) {
 				$div = $html->find('[id=nav-topic-dropdown]',0);
 				$div1 = $html->find('[id=formselectA]',0);
@@ -2578,7 +2582,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postPid()
 	{
 		$q = strtolower(Input::get('term'));
@@ -2603,7 +2607,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postTimezone()
 	{
 		$arr = array();
@@ -2613,7 +2617,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postImageSelect()
 	{
 		$gender = Session::get('gender');
@@ -2663,7 +2667,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postImageSelectDimensions()
 	{
 		$result = getimagesize(Input::get('file'));
@@ -2673,7 +2677,7 @@ class AjaxSearchController extends BaseController {
 		);
 		echo json_encode($data);
 	}
-	
+
 	public function postRestricttextgroupGet($template_id)
 	{
 		$query = DB::table('templates')->where('template_id', '=', $template_id)->first();
@@ -2683,7 +2687,7 @@ class AjaxSearchController extends BaseController {
 		);
 		echo json_encode($data);
 	}
-	
+
 	public function postRestricttextgroupSave()
 	{
 		$row = DB::table('templates')->where('template_id', '=', Input::get('template_id'))->first();
@@ -2702,7 +2706,7 @@ class AjaxSearchController extends BaseController {
 		$this->audit('Update');
 		echo "Group updated!";
 	}
-	
+
 	public function postTextdumpGroup($target)
 	{
 		$arr = '';
@@ -2801,7 +2805,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo $arr;
 	}
-	
+
 	public function postTextdump($target)
 	{
 		$arr = '';
@@ -2853,7 +2857,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo $arr;
 	}
-	
+
 	public function postTextdumpSpecific($target)
 	{
 		$arr = '';
@@ -2867,7 +2871,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo $arr;
 	}
-	
+
 	public function postAddTextTemplate()
 	{
 		$data = array(
@@ -2882,7 +2886,7 @@ class AjaxSearchController extends BaseController {
 		$arr['message'] = "Text added";
 		echo json_encode($arr);
 	}
-	
+
 	public function postAddTextTemplateGroup()
 	{
 		$data = array(
@@ -2897,7 +2901,7 @@ class AjaxSearchController extends BaseController {
 		$arr['message'] = "Group added";
 		echo json_encode($arr);
 	}
-	
+
 	public function postAddSpecificTemplate()
 	{
 		$data = array(
@@ -2912,7 +2916,7 @@ class AjaxSearchController extends BaseController {
 		$arr['message'] = "Text added";
 		echo json_encode($arr);
 	}
-	
+
 	public function postEditTextTemplateGroup()
 	{
 		$group = DB::table('templates')->where('template_id', '=', Input::get('pk'))->first();
@@ -2945,7 +2949,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo "Group updated";
 	}
-	
+
 	public function postEditTextTemplate()
 	{
 		$data = array(
@@ -2955,7 +2959,7 @@ class AjaxSearchController extends BaseController {
 		$this->audit('Update');
 		echo "Text updated";
 	}
-	
+
 	public function postEditTextTemplateSpecific()
 	{
 		$data = array(
@@ -2965,7 +2969,7 @@ class AjaxSearchController extends BaseController {
 		$this->audit('Update');
 		echo "Text updated";
 	}
-	
+
 	public function postEditTextTemplateSpecificName()
 	{
 		$query = DB::table('templates')->where('practice_id', '=', Session::get('practice_id'))->where('category', '=', 'specific')->where('template_name', '=', Input::get('template_name_old'))->get();
@@ -2982,7 +2986,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo $message;
 	}
-	
+
 	public function postDeletetextdump($id)
 	{
 		$item = DB::table('templates')->where('template_id', '=', $id)->first();
@@ -2990,7 +2994,7 @@ class AjaxSearchController extends BaseController {
 		$this->audit('Delete');
 		echo 'Text deleted';
 	}
-	
+
 	public function postDeletetextdumpgroup($id)
 	{
 		$group = DB::table('templates')->where('template_id', '=', $id)->first();
@@ -3013,7 +3017,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo 'Group deleted';
 	}
-	
+
 	public function postDeletetextdumpSpecificGroup($id)
 	{
 		$query = DB::table('templates')->where('practice_id', '=', Session::get('practice_id'))->where('category', '=', 'specific')->where('template_name', '=', $id)->where('default', '=', 'default')->get();
@@ -3025,7 +3029,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo $message;
 	}
-	
+
 	public function postDefaulttextdump($id)
 	{
 		$data = array(
@@ -3054,7 +3058,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo $arr;
 	}
-	
+
 	public function postUndefaulttextdump($id)
 	{
 		$data = array(
@@ -3083,7 +3087,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo $arr;
 	}
-	
+
 	public function postPreviousEncounters()
 	{
 		$encounter = Encounters::find(Session::get('eid'));
@@ -3111,7 +3115,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postTestName()
 	{
 		$q = strtolower(Input::get('term'));
@@ -3134,7 +3138,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postTestUnits()
 	{
 		$q = strtolower(Input::get('term'));
@@ -3157,7 +3161,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postTestFrom()
 	{
 		$q = strtolower(Input::get('term'));
@@ -3180,7 +3184,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postCheckTitle($type)
 	{
 		$data['response'] = true;
@@ -3203,7 +3207,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postEncounterList($pid)
 	{
 		$result = DB::table('encounters')->where('pid', '=', $pid)
@@ -3223,7 +3227,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postAddEncounterTemplatesDetails()
 	{
 		$template1 = $this->encounter_template_names_array();
@@ -3259,7 +3263,7 @@ class AjaxSearchController extends BaseController {
 		$data['html'] .= '<div class="pure-u-1-3"><strong>Encounter Field</strong></div><div class="pure-u-1-3"><strong>Text Template Normal Group</strong></div><div id="encounter_template_grid_label" class="pure-u-1-3"></div>';
 		echo json_encode($data);
 	}
-	
+
 	public function postGetEncounterTemplatesDetails()
 	{
 		$title = DB::table('templates')
@@ -3329,7 +3333,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postGetTemplateNormalOptions($target)
 	{
 		$query = DB::table('templates')->where('category', '=', 'text')->where('template_name', '=', $target)->where('practice_id', '=', Session::get('practice_id'))->where('array', '!=', '')->where('default', '=', 'normal')->select('group')->distinct()->get();
@@ -3342,13 +3346,13 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postGetTemplateFields($encounter_template)
 	{
 		$template = $this->encounter_template_array();
 		echo json_encode($template[$encounter_template]);
 	}
-	
+
 	public function postAutogenerateEncounterTemplate()
 	{
 		$arr = array(
@@ -3363,7 +3367,7 @@ class AjaxSearchController extends BaseController {
 			->first();
 		if (Input::get('old_template_name') == '' && $query_check) {
 			$arr['message'] = 'There is already a template with the same name!';
-		} else { 
+		} else {
 			$encounter_template_array = $this->encounter_template_array();
 			$fields = $encounter_template_array[Input::get('encounter_template')];
 			if (isset($fields)) {
@@ -3426,7 +3430,7 @@ class AjaxSearchController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postSaveEncounterTemplates()
 	{
 		$query_check = DB::table('templates')
@@ -3437,7 +3441,7 @@ class AjaxSearchController extends BaseController {
 			->first();
 		if (Input::get('old_template_name') == '' && $query_check) {
 			echo 'There is already a template with the same name!';
-		} else { 
+		} else {
 			$group = Input::get('group');
 			$array = Input::get('array');
 			$data = array(
@@ -3496,7 +3500,7 @@ class AjaxSearchController extends BaseController {
 			echo "Normal Encounter Template Saved!";
 		}
 	}
-	
+
 	public function postDeleteEncounterTemplate($template_name)
 	{
 		$query = DB::table('templates')
@@ -3525,13 +3529,13 @@ class AjaxSearchController extends BaseController {
 		}
 		echo 'Encounter template ' . $template_name . ' deleted!';
 	}
-	
+
 	public function postTimeline()
 	{
 		$arr = $this->timeline();
 		echo json_encode($arr);
 	}
-	
+
 	public function postMdNosh()
 	{
 		$url = 'https://noshchartingsystem.com/nosh-sso/providersearch?term=' . Input::get('term');
@@ -3545,7 +3549,7 @@ class AjaxSearchController extends BaseController {
 		$return = '';
 		if ($result['response'] != 'false') {
 			$i = 0;
-			foreach ($result['message'] as $row) { 
+			foreach ($result['message'] as $row) {
 				$return .= '<label for="mdnosh_provider_' . $i . '" class="pure-checkbox" style="display:block;margin-left:20px;">';
 				$return .= Form::radio('mdnosh_email', $row['email'], false, ['id' => 'mdnosh_email_' . $i, 'style' => 'float:left; margin-left:-20px; margin-right:7px;', 'class' => 'mdnosh_email_select']);
 				$return .= ' <span id="mdnosh_email_label_span_' . $i . '">' . $row['label'] . '</span>';

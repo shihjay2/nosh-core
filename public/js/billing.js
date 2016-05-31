@@ -4,7 +4,7 @@ $(document).ready(function() {
 		var a = $("#billing_eid_1");
 		var b = $("#billing_insurance_id_1");
 		bValid = bValid && checkEmpty(a, "Encounter");
-		bValid = bValid && checkEmpty(b, "Primary Insurance"); 
+		bValid = bValid && checkEmpty(b, "Primary Insurance");
 		if (bValid) {
 			var str = $("#billing_detail_form").serialize();
 			if(str){
@@ -37,11 +37,11 @@ $(document).ready(function() {
 			}
 		});
 	}
-	$("#billing_list_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 825, 
+	$("#billing_list_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 825,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -70,11 +70,11 @@ $(document).ready(function() {
 			 	loadComplete: function(data) {
 			 		var id1 = $('#billing_list_eid').val();
 			 		var id2 = $('#billing_list_other_billing_id').val();
-			 		if (id1 != '') {
+			 		if (id1 !== '') {
 			 			jQuery("#billing_encounters").expandSubGridRow(id1);
 			 			$('#billing_list_eid').val('');
 			 		}
-			 		if (id2 != '') {
+			 		if (id2 !== '') {
 			 			jQuery("#billing_other").expandSubGridRow(id2);
 			 			$('#billing_list_other_billing_id').val('');
 			 		}
@@ -95,11 +95,11 @@ $(document).ready(function() {
 			 				{name:"dos_f",index:"dos_f",width:100,formatter:'date',formatoptions:{srcformat:"m/d/Y", newformat: "ISO8601Short"}},
 			 				{name:"payment",index:"payment",width:200,formatter:'currency',formatoptions:{decimalSeparator:".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "$ "}},
 			 				{name:"payment_type",index:"payment_type",width:300,align:"right"}
-			 			], 
+			 			],
 			 			rowNum:10,
 			 			pager: pager_id,
-			 			sortname: 'dos_f', 
-			 			sortorder: "desc", 
+			 			sortname: 'dos_f',
+			 			sortorder: "desc",
 			 			height: '100%',
 			 			footerrow : true,
 			 			userDataOnFooter : true,
@@ -129,9 +129,9 @@ $(document).ready(function() {
 			 			add:false,
 			 			del:false
 			 		}).jqGrid('navButtonAdd',"#"+pager_id,{
-			 			caption:"Delete Payment", 
-						buttonicon:"ui-icon-trash", 
-						onClickButton: function(){ 
+			 			caption:"Delete Payment",
+						buttonicon:"ui-icon-trash",
+						onClickButton: function(){
 							var item = jQuery(this).getGridParam('selrow');
 							if(item){
 				 				var id = $(this).getCell(item,'billing_core_id');
@@ -153,7 +153,7 @@ $(document).ready(function() {
 										dataType: 'json',
 										success: function(data){
 											$.jGrowl(data.message);
-											$("#billing_encounters").setCell(data.id,"balance",data.balance); 
+											$("#billing_encounters").setCell(data.id,"balance",data.balance);
 										}
 									});
 									jQuery(this).trigger("reloadGrid");
@@ -162,7 +162,7 @@ $(document).ready(function() {
 							} else {
 								$.jGrowl('Choose payment to delete!');
 							}
-						}, 
+						},
 						position:"last"
 					});
 			 	}
@@ -177,7 +177,7 @@ $(document).ready(function() {
 					{name:'other_billing_id',index:'other_billing_id',width:1,hidden:true},
 					{name:'dos_f',index:'dos_f',width:100,formatter:'date',formatoptions:{srcformat:"m/d/Y", newformat: "ISO8601Short"},unformat:editDate},
 					{name:'reason',index:'reason',width:355},
-					{name:'cpt_charge',index:'cpt_charge',width:100,formatter:'currency',formatoptions:{decimalSeparator:".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "$ "}},		
+					{name:'cpt_charge',index:'cpt_charge',width:100,formatter:'currency',formatoptions:{decimalSeparator:".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "$ "}},
 					{name:"balance",index:"balance",width:100,formatter:'currency',formatoptions:{decimalSeparator:".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "$ "}}
 				],
 				rowNum:10,
@@ -191,11 +191,11 @@ $(document).ready(function() {
 			 	loadComplete: function(data) {
 			 		var id1 = $('#billing_list_eid').val();
 			 		var id2 = $('#billing_list_other_billing_id').val();
-			 		if (id1 != '') {
+			 		if (id1 !== '') {
 			 			jQuery("#billing_encounters").expandSubGridRow(id1);
 			 			$('#billing_list_eid').val('');
 			 		}
-			 		if (id2 != '') {
+			 		if (id2 !== '') {
 			 			jQuery("#billing_other").expandSubGridRow(id2);
 			 			$('#billing_list_other_billing_id').val('');
 			 		}
@@ -216,11 +216,11 @@ $(document).ready(function() {
 			 				{name:"dos_f",index:"dos_f",width:100,formatter:'date',formatoptions:{srcformat:"m/d/Y", newformat: "ISO8601Short"}},
 			 				{name:"payment",index:"payment",width:200,formatter:'currency',formatoptions:{decimalSeparator:".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "$ "}},
 			 				{name:"payment_type",index:"payment_type",width:300,align:"right"}
-			 			], 
+			 			],
 			 			rowNum:10,
 			 			pager: pager_id,
-			 			sortname: 'dos_f', 
-			 			sortorder: "desc", 
+			 			sortname: 'dos_f',
+			 			sortorder: "desc",
 			 			height: '100%',
 			 			footerrow : true,
 			 			userDataOnFooter : true,
@@ -250,9 +250,9 @@ $(document).ready(function() {
 			 			add:false,
 			 			del:false
 			 		}).jqGrid('navButtonAdd',"#"+pager_id,{
-			 			caption:"Delete Payment", 
-						buttonicon:"ui-icon-trash", 
-						onClickButton: function(){ 
+			 			caption:"Delete Payment",
+						buttonicon:"ui-icon-trash",
+						onClickButton: function(){
 							var item = jQuery(this).getGridParam('selrow');
 							if(item){
 				 				var id = $(this).getCell(item,'billing_core_id');
@@ -274,7 +274,7 @@ $(document).ready(function() {
 										dataType: 'json',
 										success: function(data){
 											$.jGrowl(data.message);
-											$("#billing_other").setCell(data.id,"balance",data.balance); 
+											$("#billing_other").setCell(data.id,"balance",data.balance);
 										}
 									});
 									jQuery(this).trigger("reloadGrid");
@@ -283,7 +283,7 @@ $(document).ready(function() {
 							} else {
 								$.jGrowl('Choose payment to delete!');
 							}
-						}, 
+						},
 						position:"last"
 					});
 			 	}
@@ -300,16 +300,16 @@ $(document).ready(function() {
 			var id = ui.newPanel[0].id;
 			$("#" + id + " .text").first().focus();
 			var active = $("#billing_detail_accordion").accordion("option", "active");
-			if (active != 0) {
+			if (active !== 0) {
 				billing_detail_save();
 			}
 		}
 	});
-	$("#billing_detail_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 840, 
+	$("#billing_detail_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 840,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -320,7 +320,7 @@ $(document).ready(function() {
 				dataType: "json",
 				success: function(data){
 					$("#billing_icd1").removeOption(/./);
-					if (data.message = "OK") {
+					if (data.message === "OK") {
 						$("#billing_icd1").addOption(data, false).removeOption("message").trigger("liszt:updated");
 					} else {
 						$.jGrowl(data.message);
@@ -337,7 +337,7 @@ $(document).ready(function() {
 					$("#established_prevent1_text").html(data.prevent_established1);
 					$("#new_prevent1_text").html(data.prevent_new1);
 				}
-			});	
+			});
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/get-insurance-id/" + id,
@@ -347,10 +347,10 @@ $(document).ready(function() {
 					$("#billing_insurance_id_2").val(data.insurance_id_2);
 					$("#billing_insurance_id_1_old").val(data.insurance_id_1);
 					$("#billing_insurance_id_2_old").val(data.insurance_id_2);
-					if (data.insurance_id_1 == '') {
+					if (data.insurance_id_1 === '') {
 						$("#billing_insuranceinfo1").html("No primary insurance chosen");
 					}
-					if (data.insurance_id_2 == '') {
+					if (data.insurance_id_2 === '') {
 						$("#billing_insuranceinfo2").html("No secondary insurance chosen");
 					}
 					get_insurance_info();
@@ -361,41 +361,42 @@ $(document).ready(function() {
 				url: "ajaxchart/get-assessment/" + id,
 				dataType: "json",
 				success: function(data){
-					if (data != '') {
-						if(data.assessment_1.length!=0){
-							var label1 = '<strong>Diagnosis A:</strong> ' + data.assessment_1;
+					if (data !== '') {
+						var label1 = '';
+						if(data.assessment_1.length !== 0){
+							label1 += '<strong>Diagnosis A:</strong> ' + data.assessment_1;
 						}
-						if(data.assessment_2.length!=0){
+						if(data.assessment_2.length !== 0){
 							label1 += '<br><strong>Diagnosis B:</strong> ' + data.assessment_2;
 						}
-						if(data.assessment_3.length!=0){
+						if(data.assessment_3.length !== 0){
 							label1 += '<br><strong>Diagnosis C:</strong> ' + data.assessment_3;
 						}
-						if(data.assessment_4.length!=0){
+						if(data.assessment_4.length !== 0){
 							label1 += '<br><strong>Diagnosis D:</strong> ' + data.assessment_4;
 						}
-						if(data.assessment_5.length!=0){
+						if(data.assessment_5.length !== 0){
 							label1 += '<br><strong>Diagnosis E:</strong> ' + data.assessment_5;
 						}
-						if(data.assessment_6.length!=0){
+						if(data.assessment_6.length !== 0){
 							label1 += '<br><strong>Diagnosis F:</strong> ' + data.assessment_6;
 						}
-						if(data.assessment_7.length!=0){
+						if(data.assessment_7.length !== 0){
 							label1 += '<br><strong>Diagnosis G:</strong> ' + data.assessment_7;
 						}
-						if(data.assessment_8.length!=0){
+						if(data.assessment_8.length !== 0){
 							label1 += '<br><strong>Diagnosis H:</strong> ' + data.assessment_8;
 						}
-						if(data.assessment_9.length!=0){
+						if(data.assessment_9.length !== 0){
 							label1 += '<br><strong>Diagnosis I:</strong> ' + data.assessment_9;
 						}
-						if(data.assessment_10.length!=0){
+						if(data.assessment_10.length !== 0){
 							label1 += '<br><strong>Diagnosis J:</strong> ' + data.assessment_10;
 						}
-						if(data.assessment_11.length!=0){
+						if(data.assessment_11.length !== 0){
 							label1 += '<br><strong>Diagnosis K:</strong> ' + data.assessment_11;
 						}
-						if(data.assessment_12.length!=0){
+						if(data.assessment_12.length !== 0){
 							label1 += '<br><strong>Diagnosis L:</strong> ' + data.assessment_12;
 						}
 						$("#billing_icd9").html(label1);
@@ -436,7 +437,7 @@ $(document).ready(function() {
 							data: "icd=" + item,
 							dataType: "json",
 							success: function(data){
-								$.jGrowl(data.item, {sticky:true});	
+								$.jGrowl(data.item, {sticky:true});
 							}
 						});
 					}
@@ -485,7 +486,7 @@ $(document).ready(function() {
 			var a = $("#billing_eid_1");
 			var b = $("#billing_insurance_id_1");
 			bValid = bValid && checkEmpty(a, "Encounter");
-			bValid = bValid && checkEmpty(b, "Primary Insurance"); 
+			bValid = bValid && checkEmpty(b, "Primary Insurance");
 			if (bValid) {
 				billing_detail_save();
 				$("#billing_detail_form").clearForm();
@@ -499,11 +500,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#billing_other_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 200, 
-		width: 800, 
+	$("#billing_other_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 200,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -531,7 +532,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#billing_other_form1").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -563,11 +564,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#billing_notes_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 600, 
+	$("#billing_notes_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 600,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -578,7 +579,7 @@ $(document).ready(function() {
 				url: "ajaxchart/get-billing-notes",
 				success: function(data){
 					$('#billing_billing_notes').val(data);
-					$('#billing_billing_notes_old').val(data)
+					$('#billing_billing_notes_old').val(data);
 				}
 			});
 		},
@@ -613,11 +614,11 @@ $(document).ready(function() {
 	});
 	$("#billing_other_dos_f1").mask("99/99/9999").datepicker();
 	$("#billing_payment_dos_f").mask("99/99/9999").datepicker();
-	$("#billing_payment_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 250, 
-		width: 500, 
+	$("#billing_payment_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 250,
+		width: 500,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -645,7 +646,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#billing_payment_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -659,12 +660,12 @@ $(document).ready(function() {
 							dataType: "json",
 							success: function(data){
 								$.jGrowl(data.message);
-								if (data.eid != ''){
+								if (data.eid !== ''){
 									$('#billing_list_eid').val(data.eid);
 									reload_grid("billing_encounters");
 									total_balance();
 								}
-								if (data.other_billing_id != ''){
+								if (data.other_billing_id !== ''){
 									$('#billing_list_other_billing_id').val(data.other_billing_id);
 									reload_grid("billing_other");
 									total_balance();
@@ -779,16 +780,16 @@ $(document).ready(function() {
 	});
 	$("#billing_modifier1").addOption({"":"","25":"25 - Significant, Separately Identifiable E & M Service.","52":"52 - Reduced Service .","59":"59 - Distinct Procedural Service."}, false);
 	$("#cpt_helper_items1").accordion({active: false, fillSpace: true});
-	$("#cpt_helper_dialog1").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#cpt_helper_dialog1").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		close: function(event, ui) {
 			var b = $("input[name='billing_cpt_helper1']:checked").val();
-			if (b != '') {
+			if (b !== '') {
 				$("#billing_cpt1").val(b);
 				$.ajax({
 					type: "POST",
@@ -809,7 +810,7 @@ $(document).ready(function() {
 	$("#print_invoice1").click(function(){
 		var ins1 = $("#billing_insurance_id_1").val();
 		var ins2 = $("#billing_insurance_id_2").val();
-		if (ins2 == '') {
+		if (ins2 === '') {
 			ins2 = '0';
 		}
 		var eid = $("#billing_eid_1").val();
@@ -825,7 +826,7 @@ $(document).ready(function() {
 			var ins1 = $("#billing_insurance_id_1").val();
 			var ins2 = $("#billing_insurance_id_2").val();
 			var eid = $("#billing_eid_1").val();
-			if (ins1 == '' || ins1 == '0') {
+			if (ins1 === '' || ins1 === '0') {
 				$.jGrowl("No HCFA-1500 printed due to no primary insurance!");
 			} else {
 				window.open("generate_hcfa1/n/" + eid + "/" + ins1 + "/" + ins2);
@@ -842,7 +843,7 @@ $(document).ready(function() {
 			var ins1 = $("#billing_insurance_id_1").val();
 			var ins2 = $("#billing_insurance_id_2").val();
 			var eid = $("#billing_eid_1").val();
-			if (ins1 == '' || ins1 == '0') {
+			if (ins1 === '' || ins1 === '0') {
 				$.jGrowl("No HCFA-1500 printed due to no primary insurance!");
 			} else {
 				window.open("generate_hcfa1/y/" + eid + "/" + ins1 + "/" + ins2);
@@ -905,11 +906,11 @@ $(document).ready(function() {
 			$.jGrowl("Please select row to remove!");
 		}
 	});
-	$("#cpt_billing_dialog1").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#cpt_billing_dialog1").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		modal: true,
 		draggable: false,
 		resizable: false,
@@ -964,7 +965,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#billing_form1").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1000,7 +1001,7 @@ $(document).ready(function() {
 	});
 	$('#update_cpt_charge1').click(function(){
 		var item = $("#billing_cpt1").val();
-		if(item != ''){
+		if(item !== ''){
 			var item2 = $("#billing_cpt_charge1").val();
 			$.ajax({
 				url: "ajaxchart/update-cpt-charge",
@@ -1056,7 +1057,7 @@ $(document).ready(function() {
 		$("#configuration_dialog").dialog('open');
 		$("#configuration_accordion").accordion("option", "active", 8);
 	});
-	if (noshdata.financial != '') {
+	if (noshdata.financial !== '') {
 		$("#billing_list_dialog").dialog('open');
 		$.ajax({
 			type: "POST",

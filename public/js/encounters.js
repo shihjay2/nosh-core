@@ -1,9 +1,9 @@
 $(document).ready(function() {
-	$("#encounter_view_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#encounter_view_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		buttons: [
@@ -35,11 +35,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#encounter_list_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#encounter_list_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function (event, ui) {
@@ -79,7 +79,7 @@ $(document).ready(function() {
 									data: "eid=" + id,
 									success: function(data) {
 										noshdata.encounter_active = 'y';
-										noshdata.eid = id
+										noshdata.eid = id;
 										openencounter();
 										$("#nosh_chart_div").hide();
 										$("#nosh_encounter_div").show();
@@ -138,11 +138,11 @@ $(document).ready(function() {
 		});
 		$("#encounter_list_dialog").dialog('open');
 	});
-	$("#encounter_choice_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 100, 
-		width: 300, 
+	$("#encounter_choice_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 100,
+		width: 300,
 		draggable: false,
 		resizable: false,
 		modal: true,

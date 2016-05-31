@@ -52,21 +52,17 @@
 				<legend>Super Query</legend>
 				<form name="super_query_form" id="super_query_form" class="pure-form">
 					<div id="super_query_div"></div><br>
-					<div style="width:450px">
+					<div>
 						<div class="pure-g">
-							<div class="pure-u-1-2">Active Patients Only:</div>
-							<div class="pure-u-1-6"><input type="checkbox" name="search_active_only" id="search_active_only" value="Yes" class="text"/></div>
-							<div class="pure-u-1-6"></div>
-							<div class="pure-u-1-6"></div>
-							<div class="pure-u-1-2">Patients without insurance:</div>
-							<div class="pure-u-1-6"><input type="checkbox" name="search_no_insurance_only" id="search_no_insurance_only" value="Yes" class="text"/></div>
-							<div class="pure-u-1-6"></div>
-							<div class="pure-u-1-6"></div>
-							<div class="pure-u-1-2">Gender:</div>
-							<div class="pure-u-1-6"><input type="radio" name="search_gender" id="search_gender_both" value="both" /> All</div>
-							<div class="pure-u-1-6"><input type="radio" name="search_gender" value="m" /> Male</div>
-							<div class="pure-u-1-6"><input type="radio" name="search_gender" value="f" /> Female</div>
-							<div class="pure-u-1-6"><input type="radio" name="search_gender" value="u" /> Undifferentiated</div>
+							<div class="pure-u-1-4">Active Patients Only:</div>
+							<div class="pure-u-3-4"><input type="checkbox" name="search_active_only" id="search_active_only" value="Yes" class="text"/></div>
+							<div class="pure-u-1-4">Patients without insurance:</div>
+							<div class="pure-u-3-4"><input type="checkbox" name="search_no_insurance_only" id="search_no_insurance_only" value="Yes" class="text"/></div>
+							<div class="pure-u-1-4">Gender:</div>
+							<div class="pure-u-1-8"><input type="radio" name="search_gender" id="search_gender_both" value="both" /> All</div>
+							<div class="pure-u-1-8"><input type="radio" name="search_gender" value="m" /> Male</div>
+							<div class="pure-u-1-8"><input type="radio" name="search_gender" value="f" /> Female</div>
+							<div class="pure-u-3-8"><input type="radio" name="search_gender" value="u" /> Undifferentiated</div>
 						</div>
 					</div>
 					<br>

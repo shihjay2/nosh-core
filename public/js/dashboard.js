@@ -7,7 +7,7 @@ $(document).ready(function() {
 			return "Orange";
 		}
 		if(cellvalue=="coloryellow"){
-			return "Yellow"; mi
+			return "Yellow";
 		}
 		if(cellvalue=="colorgreen"){
 			return "Green";
@@ -19,14 +19,14 @@ $(document).ready(function() {
 			return "Purple";
 		}
 		if(cellvalue=="colorbrown"){
-			return "Brown"
+			return "Brown";
 		}
 		if(cellvalue=="colorblack"){
-			return "Black"
+			return "Black";
 		}
 	}
 	function practicestatus (cellvalue, options, rowObject){
-		if (cellvalue == '') {
+		if (cellvalue === '') {
 			return 'Connected';
 		} else {
 			return 'Pending';
@@ -226,11 +226,11 @@ $(document).ready(function() {
 		$("#alert_div").hide();
 		$("#draft_div").hide();
 	});
-	$("#change_password_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 800, 
+	$("#change_password_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 800,
 		modal: true,
 		overlay: {
 			backgroundColor: '#000',
@@ -329,11 +329,11 @@ $(document).ready(function() {
 			}
 		});
 	}
-	$("#change_secret_answer_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 800, 
+	$("#change_secret_answer_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 800,
 		modal: true,
 		overlay: {
 			backgroundColor: '#000',
@@ -371,11 +371,11 @@ $(document).ready(function() {
 		}
 	});
 	$('.sigPad').signaturePad({drawOnly:true});
-	$("#provider_info_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#provider_info_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		closeOnEscape: false,
 		dialogClass: "noclose",
 		open: function() {
@@ -494,11 +494,11 @@ $(document).ready(function() {
 		});
 	});
 	$("#add_provider_visit_type").click(function(){
-		jQuery("#provider_visit_type_list").editGridRow("new",{closeAfterAdd:true,width:'400',bottominfo:'Fields marked in (*) are required.'});	
+		jQuery("#provider_visit_type_list").editGridRow("new",{closeAfterAdd:true,width:'400',bottominfo:'Fields marked in (*) are required.'});
 	});
 	$("#edit_provider_visit_type").click(function(){
 		var item = jQuery("#provider_visit_type_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#provider_visit_type_list").editGridRow(item,{closeAfterEdit:true,width:'400',bottominfo:'Fields marked in (*) are required.'});
 		} else {
 			$.jGrowl("Please select visit type to edit!");
@@ -506,19 +506,19 @@ $(document).ready(function() {
 	});
 	$("#delete_provider_visit_type").click(function(){
 		var item = jQuery("#provider_visit_type_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#provider_visit_type_list").delGridRow(item);
 			jQuery("#provider_visit_type_list").delRowData(item);
 		} else {
 			$.jGrowl("Please select visit type to delete!");
 		}
 	});
-	
-	$("#restore_database_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 320, 
-		width: 500, 
+
+	$("#restore_database_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 320,
+		width: 500,
 		modal: true,
 		overlay: {
 			backgroundColor: '#000',
@@ -551,10 +551,10 @@ $(document).ready(function() {
 	$(".dashboard_test_reconcile").click(function(){
 		$("#tests_reconcile_dialog").dialog('open');
 	});
-	$("#tests_reconcile_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
+	$("#tests_reconcile_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
 		width: 800,
 		open: function(event, ui) {
 			$("#reconcile_test_patient_search1").autocomplete({
@@ -592,62 +592,63 @@ $(document).ready(function() {
 					{name:'test_reference',index:'test_reference',width:100},
 					{name:'test_flags',index:'test_flags',width:50,
 						cellattr: function (rowId, val, rawObject, cm, rdata) {
-							if (rawObject.test_flags == "L") {
-								var response = "Below low normal";
+							var response = '';
+							if (rawObject.test_flags === "L") {
+								response = "Below low normal";
 							}
-							if (rawObject.test_flags == "H") {
-								var response = "Above high normal";
+							if (rawObject.test_flags === "H") {
+								response = "Above high normal";
 							}
-							if (rawObject.test_flags == "LL") {
-								var response = "Below low panic limits";
+							if (rawObject.test_flags === "LL") {
+								response = "Below low panic limits";
 							}
-							if (rawObject.test_flags == "HH") {
-								var response = "Above high panic limits";
+							if (rawObject.test_flags === "HH") {
+								response = "Above high panic limits";
 							}
-							if (rawObject.test_flags == "<") {
-								var response = "Below absolute low-off instrument scale";
+							if (rawObject.test_flags === "<") {
+								response = "Below absolute low-off instrument scale";
 							}
-							if (rawObject.test_flags == ">") {
-								var response = "Above absolute high-off instrument scale";
+							if (rawObject.test_flags === ">") {
+								response = "Above absolute high-off instrument scale";
 							}
-							if (rawObject.test_flags == "N") {
-								var response = "Normal";
+							if (rawObject.test_flags === "N") {
+								response = "Normal";
 							}
-							if (rawObject.test_flags == "A") {
-								var response = "Abnormal";
+							if (rawObject.test_flags === "A") {
+								response = "Abnormal";
 							}
-							if (rawObject.test_flags == "AA") {
-								var response = "Very abnormal";
+							if (rawObject.test_flags === "AA") {
+								response = "Very abnormal";
 							}
-							if (rawObject.test_flags == "U") {
-								var response = "Significant change up";
+							if (rawObject.test_flags === "U") {
+								response = "Significant change up";
 							}
-							if (rawObject.test_flags == "D") {
-								var response = "Significant change down";
+							if (rawObject.test_flags === "D") {
+								response = "Significant change down";
 							}
-							if (rawObject.test_flags == "B") {
-								var response = "Better";
+							if (rawObject.test_flags === "B") {
+								response = "Better";
 							}
-							if (rawObject.test_flags == "W") {
-								var response = "Worse";
+							if (rawObject.test_flags === "W") {
+								response = "Worse";
 							}
-							if (rawObject.test_flags == "S") {
-								var response = "Susceptible";
+							if (rawObject.test_flags === "S") {
+								response = "Susceptible";
 							}
-							if (rawObject.test_flags == "R") {
-								var response = "Resistant";
+							if (rawObject.test_flags === "R") {
+								response = "Resistant";
 							}
-							if (rawObject.test_flags == "I") {
-								var response = "Intermediate";
+							if (rawObject.test_flags === "I") {
+								response = "Intermediate";
 							}
-							if (rawObject.test_flags == "MS") {
-								var response = "Moderately susceptible";
+							if (rawObject.test_flags === "MS") {
+								response = "Moderately susceptible";
 							}
-							if (rawObject.test_flags == "VS") {
-								var response = "Very susceptible";
+							if (rawObject.test_flags === "VS") {
+								response = "Very susceptible";
 							}
-							if (rawObject.test_flags == "") {
-								var response = "";
+							if (rawObject.test_flags === "") {
+								response = "";
 							}
 							return 'title="' + response + '"';
 						}
@@ -712,7 +713,7 @@ $(document).ready(function() {
 	$("#delete_tests").click(function(){
 		var click_id = $("#tests_reconcile_list").getGridParam('selarrrow');
 		if(click_id.length > 0){
-			if(confirm('Are you sure you want to delete the selected tests?')){ 
+			if(confirm('Are you sure you want to delete the selected tests?')){
 				var count = click_id.length;
 				for (var i = 0; i < count; i++) {
 					$.ajax({
@@ -736,7 +737,7 @@ $(document).ready(function() {
 			url: "ajaxdashboard/check-print-entire-chart",
 			dataType: "json",
 			success: function(data){
-				if (data.response == true) {
+				if (data.response === true) {
 					$('#dialog_load').dialog('option', 'title', "Creating file...").dialog('open');
 					$.ajax({
 						type: "POST",
@@ -780,7 +781,7 @@ $(document).ready(function() {
 			url: "ajaxdashboard/check-csv-patient-demographics",
 			dataType: "json",
 			success: function(data){
-				if (data.response == true) {
+				if (data.response === true) {
 					$('#dialog_load').dialog('option', 'title', "Creating file...").dialog('open');
 					$.ajax({
 						type: "POST",
@@ -801,7 +802,7 @@ $(document).ready(function() {
 		$('#y').val(c.y);
 		$('#w').val(c.w);
 		$('#h').val(c.h);
-	};
+	}
 	function signature() {
 		$.ajax({
 			type: "POST",
@@ -810,7 +811,7 @@ $(document).ready(function() {
 			success: function(data){
 				$("#preview_signature").html(data.link);
 				$("#signature_message").html(data.message);
-				if (data.button != "") {
+				if (data.button !== "") {
 					$('#image_target').Jcrop({
 						maxSize: [198, 55],
 						onSelect: updateCoords1
@@ -818,7 +819,7 @@ $(document).ready(function() {
 					$("#signature_message").append(data.button);
 					$('#image_crop').button().click(function(){
 						var a = $('#x').val();
-						if (a != '') {
+						if (a !== '') {
 							var str = "x=" + $('#x').val() + "&y=" + $('#y').val() + "&w=" + $('#w').val() + "&h=" + $('#h').val();
 							$.ajax({
 								type: "POST",
@@ -854,10 +855,10 @@ $(document).ready(function() {
 			$("#import_entire").parent().find('input').val('');
 		}
 	});
-	$("#manage_practice_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
+	$("#manage_practice_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
 		width: 800,
 		open: function(event, ui) {
 			$("#manage_practice_list").jqGrid('GridUnload');
@@ -886,11 +887,11 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$("#add_practice_state").addOption(states, false);
-	$("#add_practice_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#add_practice_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		modal: true,
 		draggable: false,
 		resizable: false,
@@ -912,13 +913,13 @@ $(document).ready(function() {
 					});
 				},
 				minLength: 3,
-				open: function() { 
+				open: function() {
 					$('.ui-menu').width(300);
 				}
 			}).focus(function() {
 				var a = $("#add_practice_practice_name").val();
 				var b = $("#add_practice_state").val();
-				if (a != "" && b != "") {
+				if (a !== "" && b !== "") {
 					var q = a + ";" + b;
 					$("#add_practice_npi").autocomplete("search", q);
 				}
@@ -929,7 +930,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#add_practice_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 					if (input_id == 'add_practice_practice_url') {
@@ -968,11 +969,11 @@ $(document).ready(function() {
 	$("#dashboard_add_practice").click(function() {
 		$("#add_practice_dialog").dialog('open');
 	});
-	$("#manual_cancel_practice_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 400, 
+	$("#manual_cancel_practice_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 400,
 		modal: true,
 		draggable: false,
 		resizable: false,
@@ -1001,11 +1002,11 @@ $(document).ready(function() {
 			}
 		});
 	});
-	$("#hieofone_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 350, 
-		width: 550, 
+	$("#hieofone_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 350,
+		width: 550,
 		modal: true,
 		overlay: {
 			backgroundColor: '#000',
@@ -1046,11 +1047,11 @@ $(document).ready(function() {
 		$("#hieofone_error").html('');
 		$("#hieofone_dialog").dialog('open');
 	});
-	$('#send_uma_invite_dialog').dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$('#send_uma_invite_dialog').dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		modal: true,
 		draggable: false,
 		resizable: false,
@@ -1065,7 +1066,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#send_uma_invite_form2").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1102,7 +1103,7 @@ $(document).ready(function() {
 		var bValid = true;
 		$("#send_uma_invite_form1").find("[required]").each(function() {
 			var input_id = $(this).attr('id');
-			var id1 = $("#" + input_id); 
+			var id1 = $("#" + input_id);
 			var text = $("label[for='" + input_id + "']").html();
 			bValid = bValid && checkEmpty(id1, text);
 		});

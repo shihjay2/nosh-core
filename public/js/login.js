@@ -31,11 +31,11 @@ $(document).ready(function() {
 			}
 		});
 	});
-	$("#register_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 570, 
-		width: 600, 
+	$("#register_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 570,
+		width: 600,
 		modal: true,
 		draggable: false,
 		resizable: false,
@@ -47,7 +47,7 @@ $(document).ready(function() {
 		},
 		close: function(event, ui) {
 			$("#register_form").clearForm();
-			$('#numberReal').realperson('destroy'); 
+			$('#numberReal').realperson('destroy');
 		}
 	});
 	$("#register").click(function(){
@@ -58,7 +58,7 @@ $(document).ready(function() {
 		var bValid = true;
 		$("#register_form").find("[required]").each(function() {
 			var input_id = $(this).attr('id');
-			var id1 = $("#" + input_id); 
+			var id1 = $("#" + input_id);
 			var text = $("label[for='" + input_id + "']").html();
 			bValid = bValid && checkEmpty(id1, text);
 			if (input_id == 'username1') {
@@ -99,11 +99,11 @@ $(document).ready(function() {
 			}
 		}
 	});
-	$("#forgot_password_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 250, 
-		width: 600, 
+	$("#forgot_password_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 250,
+		width: 600,
 		modal: true,
 		draggable: false,
 		resizable: false,
@@ -198,11 +198,11 @@ $(document).ready(function() {
 			}
 		}
 	});
-	$("#new_password_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 600, 
+	$("#new_password_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 600,
 		modal: true,
 		draggable: false,
 		resizable: false,
@@ -248,7 +248,7 @@ $(document).ready(function() {
 			data: 'username=' + $('#username1').val(),
 			dataType: "json",
 			success: function(data){
-				if (data.response == true) {
+				if (data.response === true) {
 					$.jGrowl(data.message);
 					$("#username1").addClass("ui-state-error");
 				} else {

@@ -1,9 +1,9 @@
 $(document).ready(function() {
-	$("#allergies_list_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#allergies_list_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -61,11 +61,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#edit_allergy_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 800, 
+	$("#edit_allergy_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -114,7 +114,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_allergy_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -189,7 +189,7 @@ $(document).ready(function() {
 			$('#edit_allergy_dialog').dialog('open');
 			$("#allergies_med").focus();
 		} else {
-			$.jGrowl("Please select allergy to edit!")
+			$.jGrowl("Please select allergy to edit!");
 		}
 	});
 	$("#inactivate_allergy").click(function(){
@@ -207,7 +207,7 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select allergy to inactivate!")
+			$.jGrowl("Please select allergy to inactivate!");
 		}
 	});
 	$("#delete_allergy").click(function(){
@@ -226,7 +226,7 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			$.jGrowl("Please select allergy to delete!")
+			$.jGrowl("Please select allergy to delete!");
 		}
 	});
 	$("#reactivate_allergy").click(function(){
@@ -244,7 +244,7 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select allergy to inactivate!")
+			$.jGrowl("Please select allergy to inactivate!");
 		}
 	});
 	$('#save_oh_allergies').click(function(){

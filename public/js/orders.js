@@ -17,17 +17,17 @@ $(document).ready(function() {
 	$("#instructions_dialog_load1").dialog({
 		height: 100,
 		width: 350,
-		autoOpen: false, 
+		autoOpen: false,
 		modal: true,
 		closeOnEscape: false,
 		dialogClass: "noclose",
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#orders_plan_instructions_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 350, 
-		width: 800, 
+	$("#orders_plan_instructions_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 350,
+		width: 800,
 		modal: true,
 		draggable: false,
 		resizable: false,
@@ -96,22 +96,21 @@ $(document).ready(function() {
 		buttons: {
 			'Save': function() {
 				var b = $("#instructions_chosen").val();
-				if (b != '') {
+				if (b !== '') {
 					var old = $("#orders_plan").val();
+					var old1 = '';
 					if(old){
 						var pos = old.lastIndexOf('\n');
 						if (pos == -1) {
-							var old1 = old + '\n';
+							old1 = old + '\n';
 						} else {
 							var a = old.slice(pos);
-							if (a == '') {
-								var old1 = old;
+							if (a === '') {
+								old1 = old;
 							} else {
-								var old1 = old + '\n';
+								old1 = old + '\n';
 							}
 						}
-					} else {
-						var old1 = '';
 					}
 					var intro = 'Patient Instructions Given: ';
 					$("#orders_plan").val(old1+intro+b);
@@ -189,11 +188,11 @@ $(document).ready(function() {
 			},
 		});
 	});
-	$("#edit_orders_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 200, 
-		width: 500, 
+	$("#edit_orders_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 200,
+		width: 500,
 		modal: true,
 		closeOnEscape: false,
 		dialogClass: "noclose",

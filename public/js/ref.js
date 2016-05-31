@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	$("#messages_ref_accordion").accordion({ 
+	$("#messages_ref_accordion").accordion({
 		heightStyle: "content" ,
 		activate: function (event, ui) {
 			var id = ui.newPanel[0].id;
@@ -18,11 +18,11 @@ $(document).ready(function() {
 			}
 		});
 	});
-	$("#messages_ref_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#messages_ref_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -68,11 +68,10 @@ $(document).ready(function() {
 						success: function(data){
 							var old = $("#t_messages_message").val();
 							var old1 = old.trim();
-							if(data != ''){
-								if (old1 != '') {
-									var a = old1+'\n\n'+data;
-								} else {
-									var a = data;
+							var a = data;
+							if(data !== ''){
+								if (old1 !== '') {
+									a = old1+'\n\n'+data;
 								}
 								$("#t_messages_message").val(a);
 							}
@@ -94,7 +93,7 @@ $(document).ready(function() {
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
 	$('#messages_specialty_select').change(function() {
-		if ($(this).val() != ""){
+		if ($(this).val() !== ""){
 			$("#messages_ref_location").removeOption(/./);
 			$.ajax({
 				url: "ajaxsearch/ref-provider/" + $(this).val(),
@@ -113,7 +112,7 @@ $(document).ready(function() {
 	});
 	$("#messages_add_ref").click(function(){
 		var a = $("#messages_ref_t_messages_id_origin").val();
-		if (a == '') {
+		if (a === '') {
 			$("#messages_ref_eid").val(noshdata.eid);
 		} else {
 			$("#messages_ref_t_messages_id").val(a);
@@ -197,11 +196,11 @@ $(document).ready(function() {
 			var status = 'Details for Referral Order #' + item;
 			$("#messages_ref_status").html(status);
 			$("#messages_ref_template").val('');
-			if ($("#messages_ref_provider_list").val() == '' && noshdata.group_id == '2') {
+			if ($("#messages_ref_provider_list").val() === '' && noshdata.group_id === '2') {
 				$("#messages_ref_provider_list").val(noshdata.user_id);
 			}
 			var a = $("#messages_ref_t_messages_id_origin").val();
-			if (a == '') {
+			if (a === '') {
 				$("#messages_ref_eid").val(noshdata.eid);
 			} else {
 				$("#messages_ref_t_messages_id").val(a);
@@ -240,11 +239,11 @@ $(document).ready(function() {
 			$.jGrowl("Please select order to delete!");
 		}
 	});
-	$("#messages_ref_edit_fields").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#messages_ref_edit_fields").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -296,25 +295,24 @@ $(document).ready(function() {
 						type: "POST",
 						success: function(data){
 							var text = insurance_plan_name + '; Payor ID: ' + data + '; ID: ' + insurance_id_num;
-							if(insurance_group != ''){
+							if(insurance_group !== ''){
 								text += "; Group: " + insurance_group;
 							}
 							text += "; " + insurance_insu_lastname + ", " + insurance_insu_firstname;
 							var old = $("#messages_ref_insurance").val();
+							var old1 = '';
 							if(old){
 								var pos = old.lastIndexOf('\n');
 								if (pos == -1) {
-									var old1 = old + '\n';
+									old1 = old + '\n';
 								} else {
 									var a = old.slice(pos);
-									if (a == '') {
-										var old1 = old;
+									if (a === '') {
+										old1 = old;
 									} else {
-										var old1 = old + '\n';
+										old1 = old + '\n';
 									}
 								}
-							} else {
-								var old1 = '';
 							}
 							$("#messages_ref_insurance").val(old1+text);
 						}
@@ -368,7 +366,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_messages_ref_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -401,11 +399,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#messages_ref_action_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 200, 
-		width: 500, 
+	$("#messages_ref_action_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 200,
+		width: 500,
 		modal: true,
 		closeOnEscape: false,
 		dialogClass: "noclose",
@@ -425,7 +423,7 @@ $(document).ready(function() {
 		$('#issues_rad_header').hide();
 		$('#issues_cp_header').hide();
 		$('#issues_assessment_header').hide();
-	});	
+	});
 	$("#messages_select_ref_location2").click(function (){
 		$("#messages_edit_ref_location").dialog('open');
 	});
@@ -435,24 +433,23 @@ $(document).ready(function() {
 	$("#messages_ref_insurance_client").click(function(){
 		var text = "Bill Client";
 		var old = $("#messages_ref_insurance").val();
+		var old1 = '';
 		if(old){
 			var pos = old.lastIndexOf('\n');
 			if (pos == -1) {
-				var old1 = old + '\n';
+				old1 = old + '\n';
 			} else {
 				var a = old.slice(pos);
-				if (a == '') {
-					var old1 = old;
+				if (a === '') {
+					old1 = old;
 				} else {
-					var old1 = old + '\n';
+					old1 = old + '\n';
 				}
 			}
-		} else {
-			var old1 = '';
 		}
 		$("#messages_ref_insurance").val(old1+text);
 	});
-	
+
 	$("#messages_print_ref").click(function(){
 		var ref = $("#messages_ref_orders_id");
 		var bValid = true;
@@ -490,11 +487,11 @@ $(document).ready(function() {
 		$("#messages_ref_orders_id").val('');
 		reload_grid("messages_ref_list");
 	});
-	$("#messages_edit_ref_location").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#messages_edit_ref_location").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -556,7 +553,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#messages_edit_ref_location_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -603,11 +600,11 @@ $(document).ready(function() {
 	});
 	var user_id = noshdata.user_id;
 	$("#messages_ref_orders_type").addOption({"0":'Global',user_id:'Personal'}, false);
-	$("#add_test_cpt3").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#add_test_cpt3").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -747,7 +744,7 @@ $(document).ready(function() {
 	});
 	$('#messages_ref_template').change(function (){
 		var a = $(this).val();
-		if (a != "") {
+		if (a !== "") {
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/get-ref-template/" + a,
@@ -794,13 +791,13 @@ $(document).ready(function() {
 					}
 				});
 				$('select.ref_intro').each(function (){
-					if ($(this).val() != "") {
+					if ($(this).val() !== "") {
 						var select_label = $(this).parent().children('span').html();
 						preview += select_label + " " + $(this).val() + '\n';
 					}
 				});
 				$('input.ref_intro[type="text"]').each(function (){
-					if ($(this).val() != "") {
+					if ($(this).val() !== "") {
 						var label = $(this).attr("placeholder");
 						preview += label + ": " + $(this).val() + '\n';
 					}
@@ -816,21 +813,22 @@ $(document).ready(function() {
 					}
 				});
 				$('.referral_form_div').find('select').each(function (){
-					if ($(this).val() != "") {
+					if ($(this).val() !== "") {
 						preview += $(this).val() + '\n';
 					}
 				});
 				$('.referral_form_div').find('input[type="text"]').each(function (){
-					if ($(this).val() != "") {
+					if ($(this).val() !== "") {
 						var parent_id = $(this).attr("id");
 						var x = parent_id.length - 1;
 						var parent_div = parent_id.slice(0,x);
+						var start1 = '';
 						if ($("#" + parent_div + "_div").length) {
-							var start1 = $("#" + parent_div + "_div").find('span:first').text();
+							start1 = $("#" + parent_div + "_div").find('span:first').text();
 						} else {
 							var parent_div_parts = parent_id.split("_");
-							var parent_div = parent_div_parts[0] + "_" + parent_div_parts[1] + "_" + parent_div_parts[2];
-							var start1 = $("#" + parent_div).find('span:first').text();
+							parent_div = parent_div_parts[0] + "_" + parent_div_parts[1] + "_" + parent_div_parts[2];
+							start1 = $("#" + parent_div).find('span:first').text();
 						}
 						preview += start1 + ": " + $(this).val() + '\n';
 					}
@@ -863,13 +861,13 @@ $(document).ready(function() {
 					}
 				});
 				$('select.ref_after').each(function (){
-					if ($(this).val() != "") {
+					if ($(this).val() !== "") {
 						var select_label = $(this).parent().children('span').html();
 						preview += select_label + " " + $(this).val() + '\n';
 					}
 				});
 				$('input.ref_after[type="text"]').each(function (){
-					if ($(this).val() != "") {
+					if ($(this).val() !== "") {
 						var label = $(this).attr("placeholder");
 						preview += label + ": " + $(this).val() + '\n';
 					}

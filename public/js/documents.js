@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	$("#documents_list_dialog").dialog({ 
+	$("#documents_list_dialog").dialog({
 		bgiframe: true,
 		autoOpen: false,
 		height: 580,
@@ -382,9 +382,9 @@ $(document).ready(function() {
 			}).navGrid('#pager16',{search:false,edit:false,add:false,del:false});
 			if (noshdata.group_id == '2' || noshdata.group_id == '3') {
 				jQuery("#labs").navButtonAdd('#pager8',{
-					caption:"Edit", 
-					buttonicon:"ui-icon-pencil", 
-					onClickButton: function(){ 
+					caption:"Edit",
+					buttonicon:"ui-icon-pencil",
+					onClickButton: function(){
 						var id = jQuery("#labs").getGridParam('selrow');
 						if(id){
 							jQuery("#labs").GridToForm(id,"#documents_edit_form");
@@ -397,15 +397,15 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to edit!');
 						}
-					}, 
+					},
 					position:"last"
 				}).navButtonAdd('#pager8',{
-					caption:"Delete", 
-					buttonicon:"ui-icon-trash", 
-					onClickButton: function(){ 
+					caption:"Delete",
+					buttonicon:"ui-icon-trash",
+					onClickButton: function(){
 						var item = jQuery("#labs").getGridParam('selrow');
 						if(item){
-							if(confirm('Are you sure you want to delete this document?')){ 
+							if(confirm('Are you sure you want to delete this document?')){
 								var id = $("#labs").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
@@ -421,13 +421,13 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to delete!');
 						}
-					}, 
+					},
 					position:"last"
 				});
 				jQuery("#radiology").navButtonAdd('#pager9',{
-					caption:"Edit", 
-					buttonicon:"ui-icon-pencil", 
-					onClickButton: function(){ 
+					caption:"Edit",
+					buttonicon:"ui-icon-pencil",
+					onClickButton: function(){
 						var id = jQuery("#radiology").getGridParam('selrow');
 						if(id){
 							jQuery("#radiology").GridToForm(id,"#documents_edit_form");
@@ -440,15 +440,15 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to edit!');
 						}
-					}, 
+					},
 					position:"last"
 				}).navButtonAdd('#pager9',{
-					caption:"Delete", 
-					buttonicon:"ui-icon-trash", 
-					onClickButton: function(){ 
+					caption:"Delete",
+					buttonicon:"ui-icon-trash",
+					onClickButton: function(){
 						var item = jQuery("#radiology").getGridParam('selrow');
 						if(item){
-							if(confirm('Are you sure you want to delete this document?')){ 
+							if(confirm('Are you sure you want to delete this document?')){
 								var id = $("#radiology").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
@@ -464,13 +464,13 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to delete!');
 						}
-					}, 
+					},
 					position:"last"
 				});
 				jQuery("#cardiopulm").navButtonAdd('#pager10',{
-					caption:"Edit", 
-					buttonicon:"ui-icon-pencil", 
-					onClickButton: function(){ 
+					caption:"Edit",
+					buttonicon:"ui-icon-pencil",
+					onClickButton: function(){
 						var id = jQuery("#cardiopulm").getGridParam('selrow');
 						if(id){
 							jQuery("#cardiopulm").GridToForm(id,"#documents_edit_form");
@@ -483,15 +483,15 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to edit!');
 						}
-					}, 
+					},
 					position:"last"
 				}).navButtonAdd('#pager10',{
-					caption:"Delete", 
-					buttonicon:"ui-icon-trash", 
-					onClickButton: function(){ 
+					caption:"Delete",
+					buttonicon:"ui-icon-trash",
+					onClickButton: function(){
 						var item = jQuery("#cardiopulm").getGridParam('selrow');
 						if(item){
-							if(confirm('Are you sure you want to delete this document?')){ 
+							if(confirm('Are you sure you want to delete this document?')){
 								var id = $("#cardiopulm").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
@@ -507,13 +507,13 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to delete!');
 						}
-					}, 
+					},
 					position:"last"
 				});
 				jQuery("#endoscopy").navButtonAdd('#pager11',{
-					caption:"Edit", 
-					buttonicon:"ui-icon-pencil", 
-					onClickButton: function(){ 
+					caption:"Edit",
+					buttonicon:"ui-icon-pencil",
+					onClickButton: function(){
 						var id = jQuery("#endoscopy").getGridParam('selrow');
 						if(id){
 							jQuery("#endoscopy").GridToForm(id,"#documents_edit_form");
@@ -526,15 +526,15 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to edit!');
 						}
-					}, 
+					},
 					position:"last"
 				}).navButtonAdd('#pager11',{
-					caption:"Delete", 
-					buttonicon:"ui-icon-trash", 
-					onClickButton: function(){ 
+					caption:"Delete",
+					buttonicon:"ui-icon-trash",
+					onClickButton: function(){
 						var item = jQuery("#endoscopy").getGridParam('selrow');
 						if(item){
-							if(confirm('Are you sure you want to delete this document?')){ 
+							if(confirm('Are you sure you want to delete this document?')){
 								var id = $("#endoscopy").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
@@ -550,13 +550,13 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to delete!');
 						}
-					}, 
+					},
 					position:"last"
 				});
 				jQuery("#referrals").navButtonAdd('#pager12',{
-					caption:"Edit", 
-					buttonicon:"ui-icon-pencil", 
-					onClickButton: function(){ 
+					caption:"Edit",
+					buttonicon:"ui-icon-pencil",
+					onClickButton: function(){
 						var id = jQuery("#referrals").getGridParam('selrow');
 						if(id){
 							jQuery("#referrals").GridToForm(id,"#documents_edit_form");
@@ -569,15 +569,15 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to edit!');
 						}
-					}, 
+					},
 					position:"last"
 				}).navButtonAdd('#pager12',{
-					caption:"Delete", 
-					buttonicon:"ui-icon-trash", 
-					onClickButton: function(){ 
+					caption:"Delete",
+					buttonicon:"ui-icon-trash",
+					onClickButton: function(){
 						var item = jQuery("#referrals").getGridParam('selrow');
 						if(item){
-							if(confirm('Are you sure you want to delete this document?')){ 
+							if(confirm('Are you sure you want to delete this document?')){
 								var id = $("#referrals").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
@@ -593,13 +593,13 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to delete!');
 						}
-					}, 
+					},
 					position:"last"
 				});
 				jQuery("#past_records").navButtonAdd('#pager13',{
-					caption:"Edit", 
-					buttonicon:"ui-icon-pencil", 
-					onClickButton: function(){ 
+					caption:"Edit",
+					buttonicon:"ui-icon-pencil",
+					onClickButton: function(){
 						var id = jQuery("#past_records").getGridParam('selrow');
 						if(id){
 							jQuery("#past_records").GridToForm(id,"#documents_edit_form");
@@ -612,15 +612,15 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to edit!');
 						}
-					}, 
+					},
 					position:"last"
 				}).navButtonAdd('#pager13',{
-					caption:"Delete", 
-					buttonicon:"ui-icon-trash", 
-					onClickButton: function(){ 
+					caption:"Delete",
+					buttonicon:"ui-icon-trash",
+					onClickButton: function(){
 						var item = jQuery("#past_records").getGridParam('selrow');
 						if(item){
-							if(confirm('Are you sure you want to delete this document?')){ 
+							if(confirm('Are you sure you want to delete this document?')){
 								var id = $("#past_records").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
@@ -636,13 +636,13 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to delete!');
 						}
-					}, 
+					},
 					position:"last"
 				});
 				jQuery("#outside_forms").navButtonAdd('#pager14',{
-					caption:"Edit", 
-					buttonicon:"ui-icon-pencil", 
-					onClickButton: function(){ 
+					caption:"Edit",
+					buttonicon:"ui-icon-pencil",
+					onClickButton: function(){
 						var id = jQuery("#outside_forms").getGridParam('selrow');
 						if(id){
 							jQuery("#outside_forms").GridToForm(id,"#documents_edit_form");
@@ -655,15 +655,15 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to edit!');
 						}
-					}, 
+					},
 					position:"last"
 				}).navButtonAdd('#pager14',{
-					caption:"Delete", 
-					buttonicon:"ui-icon-trash", 
-					onClickButton: function(){ 
+					caption:"Delete",
+					buttonicon:"ui-icon-trash",
+					onClickButton: function(){
 						var item = jQuery("#outside_forms").getGridParam('selrow');
 						if(item){
-							if(confirm('Are you sure you want to delete this document?')){ 
+							if(confirm('Are you sure you want to delete this document?')){
 								var id = $("#outside_forms").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
@@ -679,13 +679,13 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to delete!');
 						}
-					}, 
+					},
 					position:"last"
 				});
 				jQuery("#letters").navButtonAdd('#pager15',{
-					caption:"Edit", 
-					buttonicon:"ui-icon-pencil", 
-					onClickButton: function(){ 
+					caption:"Edit",
+					buttonicon:"ui-icon-pencil",
+					onClickButton: function(){
 						var id = jQuery("#letters").getGridParam('selrow');
 						if(id){
 							jQuery("#letters").GridToForm(id,"#documents_edit_form");
@@ -698,15 +698,15 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to edit!');
 						}
-					}, 
+					},
 					position:"last"
 				}).navButtonAdd('#pager15',{
-					caption:"Delete", 
-					buttonicon:"ui-icon-trash", 
-					onClickButton: function(){ 
+					caption:"Delete",
+					buttonicon:"ui-icon-trash",
+					onClickButton: function(){
 						var item = jQuery("#letters").getGridParam('selrow');
 						if(item){
-							if(confirm('Are you sure you want to delete this document?')){ 
+							if(confirm('Are you sure you want to delete this document?')){
 								var id = $("#letters").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
@@ -715,20 +715,20 @@ $(document).ready(function() {
 									success: function(data){
 										$.jGrowl(data);
 										reload_grid("letters");
-										refresh_documents()
+										refresh_documents();
 									}
 								});
 							}
 						} else {
 							$.jGrowl('Choose document to delete!');
 						}
-					}, 
+					},
 					position:"last"
 				});
 				jQuery("#ccdas").navButtonAdd('#pager16',{
-					caption:"Edit", 
-					buttonicon:"ui-icon-pencil", 
-					onClickButton: function(){ 
+					caption:"Edit",
+					buttonicon:"ui-icon-pencil",
+					onClickButton: function(){
 						var id = jQuery("#ccdas").getGridParam('selrow');
 						if(id){
 							jQuery("#ccdas").GridToForm(id,"#documents_edit_form");
@@ -741,15 +741,15 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose document to edit!');
 						}
-					}, 
+					},
 					position:"last"
 				}).navButtonAdd('#pager16',{
-					caption:"Delete", 
-					buttonicon:"ui-icon-trash", 
-					onClickButton: function(){ 
+					caption:"Delete",
+					buttonicon:"ui-icon-trash",
+					onClickButton: function(){
 						var item = jQuery("#ccdas").getGridParam('selrow');
 						if(item){
-							if(confirm('Are you sure you want to delete this document?')){ 
+							if(confirm('Are you sure you want to delete this document?')){
 								var id = $("#ccdas").getCell(item,'documents_id');
 								$.ajax({
 									type: "POST",
@@ -758,14 +758,14 @@ $(document).ready(function() {
 									success: function(data){
 										$.jGrowl(data);
 										reload_grid("ccdas");
-										refresh_documents()
+										refresh_documents();
 									}
 								});
 							}
 						} else {
 							$.jGrowl('Choose document to delete!');
 						}
-					}, 
+					},
 					position:"last"
 				});
 			}
@@ -773,7 +773,7 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#documents_view_dialog").dialog({ 
+	$("#documents_view_dialog").dialog({
 		bgiframe: true,
 		autoOpen: false,
 		height: 500,
@@ -798,7 +798,7 @@ $(document).ready(function() {
 						$("#documents_view_dialog").dialog('close');
 					}
 				});
-				
+
 			}
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
@@ -817,10 +817,10 @@ $(document).ready(function() {
 	$("#menu_documents_type").addOption({"Laboratory":"Laboratory","Imaging":"Imaging","Cardiopulmonary":"Cardiopulmonary","Endoscopy":"Endoscopy","Referrals":"Referrals","Past Records":"Past Records","Other Forms":"Other Forms","Letters":"Letters"}, false);
 	$("#menu_documents_date").mask("99/99/9999");
 	$("#menu_documents_date").datepicker();
-	$("#documents_edit_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
+	$("#documents_edit_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
 		width: 800,
 		closeOnEscape: false,
 		dialogClass: "noclose",
@@ -863,7 +863,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#documents_edit_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -904,11 +904,11 @@ $(document).ready(function() {
 	$("#menu_new_letter").click(function() {
 		$("#letter_dialog").dialog('open');
 	});
-	$("#letter_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#letter_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		closeOnEscape: false,
 		dialogClass: "noclose",
 		open: function (event, ui) {
@@ -972,32 +972,31 @@ $(document).ready(function() {
 					}
 				});
 				var eid = $("#letter_eid").val();
-				if (eid != '') {
+				if (eid !== '') {
 					var to = $("#letter_to").val();
 					var body = $("#letter_body").val();
 					var send = "Letter Written:\nTo: " + to + "\n" + body;
 					var old = $("#orders_plan").val();
-						if(old){
-							var pos = old.lastIndexOf('\n');
-							if (pos == -1) {
-								var old1 = old + '\n';
-							} else {
-								var a = old.slice(pos);
-								if (a == '') {
-									var old1 = old;
-								} else {
-									var old1 = old + '\n';
-								}
-							}
+					var old1 = '';
+					if(old){
+						var pos = old.lastIndexOf('\n');
+						if (pos == -1) {
+							old1 = old + '\n';
 						} else {
-							var old1 = '';
+							var a = old.slice(pos);
+							if (a === '') {
+								old1 = old;
+							} else {
+								old1 = old + '\n';
+							}
 						}
 						$("#orders_plan").val(old1+send);
+					}
+					$('#letter_form').clearForm();
+					$('#letter_template_form').clearForm();
+					$('#letter_template').hide();
+					$('#letter_dialog').dialog('close');
 				}
-				$('#letter_form').clearForm();
-				$('#letter_template_form').clearForm();
-				$('#letter_template').hide();
-				$('#letter_dialog').dialog('close');
 			},
 			Cancel: function() {
 				$('#letter_form').clearForm();
@@ -1015,7 +1014,7 @@ $(document).ready(function() {
 	$('#letter_template_choose_id').change(function(){
 		var a = $(this).val();
 		$('#letter_template_form').html('');
-		if (a != '') {
+		if (a !== '') {
 			$.ajax({
 				type: "POST",
 				url: "ajaxchart/get-letter-template/" + a,
@@ -1052,7 +1051,7 @@ $(document).ready(function() {
 				}
 				var a = $("#letter_body").val();
 				a = a.replace(data.start, '');
-				if (a == '') {
+				if (a === '') {
 					$('#letter_body').val(data.start + b);
 				} else {
 					$('#letter_body').val(a + "\n" + data.start + b);
@@ -1060,7 +1059,7 @@ $(document).ready(function() {
 				$('#letter_template_form').clearForm();
 			}
 		});
-		
+
 	});
 	$('#letter_reset').button({icons: {primary: "ui-icon-close"}}).click(function(){
 		$("#letter_body").val('');
@@ -1071,10 +1070,10 @@ $(document).ready(function() {
 		$("#t_message_copy_result").hide();
 		$("#tests_dialog").dialog('open');
 	});
-	$("#tests_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
+	$("#tests_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
 		width: 800,
 		open: function(event, ui) {
 			$("#chart_loading").hide();
@@ -1093,62 +1092,63 @@ $(document).ready(function() {
 					{name:'test_reference',index:'test_reference',width:100},
 					{name:'test_flags',index:'test_flags',width:50,
 						cellattr: function (rowId, val, rawObject, cm, rdata) {
+							var response = '';
 							if (rawObject.test_flags == "L") {
-								var response = "Below low normal";
+								response = "Below low normal";
 							}
-							if (rawObject.test_flags == "H") {
-								var response = "Above high normal";
+							if (rawObject.test_flags === "H") {
+								response = "Above high normal";
 							}
-							if (rawObject.test_flags == "LL") {
-								var response = "Below low panic limits";
+							if (rawObject.test_flags === "LL") {
+								response = "Below low panic limits";
 							}
-							if (rawObject.test_flags == "HH") {
-								var response = "Above high panic limits";
+							if (rawObject.test_flags === "HH") {
+								response = "Above high panic limits";
 							}
-							if (rawObject.test_flags == "<") {
-								var response = "Below absolute low-off instrument scale";
+							if (rawObject.test_flags === "<") {
+								response = "Below absolute low-off instrument scale";
 							}
-							if (rawObject.test_flags == ">") {
-								var response = "Above absolute high-off instrument scale";
+							if (rawObject.test_flags === ">") {
+								response = "Above absolute high-off instrument scale";
 							}
-							if (rawObject.test_flags == "N") {
-								var response = "Normal";
+							if (rawObject.test_flags === "N") {
+								response = "Normal";
 							}
-							if (rawObject.test_flags == "A") {
-								var response = "Abnormal";
+							if (rawObject.test_flags === "A") {
+								response = "Abnormal";
 							}
-							if (rawObject.test_flags == "AA") {
-								var response = "Very abnormal";
+							if (rawObject.test_flags === "AA") {
+								response = "Very abnormal";
 							}
-							if (rawObject.test_flags == "U") {
-								var response = "Significant change up";
+							if (rawObject.test_flags === "U") {
+								response = "Significant change up";
 							}
-							if (rawObject.test_flags == "D") {
-								var response = "Significant change down";
+							if (rawObject.test_flags === "D") {
+								response = "Significant change down";
 							}
-							if (rawObject.test_flags == "B") {
-								var response = "Better";
+							if (rawObject.test_flags === "B") {
+								response = "Better";
 							}
-							if (rawObject.test_flags == "W") {
-								var response = "Worse";
+							if (rawObject.test_flags === "W") {
+								response = "Worse";
 							}
-							if (rawObject.test_flags == "S") {
-								var response = "Susceptible";
+							if (rawObject.test_flags === "S") {
+								response = "Susceptible";
 							}
-							if (rawObject.test_flags == "R") {
-								var response = "Resistant";
+							if (rawObject.test_flags === "R") {
+								response = "Resistant";
 							}
-							if (rawObject.test_flags == "I") {
-								var response = "Intermediate";
+							if (rawObject.test_flags === "I") {
+								response = "Intermediate";
 							}
-							if (rawObject.test_flags == "MS") {
-								var response = "Moderately susceptible";
+							if (rawObject.test_flags === "MS") {
+								response = "Moderately susceptible";
 							}
-							if (rawObject.test_flags == "VS") {
-								var response = "Very susceptible";
+							if (rawObject.test_flags === "VS") {
+								response = "Very susceptible";
 							}
-							if (rawObject.test_flags == "") {
-								var response = "";
+							if (rawObject.test_flags === "") {
+								response = "";
 							}
 							return 'title="' + response + '"';
 						}
@@ -1232,7 +1232,7 @@ $(document).ready(function() {
 							options.yAxis.title.text = data.yaxis;
 							options.series[0].name = data.name;
 							newData = [];
-							for (i in data.patient) {
+							for (var i in data.patient) {
 								newData.push( [ new Date(data.patient[i][0]).getTime(), parseFloat(data.patient[i][1]) ] );
 							}
 							options.series[0].data = newData;
@@ -1256,7 +1256,7 @@ $(document).ready(function() {
 		$('#edit_test_form').clearForm();
 		var currentDate = getCurrentDate();
 		$('#results_test_datetime').val(currentDate);
-		if ($("#results_test_provider_id").val() == '' && noshdata.group_id == '2') {
+		if ($("#results_test_provider_id").val() === '' && noshdata.group_id === '2') {
 			$("#results_test_provider_id").val(noshdata.user_id);
 		}
 		$('#edit_test_dialog').dialog('option', 'title', "Add Result");
@@ -1300,7 +1300,7 @@ $(document).ready(function() {
 			var count = item.length;
 			if (count <= 1) {
 				for (var i = 0; i < count; i++) {
-					if(confirm('Are you sure you want to delete this result?  This is not recommended unless entering the result was a mistake!')){ 
+					if(confirm('Are you sure you want to delete this result?  This is not recommended unless entering the result was a mistake!')){
 						var id = $("#tests_list").getCell(item[i],'tests_id');
 						$.ajax({
 							type: "POST",
@@ -1332,10 +1332,10 @@ $(document).ready(function() {
 				var test_reference = jQuery("#tests_list").getCell(id[i],'test_reference');
 				var test_flags = jQuery("#tests_list").getCell(id[i],'test_flags');
 				a += test_name + ': ' + test_result + ' ' + test_units;
-				if (test_reference != '') {
+				if (test_reference !== '') {
 					a += ', Reference Range: ' + test_reference;
 				}
-				if (test_flags != '') {
+				if (test_flags !== '') {
 					a += ', Flags: ' + test_flags;
 				}
 				a += ', Date Performed: ' + test_datetime + '\n';
@@ -1343,23 +1343,25 @@ $(document).ready(function() {
 			if ($(this).attr('id') == 't_message_copy_result') {
 				var old = $("#t_messages_message").val();
 				var old1 = old.trim();
-				if (old1 != '') {
-					var b = old1+'\n\n'+a;
+				var b = '';
+				if (old1 !== '') {
+					b = old1+'\n\n'+a;
 				} else {
-					var b = a;
+					b = a;
 				}
 				$("#t_messages_message").val(b);
 				$.jGrowl('Results copied to message!');
 			}
 			if ($(this).attr('id') == 'encounter_copy_result') {
-				var old = $("#oh_results").val();
-				var old1 = old.trim();
-				if (old1 != '') {
-					var b = old1+'\n'+a;
+				var old2 = $("#oh_results").val();
+				var old3 = old2.trim();
+				var c = '';
+				if (old3 !== '') {
+					c = old3+'\n'+a;
 				} else {
-					var b = a;
+					c = a;
 				}
-				$("#oh_results").val(b);
+				$("#oh_results").val(c);
 				$.jGrowl('Results copied to encounter!');
 			}
 		} else {
@@ -1369,11 +1371,11 @@ $(document).ready(function() {
 	$('#results_test_type').addOption({"Laboratory":"Laboratory","Imaging":"Imaging"},false);
 	$('#results_test_datetime').datepicker();
 	$('#results_test_flags').addOption(flags,false);
-	$("#edit_test_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 450, 
-		width: 800, 
+	$("#edit_test_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 450,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -1438,7 +1440,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_test_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1465,7 +1467,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_test_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1482,7 +1484,7 @@ $(document).ready(function() {
 								$('#edit_test_form').clearForm();
 								var currentDate = getCurrentDate();
 								$('#results_test_datetime').val(currentDate);
-								if ($("#results_test_provider_id").val() == '' && noshdata.group_id == '2') {
+								if ($("#results_test_provider_id").val() === '' && noshdata.group_id === '2') {
 									$("#results_test_provider_id").val(noshdata.user_id);
 								}
 							}
@@ -1585,14 +1587,14 @@ $(document).ready(function() {
 	}
 });
 var timeoutHnd2;
-function doSearch2(ev){ 
-	if(timeoutHnd2) 
+function doSearch2(ev){
+	if(timeoutHnd2)
 		clearTimeout(timeoutHnd2);
 		timeoutHnd2 = setTimeout(gridReload2,500);
 }
-function gridReload2(){ 
+function gridReload2(){
 	var mask = jQuery("#search_all_tests").val();
-	if (mask != '') {
+	if (mask !== '') {
 		jQuery("#tests_list").setGridParam({url:"ajaxchart/tests/"+mask,page:1}).trigger("reloadGrid");
 	} else {
 		jQuery("#tests_list").trigger("reloadGrid");

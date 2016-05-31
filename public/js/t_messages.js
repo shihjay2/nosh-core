@@ -1,56 +1,47 @@
 $(document).ready(function() {
 	function importreply() {
 		var old = $("#t_messages_message").val();
+		var old1 = '';
 		if(old){
 			var pos = old.lastIndexOf('\n');
 			if (pos == -1) {
-				var old1 = old + '\n\n';
+				old1 = old + '\n\n';
 			} else {
-				var a = old.slice(pos);
-				if (a == '') {
-					var old1 = old + '\n';
+				var a2 = old.slice(pos);
+				if (a2 === '') {
+					old1 = old + '\n';
 				} else {
-					var old1 = old + '\n\n';
+					old1 = old + '\n\n';
 				}
 			}
-		} else {
-			var old1 = '';
 		}
 		var a = $("#message_reply_tests_performed").val();
 		var b = $("#message_reply_message").val();
 		var c = $("#message_reply_followup").val();
+		var a1 = '';
+		var b1 = '';
+		var c1 = '';
 		if(c){
-			var c1 = 'Followup recommendations:  ' + c;
+			c1 = 'Followup recommendations:  ' + c;
 			if(b){
-				var b1 = 'Conclusion:  ' + b + '\n\n';
-				if(a != ""){
-					var a1 = 'The following tests were performed: ' + a + '\n\n';
-				} else {
-					var a1 = '';
-				}	
+				b1 = 'Conclusion:  ' + b + '\n\n';
+				if(a !== ""){
+					a1 = 'The following tests were performed: ' + a + '\n\n';
+				}
 			} else {
-				var b1 = '';
 				if(a){
-					var a1 = 'The following tests were performed: ' + a;
-				} else {
-					var a1 = '';
+					a1 = 'The following tests were performed: ' + a;
 				}
 			}
 		} else {
-			var c1 = '';
 			if(b){
-				var b1 = 'Conclusion:  ' + b;
+				b1 = 'Conclusion:  ' + b;
 				if(a){
-					var a1 = 'The following tests were performed: ' + a + '\n\n';
-				} else {
-					var a1 = '';
-				}	
+					a1 = 'The following tests were performed: ' + a + '\n\n';
+				}
 			} else {
-				var b1 = '';
 				if(a){
-					var a1 = 'The following tests were performed: ' + a;
-				} else {
-					var a1 = '';
+					a1 = 'The following tests were performed: ' + a;
 				}
 			}
 		}
@@ -58,11 +49,11 @@ $(document).ready(function() {
 		var response = a1+b1+c1;
 		return response;
 	}
-	$("#messages_list_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#messages_list_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -97,7 +88,7 @@ $(document).ready(function() {
 						var date = $('#t_messages_dos').val();
 						var edit_date = editDate(date);
 						$('#t_messages_dos').val(edit_date);
-						if ($("#t_messages_to").val() != '') {
+						if ($("#t_messages_to").val() !== '') {
 							$("#t_messages_assign_hx").html('Currently assigned to ' + $("#t_messages_to").val() + '.  Change assignment to:');
 						}
 						t_messages_tags();
@@ -106,7 +97,7 @@ $(document).ready(function() {
 					if (signed == 'Yes') {
 						$("#edit_message_fieldset").hide('fast');
 						var row = jQuery("#messages").getRowData(id);
-						var text = '<br><strong>Date:</strong>  ' + row['t_messages_dos'] + '<br><br><strong>Subject:</strong>  ' + row['t_messages_subject'] + '<br><br><strong>Message:</strong> ' + row['t_messages_message']; 
+						var text = '<br><strong>Date:</strong>  ' + row['t_messages_dos'] + '<br><br><strong>Subject:</strong>  ' + row['t_messages_subject'] + '<br><br><strong>Message:</strong> ' + row['t_messages_message'];
 						$("#message_view").html(text);
 						$("#t_messages_id").val(row['t_messages_id']);
 						t_messages_tags();
@@ -118,11 +109,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#messages_telephone_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#messages_telephone_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -130,56 +121,47 @@ $(document).ready(function() {
 		buttons: {
 			'Import': function() {
 				var old = $("#t_messages_message").val();
+				var old1 = '';
 				if(old){
 					var pos = old.lastIndexOf('\n');
 					if (pos == -1) {
-						var old1 = old + '\n\n';
+						old1 = old + '\n\n';
 					} else {
-						var a = old.slice(pos);
-						if (a == '') {
-							var old1 = old + '\n';
+						var a2 = old.slice(pos);
+						if (a2 === '') {
+							old1 = old + '\n';
 						} else {
-							var old1 = old + '\n\n';
+							old1 = old + '\n\n';
 						}
 					}
-				} else {
-					var old1 = '';
 				}
 				var a = $("#message_subjective").val();
 				var b = $("#message_assessment").val();
 				var c = $("#message_plan").val();
+				var a1 = '';
+				var b1 = '';
+				var c1 = '';
 				if(c){
-					var c1 = 'PLAN:  ' + c;
+					c1 = 'PLAN:  ' + c;
 					if(b){
-						var b1 = 'ASSESSMENT:  ' + b + '\n\n';
-						if(a != ""){
-							var a1 = 'SUBJECTIVE:  ' + a + '\n\n';
-						} else {
-							var a1 = '';
-						}	
+						b1 = 'ASSESSMENT:  ' + b + '\n\n';
+						if(a !== ""){
+							a1 = 'SUBJECTIVE:  ' + a + '\n\n';
+						}
 					} else {
-						var b1 = '';
 						if(a){
-							var a1 = 'SUBJECTIVE:  ' + a;
-						} else {
-							var a1 = '';
+							a1 = 'SUBJECTIVE:  ' + a;
 						}
 					}
 				} else {
-					var c1 = '';
 					if(b){
-						var b1 = 'ASSESSMENT:  ' + b;
+						b1 = 'ASSESSMENT:  ' + b;
 						if(a){
-							var a1 = 'SUBJECTIVE:  ' + a + '\n\n';
-						} else {
-							var a1 = '';
-						}	
+							a1 = 'SUBJECTIVE:  ' + a + '\n\n';
+						}
 					} else {
-						var b1 = '';
 						if(a){
-							var a1 = 'SUBJECTIVE:  ' + a;
-						} else {
-							var a1 = '';
+							a1 = 'SUBJECTIVE:  ' + a;
 						}
 					}
 				}
@@ -194,11 +176,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#messages_reply_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#messages_reply_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -269,7 +251,7 @@ $(document).ready(function() {
 						}
 					}
 				});
-				if (noshdata.success_doc == true) {
+				if (noshdata.success_doc === true) {
 					window.open("view_documents/" + noshdata.id_doc);
 					noshdata.success_doc = false;
 					noshdata.id_doc = '';
@@ -364,7 +346,7 @@ $(document).ready(function() {
 		var test1 = test.split(":");
 		var test2 = $.trim(test1[1]);
 		var old = $("#message_reply_tests_performed").val();
-		if (old == '') {
+		if (old === '') {
 			$("#message_reply_tests_performed").val(test2);
 		} else {
 			$("#message_reply_tests_performed").val(old + '\n' + test2);
@@ -383,23 +365,23 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select order to mark as complete!")
+			$.jGrowl("Please select order to mark as complete!");
 		}
 	});
-	$("#messages_view_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#messages_view_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#messages_main_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#messages_main_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -448,7 +430,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_message_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -476,7 +458,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_message_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -511,7 +493,7 @@ $(document).ready(function() {
 			},
 			'Delete': function() {
 				var str = $("#t_messages_id").val();
-				if(str != ''){
+				if(str !== ''){
 					$.ajax({
 						type: "POST",
 						url: "ajaxchart/delete-message",
@@ -566,7 +548,7 @@ $(document).ready(function() {
 			}
 		}
 	});
-	if (noshdata.t_messages_id != '') {
+	if (noshdata.t_messages_id !== '') {
 		$("#messages_list_dialog").dialog('open');
 		$.ajax({
 			type: "POST",
@@ -576,7 +558,7 @@ $(document).ready(function() {
 				$.each(data, function(key, value){
 					$("#edit_message_form :input[name='" + key + "']").val(value);
 				});
-				if ($("#t_messages_to").val() != '') {
+				if ($("#t_messages_to").val() !== '') {
 					$("#t_messages_assign_hx").html('Currently assigned to ' + $("#t_messages_to").val() + '.  Change assignment to:');
 				}
 				var date = $('#t_messages_dos').val();

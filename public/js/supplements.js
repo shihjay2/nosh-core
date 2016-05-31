@@ -1,9 +1,9 @@
 $(document).ready(function() {
-	$("#supplements_list_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#supplements_list_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -109,11 +109,11 @@ $(document).ready(function() {
 		$("#orders_supplements_header").hide();
 		$("#supplements_list_dialog").dialog('open');
 	});
-	$("#edit_sup_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 650, 
+	$("#edit_sup_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 650,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -249,7 +249,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_sup_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -268,7 +268,7 @@ $(document).ready(function() {
 								}
 							}
 						});
-						
+
 					} else {
 						$.jGrowl("Ensure that the supplement chosen is in the inventory!");
 					}
@@ -278,7 +278,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_sup_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -318,7 +318,7 @@ $(document).ready(function() {
 	$("#sup_route").selectOptions();
 	$("#sup_dosage").click(function(){
 		var sup_name = $("#sup_supplement").val();
-		if (sup_name == '') {
+		if (sup_name === '') {
 			$.jGrowl('Supplement field empty!');
 		} else {
 			$("#sup_dosage").autocomplete("search", sup_name);
@@ -343,7 +343,7 @@ $(document).ready(function() {
 			$('#edit_sup_dialog').dialog('open');
 			$("#sup_supplement").focus();
 		} else {
-			$.jGrowl("Please select supplement to edit!")
+			$.jGrowl("Please select supplement to edit!");
 		}
 	});
 	$("#inactivate_sup").click(function(){
@@ -364,13 +364,13 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select supplement to inactivate!")
+			$.jGrowl("Please select supplement to inactivate!");
 		}
 	});
 	$("#delete_sup").click(function(){
 		var item = jQuery("#supplements").getGridParam('selrow');
 		if(item){
-			if(confirm('Are you sure you want to delete this supplement?  This is not recommended unless entering the supplement was a mistake!')){ 
+			if(confirm('Are you sure you want to delete this supplement?  This is not recommended unless entering the supplement was a mistake!')){
 				var id = $("#supplements").getCell(item,'sup_id');
 				$.ajax({
 					type: "POST",
@@ -384,7 +384,7 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			$.jGrowl("Please select supplement to inactivate!")
+			$.jGrowl("Please select supplement to inactivate!");
 		}
 	});
 	$("#reactivate_sup").click(function(){
@@ -405,17 +405,17 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select supplement to reactivate!")
+			$.jGrowl("Please select supplement to reactivate!");
 		}
 	});
 	$("#search_db_supplement").click(function(){
 		window.open("http://www.dsld.nlm.nih.gov/dsld/");
 	});
-	$("#supplement_inventory_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 200, 
-		width: 500, 
+	$("#supplement_inventory_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 200,
+		width: 500,
 		modal: true,
 		closeOnEscape: false,
 		dialogClass: "noclose",
@@ -492,30 +492,27 @@ $(document).ready(function() {
 		var b = $("#supplement_text1").val();
 		var c = $("#supplement_inactivate_text").val();
 		var d = $("#supplement_reactivate_text").val();
+		var a1 = '';
+		var b1 = '';
+		var c1 = '';
+		var d1 = '';
+		var e = '';
 		if(a){
-			var a1 = 'SUPPLEMENTS ADVISED:  ' + a + '\n\n';
-		} else {
-			var a1 = '';
+			a1 = 'SUPPLEMENTS ADVISED:  ' + a + '\n\n';
 		}
 		if(b){
-			var b1 = 'SUPPLEMENTS PURCHASED BY PATIENT:  ' + b + '\n\n';
-		} else {
-			var b1 = '';
+			b1 = 'SUPPLEMENTS PURCHASED BY PATIENT:  ' + b + '\n\n';
 		}
 		if(c){
-			var c1 = 'DISCONTINUED SUPPLEMENTS:  ' + c + '\n\n';
-		} else {
-			var c1 = '';
+			c1 = 'DISCONTINUED SUPPLEMENTS:  ' + c + '\n\n';
 		}
 		if(d){
-			var d1 = 'REINSTATED SUPPLEMENTS:  ' + d + '\n\n';
-		} else {
-			var d1 = '';
+			d1 = 'REINSTATED SUPPLEMENTS:  ' + d + '\n\n';
 		}
-		if (old1 != '') {
-			var e = old1+'\n\n'+a1+b1+c1+d1;
+		if (old1 !== '') {
+			e = old1+'\n\n'+a1+b1+c1+d1;
 		} else {
-			var e = a1+b1+c1+d1;
+			e = a1+b1+c1+d1;
 		}
 		$("#t_messages_message").val(e);
 		$("#messages_supplements_main_form").clearForm();

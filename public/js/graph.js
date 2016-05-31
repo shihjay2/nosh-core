@@ -1,9 +1,9 @@
 $(document).ready(function() {
-	$("#growth_chart_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 100, 
-		width: 700, 
+	$("#growth_chart_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 100,
+		width: 700,
 		modal: true,
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
@@ -13,11 +13,11 @@ $(document).ready(function() {
 	$("#dashboard_growth_chart").click(function(){
 		$("#growth_chart_dialog").dialog('open');
 	});
-	$("#graph_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#graph_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		modal: true,
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
@@ -118,12 +118,13 @@ $(document).ready(function() {
 				var chart = new Highcharts.Chart(options);
 				$("#graph_load").dialog('close');
 				$("#graph_dialog").dialog('open');
-				if (origin == false) {
+				if (origin === false) {
 					var note = $("#vitals_vitals_other").val();
-					if (note == '') {
-						var newnote = 'Weight-to-age percentile: ' + data.percentile + '.';
+					var newnote = '';
+					if (note === '') {
+						newnote = 'Weight-to-age percentile: ' + data.percentile + '.';
 					} else {
-						var newnote = note + '  Weight-to-age percentile: ' + data.percentile + '.';
+						newnote = note + '  Weight-to-age percentile: ' + data.percentile + '.';
 					}
 					$("#vitals_vitals_other").val(newnote);
 					vitals_autosave();
@@ -219,12 +220,13 @@ $(document).ready(function() {
 				var chart = new Highcharts.Chart(options);
 				$("#graph_load").dialog('close');
 				$("#graph_dialog").dialog('open');
-				if (origin == false) {
+				if (origin === false) {
 					var note = $("#vitals_vitals_other").val();
-					if (note == '') {
-						var newnote = 'Height-to-age percentile: ' + data.percentile + '.';
+					var newnote = '';
+					if (note === '') {
+						newnote = 'Height-to-age percentile: ' + data.percentile + '.';
 					} else {
-						var newnote = note + '  Height-to-age percentile: ' + data.percentile + '.';
+						newnote = note + '  Height-to-age percentile: ' + data.percentile + '.';
 					}
 					$("#vitals_vitals_other").val(newnote);
 					vitals_autosave();
@@ -320,12 +322,13 @@ $(document).ready(function() {
 				var chart = new Highcharts.Chart(options);
 				$("#graph_load").dialog('close');
 				$("#graph_dialog").dialog('open');
-				if (origin == false) {
+				if (origin === false) {
 					var note = $("#vitals_vitals_other").val();
-					if (note == '') {
-						var newnote = 'Head circumference-to-age percentile: ' + data.percentile + '.';
+					var newnote = '';
+					if (note === '') {
+						newnote = 'Head circumference-to-age percentile: ' + data.percentile + '.';
 					} else {
-						var newnote = note + '  Head circumference-to-age percentile: ' + data.percentile + '.';
+						newnote = note + '  Head circumference-to-age percentile: ' + data.percentile + '.';
 					}
 					$("#vitals_vitals_other").val(newnote);
 					vitals_autosave();
@@ -421,12 +424,13 @@ $(document).ready(function() {
 				var chart = new Highcharts.Chart(options);
 				$("#graph_load").dialog('close');
 				$("#graph_dialog").dialog('open');
-				if (origin == false) {
+				if (origin === false) {
 					var note = $("#vitals_vitals_other").val();
-					if (note == '') {
-						var newnote = 'BMI-to-age percentile: ' + data.percentile + '.';
+					var newnote = '';
+					if (note === '') {
+						newnote = 'BMI-to-age percentile: ' + data.percentile + '.';
 					} else {
-						var newnote = note + '  BMI-to-age percentile: ' + data.percentile + '.';
+						newnote = note + '  BMI-to-age percentile: ' + data.percentile + '.';
 					}
 					$("#vitals_vitals_other").val(newnote);
 					vitals_autosave();
@@ -517,12 +521,13 @@ $(document).ready(function() {
 				var chart = new Highcharts.Chart(options);
 				$("#graph_load").dialog('close');
 				$("#graph_dialog").dialog('open');
-				if (origin == false) {
+				if (origin === false) {
 					var note = $("#vitals_vitals_other").val();
-					if (note == '') {
-						var newnote = 'Weight-to-height percentile: ' + data.percentile + '.';
+					var newnote = '';
+					if (note === '') {
+						newnote = 'Weight-to-height percentile: ' + data.percentile + '.';
 					} else {
-						var newnote = note + '  Weight-to-height percentile: ' + data.percentile + '.';
+						newnote = note + '  Weight-to-height percentile: ' + data.percentile + '.';
 					}
 					$("#vitals_vitals_other").val(newnote);
 					vitals_autosave();

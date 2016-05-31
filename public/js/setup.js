@@ -4,7 +4,7 @@ $(document).ready(function() {
 		$('#y').val(c.y);
 		$('#w').val(c.w);
 		$('#h').val(c.h);
-	};
+	}
 	function practice_logo() {
 		$.ajax({
 			type: "POST",
@@ -13,7 +13,7 @@ $(document).ready(function() {
 			success: function(data){
 				$("#practice_logo_upload_preview").html(data.link);
 				$("#practice_logo_message").html(data.message);
-				if (data.button != "") {
+				if (data.button !== "") {
 					$('#image_target').Jcrop({
 						maxSize: [350, 100],
 						onSelect: updateCoords
@@ -21,7 +21,7 @@ $(document).ready(function() {
 					$("#practice_logo_message").append(data.button);
 					$('#image_crop').button().click(function(){
 						var a = $('#x').val();
-						if (a != '') {
+						if (a !== '') {
 							var str = "x=" + $('#x').val() + "&y=" + $('#y').val() + "&w=" + $('#w').val() + "&h=" + $('#h').val();
 							$.ajax({
 								type: "POST",
@@ -42,11 +42,11 @@ $(document).ready(function() {
 			}
 		});
 	}
-	$("#setup_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 640, 
-		width: 800, 
+	$("#setup_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 640,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -64,13 +64,13 @@ $(document).ready(function() {
 							var bValid = true;
 							$("#" + form_id).find("[required]").each(function() {
 								var input_id = $(this).attr('id');
-								var id1 = $("#" + input_id); 
+								var id1 = $("#" + input_id);
 								var text = $("label[for='" + input_id + "']").html();
 								bValid = bValid && checkEmpty(id1, text);
 							});
 							var bValid1 = false;
 							$("#" + form_id).find(".text").each(function() {
-								if (bValid1 == false) {
+								if (bValid1 === false) {
 									var input_id = $(this).attr('id');
 									var a = $("#" + input_id).val();
 									var b = $("#" + input_id + "_old").val();
@@ -90,7 +90,7 @@ $(document).ready(function() {
 											success: function(data){
 												$.jGrowl(data);
 												$("#" + form_id).find(".text").each(function() {
-													if (bValid1 == false) {
+													if (bValid1 === false) {
 														var input_id = $(this).attr('id');
 														var a = $("#" + input_id).val();
 														$("#" + input_id + "_old").val(a);
@@ -126,7 +126,7 @@ $(document).ready(function() {
 						$("#setup_accordion :input[name='" + key + "']").val(value);
 						$("#" + key + "_old").val(value);
 						if (key == 'fax_type') {
-							if (value == '') {
+							if (value === '') {
 								$("#fax_show1").hide();
 								$("#fax_show2").hide();
 							}
@@ -168,13 +168,13 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#" + form_id).find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
 				var bValid1 = false;
 				$("#" + form_id).find(".text").each(function() {
-					if (bValid1 == false) {
+					if (bValid1 === false) {
 						var input_id = $(this).attr('id');
 						var a = $("#" + input_id).val();
 						var b = $("#" + input_id + "_old").val();
@@ -194,7 +194,7 @@ $(document).ready(function() {
 								success: function(data){
 									$.jGrowl(data);
 									$("#" + form_id).find(".text").each(function() {
-										if (bValid1 == false) {
+										if (bValid1 === false) {
 											var input_id = $(this).attr('id');
 											var a = $("#" + input_id).val();
 											$("#" + input_id + "_old").val(a);
@@ -274,7 +274,7 @@ $(document).ready(function() {
 	$("#fax_type").addOption({"":"No fax service.","efaxsend.com":"eFax","rcfax.com":"ExtremeFax","metrofax.com":"MetroFax","phaxio":"Phaxio","rcfax.com":"RingCentral"});
 	$("#fax_type").change(function () {
 		var a = $("#fax_type").val();
-		if (a == '') {
+		if (a === '') {
 			$("#fax_show1").hide();
 			$("#fax_show2").hide();
 		}
@@ -291,12 +291,11 @@ $(document).ready(function() {
 		var a = $("#fax_email").val();
 		var b = a.substr(a.indexOf("@")+1);
 		var c = b.substring(0, b.indexOf("."));
+		var imap = "imap." + b + ":993";
+		var smtp = "smtp." + b;
 		if (c == "yahoo") {
-			var imap = "imap.mail." + b + ":993";
-			var smtp = "smtp.mail.yahoo.com"
-		} else {
-			var imap = "imap." + b + ":993";
-			var smtp = "smtp." + b;
+			imap = "imap.mail." + b + ":993";
+			smtp = "smtp.mail.yahoo.com";
 		}
 		$("#fax_email_hostname").val(imap);
 		$("#fax_email_smtp").val(smtp);

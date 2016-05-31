@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	$("#messages_lab_accordion").accordion({ 
+	$("#messages_lab_accordion").accordion({
 		heightStyle: "content" ,
 		activate: function (event, ui) {
 			var id = ui.newPanel[0].id;
@@ -18,11 +18,11 @@ $(document).ready(function() {
 			}
 		});
 	});
-	$("#messages_lab_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#messages_lab_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -69,11 +69,12 @@ $(document).ready(function() {
 						success: function(data){
 							var old = $("#t_messages_message").val();
 							var old1 = old.trim();
-							if(data != ''){
-								if (old1 != '') {
-									var a = old1+'\n\n'+data;
+							var a = '';
+							if(data !== ''){
+								if (old1 !== '') {
+									a = old1+'\n\n'+data;
 								} else {
-									var a = data;
+									a = data;
 								}
 								$("#t_messages_message").val(a);
 							}
@@ -97,14 +98,14 @@ $(document).ready(function() {
 	$("#messages_add_lab").click(function(){
 		load_outside_providers('lab','add');
 		var a = $("#messages_lab_t_messages_id_origin").val();
-		if (a == '') {
+		if (a === '') {
 			$("#messages_lab_eid").val(noshdata.eid);
 		} else {
 			$("#messages_lab_t_messages_id").val(a);
 		}
 		$("#messages_lab_status").html('');
 		$("#messages_lab_location").val('');
-		if ($("#messages_lab_provider_list").val() == '' && noshdata.group_id == '2') {
+		if ($("#messages_lab_provider_list").val() === '' && noshdata.group_id === '2') {
 			$("#messages_lab_provider_list").val(noshdata.user_id);
 		}
 		var currentDate = getCurrentDate();
@@ -119,14 +120,14 @@ $(document).ready(function() {
 			jQuery("#messages_lab_list").GridToForm(item,"#edit_messages_lab_form");
 			var status = 'Details for Lab Order #' + item;
 			$("#messages_lab_status").html(status);
-			if ($("#messages_lab_provider_list").val() == '' && noshdata.group_id == '2') {
+			if ($("#messages_lab_provider_list").val() === '' && noshdata.group_id === '2') {
 				$("#messages_lab_provider_list").val(noshdata.user_id);
 			}
 			var date = $('#messages_lab_orders_pending_date').val();
 			var edit_date = editDate1(date);
 			$('#messages_lab_orders_pending_date').val(edit_date);
 			var a = $("#messages_lab_t_messages_id_origin").val();
-			if (a == '') {
+			if (a === '') {
 				$("#messages_lab_eid").val(noshdata.eid);
 			} else {
 				$("#messages_lab_t_messages_id").val(a);
@@ -165,11 +166,11 @@ $(document).ready(function() {
 			$.jGrowl("Please select order to delete!");
 		}
 	});
-	$("#messages_lab_edit_fields").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#messages_lab_edit_fields").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -221,25 +222,24 @@ $(document).ready(function() {
 						type: "POST",
 						success: function(data){
 							var text = insurance_plan_name + '; Payor ID: ' + data + '; ID: ' + insurance_id_num;
-							if(insurance_group != ''){
+							if(insurance_group !== ''){
 								text += "; Group: " + insurance_group;
 							}
 							text += "; " + insurance_insu_lastname + ", " + insurance_insu_firstname;
 							var old = $("#messages_lab_insurance").val();
+							var old1 = '';
 							if(old){
 								var pos = old.lastIndexOf('\n');
 								if (pos == -1) {
-									var old1 = old + '\n';
+									old1 = old + '\n';
 								} else {
 									var a = old.slice(pos);
-									if (a == '') {
-										var old1 = old;
+									if (a === '') {
+										old1 = old;
 									} else {
-										var old1 = old + '\n';
+										old1 = old + '\n';
 									}
 								}
-							} else {
-								var old1 = '';
 							}
 							$("#messages_lab_insurance").val(old1+text);
 						}
@@ -341,9 +341,9 @@ $(document).ready(function() {
 								}
 							} else {
 								$("#" + aoe_field).val(aoe_code);
-								var parent_id = aoe_field.replace("_code", "");
-								$("#" + parent_id).show();
-								$("#" + parent_id).addClass("aoe_required");
+								var parent_id1 = aoe_field.replace("_code", "");
+								$("#" + parent_id1).show();
+								$("#" + parent_id1).addClass("aoe_required");
 							}
 							$("#aoe_value").val(ui.item.value);
 							$("#messages_lab_orders_text").val(this.value);
@@ -360,7 +360,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_messages_lab_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -380,12 +380,13 @@ $(document).ready(function() {
 							$("#messages_lab_edit_fields").dialog('close');
 							reload_grid("alerts");
 							reload_grid("messages_lab_list");
-							if(noshdata.pending_orders_id != '') {
+							if(noshdata.pending_orders_id !== '') {
 								var old = $("#situation").val();
-								if (old != '') {
-									var b = old + '\n\n' + data.pending;
+								var b = '';
+								if (old !== '') {
+									b = old + '\n\n' + data.pending;
 								} else {
-									var b = data.pending;
+									b = data.pending;
 								}
 								$("#situation").val(b);
 								$.ajax({
@@ -409,11 +410,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#messages_lab_action_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 200, 
-		width: 500, 
+	$("#messages_lab_action_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 200,
+		width: 500,
 		modal: true,
 		closeOnEscape: false,
 		dialogClass: "noclose",
@@ -444,20 +445,19 @@ $(document).ready(function() {
 	$("#messages_lab_insurance_client").click(function(){
 		var text = "Bill Client";
 		var old = $("#messages_lab_insurance").val();
+		var old1 = '';
 		if(old){
 			var pos = old.lastIndexOf('\n');
 			if (pos == -1) {
-				var old1 = old + '\n';
+				old1 = old + '\n';
 			} else {
 				var a = old.slice(pos);
-				if (a == '') {
-					var old1 = old;
+				if (a === '') {
+					old1 = old;
 				} else {
-					var old1 = old + '\n';
+					old1 = old + '\n';
 				}
 			}
-		} else {
-			var old1 = '';
 		}
 		$("#messages_lab_insurance").val(old1+text);
 	});
@@ -487,28 +487,27 @@ $(document).ready(function() {
 			}
 			item += 'Date/Time specimen obtained: ' + $("#messages_lab_date_obtained").val() + ', ' + $("#messages_lab_time_obtained").val() + '\n';
 			var b = $("#messages_lab_location_obtained").val();
-			if(b != ''){
+			if(b !== ''){
 				item += 'Body location of specimen: ' + $("#messages_lab_location_obtained").val() + '\n';
 			}
 			var c = $("#messages_lab_medication_obtained").val();
-			if(c != ''){
+			if(c !== ''){
 				item += 'Time of last dosage of medication: ' + $("#messages_lab_medication_obtained").val() + '\n';
 			}
 			var old = $("#messages_lab_obtained").val();
+			var old1 = '';
 			if(old){
 				var pos = old.lastIndexOf('\n');
 				if (pos == -1) {
-					var old1 = old + '\n';
+					old1 = old + '\n';
 				} else {
-					var a = old.slice(pos);
-					if (a == '') {
-						var old1 = old;
+					var d = old.slice(pos);
+					if (d === '') {
+						old1 = old;
 					} else {
-						var old1 = old + '\n';
+						old1 = old + '\n';
 					}
 				}
-			} else {
-				var old1 = '';
 			}
 			$("#messages_lab_obtained").val(old1+item);
 			$("#messages_lab_date_obtained").val(currentDate);
@@ -571,11 +570,11 @@ $(document).ready(function() {
 		$("#messages_lab_orders_id").val('');
 		reload_grid("messages_lab_list");
 	});
-	$("#messages_edit_lab_location").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#messages_edit_lab_location").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -621,7 +620,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#messages_edit_lab_location_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -668,11 +667,11 @@ $(document).ready(function() {
 	});
 	var user_id = noshdata.user_id;
 	$("#messages_lab_orders_type").addOption({"0":'Global',user_id:'Personal'}, false);
-	$("#add_test_cpt").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#add_test_cpt").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -810,11 +809,11 @@ $(document).ready(function() {
 		$("#configuration_dialog").dialog('open');
 		$("#configuration_accordion").accordion("option", "active", 4);
 	});
-	$("#messages_lab_aoe_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 500, 
+	$("#messages_lab_aoe_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 500,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -827,17 +826,17 @@ $(document).ready(function() {
 					var required_id = $(this).attr('id');
 					var input_id = required_id + "_input";
 					var code_id = required_id + "_code";
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					var bValid = true;
 					bValid = bValid && checkEmpty(id1, text);
 					if (bValid) {
-						if (aoe_answer != '') {
+						if (aoe_answer !== '') {
 							aoe_answer = aoe_answer + "|" + $("#" + input_id).val();
 						} else {
 							aoe_answer = $("#" + input_id).val();
 						}
-						if (aoe_code != '') {
+						if (aoe_code !== '') {
 							aoe_code = aoe_code + "|" + $("#" + code_id).val();
 						} else {
 							aoe_code = $("#" + code_id).val();

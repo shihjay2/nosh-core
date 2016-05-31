@@ -26,7 +26,7 @@ $(document).ready(function() {
 			dataType: "json",
 			async: false,
 			success: function(data){
-				if (data.response == true) {
+				if (data.response === true) {
 					$.jGrowl(data.message);
 					$('#configuration_'+type+'_forms_title').addClass("ui-state-error");
 					a = false;
@@ -71,7 +71,7 @@ $(document).ready(function() {
 						}
 					}
 				});
-				
+
 				$("#textdump_specific_name").val(currentWord);
 				$("#textdump_specific_origin").val('configure');
 				$("#textdump_specific_save").hide();
@@ -87,11 +87,11 @@ $(document).ready(function() {
 		active: false,
 		collapsible: true
 	});
-	$("#configuration_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#configuration_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -502,8 +502,8 @@ $(document).ready(function() {
 					],
 					rowNum:10,
 					pager: pager_id,
-					sortname: 'template_id', 
-					sortorder: "asc", 
+					sortname: 'template_id',
+					sortorder: "asc",
 					height: '100%',
 					jsonReader: { repeatitems : false, id: "0" }
 				});
@@ -513,20 +513,20 @@ $(document).ready(function() {
 					add:false,
 					del:false
 				}).jqGrid('navButtonAdd',"#"+pager_id,{
-					caption:"Add", 
-					buttonicon:"ui-icon-plus", 
-					onClickButton: function(){ 
+					caption:"Add",
+					buttonicon:"ui-icon-plus",
+					onClickButton: function(){
 						jQuery("#textdump_list").GridToForm(group_id,"#configuration_textdump_form");
 						$("#configuration_textdump_template_id").val('');
 						$("#configuration_textdump_subgrid_table_id").val(subgrid_table_id);
 						$('#configuration_textdump_dialog').dialog('open');
 						$('#configuration_textdump_dialog').dialog('option', 'title', "Add Template Text");
-					}, 
+					},
 					position:"last"
 				}).jqGrid('navButtonAdd',"#"+pager_id,{
-					caption:"Edit", 
-					buttonicon:"ui-icon-pencil", 
-					onClickButton: function(){ 
+					caption:"Edit",
+					buttonicon:"ui-icon-pencil",
+					onClickButton: function(){
 						var id = jQuery(this).getGridParam('selrow');
 						if(id){
 							jQuery(this).GridToForm(id,"#configuration_textdump_form");
@@ -536,12 +536,12 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose item to edit!');
 						}
-					}, 
+					},
 					position:"last"
 				}).jqGrid('navButtonAdd',"#"+pager_id,{
-					caption:"Delete", 
-					buttonicon:"ui-icon-trash", 
-					onClickButton: function(){ 
+					caption:"Delete",
+					buttonicon:"ui-icon-trash",
+					onClickButton: function(){
 						var item = jQuery(this).getGridParam('selrow');
 						if(item){
 							if(confirm('Are you sure you want to delete this text?')){
@@ -558,7 +558,7 @@ $(document).ready(function() {
 						} else {
 							$.jGrowl('Choose item to delete!');
 						}
-					}, 
+					},
 					position:"last"
 				});
 			}
@@ -605,11 +605,11 @@ $(document).ready(function() {
 		$('#dialog_load').dialog('close');
 		$("#configuration_dialog").dialog('open');
 	});
-	$("#configuration_order").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#configuration_order").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -656,17 +656,18 @@ $(document).ready(function() {
 										var nodeId = "";
 										var url = "";
 										var type1 = $("#configuration_orders_categrory").val();
+										var type = '';
 										if (type1 == "Laboratory") {
-											var type = "lab";
+											type = "lab";
 										}
 										if (type1 == "Radiology") {
-											var type = "imaging";
+											type = "imaging";
 										}
 										if (type1 == "Cardiopulmonary") {
-											var type = "cp";
+											type = "cp";
 										}
 										if (type1 == "Referral") {
-											var type = "ref";
+											type = "ref";
 										}
 										if (node == -1) {
 											url = "ajaxsearch/snomed-parent/" + type;
@@ -736,19 +737,21 @@ $(document).ready(function() {
 		var id = $(this).attr("id");
 		var parts = id.split('_');
 		var parent_id_table = parts[0] + '_' + parts[1] + '_' + parts[2];
+		var type = '';
+		var group = '';
 		if (parts[2] == 'labs' || parts[2] == 'labs1') {
-			var type = "Laboratory";
+			type = "Laboratory";
 		}
 		if (parts[2] == 'rad' || parts[2] == 'rad1') {
-			var type = "Radiology";
+			type = "Radiology";
 		}
 		if (parts[2] == 'cp' || parts[2] == 'cp1') {
-			var type = "Cardiopulmonary";
+			type = "Cardiopulmonary";
 		}
 		if (parts[2] == 'labs' || parts[2] == 'rad' || parts[2] == 'cp') {
-			var group = '0';
+			group = '0';
 		} else {
-			var group = noshdata.user_id;
+			group = noshdata.user_id;
 		}
 		if (parts[3] == 'add') {
 			$("#configuration_order_form").clearForm();
@@ -770,14 +773,14 @@ $(document).ready(function() {
 			}
 		}
 		if (parts[3] == 'delete') {
-			var item = jQuery("#" + parent_id_table).getGridParam('selrow');
-			if(item){
+			var item1 = jQuery("#" + parent_id_table).getGridParam('selrow');
+			if(item1){
 				if(confirm('Are you sure you want to delete this order?')){
-					var id = $("#" + parent_id_table).getCell(item,'orderslist_id');
+					var id1 = $("#" + parent_id_table).getCell(item1,'orderslist_id');
 					$.ajax({
 						type: "POST",
 						url: "ajaxdashboard/delete-orders-list",
-						data: "orderslist_id=" + item,
+						data: "orderslist_id=" + item1,
 						success: function(data){
 							$.jGrowl(data);
 							jQuery("#" + parent_id_table).trigger("reloadGrid");
@@ -798,7 +801,7 @@ $(document).ready(function() {
 	});
 	$("#edit_cpt").click(function(){
 		var item = jQuery("#cpt_list_config").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#cpt_list_config").GridToForm(item,"#configuration_cpt_form");
 			$('#configuration_cpt_dialog').dialog('open');
 			$('#configuration_cpt_dialog').dialog('option', 'title', "Edit CPT Code");
@@ -822,11 +825,11 @@ $(document).ready(function() {
 			$.jGrowl("Please select CPT code to delete!");
 		}
 	});
-	$("#configuration_cpt_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 400, 
-		width: 800, 
+	$("#configuration_cpt_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 400,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -836,7 +839,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#configuration_cpt_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -852,7 +855,7 @@ $(document).ready(function() {
 							reload_grid("cpt_list_config");
 							var origin = $("#configuration_cpt_origin").val();
 							var cpt = $("#configuration_cpt_code").val();
-							if (origin != "") {
+							if (origin !== "") {
 								var parts = origin.split('_');
 								if (parts[0] == 'billing') {
 									if (parts[1] == 'cpt') {
@@ -873,7 +876,7 @@ $(document).ready(function() {
 			Cancel: function() {
 				var origin = $("#configuration_cpt_origin").val();
 				var cpt = $("#configuration_cpt_code").val();
-				if (origin != "") {
+				if (origin !== "") {
 					$('#' + origin).val("");
 				}
 				$("#configuration_cpt_form").clearForm();
@@ -900,7 +903,7 @@ $(document).ready(function() {
 	});
 	$("#edit_patient_forms").click(function(){
 		var item = jQuery("#patient_forms_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#patient_forms_list").GridToForm(item,"#configuration_patient_forms_form");
 			var id = $("#patient_forms_list").getCell(item,'template_id');
 			$.ajax({
@@ -952,7 +955,7 @@ $(document).ready(function() {
 	});
 	$("#edit_hpi_forms").click(function(){
 		var item = jQuery("#hpi_forms_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#hpi_forms_list").GridToForm(item,"#configuration_hpi_forms_form");
 			var id = $("#hpi_forms_list").getCell(item,'template_id');
 			$.ajax({
@@ -1004,7 +1007,7 @@ $(document).ready(function() {
 	});
 	$("#edit_ros_forms").click(function(){
 		var item = jQuery("#ros_forms_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#ros_forms_list").GridToForm(item,"#configuration_ros_forms_form");
 			var id = $("#ros_forms_list").getCell(item,'template_id');
 			$.ajax({
@@ -1074,7 +1077,7 @@ $(document).ready(function() {
 	});
 	$("#edit_pe_forms").click(function(){
 		var item = jQuery("#pe_forms_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#pe_forms_list").GridToForm(item,"#configuration_pe_forms_form");
 			var id = $("#pe_forms_list").getCell(item,'template_id');
 			$.ajax({
@@ -1144,7 +1147,7 @@ $(document).ready(function() {
 	});
 	$("#edit_situation_forms").click(function(){
 		var item = jQuery("#situation_forms_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#situation_forms_list").GridToForm(item,"#configuration_situation_forms_form");
 			var id = $("#situation_forms_list").getCell(item,'template_id');
 			$.ajax({
@@ -1196,7 +1199,7 @@ $(document).ready(function() {
 	});
 	$("#edit_referral_forms").click(function(){
 		var item = jQuery("#referral_forms_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#referral_forms_list").GridToForm(item,"#configuration_referral_forms_form");
 			var id = $("#referral_forms_list").getCell(item,'template_id');
 			$.ajax({
@@ -1275,7 +1278,7 @@ $(document).ready(function() {
 		var json_object = JSON.parse(json_flat);
 		var json_array = [json_object];
 		var div_id = $("#" + id_main1 + "_div_id").val();
-		if (div_id != '') {
+		if (div_id !== '') {
 			for (var i = 0; i < json_array[0]['html'].length; i++) {
 				var a = json_array[0]['html'][i].id;
 				if (a == div_id) {
@@ -1305,7 +1308,7 @@ $(document).ready(function() {
 						json_array[0]['html'][i]['html'][2]['id'] = $("#" + id_main1 + "_div_id").val() + "_" + $("#configuration_" + id_main1 + "_fieldtype").val();
 						json_array[0]['html'][i]['html'][2]['name'] = $("#" + id_main1 + "_div_id").val();
 						if ($("#configuration_" + id_main1 + "_fieldtype").val() == "select") {
-							if ($("#configuration_" + id_main1 + "_option_1").val() != "") {
+							if ($("#configuration_" + id_main1 + "_option_1").val() !== "") {
 								json_array[0]['html'][i]['html'][2]['options'] = {};
 								$("." + id_main1 + "_option").each(function(){
 									var value = $(this).val();
@@ -1392,11 +1395,11 @@ $(document).ready(function() {
 		$("#" + id_main1 + "_template_surround_div").hide();
 	});
 	$("#configuration_patient_forms_scoring").tooltip({ content: "Fill this field if you wish to create a scoring algorithm for this form.  The score value for a radio button or checkbox is determined automatically based on the order of the list that you create.  The first selection always starts with a value of 0, the second selection is 1, and so on." });
-	$("#configuration_patient_forms_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#configuration_patient_forms_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -1411,7 +1414,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#configuration_patient_forms_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1458,11 +1461,11 @@ $(document).ready(function() {
 			$.jGrowl("Finish editing current form element!");
 		}
 	});
-	$("#configuration_hpi_forms_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#configuration_hpi_forms_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -1478,7 +1481,7 @@ $(document).ready(function() {
 				bValid = bValid && checkFormDuplicateTitle('hpi');
 				$("#configuration_hpi_forms_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1524,11 +1527,11 @@ $(document).ready(function() {
 			$.jGrowl("Finish editing current form element!");
 		}
 	});
-	$("#configuration_ros_forms_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#configuration_ros_forms_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -1544,7 +1547,7 @@ $(document).ready(function() {
 				bValid = bValid && checkFormDuplicateTitle('ros');
 				$("#configuration_ros_forms_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1591,11 +1594,11 @@ $(document).ready(function() {
 			$.jGrowl("Finish editing current form element!");
 		}
 	});
-	$("#configuration_pe_forms_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#configuration_pe_forms_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -1611,7 +1614,7 @@ $(document).ready(function() {
 				bValid = bValid && checkFormDuplicateTitle('pe');
 				$("#configuration_pe_forms_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1658,11 +1661,11 @@ $(document).ready(function() {
 			$.jGrowl("Finish editing current form element!");
 		}
 	});
-	$("#configuration_situation_forms_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#configuration_situation_forms_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -1677,7 +1680,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#configuration_situation_forms_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1723,11 +1726,11 @@ $(document).ready(function() {
 			$.jGrowl("Finish editing current form element!");
 		}
 	});
-	$("#configuration_referral_forms_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#configuration_referral_forms_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -1742,7 +1745,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#configuration_referral_forms_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1897,11 +1900,11 @@ $(document).ready(function() {
 			reload_grid("textdump_specific_list");
 		}
 	});
-	$("#configuration_textdump_group_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 400, 
+	$("#configuration_textdump_group_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 400,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -1911,7 +1914,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#configuration_textdump_group_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1943,11 +1946,11 @@ $(document).ready(function() {
 	});
 	$("#configuration_textdump_group_template_name").addOption(fields,false);
 	$("#configuration_textdump_default").addOption({"":"No","normal":"Yes"},false);
-	$("#configuration_textdump_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 400, 
+	$("#configuration_textdump_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 400,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -1957,7 +1960,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#configuration_textdump_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1995,7 +1998,7 @@ $(document).ready(function() {
 	});
 	$("#edit_textdump_group").click(function(){
 		var item = jQuery("#textdump_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#textdump_list").GridToForm(item,"#configuration_textdump_group_form");
 			$('#configuration_textdump_group_dialog').dialog('open');
 			$('#configuration_textdump_group_dialog').dialog('option', 'title', "Edit Template Group");
@@ -2030,12 +2033,12 @@ $(document).ready(function() {
 			$.jGrowl("Please select group to export!");
 		}
 	});
-	
-	$("#configuration_textdump_specific_group_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 400, 
+
+	$("#configuration_textdump_specific_group_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 400,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -2045,7 +2048,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#configuration_textdump_specific_group_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -2091,7 +2094,7 @@ $(document).ready(function() {
 	});
 	$("#edit_textdump_specific_group").click(function(){
 		var item = jQuery("#textdump_specific_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#textdump_specific_list").GridToForm(item,"#configuration_textdump_specific_group_form");
 			var a = $('#configuration_textdump_specific_group_template_name').val();
 			$('#configuration_textdump_specific_group_template_name_old').val(a);
@@ -2143,7 +2146,7 @@ $(document).ready(function() {
 	});
 	$("#edit_encounter_templates").click(function(){
 		var item = jQuery("#encounter_templates_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			$('#dialog_load').dialog('option', 'title', "Loading template...").dialog('open');
 			var a = jQuery("#encounter_templates_list").getCell(item,"template_name");
 			$.ajax({
@@ -2182,7 +2185,7 @@ $(document).ready(function() {
 		}
 	});
 	$("#reset_default_templates").click(function(){
-		if(confirm('Are you sure you want to reset your default templates?  Any previous changes will be deleted!')){ 
+		if(confirm('Are you sure you want to reset your default templates?  Any previous changes will be deleted!')){
 			$('#dialog_load').dialog('option', 'title', "Resetting default templates...").dialog('open');
 			$.ajax({
 				type: "POST",
@@ -2197,12 +2200,12 @@ $(document).ready(function() {
 	});
 });
 var timeoutHnd;
-function doSearch(ev){ 
-	if(timeoutHnd) 
+function doSearch(ev){
+	if(timeoutHnd)
 		clearTimeout(timeoutHnd);
 		timeoutHnd = setTimeout(gridReload,500);
 }
-function gridReload(){ 
+function gridReload(){
 	var mask = jQuery("#search_all_cpt").val();
 	if (mask != '') {
 		jQuery("#cpt_list_config").setGridParam({url:"ajaxdashboard/cpt-list/"+mask,page:1}).trigger("reloadGrid");

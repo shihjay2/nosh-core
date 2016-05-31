@@ -24,11 +24,11 @@ $(document).ready(function() {
 	$("#dashboard_billing").click(function() {
 		$("#financial_dialog").dialog('open');
 	});
-	$("#financial_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 640, 
-		width: 925, 
+	$("#financial_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 640,
+		width: 925,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -88,7 +88,7 @@ $(document).ready(function() {
 				height: "100%",
 				loadComplete: function(data) {
 					var id1 = $('#billing_list_eid').val();
-					if (id1 != '') {
+					if (id1 !== '') {
 						jQuery("#bills_done").expandSubGridRow(id1);
 						$('#billing_list_eid').val('');
 					}
@@ -109,12 +109,12 @@ $(document).ready(function() {
 							{name:"billing_core_id",index:"billing_core_id",width:1,hidden:true},
 							{name:"dos_f",index:"dos_f",width:100,formatter:'date',formatoptions:{srcformat:"m/d/Y", newformat: "ISO8601Short"}},
 							{name:"payment",index:"payment",width:200,formatter:'currency',formatoptions:{decimalSeparator:".", thousandsSeparator: ",", decimalPlaces: 2, prefix: "$ "}},
-							{name:"payment_type",index:"payment_type",width:300,align:"right"}, 
-						], 
+							{name:"payment_type",index:"payment_type",width:300,align:"right"},
+						],
 						rowNum:10,
 						pager: pager_id,
-						sortname: 'dos_f', 
-						sortorder: "desc", 
+						sortname: 'dos_f',
+						sortorder: "desc",
 						height: '100%',
 						footerrow : true,
 						userDataOnFooter : true,
@@ -144,9 +144,9 @@ $(document).ready(function() {
 						add:false,
 						del:false
 					}).jqGrid('navButtonAdd',"#"+pager_id,{
-						caption:"Delete Payment", 
-						buttonicon:"ui-icon-trash", 
-						onClickButton: function(){ 
+						caption:"Delete Payment",
+						buttonicon:"ui-icon-trash",
+						onClickButton: function(){
 							var item = jQuery(this).getGridParam('selrow');
 							if(item){
 				 				var id = $(this).getCell(item,'billing_core_id');
@@ -168,7 +168,7 @@ $(document).ready(function() {
 										dataType: 'json',
 										success: function(data){
 											$.jGrowl(data.message);
-											$("#billing_encounters").setCell(data.id,"balance",data.balance); 
+											$("#billing_encounters").setCell(data.id,"balance",data.balance);
 										}
 									});
 									jQuery(this).trigger("reloadGrid");
@@ -177,7 +177,7 @@ $(document).ready(function() {
 							} else {
 								$.jGrowl('Choose payment to delete!');
 							}
-						}, 
+						},
 						position:"last"
 					});
 				}
@@ -260,11 +260,11 @@ $(document).ready(function() {
 						colModel:[
 							{name:"insuranceplan",index:"insuranceplan",width:300},
 							{name:"ins_patients_seen",index:"ins_patients_seen",width:100}
-						], 
+						],
 						rowNum:10,
 						pager: pager_id,
-						sortname: 'insuranceplan', 
-						sortorder: "desc", 
+						sortname: 'insuranceplan',
+						sortorder: "desc",
 						height: '100%'
 					});
 					jQuery("#"+subgrid_table_id).jqGrid('navGrid',"#"+pager_id,{
@@ -312,11 +312,11 @@ $(document).ready(function() {
 						colModel:[
 							{name:"insuranceplan",index:"insuranceplan",width:300},
 							{name:"ins_patients_seen",index:"ins_patients_seen",width:100}
-						], 
+						],
 						rowNum:10,
 						pager: pager_id,
-						sortname: 'insuranceplan', 
-						sortorder: "desc", 
+						sortname: 'insuranceplan',
+						sortorder: "desc",
 						height: '100%'
 					});
 					jQuery("#"+subgrid_table_id).jqGrid('navGrid',"#"+pager_id,{
@@ -374,21 +374,21 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'top', of: '#maincontent' }
 	});
-	$("#era_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 640, 
-		width: 925, 
+	$("#era_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 640,
+		width: 925,
 		modal: true,
 		draggable: false,
 		resizable: false,
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#submit_bill_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 400, 
-		width: 500, 
+	$("#submit_bill_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 400,
+		width: 500,
 		modal: true,
 		draggable: false,
 		resizable: false,
@@ -406,7 +406,7 @@ $(document).ready(function() {
 				reload_grid("submit_list");
 				$("#submit_bill_dialog").dialog('close');
 			}
-		});	
+		});
 	});
 	$("#submit_batch_hcfa").click(function(){
 		var eid = $("#billing_eid").val();
@@ -420,7 +420,7 @@ $(document).ready(function() {
 				reload_grid("submit_list");
 				$("#submit_bill_dialog").dialog('close');
 			}
-		});	
+		});
 	});
 	$("#submit_single_printimage").click(function(){
 		var eid = $("#billing_eid").val();
@@ -464,7 +464,7 @@ $(document).ready(function() {
 				}
 			}
 		});
-		if (noshdata.success_doc == true) {
+		if (noshdata.success_doc === true) {
 			window.open("print_batch/" + noshdata.type + "/" + noshdata.filename);
 			noshdata.success_doc = false;
 			noshdata.type = '';
@@ -489,7 +489,7 @@ $(document).ready(function() {
 				}
 			}
 		});
-		if (noshdata.success_doc == true) {
+		if (noshdata.success_doc === true) {
 			window.open("print_batch/" + noshdata.type + "/" + noshdata.filename);
 			noshdata.success_doc = false;
 			noshdata.type = '';
@@ -514,7 +514,7 @@ $(document).ready(function() {
 				}
 			}
 		});
-		if (noshdata.success_doc == true) {
+		if (noshdata.success_doc === true) {
 			window.open("print_batch/" + noshdata.type + "/" + noshdata.filename);
 			noshdata.success_doc = false;
 			noshdata.type = '';
@@ -590,7 +590,7 @@ $(document).ready(function() {
 				}
 			});
 		}
-		if (a == "") {
+		if (a === "") {
 			$("#financial_query_variables").removeOption(/./).trigger("liszt:updated");
 			$("#financial_query_year").removeOption(/./).trigger("liszt:updated");
 
@@ -647,7 +647,7 @@ $(document).ready(function() {
 		var bValid = true;
 		$("#financial_query_form").find("[required]").each(function() {
 			var input_id = $(this).attr('id');
-			var id1 = $("#" + input_id); 
+			var id1 = $("#" + input_id);
 			var text = $("label[for='" + input_id + "']").html();
 			bValid = bValid && checkEmpty(id1, text);
 		});
@@ -668,7 +668,7 @@ $(document).ready(function() {
 					}
 				}
 			});
-			if (noshdata.success_doc == true) {
+			if (noshdata.success_doc === true) {
 				window.open("financial_query_print/" + noshdata.id_doc);
 				noshdata.success_doc = '';
 				noshdata.id_doc = '';
@@ -680,7 +680,7 @@ $(document).ready(function() {
 		onComplete: function(data){
 			var data1 = JSON.parse(data);
 			if(data1.result !== false) {
-				if (data1.html == true) {
+				if (data1.html === true) {
 					var json_array = [data1];
 					var html = '';
 					for (var i = 0; i < json_array[0]['form'].length; i++) {
@@ -729,10 +729,10 @@ $(document).ready(function() {
 								type: "POST",
 								success: function(data){
 									$("#" + b).removeOption(/./);
-									$("#" + b).addOption(data, false)
+									$("#" + b).addOption(data, false);
 								}
 							});
-							
+
 						}
 					});
 				}

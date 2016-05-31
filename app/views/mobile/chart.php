@@ -15,7 +15,7 @@
 			</div>
 		</div>
 		<div id="content_inner"></div>
-		
+
 	</div>
 	<div role="main" class="ui-content" id="edit_content" style="display:none">
 		<div id="searchicd_div" class="search_class" style="display:none">
@@ -165,18 +165,20 @@
 					}
 					$.mobile.loading("hide");
 				});
-				
+
 			}
 		}).on( "collapsibleexpand", function(event, ui) {
 			$('#searchmed').children().each( function (i){
 				if (!$(this).hasClass('ui-collapsible-collapsed')) {
 					var $ul = $(this).find('ul');
-					if ($ul.html() == '') {
+					if ($ul.html() === '') {
 						$.mobile.loading("show");
 						var name = $(this).find('h2').attr('data-nosh-name');
 						var form = $(this).find('h2').attr('data-nosh-form');
 						var med = $(this).find('h2').attr('data-nosh-med');
-						var req = 'term=' + name + ";" + form;
+						var med1 = name + ";" + form;
+						med1 = encodeURIComponent(med1);
+						var req = 'med=' + med1;
 						var html = '';
 						var nosh_paste_to = '';
 						$.ajax({
@@ -194,7 +196,7 @@
 							$.mobile.loading("hide");
 						});
 					}
-					
+
 				}
 			});
 		});
@@ -220,7 +222,7 @@
 						var currentCategory = "";
 						$.each(response.message, function ( i, val ) {
 							if (val.category != currentCategory ) {
-								if (val.category != '') {
+								if (val.category !== '') {
 									html += '<li data-role="list-divider">' + val.category + '</li>';
 								} else {
 									html += '<li data-role="list-divider">Supplements Database</li>';
@@ -259,7 +261,7 @@
 						var currentCategory = "";
 						$.each(response.message, function ( i, val ) {
 							if (val.category != currentCategory ) {
-								if (val.category != '') {
+								if (val.category !== '') {
 									html += '<li data-role="list-divider">' + val.category + '</li>';
 								} else {
 									html += '<li data-role="list-divider">Supplements Database</li>';

@@ -59,7 +59,7 @@ $(document).ready(function() {
 			var a1 = a.split("_");
 			var count = parseInt(a1[2]) + 1;
 			$("#super_query_div").append('<br><select name="search_join[]" id="search_join_'+count+'" class="text search_join_class"></select> <select name="search_field[]" id="search_field_'+count+'" class="text search_field_class"></select> <select name="search_op[]" id="search_op_'+count+'" class="text search_op_class"></select> <input type="text" name="search_desc[]" id="search_desc_'+count+'"  class="text search_desc_class"></input>');
-			$("#search_field_"+count).addOption({"":"Select Field","age":"Patient's age","insurance":"Patient's primary insurance","issue":"Patient's active medical issue list","billing":"Patient's billing code","rxl_medication":"Patient's active medication list","imm_immunization":"Patient's immunization list","sup_supplement":"Patient's active supplement list","sup_supplement":"Patient's active supplement list","zip":"Zip code where patient resides","city":"City where patient resides","month":"Patient's birth month"},false);
+			$("#search_field_"+count).addOption({"":"Select Field","age":"Patient's age","insurance":"Patient's primary insurance","issue":"Patient's active medical issue list","billing":"Patient's billing code","rxl_medication":"Patient's active medication list","imm_immunization":"Patient's immunization list","sup_supplement":"Patient's active supplement list","zip":"Zip code where patient resides","city":"City where patient resides","month":"Patient's birth month"},false);
 			$("#search_op_"+count).addOption({"":"Select Operator"},false);
 			$("#search_join_"+count).addOption({"AND":"And (&)","OR":"Or (||)"},false);
 			$("#search_field_"+count).change(function(){
@@ -118,10 +118,9 @@ $(document).ready(function() {
 		if (a !== null) {
 			var json_result = $("#tag_query_form").serializeObject();
 			var b = $("#tag_patient").val();
-			if (b != '') {
-				var pid = $("#tag_pid").val();
-			} else {
-				var pid = '0';
+			var pid = '0';
+			if (b !== '') {
+				pid = $("#tag_pid").val();
 			}
 			jQuery("#tag_query_results").jqGrid('GridUnload');
 			jQuery("#tag_query_results").jqGrid({
@@ -238,11 +237,11 @@ $(document).ready(function() {
 	$("#nosh_office").click(function() {
 		$("#office_dialog").dialog('open');
 	});
-	$("#office_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 640, 
-		width: 925, 
+	$("#office_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 640,
+		width: 925,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -416,11 +415,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'top', of: '#maincontent' }
 	});
-	$("#edit_vaccine_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 400, 
-		width: 800, 
+	$("#edit_vaccine_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 400,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -467,7 +466,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_vaccine_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -499,11 +498,11 @@ $(document).ready(function() {
 	});
 	$("#edit_vaccine_imm_expiration").mask("99/99/9999").datepicker();
 	$("#edit_vaccine_date_purchase").mask("99/99/9999").datepicker();
-	$("#reactivate_vaccine_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 200, 
-		width: 500, 
+	$("#reactivate_vaccine_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 200,
+		width: 500,
 		closeOnEscape: false,
 		dialogClass: "noclose",
 		buttons: {
@@ -511,7 +510,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#reactivate_vaccine_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -554,7 +553,7 @@ $(document).ready(function() {
 			$('#edit_vaccine_dialog').dialog('open');
 			$("#edit_vaccine_imm_immunization").focus();
 		} else {
-			$.jGrowl("Please select vaccine to edit!")
+			$.jGrowl("Please select vaccine to edit!");
 		}
 	});
 	$("#inactivate_vaccine").click(function(){
@@ -572,13 +571,13 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select vaccine to inactivate!")
+			$.jGrowl("Please select vaccine to inactivate!");
 		}
 	});
 	$("#delete_vaccine").click(function(){
 		var item = jQuery("#vaccine_inventory").getGridParam('selrow');
 		if(item){
-			if(confirm('Are you sure you want to delete this vaccination entry?  This is not recommended unless entering the vaccine was a mistake!')){ 
+			if(confirm('Are you sure you want to delete this vaccination entry?  This is not recommended unless entering the vaccine was a mistake!')){
 				var id = $("#vaccine_inventory").getCell(item,'vaccine_id');
 				$.ajax({
 					type: "POST",
@@ -592,7 +591,7 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			$.jGrowl("Please select vaccine to delete!")
+			$.jGrowl("Please select vaccine to delete!");
 		}
 	});
 	$("#reactivate_vaccine").click(function(){
@@ -603,14 +602,14 @@ $(document).ready(function() {
 			$("#reactivate_vaccine_dialog").dialog('open');
 			$("#reactivate_quantity").focus();
 		} else {
-			$.jGrowl("Please select vaccine to reactivate!")
+			$.jGrowl("Please select vaccine to reactivate!");
 		}
 	});
-	$("#edit_vaccine_temp_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 800, 
+	$("#edit_vaccine_temp_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -620,7 +619,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_vaccine_temp_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -678,13 +677,13 @@ $(document).ready(function() {
 			$('#edit_vaccine_temp_dialog').dialog('open');
 			$("#edit_vaccine_temp").focus();
 		} else {
-			$.jGrowl("Please select vaccine to edit!")
+			$.jGrowl("Please select vaccine to edit!");
 		}
 	});
 	$("#delete_temp").click(function(){
 		var item = jQuery("#vaccine_temp").getGridParam('selrow');
 		if(item){
-			if(confirm('Are you sure you want to delete this vaccine temperature entry?  This is not recommended unless entering the temperature was a mistake!')){ 
+			if(confirm('Are you sure you want to delete this vaccine temperature entry?  This is not recommended unless entering the temperature was a mistake!')){
 				var id = $("#vaccine_temp").getCell(item,'temp_id');
 				$.ajax({
 					type: "POST",
@@ -698,7 +697,7 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			$.jGrowl("Please select vaccine temperature to delete!")
+			$.jGrowl("Please select vaccine temperature to delete!");
 		}
 	});
 	$("#edit_supplement_sup_expiration").mask("99/99/9999").datepicker();
@@ -713,11 +712,11 @@ $(document).ready(function() {
 			}
 		});
 	});
-	$("#supplements_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#supplements_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -751,7 +750,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_supplement_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 					if (input_id == 'edit_supplement_sup_quantity') {
@@ -800,7 +799,7 @@ $(document).ready(function() {
 			$("#supplements_dialog").dialog('open');
 			$("#edit_supplement_sup_description").focus();
 		} else {
-			$.jGrowl("Please select supplement to edit!")
+			$.jGrowl("Please select supplement to edit!");
 		}
 	});
 	$("#inactivate_supplement").button().click(function(){
@@ -818,13 +817,13 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select supplement to inactivate!")
+			$.jGrowl("Please select supplement to inactivate!");
 		}
 	});
 	$("#delete_supplement").button().click(function(){
 		var item = jQuery("#supplements_inventory").getGridParam('selrow');
 		if(item){
-			if(confirm('Are you sure you want to delete this supplement entry?  This is not recommended unless entering the supplement was a mistake!')){ 
+			if(confirm('Are you sure you want to delete this supplement entry?  This is not recommended unless entering the supplement was a mistake!')){
 				var id = $("#supplements_inventory").getCell(item,'supplement_id');
 				$.ajax({
 					type: "POST",
@@ -838,7 +837,7 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			$.jGrowl("Please select supplement to delete!")
+			$.jGrowl("Please select supplement to delete!");
 		}
 	});
 	$("#reactivate_supplement").button().click(function(){
@@ -849,14 +848,14 @@ $(document).ready(function() {
 			$("#reactivate_supplement_dialog").dialog('open');
 			$("#reactivate_sup_quantity").focus();
 		} else {
-			$.jGrowl("Please select supplement to reactivate!")
+			$.jGrowl("Please select supplement to reactivate!");
 		}
 	});
-	$("#reactivate_supplement_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 200, 
-		width: 500, 
+	$("#reactivate_supplement_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 200,
+		width: 500,
 		closeOnEscape: false,
 		dialogClass: "noclose",
 		buttons: {
@@ -864,7 +863,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#reactivate_supplement_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -948,16 +947,16 @@ $(document).ready(function() {
 	}).change(function() {
 		tag_grid_reload();
 	});
-	$("#tag_modal_view_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#tag_modal_view_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		close: function(event, ui) {
 			var a = $("#tag_document_filepath").val();
-			if (a != '') {
+			if (a !== '') {
 				$.ajax({
 					type: "POST",
 					url: "ajaxoffice/close-document",
@@ -966,7 +965,7 @@ $(document).ready(function() {
 						$("#tag_document_filepath").val('');
 						$("#tag_view_document_id").val('');
 					}
-				});	
+				});
 			}
 			$("#tag_modal_view").html('');
 		},
@@ -975,7 +974,7 @@ $(document).ready(function() {
 	$("#hedis_office_time").mask("99/99/9999").datepicker();
 	$("#hedis_office_spec").click(function() {
 		var a = $("#hedis_office_time").val();
-		if (a != '') {
+		if (a !== '') {
 			$('#hedis_office_load').show();
 			$.ajax({
 				type: "POST",

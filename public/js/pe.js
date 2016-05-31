@@ -24,7 +24,7 @@ $(document).ready(function() {
 					str += "&";
 				}
 			} else {
-				if (i != 0) {
+				if (i !== 0) {
 					str += "&";
 				}
 			}
@@ -53,7 +53,7 @@ $(document).ready(function() {
 		var id = $(this).attr('id');
 		id = id.replace('_template', '');
 		var a = $(this).val();
-		if (a != '') {
+		if (a !== '') {
 			$.ajax({
 				type: "POST",
 				url: "ajaxencounter/get-pe-templates/" +id + "/" + a + "/n",
@@ -75,11 +75,11 @@ $(document).ready(function() {
 			});
 		}
 	});
-	$("#pe_gen_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_gen_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -95,11 +95,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_eye_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_eye_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -115,11 +115,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_ent_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_ent_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -135,11 +135,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_neck_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_neck_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -155,11 +155,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_resp_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_resp_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -175,11 +175,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_cv_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_cv_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -195,11 +195,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_ch_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_ch_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -215,11 +215,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_gi_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_gi_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -235,11 +235,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_gu_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_gu_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -255,11 +255,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_lymph_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_lymph_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -275,11 +275,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_ms_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_ms_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -295,11 +295,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_neuro_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_neuro_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -315,11 +315,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_psych_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_psych_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -335,11 +335,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_skin_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_skin_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -355,11 +355,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_constitutional_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_constitutional_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -375,11 +375,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#pe_mental_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 575, 
-		width: 800, 
+	$("#pe_mental_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 575,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,

@@ -1,9 +1,9 @@
 $(document).ready(function() {
-	$("#alerts_list_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#alerts_list_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -84,11 +84,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#edit_alert_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 800, 
+	$("#edit_alert_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -151,14 +151,14 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_alert_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
 				var a = $("#alert_send_message").val();
 				var b = $("#alert_provider_id").val();
 				if (a == 'y' || a == 's') {
-					if (b == '') {
+					if (b === '') {
 						var c = $("label[for='alert_provider']").html();
 						var text = c.replace(":","");
 						$.jGrowl(text + " Required");
@@ -194,11 +194,11 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#edit_alert_dialog1").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 800, 
+	$("#edit_alert_dialog1").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -226,7 +226,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_alert_form1").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -282,7 +282,7 @@ $(document).ready(function() {
 			var edit_date = editDate(date);
 			var provider = $("#alert_provider").val();
 			$("#alert_provider_id").val(provider);
-			if (provider != '') {
+			if (provider !== '') {
 				$.ajax({
 					url: "ajaxsearch/users2/" + provider,
 					type: "POST",
@@ -296,7 +296,7 @@ $(document).ready(function() {
 			$('#edit_alert_dialog').dialog('open');
 			$("#alert").focus();
 		} else {
-			$.jGrowl("Please select alert to edit!")
+			$.jGrowl("Please select alert to edit!");
 		}
 	});
 	$("#complete_alert").click(function(){
@@ -314,7 +314,7 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select alert to mark as complete!")
+			$.jGrowl("Please select alert to mark as complete!");
 		}
 	});
 	$("#incomplete_alert").click(function(){
@@ -324,7 +324,7 @@ $(document).ready(function() {
 			$("#alert_id1").val(id);
 			$('#edit_alert_dialog1').dialog('open');
 		} else {
-			$.jGrowl("Please select alert to mark as incomplete!")
+			$.jGrowl("Please select alert to mark as incomplete!");
 		}
 	});
 	$("#delete_alert").click(function(){
@@ -343,10 +343,10 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			$.jGrowl("Please select alert to delete!")
+			$.jGrowl("Please select alert to delete!");
 		}
 	});
-	if (noshdata.alert_id != '') {
+	if (noshdata.alert_id !== '') {
 		$("#alerts_list_dialog").dialog('open');
 		$.ajax({
 			type: "POST",
@@ -365,11 +365,11 @@ $(document).ready(function() {
 			}
 		});
 	}
-	$("#alerts_pending_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#alerts_pending_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {

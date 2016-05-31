@@ -1,9 +1,9 @@
 $(document).ready(function() {
-	$("#issues_list_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#issues_list_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event,ui) {
@@ -106,7 +106,7 @@ $(document).ready(function() {
 			$('#edit_issue_dialog').dialog('option', 'title', "Edit Issue");
 			$('#edit_issue_dialog').dialog('open');
 		} else {
-			$.jGrowl("Please select issue to edit!")
+			$.jGrowl("Please select issue to edit!");
 		}
 	});
 	$("#inactivate_issue").click(function(){
@@ -124,7 +124,7 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select issue to inactivate!")
+			$.jGrowl("Please select issue to inactivate!");
 		}
 	});
 	$("#delete_issue").click(function(){
@@ -143,7 +143,7 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			$.jGrowl("Please select issue to delete!")
+			$.jGrowl("Please select issue to delete!");
 		}
 	});
 	$("#reactivate_issue").click(function(){
@@ -161,14 +161,14 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select issue to inactivate!")
+			$.jGrowl("Please select issue to inactivate!");
 		}
 	});
-	$("#edit_issue_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 800, 
+	$("#edit_issue_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -201,7 +201,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_issue_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -243,20 +243,19 @@ $(document).ready(function() {
 					$("#issues_list_dialog").dialog('close');
 				} else {
 					var old = $("#oh_pmh").val();
+					var old1 = '';
 					if(old){
 						var pos = old.lastIndexOf('\n');
 						if (pos == -1) {
-							var old1 = old + '\n';
+							old1 = old + '\n';
 						} else {
 							var a = old.slice(pos);
-							if (a == '') {
-								var old1 = old;
+							if (a === '') {
+								old1 = old;
 							} else {
-								var old1 = old + '\n';
+								old1 = old + '\n';
 							}
 						}
-					} else {
-						var old1 = '';
 					}
 					var issues1 = data.replace(/;/g,"\n");
 					var len = issues1.length;
@@ -276,20 +275,19 @@ $(document).ready(function() {
 			var issue = jQuery("#issues").getCell(item,'issue');
 			var date = jQuery("#issues").getCell(item,'issue_date_active');
 			var old = $("#oh_pmh").val();
+			var old1 = '';
 			if(old){
 				var pos = old.lastIndexOf('\n');
 				if (pos == -1) {
-					var old1 = old + '\n';
+					old1 = old + '\n';
 				} else {
 					var a = old.slice(pos);
-					if (a == '') {
-						var old1 = old;
+					if (a === '') {
+						old1 = old;
 					} else {
-						var old1 = old + '\n';
+						old1 = old + '\n';
 					}
 				}
-			} else {
-				var old1 = '';
 			}
 			$("#oh_pmh").val(old1+issue+', '+date);
 			$.jGrowl('Issue copied!');
@@ -308,20 +306,19 @@ $(document).ready(function() {
 					$("#issues_list_dialog").dialog('close');
 				} else {
 					var old = $("#oh_psh").val();
+					var old1 = '';
 					if(old){
 						var pos = old.lastIndexOf('\n');
 						if (pos == -1) {
-							var old1 = old + '\n';
+							old1 = old + '\n';
 						} else {
 							var a = old.slice(pos);
-							if (a == '') {
-								var old1 = old;
+							if (a === '') {
+								old1 = old;
 							} else {
-								var old1 = old + '\n';
+								old1 = old + '\n';
 							}
 						}
-					} else {
-						var old1 = '';
 					}
 					var issues1 = data.replace(/;/g,"\n");
 					var len = issues1.length;
@@ -341,20 +338,19 @@ $(document).ready(function() {
 			var issue = jQuery("#issues").getCell(item,'issue');
 			var date = jQuery("#issues").getCell(item,'issue_date_active');
 			var old = $("#oh_psh").val();
+			var old1 = '';
 			if(old){
 				var pos = old.lastIndexOf('\n');
 				if (pos == -1) {
-					var old1 = old + '\n';
+					old1 = old + '\n';
 				} else {
 					var a = old.slice(pos);
-					if (a == '') {
-						var old1 = old;
+					if (a === '') {
+						old1 = old;
 					} else {
-						var old1 = old + '\n';
+						old1 = old + '\n';
 					}
 				}
-			} else {
-				var old1 = '';
 			}
 			$("#oh_psh").val(old1+issue+', '+date);
 			$.jGrowl('Issue copied!');
@@ -555,33 +551,33 @@ $(document).ready(function() {
 				$.jGrowl("Please select issue to copy!");
 			}
 		} else {
-			var item = jQuery("#issues").getGridParam('selrow');
-			if(item){
-				var issue = jQuery("#issues").getCell(item,'issue');
+			var item1 = jQuery("#issues").getGridParam('selrow');
+			var old = '';
+			if(item1){
+				var issue1 = jQuery("#issues").getCell(item1,'issue');
 				if (id_num == '9') {
-					var old = $("#assessment_other").val();
+					old = $("#assessment_other").val();
 				} else {
-					var old = $("#assessment_ddx").val();
+					old = $("#assessment_ddx").val();
 				}
-				if(old){
-					var pos = old.lastIndexOf('\n');
-					if (pos == -1) {
-						var old1 = old + '\n';
+				var old1 = '';
+				if(old !== ''){
+					var pos1 = old.lastIndexOf('\n');
+					if (pos1 == -1) {
+						old1 = old + '\n';
 					} else {
-						var a = old.slice(pos);
-						if (a == '') {
-							var old1 = old;
+						var a = old.slice(pos1);
+						if (a === '') {
+							old1 = old;
 						} else {
-							var old1 = old + '\n';
+							old1 = old + '\n';
 						}
 					}
-				} else {
-					var old1 = '';
 				}
 				if (id_num == '9') {
-					$("#assessment_other").val(old1+issue);
+					$("#assessment_other").val(old1+issue1);
 				} else {
-					$("#assessment_ddx").val(old1+issue);
+					$("#assessment_ddx").val(old1+issue1);
 				}
 				$.jGrowl('Issue copied!');
 			} else {

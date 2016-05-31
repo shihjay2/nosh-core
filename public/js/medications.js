@@ -10,11 +10,11 @@ $(document).ready(function() {
 			}
 		}
 	});
-	$("#medications_list_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 800, 
+	$("#medications_list_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -104,7 +104,7 @@ $(document).ready(function() {
 	$(".medications_list").click(function() {
 		$("#oh_meds_header").hide();
 		$("#medications_list_dialog").dialog('open');
-		
+
 	});
 	$("#dashboard_rx").click(function() {
 		$('#medications_list_dialog').dialog('option', {
@@ -141,7 +141,7 @@ $(document).ready(function() {
 			$('#edit_medications_dialog').dialog('open');
 			$("#rxl_medication").focus();
 		} else {
-			$.jGrowl("Please select medication to edit!")
+			$.jGrowl("Please select medication to edit!");
 		}
 	});
 	$("#inactivate_rx").click(function(){
@@ -160,13 +160,13 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select medication to inactivate!")
+			$.jGrowl("Please select medication to inactivate!");
 		}
 	});
 	$("#delete_rx").click(function(){
 		var item = jQuery("#medications").getGridParam('selrow');
 		if(item){
-			if(confirm('Are you sure you want to delete this medication?  This is not recommended unless entering the medication was a mistake!')){ 
+			if(confirm('Are you sure you want to delete this medication?  This is not recommended unless entering the medication was a mistake!')){
 				var id = $("#medications").getCell(item,'rxl_id');
 				$.ajax({
 					type: "POST",
@@ -180,7 +180,7 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			$.jGrowl("Please select medication to inactivate!")
+			$.jGrowl("Please select medication to inactivate!");
 		}
 	});
 	$("#reactivate_rx").click(function(){
@@ -199,14 +199,14 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select medication to reactivate!")
+			$.jGrowl("Please select medication to reactivate!");
 		}
 	});
-	$("#edit_medications_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 400, 
-		width: 800, 
+	$("#edit_medications_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 400,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -246,8 +246,8 @@ $(document).ready(function() {
 					var med = $('#rxl_medication').val();
 					var name = $("#rxl_name").val();
 					var form = $("#rxl_form").val();
-					if (med == '') {
-						if (name != '' && form != '') {
+					if (med === '') {
+						if (name !== '' && form !== '') {
 							med = name + ";" + form;
 						}
 					} else {
@@ -348,7 +348,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#edit_rx_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -443,10 +443,10 @@ $(document).ready(function() {
 		modal: true,
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#messages_rx_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
+	$("#messages_rx_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
 		width: 800,
 		draggable: false,
 		resizable: false,
@@ -568,11 +568,11 @@ $(document).ready(function() {
 			}
 		});
 	}
-	$("#messages_edit_rx_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 650, 
+	$("#messages_edit_rx_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 650,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -622,8 +622,8 @@ $(document).ready(function() {
 					var med = $('#messages_rxl_medication').val();
 					var name = $("#messages_rxl_name").val();
 					var form = $("#messages_rxl_form").val();
-					if (med == '') {
-						if (name != '' && form != '') {
+					if (med === '') {
+						if (name !== '' && form !== '') {
 							med = name + ";" + form;
 						}
 					} else {
@@ -737,7 +737,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#messages_edit_rx_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -784,8 +784,8 @@ $(document).ready(function() {
 		height:400,
 		width: 400,
 		modal: true,
-		bgiframe: true, 
-		autoOpen: false, 
+		bgiframe: true,
+		autoOpen: false,
 		draggable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
@@ -804,8 +804,8 @@ $(document).ready(function() {
 		height:400,
 		width: 400,
 		modal: true,
-		bgiframe: true, 
-		autoOpen: false, 
+		bgiframe: true,
+		autoOpen: false,
 		draggable: false,
 		closeOnEscape: false,
 		dialogClass: "noclose",
@@ -867,8 +867,8 @@ $(document).ready(function() {
 		var b = $("#messages_rx_eie_text").val();
 		var c = $("#messages_rx_inactivate_text").val();
 		var d = $("#messages_rx_reactivate_text").val();
-		if(a != '' || b != '' || c != '' || d != ''){
-			if(confirm('Changes have not been saved.  Are you sure you want to close this window?  If not, press Cancel and press Import to save the form fields.')){ 
+		if(a !== '' || b !== '' || c !== '' || d !== ''){
+			if(confirm('Changes have not been saved.  Are you sure you want to close this window?  If not, press Cancel and press Import to save the form fields.')){
 				closerxorders();
 				return true;
 			} else {
@@ -876,7 +876,7 @@ $(document).ready(function() {
 			}
 		} else {
 			closerxorders();
-		}	
+		}
 	});
 	$("#save_rx_helper").click(function() {
 		var old = $("#t_messages_message").val();
@@ -885,30 +885,27 @@ $(document).ready(function() {
 		var b = $("#messages_rx_eie_text").val();
 		var c = $("#messages_rx_inactivate_text").val();
 		var d = $("#messages_rx_reactivate_text").val();
+		var a1 = '';
+		var b1 = '';
+		var c1 = '';
+		var d1 = '';
+		var e = '';
 		if(a){
-			var a1 = 'PRESCRIBED MEDICATIONS:  ' + a + '\n\n';
-		} else {
-			var a1 = '';
+			a1 = 'PRESCRIBED MEDICATIONS:  ' + a + '\n\n';
 		}
 		if(b){
-			var b1 = 'ENTERED MEDICATIONS IN ERROR:  ' + b + '\n\n';
-		} else {
-			var b1 = '';
+			b1 = 'ENTERED MEDICATIONS IN ERROR:  ' + b + '\n\n';
 		}
 		if(c){
-			var c1 = 'DISCONTINUED MEDICATIONS:  ' + c + '\n\n';
-		} else {
-			var c1 = '';
+			c1 = 'DISCONTINUED MEDICATIONS:  ' + c + '\n\n';
 		}
 		if(d){
-			var d1 = 'REINSTATED MEDICATIONS:  ' + d + '\n\n';
-		} else {
-			var d1 = '';
+			d1 = 'REINSTATED MEDICATIONS:  ' + d + '\n\n';
 		}
-		if (old1 != '') {
-			var e = old1+'\n\n'+a1+b1+c1+d1;
+		if (old1 !== '') {
+			e = old1+'\n\n'+a1+b1+c1+d1;
 		} else {
-			var e = a1+b1+c1+d1;
+			e = a1+b1+c1+d1;
 		}
 		$("#t_messages_message").val(e);
 		closerxorders();
@@ -918,8 +915,8 @@ $(document).ready(function() {
 		var b = $("#messages_rx_eie_text").val();
 		var c = $("#messages_rx_inactivate_text").val();
 		var d = $("#messages_rx_reactivate_text").val();
-		if(a != '' || b != '' || c != '' || d != ''){
-			if(confirm('Changes have not been saved.  Are you sure you want to close this window?  If not, press Cancel and press Import to save the form fields.')){ 
+		if(a !== '' || b !== '' || c !== '' || d !== ''){
+			if(confirm('Changes have not been saved.  Are you sure you want to close this window?  If not, press Cancel and press Import to save the form fields.')){
 				closerxorders();
 				return true;
 			} else {
@@ -1030,7 +1027,7 @@ $(document).ready(function() {
 	$("#messages_delete_rx").click(function(){
 		var item = jQuery("#messages_medications").getGridParam('selrow');
 		if(item){
-			if(confirm('Are you sure you want to delete this medication?  This is not recommended unless entering the medication was a mistake!')){ 
+			if(confirm('Are you sure you want to delete this medication?  This is not recommended unless entering the medication was a mistake!')){
 				var id = $("#messages_medications").getCell(item,'rxl_id');
 				$.ajax({
 					type: "POST",
@@ -1069,7 +1066,7 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select medication to reactivate!")
+			$.jGrowl("Please select medication to reactivate!");
 		}
 	});
 	$.extend({
@@ -1077,7 +1074,7 @@ $(document).ready(function() {
 			callback: function (result) {
 				var id = result["references"][0]["id"];
 				var a = $("#messages_rxl_medication_list").val();
-				if (a == '') {
+				if (a === '') {
 					$("#messages_rxl_medication_list").val(id);
 				} else {
 					$("#messages_rxl_medication_list").val(a + ',' + id);
@@ -1086,9 +1083,9 @@ $(document).ready(function() {
 		}
 	});
 	$("#messages_rx_fax_dialog").dialog({
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
 		width: 800,
 		draggable: false,
 		resizable: false,
@@ -1127,7 +1124,7 @@ $(document).ready(function() {
 				bValid = bValid && checkEmpty(medication,"Prescription ID");
 				$("#messages_rx_fax_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1231,7 +1228,7 @@ $(document).ready(function() {
 		var bValid = true;
 		$("#messages_rx_fax_form").find("[required]").each(function() {
 			var input_id = $(this).attr('id');
-			var id1 = $("#" + input_id); 
+			var id1 = $("#" + input_id);
 			var text = $("label[for='" + input_id + "']").html();
 			bValid = bValid && checkEmpty(id1, text);
 		});
@@ -1289,20 +1286,19 @@ $(document).ready(function() {
 					$.jGrowl(data.response);
 				} else {
 					var old = $("#t_messages_message").val();
+					var old1 = '';
 					if(old){
 						var pos = old.lastIndexOf('\n');
 						if (pos == -1) {
-							var old1 = old + '\n\n';
+							old1 = old + '\n\n';
 						} else {
 							var a = old.slice(pos);
-							if (a == '') {
-								var old1 = old + '\n';
+							if (a === '') {
+								old1 = old + '\n';
 							} else {
-								var old1 = old + '\n\n';
+								old1 = old + '\n\n';
 							}
 						}
-					} else {
-						var old1 = '';
 					}
 					$("#t_messages_message").val(old1+data.medtext);
 					$('#messages_edit_rx_form').hide('fast');

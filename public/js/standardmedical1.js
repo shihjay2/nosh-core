@@ -108,7 +108,7 @@ $(document).ready(function() {
 		url: "ajaxencounter/get-hpi",
 		dataType: "json",
 		success: function(data){
-			if (data.response == true) {
+			if (data.response === true) {
 				$("#hpi").val(data.hpi);
 				$("#hpi_old").val(data.hpi);
 			} else {
@@ -160,10 +160,9 @@ $(document).ready(function() {
 			url: "ajaxencounter/get-pf-template/" + a,
 			success: function(data){
 				var old = $("#hpi").val();
-				if (old != '') {
-					var b = old + '\n\n' + data;
-				} else {
-					var b = data;
+				var b = data;
+				if (old !== '') {
+					b = old + '\n\n' + data;
 				}
 				$("#hpi").val(b);
 			}
@@ -174,20 +173,19 @@ $(document).ready(function() {
 	});
 	$('#hpi_wcc').click(function(){
 		var old = $("#hpi").val();
+		var old1 = '';
 		if(old){
 			var pos = old.lastIndexOf('\n');
 			if (pos == -1) {
-				var old1 = old + '\n\n';
+				old1 = old + '\n\n';
 			} else {
 				var a = old.slice(pos);
-				if (a == '') {
-					var old1 = old + '\n';
+				if (a === '') {
+					old1 = old + '\n';
 				} else {
-					var old1 = old + '\n\n';
+					old1 = old + '\n\n';
 				}
 			}
-		} else {
-			var old1 = '';
 		}
 		var age1 = noshdata.age;
 		var age = age1.replace("Years Old", "year-old ");
@@ -202,20 +200,19 @@ $(document).ready(function() {
 	});
 	$('#hpi_cpe').click(function(){
 		var old = $("#hpi").val();
+		var old1 = '';
 		if(old){
 			var pos = old.lastIndexOf('\n');
 			if (pos == -1) {
-				var old1 = old + '\n\n';
+				old1 = old + '\n\n';
 			} else {
 				var a = old.slice(pos);
-				if (a == '') {
-					var old1 = old + '\n';
+				if (a === '') {
+					old1 = old + '\n';
 				} else {
-					var old1 = old + '\n\n';
+					old1 = old + '\n\n';
 				}
 			}
-		} else {
-			var old1 = '';
 		}
 		var age1 = noshdata.age;
 		var age = age1.replace("Years Old", "year-old ");
@@ -257,20 +254,19 @@ $(document).ready(function() {
 	});
 	$('#hpi_mtm').click(function(){
 		var old = $("#hpi").val();
+		var old1 = '';
 		if(old){
 			var pos = old.lastIndexOf('\n');
 			if (pos == -1) {
-				var old1 = old + '\n\n';
+				old1 = old + '\n\n';
 			} else {
 				var a = old.slice(pos);
-				if (a == '') {
-					var old1 = old + '\n';
+				if (a === '') {
+					old1 = old + '\n';
 				} else {
-					var old1 = old + '\n\n';
+					old1 = old + '\n\n';
 				}
 			}
-		} else {
-			var old1 = '';
 		}
 		var age1 = noshdata.age;
 		var age = age1.replace("Years Old", "year-old ");

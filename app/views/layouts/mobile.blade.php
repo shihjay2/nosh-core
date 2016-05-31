@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
 		<title><?php echo 'NOS'.'H Ch'.'art'.'ing'.'Sys'.'tem';?></title>
@@ -19,11 +19,12 @@
 		<meta http-equiv="expires" content="0" />
 		<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
 		<meta http-equiv="pragma" content="no-cache" />
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/pure/0.6.0/pure-min.css">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/pure/0.6.0/grids-responsive-min.css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/pure/0.6.0/pure-min.css" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/pure/0.6.0/grids-responsive-min.css" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css" />
 		<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/css/jquery-editable.css" />
 		<?php echo HTML::style('css/nativedroid.css');?>
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico">
 		{{ $style }}
@@ -86,9 +87,11 @@
 				});
 				$.mobile.ignoreContentEnabled = true;
 			});
+			$.fn.poshytip={defaults:null};
 		</script>
 		<script type="text/javascript" src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.1/moment.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/js/jquery-editable-poshytip.min.js"></script>
 		{{ $script }}
 	</head>
 	<body>

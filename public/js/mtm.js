@@ -1,8 +1,8 @@
 $(document).ready(function() {
-	$("#mtm_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
+	$("#mtm_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
 		width: 800,
 		closeOnEscape: false,
 		dialogClass: "noclose",
@@ -24,7 +24,7 @@ $(document).ready(function() {
 						edittype:'text',
 						editoptions:{
 							size:"100",
-							dataInit:function(elem){ 
+							dataInit:function(elem){
 								var mtm_description_select = [
 									"Accountable Care Organization (ACO) coordination of care",
 									"Compliance",
@@ -32,10 +32,10 @@ $(document).ready(function() {
 									"Diabetes Self Management Education and Training (DSME/T)",
 									"Drug interaction",
 									"Immunization",
-									"Need for therapy", 
+									"Need for therapy",
 									"Nutrition",
 									"Screening",
-									"Side effects", 
+									"Side effects",
 									"Smoking cessation",
 									"Suboptimal thearpy",
 									"Therapeutic drug monitoring",
@@ -65,9 +65,9 @@ $(document).ready(function() {
 						edittype:'text',
 						editoptions:{
 							size:"100",
-							dataInit:function(elem){ 
+							dataInit:function(elem){
 								var mtm_action_select = [
-									"Chronic disease management", 
+									"Chronic disease management",
 									"Comprehensive Medication Review (CMR)",
 									"Immunization",
 									"Patient coaching",
@@ -101,7 +101,7 @@ $(document).ready(function() {
 						editoptions:{
 							rows:"4",
 							cols:"76",
-							dataInit:function(elem){ 
+							dataInit:function(elem){
 								function split1( val ) {
 									return val.split( /;\s*/ );
 								}
@@ -156,9 +156,9 @@ $(document).ready(function() {
 						edittype:'text',
 						editoptions:{
 							size:"100",
-							dataInit:function(elem){ 
+							dataInit:function(elem){
 								var mtm_duration_select = [
-									"10 minutes", 
+									"10 minutes",
 									"20 minutes",
 									"30 minutes",
 									"40 minutes",
@@ -230,7 +230,7 @@ $(document).ready(function() {
 						}
 					}
 				});
-				if (noshdata.success_doc == true) {
+				if (noshdata.success_doc === true) {
 					window.open("view_documents/" + noshdata.id_doc);
 					noshdata.success_doc = false;
 					noshdata.id_doc = '';
@@ -283,7 +283,7 @@ $(document).ready(function() {
 						}
 					}
 				});
-				if (noshdata.success_doc == true) {
+				if (noshdata.success_doc === true) {
 					window.open("view_documents/" + noshdata.id_doc);
 					noshdata.success_doc = false;
 					noshdata.id_doc = '';
@@ -309,25 +309,24 @@ $(document).ready(function() {
 						dataType: 'json',
 						success: function(data){
 							var old = $("#orders_plan").val();
+							var old1 = '';
 							if(old){
 								var pos = old.lastIndexOf('\n');
 								if (pos == -1) {
-									var old1 = old + '\n';
+									old1 = old + '\n';
 								} else {
 									var a = old.slice(pos);
-									if (a == '') {
-										var old1 = old;
+									if (a === '') {
+										old1 = old;
 									} else {
-										var old1 = old + '\n';
+										old1 = old + '\n';
 									}
 								}
-							} else {
-								var old1 = '';
 							}
-							if (data.value != '') {
+							if (data.value !== '') {
 								$("#orders_plan").val(old1+data.value);
 							}
-							if (data.duaration != '') {
+							if (data.duaration !== '') {
 								$("#orders_duration").val(data.duration);
 							}
 							$("#mtm_origin").val('');
@@ -341,11 +340,11 @@ $(document).ready(function() {
 		}],
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#mtm_fax_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 800, 
+	$("#mtm_fax_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -378,10 +377,9 @@ $(document).ready(function() {
 				var bValid = true;
 				bValid = bValid && checkEmpty(recipient,"Recipient");
 				bValid = bValid && checkEmpty(number,"Fax Number");
-				var bValid = true;
 				$("#mtm_fax_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -448,7 +446,7 @@ $(document).ready(function() {
 	$("#mtm_list").click(function() {
 		$("#mtm_dialog").dialog('open');
 	});
-	if (noshdata.mtm != '') {
+	if (noshdata.mtm !== '') {
 		$("#mtm_dialog").dialog('open');
 		$.ajax({
 			type: "POST",

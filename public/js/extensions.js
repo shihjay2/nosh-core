@@ -10,11 +10,11 @@ $(document).ready(function() {
 			}
 		});
 	}
-	$("#extensions_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 640, 
-		width: 800, 
+	$("#extensions_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 640,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -40,10 +40,10 @@ $(document).ready(function() {
 				success: function(data){
 					$.each(data, function(key, value){
 						$("#extensions_form :input[name='" + key + "']").val(value);
-						if (key == 'birthday_message' && value != '') {
+						if (key === 'birthday_message' && value !== '') {
 							$("#birthday_message_preview").text(value);
 						}
-						if (key == 'appointment_message' && value != '') {
+						if (key === 'appointment_message' && value !== '') {
 							$("#appointment_message_preview").text(value);
 						}
 					});

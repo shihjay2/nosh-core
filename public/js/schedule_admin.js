@@ -7,7 +7,7 @@ $(document).ready(function() {
 			return "Orange";
 		}
 		if(cellvalue=="coloryellow"){
-			return "Yellow"; mi
+			return "Yellow";
 		}
 		if(cellvalue=="colorgreen"){
 			return "Green";
@@ -19,10 +19,10 @@ $(document).ready(function() {
 			return "Purple";
 		}
 		if(cellvalue=="colorbrown"){
-			return "Brown"
+			return "Brown";
 		}
 		if(cellvalue=="colorblack"){
-			return "Black"
+			return "Black";
 		}
 	}
 	function capsfn (cellvalue, options, rowObject)
@@ -70,11 +70,11 @@ $(document).ready(function() {
 		}
 		return item;
 	}
-	$("#admin_schedule_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 640, 
-		width: 800, 
+	$("#admin_schedule_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 640,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -88,13 +88,13 @@ $(document).ready(function() {
 					var bValid = true;
 					$("#" + form_id).find("[required]").each(function() {
 						var input_id = $(this).attr('id');
-						var id1 = $("#" + input_id); 
+						var id1 = $("#" + input_id);
 						var text = $("label[for='" + input_id + "']").html();
 						bValid = bValid && checkEmpty(id1, text);
 					});
 					var bValid1 = false;
 					$("#" + form_id).find(".text").each(function() {
-						if (bValid1 == false) {
+						if (bValid1 === false) {
 							var input_id = $(this).attr('id');
 							var a = $("#" + input_id).val();
 							var b = $("#" + input_id + "_old").val();
@@ -137,7 +137,7 @@ $(document).ready(function() {
 						$("#schedule-setup1 :input[name='" + key + "']").val(value);
 						$("#" + key + "_old").val(value);
 					});
-					if ($("#timezone").val() == '') {
+					if ($("#timezone").val() === '') {
 						var tz = jstz.determine();
 						$("#timezone").val(tz.name());
 						$.jGrowl("Timezone not set. Automatically set based on your browser location");
@@ -163,7 +163,7 @@ $(document).ready(function() {
 								async: false,
 								success: function(data){
 									$.each(data, function(key, value){
-										list += ";" + key + ":" + value
+										list += ";" + key + ":" + value;
 									});
 								}
 							});
@@ -200,13 +200,13 @@ $(document).ready(function() {
 			var bValid = true;
 			$("#schedule-setup1").find("[required]").each(function() {
 				var input_id = $(this).attr('id');
-				var id1 = $("#" + input_id); 
+				var id1 = $("#" + input_id);
 				var text = $("label[for='" + input_id + "']").html();
 				bValid = bValid && checkEmpty(id1, text);
 			});
 			var bValid1 = false;
 			$("#schedule-setup1").find(".text").each(function() {
-				if (bValid1 == false) {
+				if (bValid1 === false) {
 					var input_id = $(this).attr('id');
 					var a = $("#" + input_id).val();
 					var b = $("#" + input_id + "_old").val();
@@ -303,11 +303,11 @@ $(document).ready(function() {
 		}
 	});
 	$("#add_visit_type").click(function(){
-		jQuery("#visit_type_list").editGridRow("new",{closeAfterAdd:true,width:'400',bottominfo:'Fields marked in (*) are required.'});	
+		jQuery("#visit_type_list").editGridRow("new",{closeAfterAdd:true,width:'400',bottominfo:'Fields marked in (*) are required.'});
 	});
 	$("#edit_visit_type").click(function(){
 		var item = jQuery("#visit_type_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#visit_type_list").editGridRow(item,{closeAfterEdit:true,width:'400',bottominfo:'Fields marked in (*) are required.'});
 		} else {
 			$.jGrowl("Please select visit type to edit!");
@@ -315,7 +315,7 @@ $(document).ready(function() {
 	});
 	$("#delete_visit_type").click(function(){
 		var item = jQuery("#visit_type_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#visit_type_list").delGridRow(item);
 			jQuery("#visit_type_list").delRowData(item);
 		} else {
@@ -378,11 +378,11 @@ $(document).ready(function() {
 					'step': 15
 				});
 			}
-		});	
+		});
 	});
 	$("#edit_exception1").click(function(){
 		var item = jQuery("#exception_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#exception_list").editGridRow(item,{
 				closeAfterEdit:true,
 				width:'650',
@@ -406,7 +406,7 @@ $(document).ready(function() {
 	});
 	$("#delete_exception1").click(function(){
 		var item = jQuery("#exception_list").getGridParam('selrow');
-		if(item){ 
+		if(item){
 			jQuery("#exception_list").delGridRow(item);
 			jQuery("#exception_list").delRowData(item);
 		} else {

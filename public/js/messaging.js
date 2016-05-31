@@ -80,8 +80,8 @@ $(document).ready(function() {
 			onCellSelect: function(id,iCol) {
 				if (iCol > 0) {
 					var row = jQuery("#internal_inbox").getRowData(id);
-					var text = '<br><strong>From:</strong> ' + row['displayname'] + '<br><br><strong>Date:</strong> ' + row['date'] + '<br><br><strong>Subject:</strong> ' + row['subject'] + '<br><br><strong>Message:</strong> ' + row['bodytext']; 
-					var rawtext = 'From:  ' + row['displayname'] + '\nDate: ' + row['date'] + '\nSubject: ' + row['subject'] + '\n\nMessage: ' + row['body']; 
+					var text = '<br><strong>From:</strong> ' + row['displayname'] + '<br><br><strong>Date:</strong> ' + row['date'] + '<br><br><strong>Subject:</strong> ' + row['subject'] + '<br><br><strong>Message:</strong> ' + row['bodytext'];
+					var rawtext = 'From:  ' + row['displayname'] + '\nDate: ' + row['date'] + '\nSubject: ' + row['subject'] + '\n\nMessage: ' + row['body'];
 					$("#message_view1").html(text);
 					$("#message_view_rawtext").val(rawtext);
 					$("#message_view_message_id").val(id);
@@ -96,7 +96,7 @@ $(document).ready(function() {
 					$("#message_view_t_messages_id").val(row['t_messages_id']);
 					$("#message_view_documents_id").val(row['documents_id']);
 					messages_tags();
-					if (row['pid'] == '' || row['pid'] == "0") {
+					if (row['pid'] === '' || row['pid'] === "0") {
 						$("#export_message").hide();
 					} else {
 						$("#export_message").show();
@@ -107,7 +107,7 @@ $(document).ready(function() {
 						if (a) {
 							var id = $("#message_view_message_id").val();
 							var documents_id = $("#message_view_documents_id").val();
-							if (documents_id == '') {
+							if (documents_id === '') {
 								documents_id = '0';
 							}
 							$.ajax({
@@ -124,9 +124,9 @@ $(document).ready(function() {
 			}
 		}).navGrid('#internal_inbox_pager',{search:false,edit:false,add:false,del:false
 		}).navButtonAdd('#internal_inbox_pager',{
-			caption:"Delete Message", 
-			buttonicon:"ui-icon-trash", 
-			onClickButton: function(){ 
+			caption:"Delete Message",
+			buttonicon:"ui-icon-trash",
+			onClickButton: function(){
 				var item = jQuery("#internal_inbox").getGridParam('selarrrow');
 				if(item){
 					var count = item.length;
@@ -145,7 +145,7 @@ $(document).ready(function() {
 				} else {
 					$.jGrowl('Choose message(s) to delete!');
 				}
-			}, 
+			},
 			position:"last"
 		});
 		jQuery("#internal_draft").jqGrid('GridUnload');
@@ -185,12 +185,12 @@ $(document).ready(function() {
 			}
 		}).navGrid('#internal_draft_pager',{search:false,edit:false,add:false,del:false
 		}).navButtonAdd('#internal_draft_pager',{
-			caption:"Delete Message", 
-			buttonicon:"ui-icon-trash", 
-			onClickButton: function(){ 
+			caption:"Delete Message",
+			buttonicon:"ui-icon-trash",
+			onClickButton: function(){
 				var item = jQuery("#internal_draft").getGridParam('selarrrow');
 				if(item){
-					var count = id.length;
+					var count = item.length;
 					for (var i = 0; i < count; i++) {
 						var id = $("#internal_draft").getCell(item[i],'message_id');
 						$.ajax({
@@ -206,7 +206,7 @@ $(document).ready(function() {
 				} else {
 					$.jGrowl('Choose message(s) to delete!');
 				}
-			}, 
+			},
 			position:"last"
 		});
 		jQuery("#internal_outbox").jqGrid('GridUnload');
@@ -238,7 +238,7 @@ $(document).ready(function() {
 			onCellSelect: function(id,iCol) {
 				if (iCol > 0) {
 					var row = jQuery("#internal_outbox").getRowData(id);
-					var text = '<br><strong>To:</strong>  ' + row['message_to'] + '<br><strong>CC:</strong> ' + row['cc'] + '<br><br><strong>Date:</strong>  ' + row['date'] + '<br><br><strong>Subject:</strong>  ' + row['subject'] + '<br><br><strong>Message:</strong> ' + row['body']; 
+					var text = '<br><strong>To:</strong>  ' + row['message_to'] + '<br><strong>CC:</strong> ' + row['cc'] + '<br><br><strong>Date:</strong>  ' + row['date'] + '<br><br><strong>Subject:</strong>  ' + row['subject'] + '<br><br><strong>Message:</strong> ' + row['body'];
 					$("#message_view2").html(text);
 					$("#message_view_message_id").val(id);
 					$("#message_view_subject1").val(row['subject']);
@@ -246,7 +246,7 @@ $(document).ready(function() {
 					$("#message_view_date1").val(row['date']);
 					$("#message_view_pid1").val(row['pid']);
 					messages_tags();
-					if (row['pid'] == '' || row['pid'] == "0") {
+					if (row['pid'] === '' || row['pid'] === "0") {
 						$("#export_message1").hide();
 					} else {
 						$("#export_message1").show();
@@ -486,11 +486,11 @@ $(document).ready(function() {
 		loadmessaging();
 		$("#messaging_accordion").accordion({active: 1});
 	});
-	$("#messaging_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
+	$("#messaging_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
 		height: 640,
-		width: 800, 
+		width: 800,
 		draggable: false,
 		resizable: false,
 		position: { my: 'center', at: 'top', of: '#maincontent' }
@@ -513,11 +513,11 @@ $(document).ready(function() {
  		$("#internal_messages_dialog").dialog('open');
 		$("#messages_subject").focus();
 	});
-	$("#internal_messages_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#internal_messages_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -527,7 +527,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#internal_messages_form_id").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -572,7 +572,7 @@ $(document).ready(function() {
 			},
 			Cancel: function() {
 				var message_id = $("#messages_message_id").val();
-				if (message_id == '') {
+				if (message_id === '') {
 					$("#internal_messages_form_id").clearForm();
 					$("#internal_messages_dialog").dialog('close');
 				} else {
@@ -591,20 +591,20 @@ $(document).ready(function() {
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#internal_messages_view_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#internal_messages_view_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#internal_messages_view2_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#internal_messages_view2_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		position: { my: 'center', at: 'center', of: '#maincontent' }
@@ -691,7 +691,7 @@ $(document).ready(function() {
 		var cc = $("#message_view_cc").val();
 		$("#messages_to_hidden").val(to);
 		$("#messages_cc_hidden").val(cc);
-		if (cc == ''){
+		if (cc === ''){
 			$.ajax({
 				type: "POST",
 				url: "ajaxmessaging/get-displayname",
@@ -762,7 +762,7 @@ $(document).ready(function() {
 					dataType: "json",
 					data: "pid=" + pid,
 					success: function(data){
-						if (t_messages_id != '') {
+						if (t_messages_id !== '') {
 							$.ajax({
 								type: "POST",
 								url: "ajaxsearch/tmessagesidset",
@@ -779,7 +779,7 @@ $(document).ready(function() {
 				});
 			} else {
 				if(pid == oldpt){
-					if (t_messages_id != '') {
+					if (t_messages_id !== '') {
 						$.ajax({
 							type: "POST",
 							url: "ajaxsearch/tmessagesidset",
@@ -799,7 +799,7 @@ $(document).ready(function() {
 						dataType: "json",
 						data: "pid=" + pid,
 						success: function(data){
-							if (t_messages_id != '') {
+							if (t_messages_id !== '') {
 								$.ajax({
 									type: "POST",
 									url: "ajaxsearch/tmessagesidset",
@@ -852,11 +852,11 @@ $(document).ready(function() {
 			$.jGrowl("No patient is associated with this message!");
 		}
 	});
-	$("#messaging_fax_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#messaging_fax_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -1036,11 +1036,11 @@ $(document).ready(function() {
 		}],
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
-	$("#fax_view_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#fax_view_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		modal: true,
 		close: function(event, ui) {
 			var a = $("#fax_filepath").val();
@@ -1054,7 +1054,7 @@ $(document).ready(function() {
 					$("#view_received_id").val('');
 					$("#import_fax_pages").val('');
 				}
-			});	
+			});
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});
@@ -1072,12 +1072,12 @@ $(document).ready(function() {
 				$(".messaging_fax_dialog_new").show();
 				$("#messaging_fax_dialog").dialog('open');
 			}
-		});	
+		});
 	});
 	$("#delete_fax").click(function(){
 		var click_id = jQuery("#received_faxes").getGridParam('selrow');
 		if(click_id){
-			if(confirm('Are you sure you want to delete this fax?')){ 
+			if(confirm('Are you sure you want to delete this fax?')){
 				var click_filePath = jQuery("#received_faxes").getCell(click_id,'filePath');
 				var click_fileName = jQuery("#received_faxes").getCell(click_id,'fileName');
 				$.ajax({
@@ -1097,11 +1097,11 @@ $(document).ready(function() {
 	$("#fax_import_documents_type").addOption({"Laboratory":"Laboratory","Imaging":"Imaging","Cardiopulmonary":"Cardiopulmonary","Endoscopy":"Endoscopy","Referrals":"Referrals","Past Records":"Past Records","Other Forms":"Other Forms"}, false);
 	$("#fax_import_documents_date").mask("99/99/9999");
 	$("#fax_import_documents_date").datepicker();
-	$("#fax_import_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#fax_import_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		closeOnEscape: false,
 		dialogClass: "noclose",
 		open: function (event, ui) {
@@ -1162,7 +1162,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#fax_import_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1201,10 +1201,11 @@ $(document).ready(function() {
 		var id = $("#view_received_id").val();
 		var pages = $("#import_fax_pages").val();
 		var row = jQuery("#received_faxes").getRowData(id);
-		if (pages != '') {
-			var text = "Enter details for importing fax from " + row['fileFrom'] + ", pages " + pages + ":";
+		var text = '';
+		if (pages !== '') {
+			text = "Enter details for importing fax from " + row['fileFrom'] + ", pages " + pages + ":";
 		} else {
-			var text = "Enter details for importing fax from " + row['fileFrom'] + ":";
+			text = "Enter details for importing fax from " + row['fileFrom'] + ":";
 		}
 		$("#fax_received_id").val(id);
 		$("#fax_import_pages").val(pages);
@@ -1217,7 +1218,7 @@ $(document).ready(function() {
 	});
 	$("#editrecipient").click(function(){
 		var clickedit = jQuery("#send_list").getGridParam('selrow');
-		if(clickedit){ 
+		if(clickedit){
 			jQuery("#send_list").editGridRow(clickedit,{closeAfterEdit:true});
 		} else {
 			$.jGrowl("Please select recipient to edit!");
@@ -1239,11 +1240,11 @@ $(document).ready(function() {
 			$("#addfile").parent().find('input').val('');
 		}
 	});
-	$("#pages_view_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#pages_view_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		modal: true,
 		close: function(event, ui) {
 			var a = $("#pages_view_filepath").val();
@@ -1276,7 +1277,7 @@ $(document).ready(function() {
 	});
 	$("#delfile").click(function(){
 		var clickremove = jQuery("#pages_list").getGridParam('selrow');
-		if(clickremove){ 
+		if(clickremove){
 			var click_file = jQuery("#pages_list").getCell(clickremove,'file');
 			var click_pages_id = jQuery("#pages_list").getCell(clickremove,'pages_id');
 			$.ajax({
@@ -1300,15 +1301,15 @@ $(document).ready(function() {
 			$("#faxmessage").val('');
 		}
 	});
-	
+
 	$("#scan_import_documents_type").addOption({"Laboratory":"Laboratory","Imaging":"Imaging","Cardiopulmonary":"Cardiopulmonary","Endoscopy":"Endoscopy","Referrals":"Referrals","Past Records":"Past Records","Other Forms":"Other Forms"}, false);
 	$("#scan_import_documents_date").mask("99/99/9999");
 	$("#scan_import_documents_date").datepicker();
-	$("#scan_import_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#scan_import_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		closeOnEscape: false,
 		dialogClass: "noclose",
 		open: function (event, ui) {
@@ -1369,7 +1370,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#scan_import_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1415,7 +1416,7 @@ $(document).ready(function() {
 	$("#delete_scan").click(function(){
 		var click_id = jQuery("#received_scans").getGridParam('selarrrow');
 		if(click_id){
-			if(confirm('Are you sure you want to delete the seletected documents?')){ 
+			if(confirm('Are you sure you want to delete the seletected documents?')){
 				var count = click_id.length;
 				for (var i = 0; i < count; i++) {
 					var id = $("#received_scans").getCell(click_id[i],'scans_id');
@@ -1442,10 +1443,11 @@ $(document).ready(function() {
 		var id = $("#view_scans_id").val();
 		var pages = $("#import_scan_pages").val();
 		var row = jQuery("#received_scans").getRowData(id);
-		if (pages != '') {
-			var text = "Enter details for importing document named " + row['fileFrom'] + ", pages " + pages + ":";
+		var text = '';
+		if (pages !== '') {
+			text = "Enter details for importing document named " + row['fileFrom'] + ", pages " + pages + ":";
 		} else {
-			var text = "Enter details for importing document named " + row['fileName'] + ":";
+			text = "Enter details for importing document named " + row['fileName'] + ":";
 		}
 		$("#scan_scans_id").val(id);
 		$("#scan_import_pages").val(pages);
@@ -1453,11 +1455,11 @@ $(document).ready(function() {
 		$("#scan_import_dialog").dialog('open');
 		$("#scan_patient_search").focus();
 	});
-	$("#scan_view_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#scan_view_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		modal: true,
 		close: function(event, ui) {
 			var a = $("#scan_filepath").val();
@@ -1471,10 +1473,10 @@ $(document).ready(function() {
 					$("#view_scans_id").val('');
 					$("#import_scan_pages").val('');
 				}
-			});	
+			});
 		}
 	});
-	
+
 	var myUpload3 = $("#import_csv").upload({
 		action: 'import_contact',
 		onComplete: function(data){
@@ -1498,7 +1500,7 @@ $(document).ready(function() {
 			$('#contacts_dialog').dialog('open');
 			$("#messaging_lastname").focus();
 		} else {
-			$.jGrowl("Please select contact to edit!")
+			$.jGrowl("Please select contact to edit!");
 		}
 	});
 	$("#messaging_delete_contact").click(function(){
@@ -1517,14 +1519,14 @@ $(document).ready(function() {
 				});
 			}
 		} else {
-			$.jGrowl("Please select contact to delete!")
+			$.jGrowl("Please select contact to delete!");
 		}
 	});
-	$("#contacts_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#contacts_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		closeOnEscape: false,
 		dialogClass: "noclose",
 		buttons: {
@@ -1532,7 +1534,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#messaging_contact_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1612,15 +1614,15 @@ $(document).ready(function() {
 			});
 		},
 		minLength: 3,
-		open: function() { 
+		open: function() {
 			$('.ui-menu').width(300);
 		}
 	}).focus(function() {
 		var a = $("#messaging_lastname").val();
 		var b = $("#messaging_firstname").val();
 		var c = $("#messaging_state").val();
-		if (a != "" && b != "" && c != "") {
-			var q = a + "," + b + "," + c
+		if (a !== "" && b !== "" && c !== "") {
+			var q = a + "," + b + "," + c;
 			$("#messaging_npi").autocomplete("search", q);
 		}
 	}).mask("9999999999");
@@ -1639,10 +1641,11 @@ $(document).ready(function() {
 			});
 		},
 		tagsChanged: function(a, b) {
+			var c = '';
 			if($("#internal_messages_form_id").is(":hidden")) {
-				var c = $("#message_view_message_id").val();
+				c = $("#message_view_message_id").val();
 			} else {
-				var c = $("#messages_message_id").val(); 
+				c = $("#messages_message_id").val();
 			}
 			if (b == "added") {
 				$.ajax({
@@ -1695,10 +1698,11 @@ $(document).ready(function() {
 	}
 	function messages_tags() {
 		$("#messages_tags").show();
+		var id = '';
 		if($("#internal_messages_form_id").is(":hidden")) {
-			var id = $("#message_view_message_id").val();
+			id = $("#message_view_message_id").val();
 		} else {
-			var id = $("#messages_message_id").val();
+			id = $("#messages_message_id").val();
 		}
 		$.ajax({
 			type: "POST",
@@ -1711,12 +1715,12 @@ $(document).ready(function() {
 	}
 });
 var timeoutHnd1;
-function doSearch1(ev){ 
-	if(timeoutHnd1) 
+function doSearch1(ev){
+	if(timeoutHnd1)
 		clearTimeout(timeoutHnd1);
 		timeoutHnd1 = setTimeout(gridReload1,500);
 }
-function gridReload1(){ 
+function gridReload1(){
 	var mask = jQuery("#search_all_contact").val();
 	jQuery("#all_contacts_list").setGridParam({url:"ajaxmessaging/all-contacts/"+mask,page:1}).trigger("reloadGrid");
 }

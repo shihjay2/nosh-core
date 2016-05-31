@@ -33,11 +33,11 @@ $(document).ready(function() {
 		active: false,
 		collpasible: true
 	});
-	$("#prevention_list_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#prevention_list_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		close: function(event, ui) {
@@ -54,14 +54,14 @@ $(document).ready(function() {
 				$('#prevention_items').html(data);
 				$('#prevention_load').hide();
 			}
-		});	
+		});
 		$("#prevention_list_dialog").dialog('open');
 	});
-	$("#hedis_chart_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#hedis_chart_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -80,7 +80,7 @@ $(document).ready(function() {
 	$("#hedis_chart_time").mask("99/99/9999").datepicker();
 	$("#hedis_chart_spec").click(function() {
 		var a = $("#hedis_chart_time").val();
-		if (a != '') {
+		if (a !== '') {
 			$('#hedis_chart_load').show();
 			$.ajax({
 				type: "POST",
@@ -120,7 +120,7 @@ $(document).ready(function() {
 			}
 		});
 	});
-	if (noshdata.hedis != '') {
+	if (noshdata.hedis !== '') {
 		$("#hedis_chart_dialog").dialog('open');
 		$.ajax({
 			type: "POST",

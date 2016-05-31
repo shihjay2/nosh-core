@@ -1,9 +1,9 @@
 $(document).ready(function() {
-	$("#schedule_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 640, 
-		width: 925, 
+	$("#schedule_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 640,
+		width: 925,
 		draggable: false,
 		resizable: false,
 		close: function(event, ui) {
@@ -36,10 +36,10 @@ $(document).ready(function() {
 				data: "id=" + id,
 				success: function(data){
 					if( $.cookie('nosh-schedule') === undefined){
-						var d = new Date();
-						var y = d.getFullYear();
-						var m = d.getMonth();
-						var d = d.getDate();
+						var d1 = new Date();
+						var y = d1.getFullYear();
+						var m = d1.getMonth();
+						var d = d1.getDate();
 						loadcalendar(y,m,d,'agendaWeek');
 					} else {
 						var n =  $.cookie('nosh-schedule').split(",");
@@ -64,14 +64,14 @@ $(document).ready(function() {
 					});
 				}
 			});
-		} 
+		}
 	});
-	$("#event_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 600, 
-		modal: true, 
+	$("#event_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 600,
+		modal: true,
 		closeOnEscape: false,
 		dialogClass: "noclose",
 		open: function (event, ui) {
@@ -107,21 +107,21 @@ $(document).ready(function() {
 				var end= $("#end").val();
 				var visit_type = $("#schedule_visit_type").val();
 				var pid = $("#pid").val();
-				if (pid == '') {
+				if (pid === '') {
 					var reason = $("#reason").val();
 					$("#title").val(reason);
 				}
-				if ($("#repeat").val() != '' && $("#event_id").val() != '' && $("#event_id").val().indexOf("R") === -1) {
+				if ($("#repeat").val() !== '' && $("#event_id").val() !== '' && $("#event_id").val().indexOf("R") === -1) {
 					var event_id = $("#event_id").val();
 					$("#event_id").val("N" + event_id);
 				}
-				if ($("#repeat").val() == '' && $("#event_id").val() != '' && $("#event_id").val().indexOf("R") !== -1) {
+				if ($("#repeat").val() === '' && $("#event_id").val() !== '' && $("#event_id").val().indexOf("R") !== -1) {
 					var event_id1 = $("#event_id").val();
 					$("#event_id").val("N" + event_id1);
 				}
 				var str = $("#event_form").serialize();
 				if(str){
-					if (visit_type == '' || visit_type == null && end == '') {
+					if (visit_type === '' || visit_type === null && end === '') {
 						$.jGrowl("No visit type or end time selected!");
 					} else {
 						$('#dialog_load').dialog('option', 'title', "Saving...").dialog('open');
@@ -184,7 +184,7 @@ $(document).ready(function() {
 			id: 'schedule_dialog_delete_event',
 			class: 'nosh_button_delete nosh_schedule_exist_event',
 			click: function() {
-				if(confirm('Are you sure you want to delete this appointment?')){ 
+				if(confirm('Are you sure you want to delete this appointment?')){
 					var appt_id = $("#event_id").val();
 					$.ajax({
 						type: "POST",
@@ -197,7 +197,7 @@ $(document).ready(function() {
 							$("#providers_calendar").fullCalendar('refetchEvents');
 						}
 					});
-				} 
+				}
 			}
 		},{
 			text: 'Cancel',
@@ -244,7 +244,7 @@ $(document).ready(function() {
 	});
 	$('#schedule_visit_type').change(function() {
 		var visit_type_select = $("#schedule_visit_type").val();
-		if (visit_type_select != ''){
+		if (visit_type_select !== ''){
 			$("#end_row").hide();
 			$("#end").val('');
 		} else {
@@ -253,7 +253,7 @@ $(document).ready(function() {
 	});
 	$('#repeat').change(function() {
 		var repeat_select = $("#repeat").val();
-		if (repeat_select != ''){
+		if (repeat_select !== ''){
 			$("#until_row").show();
 		} else {
 			$("#until_row").hide();

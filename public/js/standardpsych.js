@@ -102,7 +102,7 @@ $(document).ready(function() {
 		url: "ajaxencounter/get-hpi",
 		dataType: "json",
 		success: function(data){
-			if (data.response == true) {
+			if (data.response === true) {
 				$("#hpi").val(data.hpi);
 				$("#hpi_old").val(data.hpi);
 			} else {
@@ -154,10 +154,9 @@ $(document).ready(function() {
 			url: "ajaxencounters/get-pf-template/" + a,
 			success: function(data){
 				var old = $("#hpi").val();
-				if (old != '') {
-					var b = old + '\n\n' + data;
-				} else {
-					var b = data;
+				var b = data;
+				if (old !== '') {
+					b = old + '\n\n' + data;
 				}
 				$("#hpi").val(b);
 			}
@@ -167,14 +166,13 @@ $(document).ready(function() {
 	$('#hpi_template').change(function(){
 		var a = $(this).val();
 		$('#hpi_template_form').html('');
-		if (a != '') {
+		if (a !== '') {
 			var text = $('#hpi_template option:selected').text();
 			var old = $("#hpi").val();
+			var b = text;
 			if (text != 'Generic') {
-				if (old != '') {
-					var b = old + '\n\n' + text;
-				} else {
-					var b = text;
+				if (old !== '') {
+					b = old + '\n\n' + text;
 				}
 				$("#hpi").val(b);
 			}
@@ -202,133 +200,129 @@ $(document).ready(function() {
 						var parent_id = $(this).attr("id");
 						var old = $("#hpi").val();
 						var a = $(this).val();
+						var b = a;
 						if ($(this).is(':checked')) {
-							if (old != '') {
-								var b = old + '\n' + a;
-							} else {
-								var b = a;
+							if (old !== '') {
+								b = old + '\n' + a;
 							}
-							$("#hpi").val(b); 
+							$("#hpi").val(b);
 						} else {
 							var a1 = '\n' + a;
 							var c = old.replace(a1,'');
 							c = c.replace(a, '');
-							$("#hpi").val(c); 
+							$("#hpi").val(c);
 						}
 					});
 					$('#hpi_template_form').find('input[type="radio"]').change(function() {
 						var parent_id = $(this).attr("id");
 						var old = $("#hpi").val();
 						var a = $(this).val();
+						var b = a;
 						if ($(this).is(':checked')) {
-							if (old != '') {
+							if (old !== '') {
 								$(this).siblings('input:radio').each(function() {
 									var d = $(this).val();
 									var d1 = '  ' + d;
 									old = old.replace(d1,'');
 									old = old.replace(d, '');
 								});
-								if (old != '') {
-									var b = old + '\n' + a;
-								} else {
-									var b = a;
+								if (old !== '') {
+									b = old + '\n' + a;
 								}
-							} else {
-								var b = a;
 							}
-							$("#hpi").val(b); 
+							$("#hpi").val(b);
 						} else {
 							var a1 = '\n' + a;
 							var c = old.replace(a1,'');
 							c = c.replace(a, '');
-							$("#hpi").val(c); 
+							$("#hpi").val(c);
 						}
 					});
 					$('#hpi_template_form').find('select').change(function() {
 						var parent_id = $(this).attr("id");
 						var old = $("#hpi").val();
 						var a = $(this).val();
-						if (old != '') {
-							var b = old + '\n' + a;
-						} else {
-							var b = a;
+						var b = a;
+						if (old !== '') {
+							b = old + '\n' + a;
 						}
-						$("#hpi").val(b); 
+						$("#hpi").val(b);
 					});
 					$('#hpi_template_form').find('input[type="text"]').focusin(function() {
 						old_text = $(this).val();
 					});
 					$('#hpi_template_form').find('input[type="text"]').focusout(function() {
 						var a = $(this).val();
-						if (a != '') {
+						if (a !== '') {
 							var parent_id = $(this).attr("id");
 							var x = parent_id.length - 1;
 							var parent_div = parent_id.slice(0,x);
+							var start1 = '';
 							if ($("#" + parent_div + "_div").length) {
-								var start1 = $("#" + parent_div + "_div").find('span:first').text();
+								start1 = $("#" + parent_div + "_div").find('span:first').text();
 							} else {
 								var parent_div_parts = parent_id.split("_");
-								var parent_div = parent_div_parts[0] + "_" + parent_div_parts[1] + "_" + parent_div_parts[2];
-								var start1 = $("#" + parent_div).find('span:first').text() + ":";
+								parent_div = parent_div_parts[0] + "_" + parent_div_parts[1] + "_" + parent_div_parts[2];
+								start1 = $("#" + parent_div).find('span:first').text() + ":";
 							}
 							var start2 = $("label[for='" + parent_id + "']").text();
 							var start3_n = start1.lastIndexOf('degrees');
+							var end_text = '';
 							if (start3_n != -1) {
-								var end_text = ' degrees.';
-							} else {
-								var end_text = '';
+								end_text = ' degrees.';
 							}
+							var start_text = start1;
 							if (!!start2) {
-								var start_text = start2 + ' ' + start1;
-							} else {
-								var start_text = start1;
+								start_text = start2 + ' ' + start1;
 							}
 							var old = $("#hpi").val();
 							var a_pointer = a.length - 1;
 							var a_pointer2 = a.lastIndexOf('.');
+							var b = '';
 							if (!!old) {
+								var c = '';
+								var c_old = '';
 								if (!!start_text) {
-									var c = start_text + ' ' + a + end_text;
-									if (old_text != '') {
-										var c_old = start_text + ' ' + old_text + end_text;
+									c = start_text + ' ' + a + end_text;
+									if (old_text !== '') {
+										c_old = start_text + ' ' + old_text + end_text;
 									}
 								} else {
 									if (a_pointer != a_pointer2) {
-										var c = a + '.';
+										c = a + '.';
 									} else {
-										var c = a;
+										c = a;
 									}
 								}
-								if (old_text != '') {
+								if (old_text !== '') {
 									var old_text_pointer = old_text.length - 1;
 									var old_text_pointer2 = old_text.lastIndexOf('.');
+									var old_text1 = old_text;
 									if (old_text_pointer != old_text_pointer2) {
-										var old_text1 = old_text + '.';
-									} else {
-										var old_text1 = old_text;
+										old_text1 = old_text + '.';
 									}
 									if (!!start_text) {
-										var b = old.replace(c_old, c);
+										b = old.replace(c_old, c);
 									} else {
-										var b = old.replace(old_text1, c);
+										b = old.replace(old_text1, c);
 									}
 									old_text = '';
 								} else {
 									var item_class = $(this).attr("class");
 									if (item_class == "hpi_other hpi_detail_text ui-dform-text ui-widget-content ui-corner-all") {
-										var b = old + " " +c;
+										b = old + " " + c;
 									} else {
-										var b = old + "\n" + c;
+										b = old + "\n" + c;
 									}
 								}
 							} else {
 								if (!!start_text) {
-									var b = start_text + ' ' + a + end_text;
+									b = start_text + ' ' + a + end_text;
 								} else {
 									if (a_pointer != a_pointer2) {
-										var b = a + '.';
+										b = a + '.';
 									} else {
-										var b = a;
+										b = a;
 									}
 								}
 							}
@@ -365,7 +359,7 @@ $(document).ready(function() {
 								$("#hpi_template_form input").button('refresh');
 							});
 							$("#hpi_template_form").find('.hpi_detail_text').each(function(){
-								if ($(this).val() != '') {
+								if ($(this).val() !== '') {
 									var parent_id = $(this).attr("id");
 									var old = $("#hpi").val();
 									var a = ' ' + $(this).val();

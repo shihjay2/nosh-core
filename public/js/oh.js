@@ -28,10 +28,9 @@ $(document).ready(function() {
 			url: "ajaxencounter/get-pf-template/" + a,
 			success: function(data){
 				var old = $("#oh_pmh").val();
-				if (old != '') {
-					var b = old + '\n\n' + data;
-				} else {
-					var b = data;
+				var b = data;
+				if (old !== '') {
+					b = old + '\n\n' + data;
 				}
 				$("#oh_pmh").val(b);
 			}
@@ -44,10 +43,9 @@ $(document).ready(function() {
 			url: "ajaxencounter/get-pf-template/" + a,
 			success: function(data){
 				var old = $("#oh_psh").val();
-				if (old != '') {
-					var b = old + '\n\n' + data;
-				} else {
-					var b = data;
+				var b = data;
+				if (old !== '') {
+					b = old + '\n\n' + data;
 				}
 				$("#oh_psh").val(b);
 			}
@@ -60,10 +58,9 @@ $(document).ready(function() {
 			url: "ajaxencounter/get-pf-template/" + a,
 			success: function(data){
 				var old = $("#oh_fh").val();
-				if (old != '') {
-					var b = old + '\n\n' + data;
-				} else {
-					var b = data;
+				var b = data;
+				if (old !== '') {
+					b = old + '\n\n' + data;
 				}
 				$("#oh_fh").val(b);
 			}
@@ -76,10 +73,9 @@ $(document).ready(function() {
 			url: "ajaxencounter/get-pf-template/" + a,
 			success: function(data){
 				var old = $("#oh_sh").val();
-				if (old != '') {
-					var b = old + '\n\n' + data;
-				} else {
-					var b = data;
+				var b = data;
+				if (old !== '') {
+					b = old + '\n\n' + data;
 				}
 				$("#oh_sh").val(b);
 			}
@@ -178,11 +174,11 @@ $(document).ready(function() {
 	$('#oh_fh_reset').click(function(){
 		$("#oh_fh").val('');
 	});
-	$('#oh_fh_helper_dialog').dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 200, 
-		width: 800, 
+	$('#oh_fh_helper_dialog').dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 200,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -212,7 +208,7 @@ $(document).ready(function() {
 			'Import': function() {
 				var icd = $("#fh_icd").val();
 				var fm = $("#fh_fm").val();
-				if (icd != '' || fh != '') {
+				if (icd !== '' || fh !== '') {
 					var old = $("#oh_fh").val().trim();
 					var full = icd + ' - ' + fm;
 					$("#oh_fh").val(old+'\n'+full);
@@ -233,11 +229,11 @@ $(document).ready(function() {
 	$('#oh_fh_icd').click(function(){
 		$('#oh_fh_helper_dialog').dialog('open');
 	});
-	$("#oh_sh_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#oh_sh_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -297,7 +293,7 @@ $(document).ready(function() {
 						}
 					}
 				});
-			}, 
+			},
 			Cancel: function() {
 				$("#oh_sh_dialog_form").clearForm();
 				$("#oh_sh_dialog").dialog('close');
@@ -353,11 +349,11 @@ $(document).ready(function() {
 		$("#allergies_list_dialog").dialog('open');
 		$("#oh_allergies").focus();
 	});
-	$("#oh_etoh_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#oh_etoh_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -406,7 +402,7 @@ $(document).ready(function() {
 						}
 					}
 				});
-			}, 
+			},
 			Cancel: function() {
 				$("#oh_etoh_dialog_form").clearForm();
 				$('#oh_etoh_form').clearForm();
@@ -434,11 +430,11 @@ $(document).ready(function() {
 	$('#cancel_oh_etoh_form').click(function(){
 		$('#oh_etoh_form').clearForm();
 	});
-	$("#oh_tobacco_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#oh_tobacco_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -487,7 +483,7 @@ $(document).ready(function() {
 						}
 					}
 				});
-			}, 
+			},
 			Cancel: function() {
 				$("#oh_tobacco_dialog_form").clearForm();
 				$("#oh_tobacco_form").clearForm();
@@ -515,11 +511,11 @@ $(document).ready(function() {
 	$('#cancel_oh_tobacco_form').click(function(){
 		$('#oh_tobacco_form').clearForm();
 	});
-	$("#oh_drugs_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#oh_drugs_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -568,7 +564,7 @@ $(document).ready(function() {
 						}
 					}
 				});
-			}, 
+			},
 			Cancel: function() {
 				$("#oh_drugs_dialog_form").clearForm();
 				$("#oh_drugs_form").clearForm();
@@ -597,11 +593,11 @@ $(document).ready(function() {
 	$('#cancel_oh_drugs_form').click(function(){
 		$('#oh_drugs_form').clearForm();
 	});
-	$("#oh_employment_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#oh_employment_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -650,7 +646,7 @@ $(document).ready(function() {
 						}
 					}
 				});
-			}, 
+			},
 			Cancel: function() {
 				$("#oh_employment_dialog_form").clearForm();
 				$('#oh_employment_form').clearForm();
@@ -688,11 +684,11 @@ $(document).ready(function() {
 	$('#cancel_oh_employment_form').click(function(){
 		$('#oh_employment_form').clearForm();
 	});
-	$("#oh_psychosocial_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#oh_psychosocial_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -741,7 +737,7 @@ $(document).ready(function() {
 						}
 					}
 				});
-			}, 
+			},
 			Cancel: function() {
 				$("#oh_psychosocial_dialog_form").clearForm();
 				$("#oh_psychosocial_form").clearForm();
@@ -753,11 +749,11 @@ $(document).ready(function() {
 	$("#button_oh_psychosocial").click(function() {
 		$("#oh_psychosocial_dialog").dialog('open');
 	});
-	$("#oh_developmental_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#oh_developmental_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -806,7 +802,7 @@ $(document).ready(function() {
 						}
 					}
 				});
-			}, 
+			},
 			Cancel: function() {
 				$("#oh_developmental_dialog_form").clearForm();
 				$("#oh_developmental_form").clearForm();
@@ -818,11 +814,11 @@ $(document).ready(function() {
 	$("#button_oh_developmental").click(function() {
 		$("#oh_developmental_dialog").dialog('open');
 	});
-	$("#oh_medtrials_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#oh_medtrials_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -871,7 +867,7 @@ $(document).ready(function() {
 						}
 					}
 				});
-			}, 
+			},
 			Cancel: function() {
 				$("#oh_medtrials_dialog_form").clearForm();
 				$("#oh_medtrials_form").clearForm();

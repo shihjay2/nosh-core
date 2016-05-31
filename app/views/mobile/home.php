@@ -15,8 +15,57 @@
 		<div id="right_panel_selections">
 			<ul id="search_results" data-role="listview" data-inset="true"></ul>
 		</div>
-		<div id="textdump_group_html"></div>
 		<?php echo $right_panel;?>
+	</div>
+	<div data-role="popup" id="textdump_group_html_div" data-display="overlay" data-theme="a">
+		<div data-role="header" data-theme="a">
+			<h1 class="nd-title">Template Groups</h1>
+		</div>
+		<div data-role="content">
+			<form id="textdump_group_form">
+				<input type="text" name="textdump_group_add" id="textdump_group_add" placeholder="Add template group here"/>
+				<input type="hidden" name="target" id="textdump_group_target"/>
+				<input type="hidden" id="textdump_group_id">
+			</form><br>
+			<form id="textdump_delimiter2_form">
+				<div id="textdump_delimiter2_div">
+					<label for="textdump_delimiter2">Delimiter for normal values</label>
+					<select id="textdump_delimiter2">
+						<option value=", ">,</option>
+						<option value=" ">space</option>
+						<option value="&#13;&#10;">new line</option>
+						<option value="; ">;</option>
+					</select>
+				</div>
+			</form>
+		</div>
+		<div data-role="content" id="textdump_group_html"></div>
+	</div>
+	<div data-role="popup" id="textdump_html_div" data-display="overlay" data-theme="a">
+		<div data-role="header" data-theme="a">
+			<h1 class="nd-title">Templates</h1>
+		</div>
+		<div data-role="content">
+			<input type="hidden" id="textdump_input"/>
+			<form id="textdump_form">
+				<input type="text" name="textdump_add" id="textdump_add" placeholder="Add text to template here"/>
+				<input type="hidden" name="target" id="textdump_target"/>
+				<input type="hidden" name="group" id="textdump_group_item">
+			</form><br>
+			<form id="textdump_delimiter1_form">
+				<div id="textdump_delimiter1_div">
+					<label for="textdump_delimiter1">Delimiter</label>
+					<select id="textdump_delimiter1">
+						<option value=", ">,</option>
+						<option value=" ">space</option>
+						<option value="&#13;&#10;">new line</option>
+						<option value="; ">;</option>
+					</select>
+					<span id="textdump_hint" title="" style="float:right">Text Macro List</span><br><br>
+				</div>
+			</form>
+		</div>
+		<div data-role="content" id="textdump_html"></div>
 	</div>
 </div>
 <script type="text/javascript">

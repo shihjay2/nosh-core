@@ -1,10 +1,10 @@
 $(document).ready(function() {
 	$("#form_button_div").hide();
-	$("#forms_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#forms_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		open: function(event, ui) {
@@ -48,7 +48,7 @@ $(document).ready(function() {
 							$(".form_select").chosen();
 							var row = jQuery("#forms").getGridParam('selrow');
 							var forms_id = jQuery('#forms').jqGrid('getCell', row, 'forms_id');
-							if (forms_id != "") {
+							if (forms_id !== "") {
 								$.ajax({
 									type: "POST",
 									url: "ajaxcommon/get-form-data/" + forms_id,
@@ -80,11 +80,11 @@ $(document).ready(function() {
 		});
 		$("#forms_dialog").dialog('open');
 	});
-	$("#form_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#form_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		draggable: false,
 		resizable: false,
 		buttons: {
@@ -117,8 +117,8 @@ $(document).ready(function() {
 						text += $("#" + b + "_select").val() + "\n";
 					}
 				});
-				if ($("#form_scoring").val() != '') {
-					text += "Score: " + score + "\n"
+				if ($("#form_scoring").val() !== '') {
+					text += "Score: " + score + "\n";
 					text += "Scoring Description: " + $("#form_scoring").val();
 				}
 				var array = $("#form_array").val();

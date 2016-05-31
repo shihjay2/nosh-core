@@ -5,7 +5,7 @@ $(document).ready(function() {
 		url: "ajaxencounter/get-vitals",
 		dataType: "json",
 		success: function(data){
-			if (data == '') {
+			if (data === '') {
 				$("#vitals_temp_method_old").val('Oral');
 				$("#vitals_bp_position_old").val('Sitting');
 			} else {
@@ -54,31 +54,33 @@ $(document).ready(function() {
 	$("#vitals_height").blur(function(){
 		var w = $("#vitals_weight").val();
 		var h = $("#vitals_height").val();
-		if (w != '') {
+		if (w !== '') {
+			var text = '';
 			if ((w >= 500) || (h >= 120)) {
 				alert("Invalid data.  Please check and re-enter!");
 			} else {
 				var bmi = (Math.round((w * 703) / (h * h)));
 				$("#vitals_BMI").val(bmi);
 				if (parseInt(noshdata.agealldays) <= 6574.5) {
-					var text = bmi;
+					text = bmi;
 				} else {
+					var a = '';
 					if (bmi < 19) {
-						var a = " - Underweight";
+						a = " - Underweight";
 					}
 					if (bmi >=19 && bmi <=25) {
-						var a = " - Desirable";
+						a = " - Desirable";
 					}
 					if (bmi >=26 && bmi <=29) {
-						var a = " - Prone to health risks";
+						a = " - Prone to health risks";
 					}
 					if (bmi >=30 && bmi <=40) {
-						var a = " - Obese";
+						a = " - Obese";
 					}
 					if (bmi >40){
-						var a = " - Morbidly obese";
+						a = " - Morbidly obese";
 					}
-					var text = bmi + a;
+					text = bmi + a;
 				}
 				$("#vitals_bmi_display").html(text);
 			}
@@ -86,7 +88,7 @@ $(document).ready(function() {
 	});
 	$("#vitals_temp").blur(function(){
 		var a = $("#vitals_temp").val();
-		if (a != '') {
+		if (a !== '') {
 			if (a > 100.4) {
 				$("#vitals_temp").css("color","red");
 			} else {
@@ -101,7 +103,7 @@ $(document).ready(function() {
 	});
 	$("#vitals_bp_systolic").blur(function(){
 		var a = $("#vitals_bp_systolic").val();
-		if (a != '') {
+		if (a !== '') {
 			if (a > 140 || a < 80) {
 				$("#vitals_bp_systolic").css("color","red");
 			} else {
@@ -116,7 +118,7 @@ $(document).ready(function() {
 	});
 	$("#vitals_bp_diastolic").blur(function(){
 		var a = $("#vitals_bp_diastolic").val();
-		if (a != '') {
+		if (a !== '') {
 			if (a > 90 || a < 50) {
 				$("#vitals_bp_diastolic").css("color","red");
 			} else {
@@ -131,7 +133,7 @@ $(document).ready(function() {
 	});
 	$("#vitals_pulse").blur(function(){
 		var a = $("#vitals_pulse").val();
-		if (a != '') {
+		if (a !== '') {
 			if (a > 140 || a < 50) {
 				$("#vitals_pulse").css("color","red");
 			} else {
@@ -146,7 +148,7 @@ $(document).ready(function() {
 	});
 	$("#vitals_respirations").blur(function(){
 		var a = $("#vitals_respirations").val();
-		if (a != '') {
+		if (a !== '') {
 			if (a > 35 || a < 10) {
 				$("#vitals_respirations").css("color","red");
 			} else {
@@ -161,7 +163,7 @@ $(document).ready(function() {
 	});
 	$("#vitals_o2_sat").blur(function(){
 		var a = $("#vitals_o2_sat").val();
-		if (a != '') {
+		if (a !== '') {
 			if (a < 90) {
 				$("#vitals_o2_sat").css("color","red");
 			} else {

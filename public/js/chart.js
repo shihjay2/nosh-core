@@ -79,7 +79,7 @@ $(document).ready(function() {
 	});
 	$("#encounter_provider").change(function() {
 		var a = $(this).val();
-		if (a != "") {
+		if (a !== "") {
 			$("#encounter_type").removeOption(/./);
 			$("#encounter_type").addOption({'':'Choose appointment to associate encounter!'}, false);
 			$.ajax({
@@ -106,11 +106,11 @@ $(document).ready(function() {
 	$("#encounter_condition_auto").addOption({"":"","No":"No","Yes":"Yes"},false);
 	$("#encounter_condition_other").addOption({"":"","No":"No","Yes":"Yes"},false);
 	$("#encounter_condition_auto_state").addOption({"":"State where accident occured.","AL":"Alabama","AK":"Alaska","AS":"America Samoa","AZ":"Arizona","AR":"Arkansas","CA":"California","CO":"Colorado","CT":"Connecticut","DE":"Delaware","DC":"District of Columbia","FM":"Federated States of Micronesia","FL":"Florida","GA":"Georgia","GU":"Guam","HI":"Hawaii","ID":"Idaho","IL":"Illinois","IN":"Indiana","IA":"Iowa","KS":"Kansas","KY":"Kentucky","LA":"Louisiana","ME":"Maine","MH":"Marshall Islands","MD":"Maryland","MA":"Massachusetts","MI":"Michigan","MN":"Minnesota","MS":"Mississippi","MO":"Missouri","MT":"Montana","NE":"Nebraska","NV":"Nevada","NH":"New Hampshire","NJ":"New Jersey","NM":"New Mexico","NY":"New York","NC":"North Carolina","ND":"North Dakota","OH":"Ohio","OK":"Oklahoma","OR":"Oregon","PW":"Palau","PA":"Pennsylvania","PR":"Puerto Rico","RI":"Rhode Island","SC":"South Carolina","SD":"South Dakota","TN":"Tennessee","TX":"Texas","UT":"Utah","VT":"Vermont","VI":"Virgin Island","VA":"Virginia","WA":"Washington","WV":"West Virginia","WI":"Wisconsin","WY":"Wyoming"}, false);
-	$("#new_encounter_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 650, 
+	$("#new_encounter_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 650,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -201,13 +201,13 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#new_encounter_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
 				if (bValid) {
-					if($("#new_encounter_dialog_eid").val() == '') {
-						if($("#encounter_type").val() == '') {
+					if($("#new_encounter_dialog_eid").val() === '') {
+						if($("#encounter_type").val() === '') {
 							if(confirm('Are you sure you want to create a new encounter without an associated appointment?')){
 								newencounter();
 							}
@@ -286,11 +286,11 @@ $(document).ready(function() {
 	$("#new_import_documents_type").addOption({"Laboratory":"Laboratory","Imaging":"Imaging","Cardiopulmonary":"Cardiopulmonary","Endoscopy":"Endoscopy","Referrals":"Referrals","Past Records":"Past Records","Other Forms":"Other Forms"}, false);
 	$("#new_import_documents_date").mask("99/99/9999");
 	$("#new_import_documents_date").datepicker();
-	$("#new_import_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
-		width: 800, 
+	$("#new_import_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
+		width: 800,
 		closeOnEscape: false,
 		dialogClass: "noclose",
 		open: function(event, ui) {
@@ -333,7 +333,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#new_import_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -402,7 +402,7 @@ $(document).ready(function() {
 			$("#import_ccda").parent().find('input').val('');
 			var data1 = JSON.parse(data);
 			$.jGrowl(data1.message);
-			if (data1.result == true) {
+			if (data1.result === true) {
 				$.ajax({
 					type: "POST",
 					url: "ajaxchart/get-ccda/" + data1.ccda,
@@ -534,11 +534,11 @@ $(document).ready(function() {
 			}
 		}
 	});
-	$("#ccda_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 925, 
+	$("#ccda_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 925,
 		draggable: false,
 		resizable: false,
 		open: function(event,ui) {
@@ -677,7 +677,7 @@ $(document).ready(function() {
 			$('#edit_issue_dialog').dialog('option', 'title', "Copy Issue");
 			$('#edit_issue_dialog').dialog('open');
 		} else {
-			$.jGrowl("Please select issue to copy!")
+			$.jGrowl("Please select issue to copy!");
 		}
 	});
 	$("#add_nosh_issue").click(function(){
@@ -698,7 +698,7 @@ $(document).ready(function() {
 			$('#edit_issue_dialog').dialog('option', 'title', "Edit Issue");
 			$('#edit_issue_dialog').dialog('open');
 		} else {
-			$.jGrowl("Please select issue to edit!")
+			$.jGrowl("Please select issue to edit!");
 		}
 	});
 	$("#inactivate_nosh_issue").click(function(){
@@ -715,7 +715,7 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select issue to inactivate!")
+			$.jGrowl("Please select issue to inactivate!");
 		}
 	});
 	$("#copy_ccda_medications_item").click(function(){
@@ -730,33 +730,33 @@ $(document).ready(function() {
 			var reason = jQuery("#ccda_medications").getCell(item,7);
 			var admin = jQuery("#ccda_medications").getCell(item,9);
 			var a = '';
-			if (dosage != '') {
+			if (dosage !== '') {
 				a += dosage;
 			}
-			if (dosage_unit != '') {
+			if (dosage_unit !== '') {
 				a += ' ' + dosage_unit;
 			}
-			if (admin != '') {
+			if (admin !== '') {
 				a += " " + admin;
 			}
 			$('#rxl_medication').val(medication);
 			$('#rxl_sig').val(a);
-			if (route != '') {
+			if (route !== '') {
 				var b = '';
 				if (route == "Oropharyngeal Route of Administration") {
-					b = "by mouth"; 
+					b = "by mouth";
 				}
 				if (route == "Rectal Route of Administration") {
-					b = "per rectum"; 
+					b = "per rectum";
 				}
 				if (route == "Subcutaneous Route of Administration") {
-					b = "subcutaneously"; 
+					b = "subcutaneously";
 				}
 				if (route == "Intravascular Route of Administration") {
-					b = "intravenously"; 
+					b = "intravenously";
 				}
 				if (route == "Intramuscular Route of Administration") {
-					b = "intramuscularly"; 
+					b = "intramuscularly";
 				}
 				$('#rxl_route').val(b);
 			}
@@ -768,7 +768,7 @@ $(document).ready(function() {
 			$('#edit_medications_dialog').dialog('open');
 			$("#rxl_medication").focus();
 		} else {
-			$.jGrowl("Please select medication to copy!")
+			$.jGrowl("Please select medication to copy!");
 		}
 	});
 	$("#add_nosh_rx").click(function(){
@@ -790,7 +790,7 @@ $(document).ready(function() {
 			$('#edit_medications_dialog').dialog('open');
 			$("#rxl_medication").focus();
 		} else {
-			$.jGrowl("Please select medication to edit!")
+			$.jGrowl("Please select medication to edit!");
 		}
 	});
 	$("#inactivate_nosh_rx").click(function(){
@@ -808,7 +808,7 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select medication to inactivate!")
+			$.jGrowl("Please select medication to inactivate!");
 		}
 	});
 	$("#copy_ccda_allergies_item").click(function(){
@@ -826,7 +826,7 @@ $(document).ready(function() {
 			$('#edit_allergy_dialog').dialog('open');
 			$("#allergies_med").focus();
 		} else {
-			$.jGrowl("Please select allergy to copy!")
+			$.jGrowl("Please select allergy to copy!");
 		}
 	});
 	$("#add_nosh_allergy").click(function(){
@@ -848,7 +848,7 @@ $(document).ready(function() {
 			$('#edit_allergy_dialog').dialog('open');
 			$("#allergies_med").focus();
 		} else {
-			$.jGrowl("Please select allergy to edit!")
+			$.jGrowl("Please select allergy to edit!");
 		}
 	});
 	$("#inactivate_nosh_allergy").click(function(){
@@ -865,7 +865,7 @@ $(document).ready(function() {
 				}
 			});
 		} else {
-			$.jGrowl("Please select allergy to inactivate!")
+			$.jGrowl("Please select allergy to inactivate!");
 		}
 	});
 	$("#copy_ccda_imm_item").click(function(){
@@ -876,19 +876,19 @@ $(document).ready(function() {
 			var date_active = jQuery("#ccda_imm").getCell(item,1);
 			var route = jQuery("#ccda_imm").getCell(item,3);
 			$('#imm_immunization').val(imm);
-			if (route != null) {
+			if (route !== null) {
 				var b = '';
 				if (route == "Oropharyngeal Route of Administration") {
-					b = "by mouth"; 
+					b = "by mouth";
 				}
 				if (route == "Subcutaneous Route of Administration") {
-					b = "subcutaneously"; 
+					b = "subcutaneously";
 				}
 				if (route == "Intravascular Route of Administration") {
-					b = "intravenously"; 
+					b = "intravenously";
 				}
 				if (route == "Intramuscular Route of Administration") {
-					b = "intramuscularly"; 
+					b = "intramuscularly";
 				}
 				$('#imm_route').val(b);
 			}
@@ -898,7 +898,7 @@ $(document).ready(function() {
 			$('#edit_immunization_dialog').dialog('open');
 			$("#imm_immunization").focus();
 		} else {
-			$.jGrowl("Please select immunization to copy!")
+			$.jGrowl("Please select immunization to copy!");
 		}
 	});
 	$("#add_nosh_imm").click(function(){
@@ -923,17 +923,17 @@ $(document).ready(function() {
 			$('#edit_immunization_dialog').dialog('open');
 			$("#imm_immunization").focus();
 		} else {
-			$.jGrowl("Please select immunization to edit!")
+			$.jGrowl("Please select immunization to edit!");
 		}
 	});
 	$("#print_ccr").click(function() {
 		window.open("print_ccr");
 	});
-	$("#csv_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 580, 
-		width: 925, 
+	$("#csv_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 580,
+		width: 925,
 		draggable: false,
 		resizable: false,
 		buttons: {
@@ -941,7 +941,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#csv_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -973,9 +973,9 @@ $(document).ready(function() {
 
 	//Encounters section
 	$("#template_encounter_dialog").dialog({
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 230, 
+		bgiframe: true,
+		autoOpen: false,
+		height: 230,
 		width: 500,
 		closeOnEscape: false,
 		dialogClass: "noclose",
@@ -987,7 +987,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#template_encounter_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1034,7 +1034,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#template_encounter_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
@@ -1075,7 +1075,7 @@ $(document).ready(function() {
 			url: "ajaxencounter/get-encounter-templates",
 			dataType: "json",
 			success: function(data){
-				if(data.response == true){
+				if(data.response === true){
 					$("#template_encounter_choose").addOption(data.message, false);
 				} else {
 					$("#template_encounter_choose").addOption({"":"No encounter templates"}, false);
@@ -1084,10 +1084,10 @@ $(document).ready(function() {
 			}
 		});
 	});
-	$("#preview_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 500, 
+	$("#preview_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 500,
 		width: 800,
 		buttons: [
 		{
@@ -1172,13 +1172,13 @@ $(document).ready(function() {
 		closeencounter();
 	});
 	$("#sign_encounter").click(function() {
-		if(confirm('Are you sure you want to sign?')){ 
+		if(confirm('Are you sure you want to sign?')){
 			var signed = "Yes";
 			$.ajax({
 				type: "POST",
 				url: "ajaxencounter/check-encounter",
 				success: function(data){
-					if (data == "") {
+					if (data === "") {
 						$.ajax({
 							type: "POST",
 							url: "ajaxencounter/sign-encounter",
@@ -1198,7 +1198,7 @@ $(document).ready(function() {
 		}
 	});
 	$("#delete_encounter").click(function() {
-		if(confirm('Are you sure you want to delete this encounter?')){ 
+		if(confirm('Are you sure you want to delete this encounter?')){
 			$.ajax({
 				type: "POST",
 				url: "ajaxencounter/delete-encounter",
@@ -1246,11 +1246,11 @@ $(document).ready(function() {
 	$("#copy_encounter").click(function(){
 		$("#copy_encounter_dialog").dialog('open');
 	});
-	$("#copy_encounter_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 550, 
+	$("#copy_encounter_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 550,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -1268,11 +1268,11 @@ $(document).ready(function() {
 		},
 		buttons: {
 			'Copy': function() {
-				if(confirm('Are you sure you want to copy this encounter into the current?')){ 
+				if(confirm('Are you sure you want to copy this encounter into the current?')){
 					var bValid = true;
 					$("#copy_encounter_form").find("[required]").each(function() {
 						var input_id = $(this).attr('id');
-						var id1 = $("#" + input_id); 
+						var id1 = $("#" + input_id);
 						var text = $("label[for='" + input_id + "']").html();
 						bValid = bValid && checkEmpty(id1, text);
 					});
@@ -1304,11 +1304,11 @@ $(document).ready(function() {
 	});
 	$("#creditcard_type").addOption({"":"Select a credit card type","MasterCard":"MasterCard","Visa":"Visa","Discover":"Discover","Amex":"American Express"}, false);
 	$("#creditcard_expiration").mask("99/9999");
-	$("#creditcard_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 300, 
-		width: 400, 
+	$("#creditcard_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 300,
+		width: 400,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,
@@ -1318,7 +1318,7 @@ $(document).ready(function() {
 				var bValid = true;
 				$("#creditcard_form").find("[required]").each(function() {
 					var input_id = $(this).attr('id');
-					var id1 = $("#" + input_id); 
+					var id1 = $("#" + input_id);
 					var text = $("label[for='" + input_id + "']").html();
 					bValid = bValid && checkEmpty(id1, text);
 				});
