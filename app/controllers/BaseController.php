@@ -6266,7 +6266,7 @@ class BaseController extends Controller {
 				$imm_array_1 = array('20', '106', '107', '146', '110', '50', '120', '130', '132', '1', '22', '102');
 				$count_1 = 0;
 				foreach ($imm_array_1 as $imm_1) {
-					if ($i == 0) {
+					if ($count_1 == 0) {
 						$query_array_1->where('imm_cvxcode', '=', $imm_1);
 					} else {
 						$query_array_1->orWhere('imm_cvxcode', '=', $imm_1);
@@ -6288,7 +6288,7 @@ class BaseController extends Controller {
 				$imm_array_2 = array('146', '110', '120', '130', '132', '10');
 				$count_2 = 0;
 				foreach ($imm_array_2 as $imm_2) {
-					if ($i == 0) {
+					if ($count_2 == 0) {
 						$query_array_2->where('imm_cvxcode', '=', $imm_2);
 					} else {
 						$query_array_2->orWhere('imm_cvxcode', '=', $imm_2);
@@ -6310,7 +6310,7 @@ class BaseController extends Controller {
 				$imm_array_3 = array('3', '94', '5', '6', '7', '38');
 				$count_3 = 0;
 				foreach ($imm_array_3 as $imm_3) {
-					if ($i == 0) {
+					if ($count_3 == 0) {
 						$query_array_3->where('imm_cvxcode', '=', $imm_3);
 					} else {
 						$query_array_3->orWhere('imm_cvxcode', '=', $imm_3);
@@ -6332,7 +6332,7 @@ class BaseController extends Controller {
 				$imm_array_4 = array('146','50','120','132', '22', '102', '46', '47', '48', '49', '17', '51', '148');
 				$count_4 = 0;
 				foreach ($imm_array_4 as $imm_4) {
-					if ($i == 0) {
+					if ($count_4 == 0) {
 						$query_array_4->where('imm_cvxcode', '=', $imm_4);
 					} else {
 						$query_array_4->orWhere('imm_cvxcode', '=', $imm_4);
@@ -6354,7 +6354,7 @@ class BaseController extends Controller {
 				$imm_array_5 = array('146','110','132','102','104','8','42','43','44','45','51');
 				$count_5 = 0;
 				foreach ($imm_array_5 as $imm_5) {
-					if ($i == 0) {
+					if ($count_5 == 0) {
 						$query_array_5->where('imm_cvxcode', '=', $imm_5);
 					} else {
 						$query_array_5->orWhere('imm_cvxcode', '=', $imm_5);
@@ -6376,7 +6376,7 @@ class BaseController extends Controller {
 				$imm_array_6 = array('21');
 				$count_6 = 0;
 				foreach ($imm_array_6 as $imm_6) {
-					if ($i == 0) {
+					if ($count_6 == 0) {
 						$query_array_6->where('imm_cvxcode', '=', $imm_6);
 					} else {
 						$query_array_6->orWhere('imm_cvxcode', '=', $imm_6);
@@ -6398,7 +6398,7 @@ class BaseController extends Controller {
 				$imm_array_7 = array('133','100','109');
 				$count_7 = 0;
 				foreach ($imm_array_7 as $imm_7) {
-					if ($i == 0) {
+					if ($count_7 == 0) {
 						$query_array_7->where('imm_cvxcode', '=', $imm_7);
 					} else {
 						$query_array_7->orWhere('imm_cvxcode', '=', $imm_7);
@@ -6420,7 +6420,7 @@ class BaseController extends Controller {
 				$imm_array_8 = array('52','83','84','31','85','104');
 				$count_8 = 0;
 				foreach ($imm_array_8 as $imm_8) {
-					if ($i == 0) {
+					if ($count_8 == 0) {
 						$query_array_8->where('imm_cvxcode', '=', $imm_8);
 					} else {
 						$query_array_8->orWhere('imm_cvxcode', '=', $imm_8);
@@ -6442,7 +6442,7 @@ class BaseController extends Controller {
 				$imm_array_9 = array('119','116','74','122');
 				$count_9 = 0;
 				foreach ($imm_array_9 as $imm_9) {
-					if ($i == 0) {
+					if ($count_9 == 0) {
 						$query_array_9->where('imm_cvxcode', '=', $imm_9);
 					} else {
 						$query_array_9->orWhere('imm_cvxcode', '=', $imm_9);
@@ -6464,7 +6464,7 @@ class BaseController extends Controller {
 				$imm_array_10 = array('123','135','111','149','141','140','144','15','88','16','127','128','125','126');
 				$count_10 = 0;
 				foreach ($imm_array_10 as $imm_10) {
-					if ($i == 0) {
+					if ($count_10 == 0) {
 						$query_array_10->where('imm_cvxcode', '=', $imm_10);
 					} else {
 						$query_array_10->orWhere('imm_cvxcode', '=', $imm_10);
