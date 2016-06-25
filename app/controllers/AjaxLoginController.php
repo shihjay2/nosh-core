@@ -5,7 +5,7 @@ class AjaxLoginController extends BaseController {
 	/**
 	* NOSH ChartingSystem Login Ajax Functions
 	*/
-	
+
 	public function postPractices()
 	{
 		$practices = Practiceinfo::all();
@@ -17,7 +17,7 @@ class AjaxLoginController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postPracticeLogo($practice_id)
 	{
 		$practice = Practiceinfo::find($practice_id);
@@ -27,7 +27,7 @@ class AjaxLoginController extends BaseController {
 		}
 		echo $html;
 	}
-	
+
 	public function postRegisterUser()
 	{
 		if ($this->rpHash(Input::get('numberReal')) == Input::get('numberRealHash')) {
@@ -51,7 +51,7 @@ class AjaxLoginController extends BaseController {
 					$demographics_relate = DB::table('demographics_relate')->where('pid', '=', $result->pid)->get();
 					foreach ($demographics_relate as $demographics_relate_row) {
 						$row1 = DB::table('practiceinfo')->where('practice_id', '=', $demographics_relate_row->practice_id)->first();
-						if ($demographics_relate_row->id != "" && $demographics_relate_row->id != "0") {
+						if ($demographics_relate_row->id != "0" && !is_null($demographics_relate_row->id)) {
 							$arr['response'] = "5";
 							$row2 = User::where('id', '=', $demographics_relate_row->id)->first();
 							$data_message['practicename'] = $row1->practice_name;
@@ -108,7 +108,7 @@ class AjaxLoginController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postForgotPassword($username)
 	{
 		$result = User::where('username', '=', $username)->first();
@@ -124,7 +124,7 @@ class AjaxLoginController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postForgotPassword1()
 	{
 		$id = Input::get('id');
@@ -144,7 +144,7 @@ class AjaxLoginController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function postChangePassword($id)
 	{
 		$user = User::find($id);
@@ -152,7 +152,7 @@ class AjaxLoginController extends BaseController {
 		$user->save();
 		echo 'OK';
 	}
-	
+
 	public function postChangePassword1()
 	{
 		$id = Session::get('user_id');
@@ -190,7 +190,7 @@ class AjaxLoginController extends BaseController {
 			echo 'Your old password is incorrect!';
 		}
 	}
-	
+
 	public function postCheckUsername()
 	{
 		$data['response'] = true;
@@ -206,13 +206,13 @@ class AjaxLoginController extends BaseController {
 		}
 		echo json_encode($data);
 	}
-	
+
 	public function postGetSecret()
 	{
 		$result = User::find(Session::get('user_id'))->toArray();
 		echo json_encode($result);
 	}
-	
+
 	public function postSetSecret()
 	{
 		$id = Session::get('user_id');
@@ -224,7 +224,7 @@ class AjaxLoginController extends BaseController {
 		$this->audit('Update');
 		echo 'Secret question and answer set!';
 	}
-	
+
 	public function postCheckSecret()
 	{
 		$arr = array(
@@ -247,7 +247,7 @@ class AjaxLoginController extends BaseController {
 		}
 		echo json_encode($arr);
 	}
-	
+
 	public function apilogin()
 	{
 		$data = Input::all();
@@ -275,7 +275,7 @@ class AjaxLoginController extends BaseController {
 			),200);
 		}
 	}
-	
+
 	public function apilogout()
 	{
 		$data = Input::all();
@@ -294,7 +294,7 @@ class AjaxLoginController extends BaseController {
 			),200);
 		}
 	}
-	
+
 	public function postHieofone()
 	{
 		$arr['response'] = 'y';
