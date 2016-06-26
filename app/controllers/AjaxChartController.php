@@ -5256,7 +5256,7 @@ class AjaxChartController extends BaseController {
 				Config::set('formatter::formatter.csv.newline', "\n");
 				Config::set('formatter::formatter.csv.regex_newline', '\n');
 				Config::set('formatter::formatter.csv.escape', '\\');
-				$result = Formatter::make($csv, 'csv')->to_array();
+				$result = Formatter::make($csv, 'csv')->toArray();
 				if (empty(Formatter::$errors)) {
 					$keys = array_keys($result[0]);
 					$i = 0;
@@ -5310,7 +5310,7 @@ class AjaxChartController extends BaseController {
 		Config::set('formatter::formatter.csv.newline', "\n");
 		Config::set('formatter::formatter.csv.regex_newline', '\n');
 		Config::set('formatter::formatter.csv.escape', '\\');
-		$result = Formatter::make($csv_final, 'csv')->to_array();
+		$result = Formatter::make($csv_final, 'csv')->toArray();
 		$i = 0;
 		$message = '';
 		$allergies_array = array('allergies_date_active','allergies_med','allergies_reaction');
