@@ -188,7 +188,8 @@ return array(
 		'ApiBaseClass'    => 'ApiBaseClasses\ApiBaseClass',
 		'Ccdaparser'      => 'Ccdaparsers\Ccdaparser',
 		'Phaxio'          => 'Phaxios\Phaxio',
-		'OpenIDConnectClient' => 'OpenIDConnectClients\OpenIDConnectClient'
+		'OpenIDConnectClient' => 'OpenIDConnectClients\OpenIDConnectClient',
+		'Formatter'				=> 'Soapbox\Formatter\Formatter'
 	),
 
 );
