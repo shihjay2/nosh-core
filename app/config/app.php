@@ -114,7 +114,8 @@ return array(
 		'Barryvdh\Snappy\ServiceProvider',
 		'Jenssegers\Date\DateServiceProvider',
 		'Yangqi\Htmldom\HtmldomServiceProvider',
-		'Chumper\Zipper\ZipperServiceProvider'
+		'Chumper\Zipper\ZipperServiceProvider',
+		'mnshankar\CSV\CSVServiceProvider'
 	),
 
 	/*
@@ -189,6 +190,7 @@ return array(
 		'Ccdaparser'      => 'Ccdaparsers\Ccdaparser',
 		'Phaxio'          => 'Phaxios\Phaxio',
 		'OpenIDConnectClient' => 'OpenIDConnectClients\OpenIDConnectClient',
+		'CSV'             =>'mnshankar\CSV\CSVFacade',
 		'Formatter'				=> 'SoapBox\Formatter\Formatter'
 	),
 

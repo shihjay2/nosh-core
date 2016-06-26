@@ -5249,42 +5249,31 @@ class AjaxChartController extends BaseController {
 				while(!file_exists($file_path)) {
 					sleep(2);
 				}
-				$csv = File::get($file_path);
 				$delimiter = $this->getCSVDelimiter($file_path);
-				Config::set('formatter::formatter.csv.delimiter', $delimiter);
-				Config::set('formatter::formatter.csv.enclosure', '');
-				Config::set('formatter::formatter.csv.newline', "\n");
-				Config::set('formatter::formatter.csv.regex_newline', '\n');
-				Config::set('formatter::formatter.csv.escape', '\\');
-				$result = Formatter::make($csv, 'csv')->toArray();
-				if (empty(Formatter::$errors)) {
-					$keys = array_keys($result[0]);
-					$i = 0;
-					$arr['html'] = '<input type="hidden" name="file_path" value="' . $file_path . '"/>';
-					$arr['message'] = 'CSV file analyzed!';
-					foreach ($keys as $key) {
-						$id = 'csv_' . $key;
-						$arr['html'] .= '<div class="pure-control-group">';
-						$arr['html'] .= '<label for="' . $id . '">' . $key . '</label>';
-						$arr['html'] .= Form::select($key, array(
-							''=>'Select NOSH database field.',
-							'null'=>'Do not import this field.',
-							'Allergies' => array('allergies_date_active'=>'Date Active','allergies_med'=>'Medication','allergies_reaction'=>'Reaction'),
-							'Billing' => array('dos_f'=>'Date of Service - Start','dos_t'=>'Date of Service - End','payment_date'=>'Payment Date','payment'=>'Payment Amount','payment_type'=>'Payment Type'),
-							'Demographics' => array('lastname'=>'Last Name','firstname'=>'First Name','middle'=>'Middle Name','nickname'=>'Nickname','title'=>'Title','sex'=>'Gender','DOB'=>'Date of Birth','ss'=>'Social Security Number','race'=>'Race','ethnicity'=>'Ethnicity','language'=>'Language','address'=>'Address','city'=>'City','state'=>'State','zip'=>'Zip','phone_home'=>'Home Phone','phone_work'=>'Work Phone','phone_cell'=>'Cell Phone','email'=>'Email','marital_status'=>'Marital Status','partner_name'=>'Partner Name','employer'=>'Employer','emergency_contact'=>'Emergency Contact Name','emergency_phone'=>'Emergency Contact Phone','caregiver'=>'Caregiver','guardian_lastname'=>'Guardian Last Name','guardian_firstname'=>'Guardian First Name','guardian_address'=>'Guardian Address','guardian_city'=>'Guardian City','guardian_state'=>'Guardian State','guardian_zip'=>'Guardian Zip','guardian_phone_home'=>'Guardian Home Phone','guardian_phone_work'=>'Guardian Work Phone','guardian_phone_cell'=>'Guardian Cell Phone','guardian_email'=>'Guardian E-mail','guardian_relationship'=>'Guardian Relationship'),
-							'Immunizations' => array('imm_date'=>'Date','imm_immunization'=>'Immunization','imm_sequence'=>'Sequence','imm_body_site'=>'Body Site','imm_dosage'=>'Dosage','imm_dosage_unit'=>'Dosage Unit','imm_route'=>'Route','imm_lot'=>'LOT number','imm_manufacturer'=>'Manufacturer','imm_expiration'=>'Expiration Date','imm_brand'=>'Brand'),
-							'Insurance' => array('insurance_plan_name'=>'Plan Name','insurance_id_num'=>'Policy Number','insurance_group'=>'Group Number','insurance_relationship'=>'Relationship to Insured','insurance_copay'=>'Copay Amount','insurance_deductible'=>'Deductible Amount','insurance_insu_lastname'=>'Insured Last Name','insurance_insu_firstname'=>'Insured First Name','insurance_insu_address'=>'Insured Address','insurance_insu_city'=>'Insured City','insurance_insu_state'=>'Insured State','insurance_insu_zip'=>'Insured Zip','insurance_insu_phone'=>'Insured Phone','insurance_insu_dob'=>'Insured Date of Birth','insurance_insu_gender'=>'Insured Gender','street_address1'=>'Insurance Plan Address 1','street_address2'=>'Insurance Plan Address 2','insurance_city'=>'Insurance Plan City','insurance_state'=>'Insurance Plan State','insurance_zip'=>'Insurance Plan Zip'),
-							'Issues' => array('issue'=>'Issue','issue_date_active'=>'Date Active'),
-							'Medications' => array('rxl_date_active'=>'Date Active','rxl_date_prescribed'=>'Date Prescribed','rxl_medication'=>'Medication','rxl_dosage'=>'Dosage','rxl_dosage_unit'=>'Dosage Unit','rxl_sig'=>'SIG','rxl_route'=>'Route','rxl_frequency'=>'Frequency','rxl_instructions'=>'Instructions','rxl_quantity'=>'Quantity','rxl_refill'=>'Refills','rxl_reason'=>'Reason'),
-							'Supplements' => array('sup_date_active'=>'Date Active','sup_date_prescribed'=>'Date Prescribed','sup_supplement'=>'Supplement','sup_dosage'=>'Dosage','sup_dosage_unit'=>'Dosage Unit','sup_sig'=>'SIG','sup_route'=>'Route','sup_frequency'=>'Frequency','sup_instructions'=>'Instructions','sup_quantity'=>'Quantity','sup_reason'=>'Reason'),
-							'Tests' => array('test_name'=>'Test Name','test_datetime'=>'Date of Test','test_result'=>'Result','test_units'=>'Result Units','test_reference'=>'Reference Range','test_flags'=>'Flags','test_type'=>'Test Type (Laboratory or Imaging)')
-						), null, array('id'=>$id,'required','style'=>'width:300px','class'=>'text'));
-						$arr['html'] .= '</div>';
-						$arr['file'] = $file_path;
-					}
-				} else {
-					unlink($file_path);
-					$arr['message'] = 'Error with CSV file!';
+				$result = CSV::setDelimiter($delimiter)->fromFile($file_path)->toArray();
+				$keys = array_keys($result[0]);
+				$i = 0;
+				$arr['html'] = '<input type="hidden" name="file_path" value="' . $file_path . '"/>';
+				$arr['message'] = 'CSV file analyzed!';
+				foreach ($keys as $key) {
+					$id = 'csv_' . $key;
+					$arr['html'] .= '<div class="pure-control-group">';
+					$arr['html'] .= '<label for="' . $id . '">' . $key . '</label>';
+					$arr['html'] .= Form::select($key, array(
+						''=>'Select NOSH database field.',
+						'null'=>'Do not import this field.',
+						'Allergies' => array('allergies_date_active'=>'Date Active','allergies_med'=>'Medication','allergies_reaction'=>'Reaction'),
+						'Billing' => array('dos_f'=>'Date of Service - Start','dos_t'=>'Date of Service - End','payment_date'=>'Payment Date','payment'=>'Payment Amount','payment_type'=>'Payment Type'),
+						'Demographics' => array('lastname'=>'Last Name','firstname'=>'First Name','middle'=>'Middle Name','nickname'=>'Nickname','title'=>'Title','sex'=>'Gender','DOB'=>'Date of Birth','ss'=>'Social Security Number','race'=>'Race','ethnicity'=>'Ethnicity','language'=>'Language','address'=>'Address','city'=>'City','state'=>'State','zip'=>'Zip','phone_home'=>'Home Phone','phone_work'=>'Work Phone','phone_cell'=>'Cell Phone','email'=>'Email','marital_status'=>'Marital Status','partner_name'=>'Partner Name','employer'=>'Employer','emergency_contact'=>'Emergency Contact Name','emergency_phone'=>'Emergency Contact Phone','caregiver'=>'Caregiver','guardian_lastname'=>'Guardian Last Name','guardian_firstname'=>'Guardian First Name','guardian_address'=>'Guardian Address','guardian_city'=>'Guardian City','guardian_state'=>'Guardian State','guardian_zip'=>'Guardian Zip','guardian_phone_home'=>'Guardian Home Phone','guardian_phone_work'=>'Guardian Work Phone','guardian_phone_cell'=>'Guardian Cell Phone','guardian_email'=>'Guardian E-mail','guardian_relationship'=>'Guardian Relationship'),
+						'Immunizations' => array('imm_date'=>'Date','imm_immunization'=>'Immunization','imm_sequence'=>'Sequence','imm_body_site'=>'Body Site','imm_dosage'=>'Dosage','imm_dosage_unit'=>'Dosage Unit','imm_route'=>'Route','imm_lot'=>'LOT number','imm_manufacturer'=>'Manufacturer','imm_expiration'=>'Expiration Date','imm_brand'=>'Brand'),
+						'Insurance' => array('insurance_plan_name'=>'Plan Name','insurance_id_num'=>'Policy Number','insurance_group'=>'Group Number','insurance_relationship'=>'Relationship to Insured','insurance_copay'=>'Copay Amount','insurance_deductible'=>'Deductible Amount','insurance_insu_lastname'=>'Insured Last Name','insurance_insu_firstname'=>'Insured First Name','insurance_insu_address'=>'Insured Address','insurance_insu_city'=>'Insured City','insurance_insu_state'=>'Insured State','insurance_insu_zip'=>'Insured Zip','insurance_insu_phone'=>'Insured Phone','insurance_insu_dob'=>'Insured Date of Birth','insurance_insu_gender'=>'Insured Gender','street_address1'=>'Insurance Plan Address 1','street_address2'=>'Insurance Plan Address 2','insurance_city'=>'Insurance Plan City','insurance_state'=>'Insurance Plan State','insurance_zip'=>'Insurance Plan Zip'),
+						'Issues' => array('issue'=>'Issue','issue_date_active'=>'Date Active'),
+						'Medications' => array('rxl_date_active'=>'Date Active','rxl_date_prescribed'=>'Date Prescribed','rxl_medication'=>'Medication','rxl_dosage'=>'Dosage','rxl_dosage_unit'=>'Dosage Unit','rxl_sig'=>'SIG','rxl_route'=>'Route','rxl_frequency'=>'Frequency','rxl_instructions'=>'Instructions','rxl_quantity'=>'Quantity','rxl_refill'=>'Refills','rxl_reason'=>'Reason'),
+						'Supplements' => array('sup_date_active'=>'Date Active','sup_date_prescribed'=>'Date Prescribed','sup_supplement'=>'Supplement','sup_dosage'=>'Dosage','sup_dosage_unit'=>'Dosage Unit','sup_sig'=>'SIG','sup_route'=>'Route','sup_frequency'=>'Frequency','sup_instructions'=>'Instructions','sup_quantity'=>'Quantity','sup_reason'=>'Reason'),
+						'Tests' => array('test_name'=>'Test Name','test_datetime'=>'Date of Test','test_result'=>'Result','test_units'=>'Result Units','test_reference'=>'Reference Range','test_flags'=>'Flags','test_type'=>'Test Type (Laboratory or Imaging)')
+					), null, array('id'=>$id,'required','style'=>'width:300px','class'=>'text'));
+					$arr['html'] .= '</div>';
+					$arr['file'] = $file_path;
 				}
 			}
 		}
@@ -5295,22 +5284,8 @@ class AjaxChartController extends BaseController {
 	{
 		$pid = Session::get('pid');
 		$data = Input::all();
-		$csv = File::get($data['file_path']);
 		$delimiter = $this->getCSVDelimiter($data['file_path']);
-		$csv_line = explode("\n", $csv);
-		$csv_headers = explode($delimiter, $csv_line[0]);
-		$new_header_array = array();
-		foreach ($csv_headers as $header) {
-			$new_header_array[] = $data[$header];
-		}
-		$csv_line[0] = implode($delimiter, $new_header_array);
-		$csv_final = implode("\n", $csv_line);
-		Config::set('formatter::formatter.csv.delimiter', $delimiter);
-		Config::set('formatter::formatter.csv.enclosure', '');
-		Config::set('formatter::formatter.csv.newline', "\n");
-		Config::set('formatter::formatter.csv.regex_newline', '\n');
-		Config::set('formatter::formatter.csv.escape', '\\');
-		$result = Formatter::make($csv_final, 'csv')->toArray();
+		$result = CSV::setDelimiter($delimiter)->fromFile($data['file_path'])->toArray();
 		$i = 0;
 		$message = '';
 		$allergies_array = array('allergies_date_active','allergies_med','allergies_reaction');
@@ -5333,7 +5308,8 @@ class AjaxChartController extends BaseController {
 			$supplements = array();
 			$tests = array();
 			while ($value = current($field)) {
-				$key = key($field);
+				$old_key = key($field);
+				$key = $data[$old_key];
 				if (in_array($key, $allergies_array)) {
 					$allergies[$key] = $value;
 				}
@@ -5374,7 +5350,7 @@ class AjaxChartController extends BaseController {
 				$allergies['rcopia_sync'] = 'n';
 				DB::table('allergies')->insert($allergies);
 				$this->audit('Add');
-				$message .= 'Added ' . $allergies['allergies_med'] . 'to allergies list.<br>';
+				$message .= 'Added ' . $allergies['allergies_med'] . ' to allergies list.<br>';
 			}
 			if (!empty($billing)) {
 				if (!empty($billing['dos_f'])) {
@@ -5500,7 +5476,7 @@ class AjaxChartController extends BaseController {
 				$medications['rxl_date_inactive'] = '';
 				DB::table('rx_list')->insert($medications);
 				$this->audit('Add');
-				$message .= 'Added ' . $medications['rxl_medication'] . 'to medications list.<br>';
+				$message .= 'Added ' . $medications['rxl_medication'] . ' to medications list.<br>';
 			}
 			if (!empty($supplements)) {
 				if (!empty($supplements['sup_date_active'])) {
@@ -5514,7 +5490,7 @@ class AjaxChartController extends BaseController {
 				$supplements['sup_date_inactive'] = '';
 				DB::table('sup_list')->insert($supplements);
 				$this->audit('Add');
-				$message .= 'Added ' . $supplements['sup_supplement'] . 'to supplements list.<br>';
+				$message .= 'Added ' . $supplements['sup_supplement'] . ' to supplements list.<br>';
 			}
 			if (!empty($tests)) {
 				if (!empty($tests['test_datetime'])) {
@@ -5523,7 +5499,7 @@ class AjaxChartController extends BaseController {
 					$tests['practice_id'] = Session::get('practice_id');
 					DB::table('tests')->insert($tests);
 					$this->audit('Add');
-					$message .= 'Added ' . $tests['test_name'] . 'to tests list.<br>';
+					$message .= 'Added ' . $tests['test_name'] . ' to tests list.<br>';
 				} else {
 					$message .= 'No test results added due to missing date of test.<br>';
 				}

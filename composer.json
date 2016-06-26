@@ -32,7 +32,8 @@
 		"Chumper/Zipper": "0.5.x",
 		"knplabs/github-api": "*",
 		"phpseclib/phpseclib": "*",
-		"google/apiclient": "1.0.*@beta"
+		"google/apiclient": "1.0.*@beta",
+		"mnshankar/CSV": "1.8"
 	},
 	"autoload": {
 		"classmap": [
