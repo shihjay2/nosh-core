@@ -33,10 +33,7 @@ class AjaxLoginController extends BaseController {
 		$arr['response'] = '2';
 		$hash = 5381;
 		$value = Input::get('numberReal');
-		$value = strtoupper($value);
-		for($i = 0; $i < strlen($value); $i++) {
-			$hash = ($this->leftShift32($hash, 5) + $hash) + ord(substr($value, $i));
-		}
+		$hash = $this->rpHash($value);
 		$arr['response'] = $hash;
 		// if ($this->rpHash(Input::get('numberReal')) == Input::get('numberRealHash')) {
 		// 	$registration_code = Input::get('registration_code');
