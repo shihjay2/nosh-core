@@ -82,8 +82,6 @@ class AjaxLoginController extends BaseController {
 							$data_message1['url'] = route('home');
 							$this->send_mail('emails.loginregistrationconfirm', $data_message1, 'Patient Portal Registration Confirmation', Input::get('email'), $demographics_relate_row->practice_id);
 						}
-						echo json_encode($arr);
-						exit (0);
 					} else {
 						$arr['response'] = "5";
 						$row2 = User::where('id', '=', $demographics_relate_row->id)->first();
@@ -91,15 +89,11 @@ class AjaxLoginController extends BaseController {
 						$data_message['username'] = $row2->username;
 						$data_message['url'] = route('home');
 						$this->send_mail('emails.loginregistration', $data_message, 'Patient Portal Registration Message', Input::get('email'), $demographics_relate_row->practice_id);
-						echo json_encode($arr);
-						exit (0);
 					}
 				} else {
 					$arr['response'] = "2";
 					$count++;
 					$arr['count'] = strval($count);
-					echo json_encode($arr);
-					exit (0);
 				}
 			} else {
 				$row3 = Practiceinfo::find(Input::get('practice_id'));
@@ -113,17 +107,14 @@ class AjaxLoginController extends BaseController {
 				);
 				$this->send_mail('emails.loginregistrationrequest', $data_message2, 'New User Request', $row3->email, Input::get('practice_id'));
 				$arr['response'] = "4";
-				echo json_encode($arr);
-				exit (0);
 			}
 		} else {
 			$count = intval(Input::get('count'));
 			$arr['response'] = "2";
 			$count++;
 			$arr['count'] = strval($count);
-			echo json_encode($arr);
-			exit (0);
 		}
+		echo json_encode($arr);
 	}
 
 	public function postForgotPassword($username)
