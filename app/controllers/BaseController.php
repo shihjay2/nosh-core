@@ -2284,22 +2284,33 @@ class BaseController extends Controller {
 
 	protected function rpHash($value)
 	{
-		switch(PHP_INT_SIZE) {
-			case 4:
-				$hash = 5381;
-				$value = strtoupper($value);
-				for($i = 0; $i < strlen($value); $i++) {
-					$hash = (($hash << 5) + $hash) + ord(substr($value, $i));
-				}
-				break;
-			case 8:
-				$hash = 5381;
-				$value = strtoupper($value);
-				for($i = 0; $i < strlen($value); $i++) {
-					$hash = ($this->leftShift32($hash, 5) + $hash) + ord(substr($value, $i));
-				}
-				break;
+		$hash = 5381;
+		$value = strtoupper($value);
+		if (PHP_INT_SIZE == 4) {
+			for($i = 0; $i < strlen($value); $i++) {
+				$hash = (($hash << 5) + $hash) + ord(substr($value, $i));
+			}
+		} else {
+			for($i = 0; $i < strlen($value); $i++) {
+				$hash = ($this->leftShift32($hash, 5) + $hash) + ord(substr($value, $i));
+			}
 		}
+		// switch(PHP_INT_SIZE) {
+		// 	case 4:
+		// 		$hash = 5381;
+		// 		$value = strtoupper($value);
+		// 		for($i = 0; $i < strlen($value); $i++) {
+		// 			$hash = (($hash << 5) + $hash) + ord(substr($value, $i));
+		// 		}
+		// 		break;
+		// 	case 8:
+		// 		$hash = 5381;
+		// 		$value = strtoupper($value);
+		// 		for($i = 0; $i < strlen($value); $i++) {
+		// 			$hash = ($this->leftShift32($hash, 5) + $hash) + ord(substr($value, $i));
+		// 		}
+		// 		break;
+		// }
 		return $hash;
 	}
 
