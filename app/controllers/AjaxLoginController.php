@@ -30,89 +30,85 @@ class AjaxLoginController extends BaseController {
 
 	public function postRegisterUser()
 	{
-		$arr['response'] = '2';
-		$value = Input::get('numberReal');
-		$hash = $this->rpHash($value);
-		$arr['response'] = $hash;
-		// if ($this->rpHash(Input::get('numberReal')) == Input::get('numberRealHash')) {
-		// 	$registration_code = Input::get('registration_code');
-		// 	if ($registration_code != '') {
-		// 		$count = intval(Input::get('count'));
-		// 		if ($count > 2) {
-		// 			$arr['response'] = "3";
-		// 		} else {
-		// 			$dob = date('Y-m-d', strtotime(Input::get('dob')));
-		// 			$result = DB::table('demographics')->where('registration_code', '=', $registration_code)
-		// 				->where('firstname', '=', Input::get('firstname'))
-		// 				->where('lastname', '=', Input::get('lastname'))
-		// 				->where('DOB', '=', $dob)
-		// 				->first();
-		// 			if ($result) {
-		// 				$displayname = Input::get('firstname') . " " . Input::get('lastname');
-		// 				$demographics_relate = DB::table('demographics_relate')->where('pid', '=', $result->pid)->get();
-		// 				$arr['response'] = "1";
-		// 				foreach ($demographics_relate as $demographics_relate_row) {
-		// 					if ($demographics_relate_row->id == '' || $demographics_relate_row->id == '0' || is_null($demographics_relate_row->id)) {
-		// 						$row1 = DB::table('practiceinfo')->where('practice_id', '=', $demographics_relate_row->practice_id)->first();
-		// 						$data1 = array(
-		// 							'username' => Input::get('username'),
-		// 							'firstname' => Input::get('firstname'),
-		// 							'lastname' => Input::get('lastname'),
-		// 							'email' => Input::get('email'),
-		// 							'group_id' => '100',
-		// 							'active' => '1',
-		// 							'displayname' => $displayname,
-		// 							'practice_id' => $demographics_relate_row->practice_id
-		// 						);
-		// 						$arr['id'] = DB::table('users')->insertGetId($data1);
-		// 						$this->audit('Add');
-		// 						$data2 = array(
-		// 							'id' => $arr['id']
-		// 						);
-		// 						DB::table('demographics_relate')->where('demographics_relate_id', '=', $demographics_relate_row->demographics_relate_id)->update($data2);
-		// 						$this->audit('Update');
-		// 						$data_message1['practicename'] = $row1->practice_name;
-		// 						$data_message1['username'] = Input::get('username');
-		// 						$data_message1['url'] = route('home');
-		// 						$this->send_mail('emails.loginregistrationconfirm', $data_message1, 'Patient Portal Registration Confirmation', Input::get('email'), $demographics_relate_row->practice_id);
-		// 					} else {
-		// 						$arr['response'] = "5";
-		// 						$row2 = User::where('id', '=', $demographics_relate_row->id)->first();
-		// 						$data_message['practicename'] = $row1->practice_name;
-		// 						$data_message['username'] = $row2->username;
-		// 						$data_message['url'] = route('home');
-		// 						$this->send_mail('emails.loginregistration', $data_message, 'Patient Portal Registration Message', Input::get('email'), $demographics_relate_row->practice_id);
-		// 					}
-		// 				}
-		// 			} else {
-		// 				$arr['response'] = "2";
-		// 				$count++;
-		// 				$arr['count'] = strval($count);
-		// 			}
-		// 		}
-		// 	} else {
-		// 		$row3 = Practiceinfo::find(Input::get('practice_id'));
-		// 		$displayname = Session::get('displayname');
-		// 		$data_message2 = array(
-		// 			'firstname' => Input::get('firstname'),
-		// 			'lastname' => Input::get('lastname'),
-		// 			'dob' => Input::get('dob'),
-		// 			'username' => Input::get('username'),
-		// 			'email' => Input::get('email')
-		// 		);
-		// 		$this->send_mail('emails.loginregistrationrequest', $data_message2, 'New User Request', $row3->email, Input::get('practice_id'));
-		// 		$arr['response'] = "4";
-		// 	}
-		// } else {
-		// 	$count = intval(Input::get('count'));
-		// 	if ($count > 2) {
-		// 		$arr['response'] = "3";
-		// 	} else {
-		// 		$arr['response'] = "2";
-		// 		$count++;
-		// 		$arr['count'] = strval($count);
-		// 	}
-		// }
+		if ($this->rpHash(Input::get('numberReal')) == Input::get('numberRealHash')) {
+			$registration_code = Input::get('registration_code');
+			if ($registration_code != '') {
+				$count = intval(Input::get('count'));
+				if ($count > 2) {
+					$arr['response'] = "3";
+				} else {
+					$dob = date('Y-m-d', strtotime(Input::get('dob')));
+					$result = DB::table('demographics')->where('registration_code', '=', $registration_code)
+						->where('firstname', '=', Input::get('firstname'))
+						->where('lastname', '=', Input::get('lastname'))
+						->where('DOB', '=', $dob)
+						->first();
+					if ($result) {
+						$displayname = Input::get('firstname') . " " . Input::get('lastname');
+						$demographics_relate = DB::table('demographics_relate')->where('pid', '=', $result->pid)->get();
+						$arr['response'] = "1";
+						foreach ($demographics_relate as $demographics_relate_row) {
+							if ($demographics_relate_row->id == '' || $demographics_relate_row->id == '0' || is_null($demographics_relate_row->id)) {
+								$row1 = DB::table('practiceinfo')->where('practice_id', '=', $demographics_relate_row->practice_id)->first();
+								$data1 = array(
+									'username' => Input::get('username'),
+									'firstname' => Input::get('firstname'),
+									'lastname' => Input::get('lastname'),
+									'email' => Input::get('email'),
+									'group_id' => '100',
+									'active' => '1',
+									'displayname' => $displayname,
+									'practice_id' => $demographics_relate_row->practice_id
+								);
+								$arr['id'] = DB::table('users')->insertGetId($data1);
+								$this->audit('Add');
+								$data2 = array(
+									'id' => $arr['id']
+								);
+								DB::table('demographics_relate')->where('demographics_relate_id', '=', $demographics_relate_row->demographics_relate_id)->update($data2);
+								$this->audit('Update');
+								$data_message1['practicename'] = $row1->practice_name;
+								$data_message1['username'] = Input::get('username');
+								$data_message1['url'] = route('home');
+								$this->send_mail('emails.loginregistrationconfirm', $data_message1, 'Patient Portal Registration Confirmation', Input::get('email'), $demographics_relate_row->practice_id);
+							} else {
+								$arr['response'] = "5";
+								$row2 = User::where('id', '=', $demographics_relate_row->id)->first();
+								$data_message['practicename'] = $row1->practice_name;
+								$data_message['username'] = $row2->username;
+								$data_message['url'] = route('home');
+								$this->send_mail('emails.loginregistration', $data_message, 'Patient Portal Registration Message', Input::get('email'), $demographics_relate_row->practice_id);
+							}
+						}
+					} else {
+						$arr['response'] = "2";
+						$count++;
+						$arr['count'] = strval($count);
+					}
+				}
+			} else {
+				$row3 = Practiceinfo::find(Input::get('practice_id'));
+				$displayname = Session::get('displayname');
+				$data_message2 = array(
+					'firstname' => Input::get('firstname'),
+					'lastname' => Input::get('lastname'),
+					'dob' => Input::get('dob'),
+					'username' => Input::get('username'),
+					'email' => Input::get('email')
+				);
+				$this->send_mail('emails.loginregistrationrequest', $data_message2, 'New User Request', $row3->email, Input::get('practice_id'));
+				$arr['response'] = "4";
+			}
+		} else {
+			$count = intval(Input::get('count'));
+			if ($count > 2) {
+				$arr['response'] = "3";
+			} else {
+				$arr['response'] = "2";
+				$count++;
+				$arr['count'] = strval($count);
+			}
+		}
 		echo json_encode($arr);
 	}
 
