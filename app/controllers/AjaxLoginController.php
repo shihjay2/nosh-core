@@ -31,8 +31,8 @@ class AjaxLoginController extends BaseController {
 	public function postRegisterUser()
 	{
 		$arr['response'] = '2';
-		if ($this->rpHash(Input::get('numberReal')) == Input::get('numberRealHash')) {
-			$arr['response'] = 'Success';
+		$arr['response'] = $this->rpHash(Input::get('numberReal'));
+		// if ($this->rpHash(Input::get('numberReal')) == Input::get('numberRealHash')) {
 		// 	$registration_code = Input::get('registration_code');
 		// 	if ($registration_code != '') {
 		// 		$count = intval(Input::get('count'));
@@ -110,7 +110,7 @@ class AjaxLoginController extends BaseController {
 		// 		$count++;
 		// 		$arr['count'] = strval($count);
 		// 	}
-		}
+		// }
 		echo json_encode($arr);
 	}
 
