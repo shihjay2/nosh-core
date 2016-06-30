@@ -31,7 +31,13 @@ class AjaxLoginController extends BaseController {
 	public function postRegisterUser()
 	{
 		$arr['response'] = '2';
-		$arr['response'] = PHP_INT_SIZE;
+		$hash = 5381;
+		$value = Input::get('numberReal');
+		$value = strtoupper($value);
+		for($i = 0; $i < strlen($value); $i++) {
+			$hash = ($this->leftShift32($hash, 5) + $hash) + ord(substr($value, $i));
+		}
+		$arr['response'] = $hash;
 		// if ($this->rpHash(Input::get('numberReal')) == Input::get('numberRealHash')) {
 		// 	$registration_code = Input::get('registration_code');
 		// 	if ($registration_code != '') {
