@@ -31,6 +31,7 @@ class AjaxLoginController extends BaseController {
 	public function postRegisterUser()
 	{
 		ini_set('memory_limit','196M');
+		$arr['response'] = '2';
 		if ($this->rpHash(Input::get('numberReal')) == Input::get('numberRealHash')) {
 			$registration_code = Input::get('registration_code');
 			if ($registration_code != '') {
