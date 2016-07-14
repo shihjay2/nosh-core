@@ -15,6 +15,7 @@ $(document).ready(function() {
 		}
 	});
 	$("#menu_accordion").accordion({
+		event: "click hoverintent",
 		activate: function (event, ui) {
 			var id = ui.newPanel[0].id;
 			if (id != "menu_accordion_chart") {

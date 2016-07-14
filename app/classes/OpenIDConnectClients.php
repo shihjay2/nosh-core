@@ -8,7 +8,7 @@ use Exception;
  *
  * OpenIDConnectClient for PHP5
  * Author: Michael Jett <mjett@mitre.org>
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
  * a copy of the License at
@@ -26,7 +26,7 @@ use Exception;
 /**
  * Modifications for NOSH ChartingSystem and UMA specific calls by Michael Chen <shihjay2@gmail.com>
  */
- 
+
 /**
  * Use session to manage a nonce
  */
@@ -143,7 +143,7 @@ class OpenIDConnectClient
 	 * @var array holds scopes
 	 */
 	private $scopes = array();
-	
+
 	/**
 	 * @var array holds grant types
 	 */
@@ -208,7 +208,7 @@ class OpenIDConnectClient
 				throw new OpenIDConnectClientException("User did not authorize openid scope.");
 			}
 			$claims = $this->decodeJWT($token_json->id_token, 1);
-			
+
 			// Verify the signature
 			if ($this->canVerifySignatures()) {
 				if (!$this->verifyJWTsignature($token_json->id_token, $uma)) {
@@ -226,7 +226,7 @@ class OpenIDConnectClient
 
 				// Save the access token
 				$this->accessToken = $token_json->access_token;
-				
+
 				// Save the refresh token, if we got one
 				if (isset($token_json->refresh_token)) $this->refreshToken = $token_json->refresh_token;
 				return true;
@@ -242,7 +242,7 @@ class OpenIDConnectClient
 			return false;
 		}
 	}
-	
+
 	public function refresh($token, $uma=false) {
 		$token_json = $this->requestTokens('', $uma, $token);
 
@@ -254,7 +254,7 @@ class OpenIDConnectClient
 			throw new OpenIDConnectClientException("User did not authorize openid scope.");
 		}
 		$claims = $this->decodeJWT($token_json->id_token, 1);
-		
+
 		// Verify the signature
 		if ($this->canVerifySignatures()) {
 			if (!$this->verifyJWTsignature($token_json->id_token, $uma)) {
@@ -280,7 +280,7 @@ class OpenIDConnectClient
 	public function addScope($scope) {
 		$this->scopes = array_merge($this->scopes, (array)$scope);
 	}
-	
+
 	/**
 	 * @param $grant_type - example: authorization_code, implicit, password, client_credentials, refresh_token, urn:ietf:params:oauth:grant-type:jwt-bearer, urn:ietf:params:oauth:grant-type:saml2-bearer
 	 */
@@ -325,7 +325,7 @@ class OpenIDConnectClient
 		}
 		return $this->providerConfig[$param];
 	}
-	
+
 	/**
 	 * @param $url Sets redirect URL for auth flow
 	 */
@@ -431,7 +431,7 @@ class OpenIDConnectClient
 		$token_params = http_build_query($token_params, null, '&');
 		return json_decode($this->fetchURL($token_endpoint, $token_params));
 	}
-	
+
 	public function requestAAT() {
 		$token_endpoint = $this->getProviderConfigValue("token_endpoint", true);
 		$token_params = array(
@@ -532,7 +532,7 @@ class OpenIDConnectClient
 				$key = $this->get_key_for_header($jwks->keys, $header);
 			} else {
 				$key = $this->get_key_for_alg($jwks->keys, 'RSA');
-			}        
+			}
 			$verified = $this->verifyRSAJWTsignature($hashtype, $key, $payload, $signature);
 			break;
 		default:
@@ -550,7 +550,7 @@ class OpenIDConnectClient
 			&& (($claims->aud == $this->clientID) || (in_array($this->clientID, $claims->aud)))
 			&& ($claims->nonce == $_SESSION['openid_connect_nonce']));
 	}
-	
+
 	/**
 	 * @param object $claims
 	 * @return bool
@@ -780,7 +780,7 @@ class OpenIDConnectClient
 		} else {
 			$registration_endpoint = $this->getProviderConfigValue('dynamic_client_endpoint', $uma);
 			$send_array = (object)array(
-				'redirect_uris' => array($this->getRedirectURL(), 
+				'redirect_uris' => array($this->getRedirectURL(),
 					str_replace('uma_auth', 'uma_api', $this->getRedirectURL())
 				),
 				'client_name' => $this->getClientName(),
@@ -858,14 +858,14 @@ class OpenIDConnectClient
 	public function setAccessToken($accessToken) {
 		$this->accessToken = $accessToken;
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getAccessToken() {
 		return $this->accessToken;
 	}
-	
+
 	/**
 	 * @param $refreshToken
 	 */
@@ -879,11 +879,11 @@ class OpenIDConnectClient
 	public function getRefreshToken() {
 		return $this->refreshToken;
 	}
-	
+
 	/**
-	 * Everthing below this are UMA specific calls 
+	 * Everthing below this are UMA specific calls
 	 */
-	 
+
 	/**
 	 * @param $resourceID
 	 */
@@ -899,7 +899,7 @@ class OpenIDConnectClient
 		// State essentially acts as a session key for OIDC
 		$state = $this->generateRandString();
 		$_SESSION['openid_connect_state'] = $state;
-		
+
 		if ($type == 'user1') {
 			$auth_params = array_merge($this->authParams, array(
 				'response_type' => $response_type,
@@ -928,7 +928,7 @@ class OpenIDConnectClient
 				'scope' => 'uma_authorization email profile'
 			));
 		}
-		
+
 		// If the client has been registered with additional scopes
 		if (sizeof($this->scopes) > 0) {
 			$auth_params = array_merge($auth_params, array('scope' => implode(' ', $this->scopes)));
@@ -936,7 +936,7 @@ class OpenIDConnectClient
 		$auth_endpoint .= '?' . http_build_query($auth_params, null, '&');
 		$this->redirect($auth_endpoint);
 	}
-	
+
 	/**
 	 * UMA - Resource Set Registration
 	 *
@@ -964,7 +964,7 @@ class OpenIDConnectClient
 		$return['user_access_policy_uri'] = $json_response->{'user_access_policy_uri'};
 		return $return;
 	}
-	
+
 	public function delete_resource_set($id) {
 		$resource_set_endpoint = $this->getProviderConfigValue('resource_set_registration_endpoint',true);
 		$send_object = (object)array(
@@ -983,7 +983,7 @@ class OpenIDConnectClient
 		$return['user_access_policy_uri'] = $json_response->{'user_access_policy_uri'};
 		return $return;
 	}
-	
+
 	public function update_resource_set($id, $name, $icon, $scopes) {
 		$resource_set_endpoint = $this->getProviderConfigValue('resource_set_registration_endpoint',true);
 		$send_object = (object)array(
@@ -1028,7 +1028,7 @@ class OpenIDConnectClient
 		$return['ticket'] = $json_response->{'ticket'};
 		return $return;
 	}
-	
+
 	/**
 	 * UMA - Requesting Party Claims Request
 	 *
@@ -1041,9 +1041,7 @@ class OpenIDConnectClient
 		$requesting_party_claims_endpoint .= "?ticket=" . $permission_ticket . "&redirect_uri=" . $this->getRedirectURL() . "&client_id=" . $this->clientID . "&state=" . $state;
 		$this->redirect($requesting_party_claims_endpoint);
 	}
-	
-	/**
-	
+
 	/**
 	 * UMA - Requesting Party Token Request
 	 *
@@ -1063,7 +1061,7 @@ class OpenIDConnectClient
 		}
 		return $return;
 	}
-	
+
 	public function rpt_request_token($permission_ticket) {
 		$rpt_request_endpoint = $this->getProviderConfigValue('rpt_endpoint',true);
 		$send_object = (object)array(
@@ -1077,7 +1075,7 @@ class OpenIDConnectClient
 		}
 		return $json_response;
 	}
-	
+
 	public function introspect($token) {
 		$introspect_endpoint = $this->getProviderConfigValue('introspection_endpoint',true);
 		$send_object = array(
@@ -1088,7 +1086,7 @@ class OpenIDConnectClient
 		$json_response = json_decode($response, true);
 		return $json_response;
 	}
-	
+
 	public function api($command, $api_endpoint, $send_object = null, $put_delete = null) {
 		if ($send_object != null) {
 			$response = $this->fetchURL($api_endpoint, json_encode($send_object), $this->accessToken, $put_delete);
@@ -1098,7 +1096,7 @@ class OpenIDConnectClient
 		$json_response = json_decode($response, true);
 		return $json_response;
 	}
-	
+
 	public function revoke() {
 		$revoke_request_endpoint = $this->getProviderConfigValue('revocation_endpoint',true);
 		$token_params = array(

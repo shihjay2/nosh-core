@@ -2295,22 +2295,6 @@ class BaseController extends Controller {
 				$hash = ($this->leftShift32($hash, 5) + $hash) + ord(substr($value, $i));
 			}
 		}
-		// switch(PHP_INT_SIZE) {
-		// 	case 4:
-		// 		$hash = 5381;
-		// 		$value = strtoupper($value);
-		// 		for($i = 0; $i < strlen($value); $i++) {
-		// 			$hash = (($hash << 5) + $hash) + ord(substr($value, $i));
-		// 		}
-		// 		break;
-		// 	case 8:
-		// 		$hash = 5381;
-		// 		$value = strtoupper($value);
-		// 		for($i = 0; $i < strlen($value); $i++) {
-		// 			$hash = ($this->leftShift32($hash, 5) + $hash) + ord(substr($value, $i));
-		// 		}
-		// 		break;
-		// }
 		return $hash;
 	}
 
@@ -6515,7 +6499,7 @@ class BaseController extends Controller {
 				$imm_array_1 = array('103', '148', '147', '136', '114', '32', '108');
 				$count_1 = 0;
 				foreach ($imm_array_1 as $imm_1) {
-					if ($i == 0) {
+					if ($count_1 == 0) {
 						$query_array_1->where('imm_cvxcode', '=', $imm_1);
 					} else {
 						$query_array_1->orWhere('imm_cvxcode', '=', $imm_1);
@@ -6537,7 +6521,7 @@ class BaseController extends Controller {
 				$imm_array_2 = array('138', '113', '9', '139', '115');
 				$count_2 = 0;
 				foreach ($imm_array_2 as $imm_2) {
-					if ($i == 0) {
+					if ($count_2 == 0) {
 						$query_array_2->where('imm_cvxcode', '=', $imm_2);
 					} else {
 						$query_array_2->orWhere('imm_cvxcode', '=', $imm_2);
@@ -6577,7 +6561,7 @@ class BaseController extends Controller {
 				$imm_array_1 = array('118', '62', '137');
 				$count_1 = 0;
 				foreach ($imm_array_1 as $imm_1) {
-					if ($i == 0) {
+					if ($count_1 == 0) {
 						$query_array_1->where('imm_cvxcode', '=', $imm_1);
 					} else {
 						$query_array_1->orWhere('imm_cvxcode', '=', $imm_1);

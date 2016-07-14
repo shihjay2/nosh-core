@@ -190,7 +190,7 @@ return array(
 		'Ccdaparser'      => 'Ccdaparsers\Ccdaparser',
 		'Phaxio'          => 'Phaxios\Phaxio',
 		'OpenIDConnectClient' => 'OpenIDConnectClients\OpenIDConnectClient',
-		'CSV'             =>'mnshankar\CSV\CSVFacade',
+		'CSV'             => 'mnshankar\CSV\CSVFacade',
 		'Formatter'				=> 'SoapBox\Formatter\Formatter'
 	),
 
