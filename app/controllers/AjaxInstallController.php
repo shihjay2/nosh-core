@@ -5,7 +5,7 @@ class AjaxInstallController extends BaseController {
 	/**
 	* NOSH ChartingSystem Installation Ajax Functions
 	*/
-	
+
 	public function postInstallProcess($type)
 	{
 		set_time_limit(0);
@@ -49,173 +49,6 @@ class AjaxInstallController extends BaseController {
 			'practice_id' => '1'
 		);
 		$user_id = DB::table('users')->insertGetId($data1);
-		// Check if patient-centric is also tied to a UMA server
-		$client_id = '';
-		$client_secret = '';
-		$sub = '';
-		if ($type == 'patient') {
-			$pt_password = substr_replace(Hash::make(Input::get('pt_password')),"$2a",0,3);
-			$res = DB::select("SHOW DATABASES LIKE 'oic_production'");
-			if(count($res) > 0) {
-				$data_edit = array(
-					'username' => Input::get('pt_username'),
-					'password' => $pt_password,
-					'enabled' => '1'
-				);
-				$data_edit1 = array(
-					'email' => Input::get('email'),
-					'preferred_username' => Input::get('pt_username'),
-					'email_verified' => '1',
-					'given_name' => Input::get('firstname'),
-					'family_name' => Input::get('lastname')
-				);
-				DB::connection('oic')->table('users')->insert($data_edit);
-				$id = DB::connection('oic')->table('user_info')->insertGetId($data_edit1);
-				$sub = hash('sha256', $id);
-				$data_edit2 = array(
-					'sub' => $sub
-				);
-				DB::connection('oic')->table('user_info')->where('id', '=', $id)->update($data_edit2);
-				$data_edit3 = array(
-					'username' => Input::get('pt_username'),
-					'authority' => 'ROLE_ADMIN'
-				);
-				$data_edit3a = array(
-					'username' => Input::get('pt_username'),
-					'authority' => 'ROLE_USER'
-				);
-				DB::connection('oic')->table('authorities')->insert($data_edit3);
-				DB::connection('oic')->table('authorities')->insert($data_edit3a);
-				$client_id = $this->gen_uuid();
-				$client_secret = $this->gen_secret();
-				$client_name = 'Patient NOSH for ' .  Input::get('firstname') . ' ' . Input::get('lastname') . ', DOB: ' . date('Y-m-d', strtotime(Input::get('DOB')));
-				$data_edit4 = array(
-					'client_id' => $client_id,
-					'client_secret' => $client_secret,
-					'client_name' => $client_name,
-					'dynamically_registered' => false,
-					'refresh_token_validity_seconds' => null,
-					'access_token_validity_seconds' => 3600,
-					'id_token_validity_seconds' => 600,
-					'allow_introspection' => true,
-					'token_endpoint_auth_method' => 'SECRET_BASIC',
-					'clear_access_tokens_on_refresh' => 1,
-					'logo_uri' => 'https://www.noshchartingsystem.com/SAAS-Logo.jpg',
-					'client_uri' => URL::to('/')
-				);
-				$client_id1 = DB::connection('oic')->table('client_details')->insertGetId($data_edit4);
-				$data_edit5s = array(
-					['owner_id' => $client_id1, 'scope' => 'openid'],
-					['owner_id' => $client_id1, 'scope' => 'profile'],
-					['owner_id' => $client_id1, 'scope' => 'email'],
-					['owner_id' => $client_id1, 'scope' => 'address'],
-					['owner_id' => $client_id1, 'scope' => 'phone'],
-					['owner_id' => $client_id1, 'scope' => 'offline_access'],
-					['owner_id' => $client_id1, 'scope' => 'uma_protection']
-				);
-				foreach ($data_edit5s as $data_edit5) {
-					DB::connection('oic')->table('client_scope')->insert($data_edit5);
-				}
-				$data_edit6s = array(
-					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/oidc'],
-					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/uma_auth'],
-					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/uma_api'],
-					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/fhir/oidc'],
-					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/fhir'],
-					['owner_id' => $client_id1, 'redirect_uri' => URL::to('/') . '/uma_logout']
-				);
-				foreach ($data_edit6s as $data_edit6) {
-					DB::connection('oic')->table('client_redirect_uri')->insert($data_edit6);
-				}
-				$data_edit7s = array(
-					['owner_id' => $client_id1, 'grant_type' => 'authorization_code'],
-					['owner_id' => $client_id1, 'grant_type' => 'client_credentials'],
-					['owner_id' => $client_id1, 'grant_type' => 'urn:ietf:params:oauth:grant_type:redelegate'],
-					['owner_id' => $client_id1, 'grant_type' => 'implicit'],
-					['owner_id' => $client_id1, 'grant_type' => 'refresh_token']
-				);
-				foreach ($data_edit7s as $data_edit7) {
-					DB::connection('oic')->table('client_grant_type')->insert($data_edit7);
-				}
-				$data_edit8s = array(
-					[
-						'scope' => 'openid',
-						'description' => 'log in using your identity',
-						'icon' => 'user',
-						'restricted' => false,
-						'default_scope' => true,
-						'structured' => false,
-						'structured_param_description' => null
-					],
-					[
-						'scope' => 'profile',
-						'description' => 'basic profile information',
-						'icon' => 'list-alt',
-						'restricted' => false,
-						'default_scope' => true,
-						'structured' => false,
-						'structured_param_description' => null
-					],
-					[
-						'scope' => 'email',
-						'description' => 'email address',
-						'icon' => 'envelope',
-						'restricted' => false,
-						'default_scope' => true,
-						'structured' => false,
-						'structured_param_description' => null
-					],
-					[
-						'scope' => 'address',
-						'description' => 'physical address',
-						'icon' => 'home',
-						'restricted' => false,
-						'default_scope' => true,
-						'structured' => false,
-						'structured_param_description' => null
-					],
-					[
-						'scope' => 'phone',
-						'description' => 'telephone number',
-						'icon' => 'bell',
-						'restricted' => false,
-						'default_scope' => true,
-						'structured' => false,
-						'structured_param_description' => null
-					],
-					[
-						'scope' => 'offline_access',
-						'description' => 'offline_access',
-						'icon' => 'time',
-						'restricted' => false,
-						'default_scope' => true,
-						'structured' => false,
-						'structured_param_description' => null
-					],
-					[
-						'scope' => 'uma_protection',
-						'description' => 'manage protected resources',
-						'icon' => 'briefcase',
-						'restricted' => false,
-						'default_scope' => false,
-						'structured' => false,
-						'structured_param_description' => null
-					],
-					[
-						'scope' => 'uma_authorization',
-						'description' => 'request access to protected resources',
-						'icon' => 'share',
-						'restricted' => false,
-						'default_scope' => true,
-						'structured' => false,
-						'structured_param_description' => null
-					]
-				);
-				foreach ($data_edit8s as $data_edit8) {
-					DB::connection('oic')->table('system_scope')->insert($data_edit8);
-				}
-			}
-		}
 		// Insert practice
 		$data2 = array(
 			'practice_name' => $practice_name,
@@ -235,11 +68,6 @@ class AjaxInstallController extends BaseController {
 			'active' => 'Y',
 			'patient_centric' => $patient_centric
 		);
-		if ($type == 'patient' && $client_id != '') {
-			$data2['uma_client_id'] = $client_id;
-			$data2['uma_client_secret'] = $client_secret;
-		}
-		DB::table('practiceinfo')->insert($data2);
 		// Insert patient
 		if ($type == 'patient') {
 			$dob = date('Y-m-d', strtotime(Input::get('DOB')));
@@ -281,9 +109,6 @@ class AjaxInstallController extends BaseController {
 				'practice_id' => '1',
 				'password' => $pt_password
 			);
-			if ($sub != '') {
-				$patient_data2['uid'] = $sub;
-			}
 			$patient_user_id = DB::table('users')->insertGetId($patient_data2);
 			$patient_data3 = array(
 				'pid' => $pid,
@@ -802,7 +627,7 @@ class AjaxInstallController extends BaseController {
 		Session::put('patient_centric', $data2['patient_centric']);
 		echo "OK";
 	}
-	
+
 	public function postPracticeRegister()
 	{
 		$base_practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
@@ -860,7 +685,7 @@ class AjaxInstallController extends BaseController {
 		Session::put('patient_centric', $data3->patient_centric);
 		echo "OK";
 	}
-	
+
 	public function practiceregisternosh($api)
 	{
 		$practice = DB::table('practiceinfo')->where('practice_registration_key', '=', $api)->first();
@@ -898,7 +723,7 @@ class AjaxInstallController extends BaseController {
 			),200);
 		}
 	}
-	
+
 	public function postDirectoryCheck()
 	{
 		$documents_dir = Input::get('documents_dir');
@@ -908,7 +733,7 @@ class AjaxInstallController extends BaseController {
 			echo "OK";
 		}
 	}
-	
+
 	public function postDatabaseFix()
 	{
 		$db_username = Input::get('db_username');
@@ -926,7 +751,7 @@ class AjaxInstallController extends BaseController {
 			echo "Incorrect username/password for your MySQL database.  Try again.";
 		}
 	}
-	
+
 	public function postCheckPracticehandle()
 	{
 		$query = DB::table('practiceinfo')->where('practicehandle', '=', Input::get('practicehandle'))->first();
@@ -936,14 +761,14 @@ class AjaxInstallController extends BaseController {
 			echo "OK";
 		}
 	}
-	
+
 	public function set_version()
 	{
 		$result = $this->github_all();
 		File::put(__DIR__."/../../.version", $result[0]['sha']);
 		return Redirect::to('/');
 	}
-	
+
 	public function default_template($practice_id)
 	{
 		$directory = __DIR__.'/../../import/templates';
@@ -960,7 +785,7 @@ class AjaxInstallController extends BaseController {
 		}
 		return "Imported " . $i . " templates." . $error;
 	}
-	
+
 	public function google_upload()
 	{
 		$pid = Session::get('pid');
@@ -982,9 +807,9 @@ class AjaxInstallController extends BaseController {
 		}
 		echo 'Google client JSON file saved!';
 	}
-	
+
 	// Update scripts
-	
+
 	public function update()
 	{
 		$practice = Practiceinfo::find(1);
@@ -1005,7 +830,7 @@ class AjaxInstallController extends BaseController {
 		}
 		return Redirect::to('/');
 	}
-	
+
 	public function update180()
 	{
 		$orderslist1_array = array();
@@ -1282,7 +1107,7 @@ class AjaxInstallController extends BaseController {
 		// Update version
 		DB::table('practiceinfo')->update(array('version' => '1.8.0'));
 	}
-	
+
 	public function update181()
 	{
 		$db_name = $_ENV['mysql_database'];
@@ -1298,7 +1123,7 @@ class AjaxInstallController extends BaseController {
 		// Update version
 		DB::table('practiceinfo')->update($practiceinfo_data);
 	}
-	
+
 	public function update182()
 	{
 		// Fix template numbering bug
@@ -1347,7 +1172,7 @@ class AjaxInstallController extends BaseController {
 		// Update version
 		DB::table('practiceinfo')->update($practiceinfo_data);
 	}
-	
+
 	public function update183()
 	{
 		// Update ICD9 database
@@ -1364,7 +1189,7 @@ class AjaxInstallController extends BaseController {
 		// Update version
 		DB::table('practiceinfo')->update($practiceinfo_data);
 	}
-	
+
 	public function update184()
 	{
 		set_time_limit(0);
@@ -1382,7 +1207,7 @@ class AjaxInstallController extends BaseController {
 		// Update version
 		DB::table('practiceinfo')->update($practiceinfo_data);
 	}
-	
+
 	public function postResetDatabase()
 	{
 		$db_name = $_ENV['mysql_database'];
@@ -1434,6 +1259,8 @@ class AjaxInstallController extends BaseController {
 			$this->deltree($directory, false);
 		}
 		DB::table('demographics')->truncate();
+		DB::table('demographics_notes')->truncate();
+		DB::table('demographics_relate')->truncate();
 		DB::table('documents')->truncate();
 		DB::table('encounters')->truncate();
 		DB::table('era')->truncate();
@@ -1479,6 +1306,8 @@ class AjaxInstallController extends BaseController {
 		DB::table('tags_relate')->truncate();
 		DB::table('tests')->truncate();
 		DB::table('t_messages')->truncate();
+		DB::table('uma')->truncate();
+		DB::table('uma_invitation')->truncate();
 		DB::table('users')->truncate();
 		DB::table('vaccine_inventory')->truncate();
 		DB::table('vaccine_temp')->truncate();

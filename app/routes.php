@@ -195,6 +195,7 @@ Route::any('uma_invitation_request', array('as' => 'uma_invitation_request', 'be
 Route::get('uma_auth', array('as' => 'uma_auth', 'uses' => 'LoginController@uma_auth'));
 Route::get('uma_register_client', array('as' => 'uma_register_client', 'uses' => 'LoginController@uma_register_client'));
 Route::get('uma_get_refresh_token', array('as' => 'uma_get_refresh_token', 'uses' => 'LoginController@uma_get_refresh_token'));
+Route::any('uma_patient_centric', array('as' => 'uma_patient_centric', 'uses' => 'InstallController@uma_patient_centric'));
 Route::get('reset_demo', array('as' => 'reset_demo', 'uses' => 'LoginController@reset_demo'));
 Route::group(array('prefix' => 'uma_api'), function()
 {
@@ -507,7 +508,7 @@ Route::filter('auth.basic', function()
 Route::filter('auth.token', function()
 {
 	$payload = Request::header('Authorization');
-	$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+	$open_id_url = str_replace('/nosh', '/', URL::to('/'));
 	$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 	$client_id = $practice->uma_client_id;
 	$client_secret = $practice->uma_client_secret;
@@ -520,8 +521,22 @@ Route::filter('auth.token', function()
 		if ($result_rpt['active'] == false) {
 			// Inactive RPT, Request Permission Ticket
 			$url = Request::url();
+			// Remove parameters if it exists
+			$url_array = explode('?', $url);
+			$url = $url_array[0];
+			// Trim any trailing Slashes
+			$url = rtrim($url, '/');
+			// Check if end fragment of URL is an integer and strip it out
+			$path = parse_url($url, PHP_URL_PATH);
+			$pathFragments = explode('/', $path);
+			$end = end($pathFragments);
+			if (is_numeric($end)) {
+				$pathFragments1 = explode('/', $url);
+				$sliced = array_slice($pathFragments1, 0, -1);
+				$url = implode('/', $sliced);
+			}
 			$query = DB::table('uma')->where('scope', '=', $url)->first();
-			$as_uri = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+			$as_uri = str_replace('/nosh', '/', URL::to('/'));
 			$header = [
 				'WWW-Authenticate' => 'UMA realm="pNOSH_UMA", as_uri="' . $as_uri . '"'
 			];
@@ -557,8 +572,22 @@ Route::filter('auth.token', function()
 	} else {
 		// No RPT, Request Permission Ticket
 		$url = Request::url();
+		// Remove parameters if it exists
+		$url_array = explode('?', $url);
+		$url = $url_array[0];
+		// Trim any trailing Slashes
+		$url = rtrim($url, '/');
+		// Check if end fragment of URL is an integer and strip it out
+		$path = parse_url($url, PHP_URL_PATH);
+		$pathFragments = explode('/', $path);
+		$end = end($pathFragments);
+		if (is_numeric($end)) {
+			$pathFragments1 = explode('/', $url);
+			$sliced = array_slice($pathFragments1, 0, -1);
+			$url = implode('/', $sliced);
+		}
 		$query = DB::table('uma')->where('scope', '=', $url)->first();
-		$as_uri = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$as_uri = str_replace('/nosh', '/', URL::to('/'));
 		$header = [
 			'WWW-Authenticate' => 'UMA realm = "pNOSH_UMA", as_uri = "' . $as_uri . '"'
 		];

@@ -769,7 +769,7 @@ class OpenIDConnectClient
 	 *
 	 * @throws OpenIDConnectClientException
 	 */
-	public function register($uma=false) {
+	public function register($uma=false,$rs=false) {
 		if ($uma == false) {
 			$registration_endpoint = $this->getProviderConfigValue('registration_endpoint');
 			$send_array = (object)array(
@@ -779,21 +779,38 @@ class OpenIDConnectClient
 			);
 		} else {
 			$registration_endpoint = $this->getProviderConfigValue('dynamic_client_endpoint', $uma);
-			$send_array = (object)array(
-				'redirect_uris' => array($this->getRedirectURL(),
-					str_replace('uma_auth', 'uma_api', $this->getRedirectURL())
-				),
-				'client_name' => $this->getClientName(),
-				'logo_uri' => 'https://www.noshchartingsystem.com/SAAS-Logo.jpg',
-				'claims_redirect_uris' => array($this->getRedirectURL())
-			);
+			if ($rs == true) {
+				$send_array = (object)array(
+					'redirect_uris' => array(
+						$this->getRedirectURL(),
+						str_replace('uma_auth', 'uma_api', $this->getRedirectURL()),
+						str_replace('uma_auth', 'oidc', $this->getRedirectURL()),
+						str_replace('uma_auth', 'fhir', $this->getRedirectURL()),
+						str_replace('uma_auth', 'fhir/oidc', $this->getRedirectURL()),
+						str_replace('uma_auth', 'uma_logout', $this->getRedirectURL()),
+						str_replace('uma_auth', 'uma_patient_centric', $this->getRedirectURL())
+					),
+					'client_name' => $this->getClientName(),
+					'logo_uri' => 'https://www.noshchartingsystem.com/SAAS-Logo.jpg',
+					'claims_redirect_uris' => array($this->getRedirectURL())
+				);
+			} else {
+				$send_array = (object)array(
+					'redirect_uris' => array($this->getRedirectURL(),
+						str_replace('uma_auth', 'uma_api', $this->getRedirectURL())
+					),
+					'client_name' => $this->getClientName(),
+					'logo_uri' => 'https://www.noshchartingsystem.com/SAAS-Logo.jpg',
+					'claims_redirect_uris' => array($this->getRedirectURL())
+				);
+			}
 		}
 		// If the client has been registered with additional scopes
 		if (sizeof($this->grant_types) > 0) {
 			$send_array = array_merge($send_array, array('grant_types' => $this->grant_types));
 		}
 		if (sizeof($this->scopes) > 0) {
-			$auth_params = array_merge($auth_params, array('scope' => implode(' ', $this->scopes)));
+			$send_array = array_merge($send_array, array('scope' => implode(' ', $this->scopes)));
 		}
 		$send_object = (object) $send_array;
 		$response = $this->fetchURL($registration_endpoint, json_encode($send_object));
@@ -949,7 +966,7 @@ class OpenIDConnectClient
 			'icon_uri' => $icon,
 			'scopes' => $scopes
 		);
-		$response = $this->fetchURL($resource_set_endpoint . '/resource_set', json_encode($send_object), $this->accessToken);
+		$response = $this->fetchURL($resource_set_endpoint, json_encode($send_object), $this->accessToken);
 		//$json_response = json_decode($response);
 		$json_response = json_decode($response);
 		// Throw some errors if we encounter them
@@ -970,7 +987,7 @@ class OpenIDConnectClient
 		$send_object = (object)array(
 			'resource_set_id' => $id
 		);
-		$response = $this->fetchURL($resource_set_endpoint . '/resource_set/' . $id, json_encode($send_object), $this->accessToken, 'DELETE');
+		$response = $this->fetchURL($resource_set_endpoint . '/' . $id, json_encode($send_object), $this->accessToken, 'DELETE');
 		$json_response = json_decode($response);
 		if ($json_response === false) {
 			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
@@ -991,7 +1008,7 @@ class OpenIDConnectClient
 			'icon_uri' => $icon,
 			'scopes' => $scopes
 		);
-		$response = $this->fetchURL($resource_set_endpoint . '/resource_set/' . $id, json_encode($send_object), $this->accessToken, 'PUT');
+		$response = $this->fetchURL($resource_set_endpoint . '/' . $id, json_encode($send_object), $this->accessToken, 'PUT');
 		$json_response = json_decode($response);
 		if ($json_response === false) {
 			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
@@ -1004,6 +1021,88 @@ class OpenIDConnectClient
 		$return['user_access_policy_uri'] = $json_response->{'user_access_policy_uri'};
 		return $return;
 	}
+
+	public function get_resources($client_id) {
+		$resource_set_endpoint = $this->getProviderConfigValue('resource_set_registration_endpoint',true);
+		$return = json_decode($this->fetchURL($resource_set_endpoint, null, $this->accessToken, null), true);
+		return $return;
+	}
+
+	/**
+	 * UMA - Policy
+	 * $permissions is array such as
+	 * $permissions[] = [
+	 * 	'claim' => 'person@email.com',
+	 *	'scopes' => ['scope1', 'scope2' 'scope3']
+ 	 * ];
+	 *
+	 * @throws OpenIDConnectClientException
+	 */
+	public function policy($resource_set_id, $permissions) {
+		$policy_endpoint = $this->getProviderConfigValue('policy_endpoint',true);
+		$send_object = (object)array(
+			'resourceId' => $resource_set_id,
+			'permissions' => $permissions
+		);
+		$response = $this->fetchURL($policy_endpoint, json_encode($send_object), $this->accessToken);
+		//$json_response = json_decode($response);
+		$json_response = json_decode($response);
+		// Throw some errors if we encounter them
+		if ($json_response === false) {
+			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
+		} elseif (isset($json_response->{'error_description'})) {
+			$return['error'] = $json_response->{'error'};
+			$return['error_description'] = $json_response->{'error_description'};
+			throw new OpenIDConnectClientException($json_response->{'error_description'});
+		}
+		$return['message'] = 'Policy with ID ' . $json_response->{'_id'} . ' added';
+		return $return;
+	}
+
+	public function delete_policy($id, $resource_set_id) {
+		$policy_endpoint = $this->getProviderConfigValue('policy_endpoint',true);
+		$send_object = (object)array(
+			'resourceId' => $resource_set_id,
+		);
+		$response = $this->fetchURL($policy_endpoint . '/' . $id, json_encode($send_object), $this->accessToken, 'DELETE');
+		$json_response = json_decode($response);
+		if ($json_response === false) {
+			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
+		} elseif (isset($json_response->{'code'})) {
+			$return['error'] = $json_response->{'reason'};
+			$return['error_description'] = $json_response->{'message'};
+			throw new OpenIDConnectClientException($json_response->{'message'});
+		}
+		$return['message'] = 'Policy Deleted';
+		return $return;
+	}
+
+	public function update_policy($id, $resource_set_id, $permissions) {
+		$policy_endpoint = $this->getProviderConfigValue('policy_endpoint',true);
+		$send_object = (object)array(
+			'resourceId' => $resource_set_id,
+			'permissions' => $permissions
+		);
+		$response = $this->fetchURL($policy_endpoint . '/' . $id, json_encode($send_object), $this->accessToken, 'PUT');
+		$json_response = json_decode($response);
+		if ($json_response === false) {
+			throw new OpenIDConnectClientException("Error registering: JSON response received from the server was invalid.");
+		} elseif (isset($json_response->{'code'})) {
+			$return['error'] = $json_response->{'reason'};
+			$return['error_description'] = $json_response->{'message'};
+			throw new OpenIDConnectClientException($json_response->{'message'});
+		}
+		$return['message'] = 'Policy Updated';
+		return $return;
+	}
+
+	public function get_policy($resource_set_id) {
+		$policy_endpoint = $this->getProviderConfigValue('policy_endpoint',true);
+		$policy_endpoint .= "?resourceId=" . $resource_set_id;
+		$return = json_decode($this->fetchURL($policy_endpoint, null, $this->accessToken, null), true);
+		return $return;
+	}
+
 
 	/**
 	 * UMA - Permission Request

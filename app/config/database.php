@@ -84,17 +84,6 @@ return array(
 			'collation' => 'utf8_general_ci',
 			'prefix'    => '',
 		),
-		
-		'oic' => array(
-			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'oic_production',
-			'username'  => $username,
-			'password'  => $password,
-			'charset'   => 'latin1',
-			'collation' => 'latin1_general_ci',
-			'prefix'    => '',
-		),
 
 		'pgsql' => array(
 			'driver'   => 'pgsql',

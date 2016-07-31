@@ -27,22 +27,22 @@
 		<script type="text/javascript">
 			document.documentElement.className = 'js';
 			var noshdata = {
-				'user_id': '<?php echo Session::get('user_id'); ?>',
+				'user_id': '<?php echo Session::get("user_id"); ?>',
 				'pid': '',
 				'eid': '',
 				'job_id': '',
-				'practice_id': '<?php echo Session::get('practice_id'); ?>',
+				'practice_id': '<?php echo Session::get("practice_id"); ?>',
 				't_messages_id': '',
 				'alert_id': '',
-				'group_id': '<?php echo Session::get('group_id'); ?>',
-				'calendar': '<?php echo asset('images/calendar.gif','Calendar', array('border' => '0')); ?>',
-				'error': '<?php echo route('home'); ?>',
+				'group_id': '<?php echo Session::get("group_id"); ?>',
+				'calendar': '<?php echo asset("images/calendar.gif","Calendar", array("border" => "0")); ?>',
+				'error': '<?php echo route("home"); ?>',
 				'path': "/<?php $path = explode('/', route('home')); echo $path[3];?>/js/",
-				'logout_url': '<?php echo route('logout'); ?>',
-				'login_url': '<?php echo route('home'); ?>',
-				'images': '<?php echo url('images'); ?>/',
+				'logout_url': '<?php echo route("logout"); ?>',
+				'login_url': '<?php echo route("home"); ?>',
+				'images': '<?php echo url("images"); ?>/',
 				'default_pos': '',
-				'displayname': '<?php echo Session::get('displayname'); ?>',
+				'displayname': '<?php echo Session::get("displayname"); ?>',
 				'encounter_active': '',
 				'age': '',
 				'agealldays': '',
@@ -58,8 +58,8 @@
 				'filename': '',
 				'pending_orders_id': '',
 				'pending_orders_id1': '',
-				'item_present': '<?php echo HTML::image('images/button_accept.png', 'Status', array('border' => '0', 'height' => '15', 'width' => '15', 'style' => 'vertical-align:middle;'));?>',
-				'item_empty': '<?php echo HTML::image('images/cancel.png', 'Status', array('border' => '0', 'height' => '15', 'width' => '15', 'style' => 'vertical-align:middle;'));?>',
+				'item_present': '<?php echo HTML::image("images/button_accept.png", "Status", array("border" => "0", "height" => "15", "width" => "15", "style" => "vertical-align:middle;"));?>',
+				'item_empty': '<?php echo HTML::image("images/cancel.png", "Status", array("border" => "0", "height" => "15", "width" => "15", "style" => "vertical-align:middle;"));?>',
 				'mtm': '',
 				'old_text': '',
 				'label_text': '',
@@ -70,7 +70,7 @@
 				'notification_appt': '',
 				'notification_alert': '',
 				'messaging_dialog_load' : 0,
-				'patient_centric' : '<?php echo Session::get('patient_centric'); ?>'
+				'patient_centric' : '<?php echo Session::get("patient_centric"); ?>'
 			};
 			var medcache = {};
 			var medcache1 = {};

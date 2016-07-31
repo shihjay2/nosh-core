@@ -5,7 +5,7 @@ class AjaxCommonController extends BaseController {
 	/**
 	* NOSH ChartingSystem Common Chart Ajax public functions
 	*/
-	
+
 	public function postEncounters()
 	{
 		$practice_id = Session::get('practice_id');
@@ -23,10 +23,10 @@ class AjaxCommonController extends BaseController {
 			$query->where('encounter_signed', '=', 'Yes');
 		}
 		$result = $query->get();
-		if($result) { 
+		if($result) {
 			$count = count($result);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -47,7 +47,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postIssues()
 	{
 		$pid = Session::get('pid');
@@ -56,7 +56,7 @@ class AjaxCommonController extends BaseController {
 		$index_arr = explode(', ', Input::get('sidx'));
 		$group_arr = explode(' ', $index_arr[0]);
 		$group_type = $group_arr[0];
-		
+
 		if ($group_arr[1] == 'asc') {
 			$group_sort = SORT_ASC;
 		} else {
@@ -74,17 +74,17 @@ class AjaxCommonController extends BaseController {
 			->where('pid', '=', $pid)
 			->where('issue_date_inactive', '=', '0000-00-00 00:00:00')
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
 		if ($page > $total_pages) $page=$total_pages;
-		$start = $limit*$page - $limit; 
+		$start = $limit*$page - $limit;
 		if($start < 0) $start = 0;
-		
+
 		if ($query) {
 			foreach ($query as $key => $value) {
 				$group[$key]  = $value->$group_type;
@@ -101,7 +101,7 @@ class AjaxCommonController extends BaseController {
 		$response['rows'] = $records;
 		echo json_encode($response);
 	}
-	
+
 	public function postIssuesInactive()
 	{
 		$pid = Session::get('pid');
@@ -113,15 +113,15 @@ class AjaxCommonController extends BaseController {
 			->where('pid', '=', $pid)
 			->where('issue_date_inactive', '!=', '0000-00-00 00:00:00')
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
 		if ($page > $total_pages) $page=$total_pages;
-		$start = $limit*$page - $limit; 
+		$start = $limit*$page - $limit;
 		if($start < 0) $start = 0;
 		$query1 = DB::table('issues')
 			->where('pid', '=', $pid)
@@ -140,7 +140,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postMedications()
 	{
 		$pid = Session::get('pid');
@@ -153,10 +153,10 @@ class AjaxCommonController extends BaseController {
 			->where('rxl_date_inactive', '=', '0000-00-00 00:00:00')
 			->where('rxl_date_old', '=', '0000-00-00 00:00:00')
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -181,7 +181,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postMedicationsInactive()
 	{
 		$pid = Session::get('pid');
@@ -193,10 +193,10 @@ class AjaxCommonController extends BaseController {
 			->where('pid', '=', $pid)
 			->where('rxl_date_inactive', '!=', '0000-00-00 00:00:00')
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -220,7 +220,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postSupplements()
 	{
 		$pid = Session::get('pid');
@@ -232,10 +232,10 @@ class AjaxCommonController extends BaseController {
 			->where('pid', '=', $pid)
 			->where('sup_date_inactive', '=', '0000-00-00 00:00:00')
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -259,7 +259,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postSupplementsInactive()
 	{
 		$pid = Session::get('pid');
@@ -271,10 +271,10 @@ class AjaxCommonController extends BaseController {
 			->where('pid', '=', $pid)
 			->where('sup_date_inactive', '!=', '0000-00-00 00:00:00')
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -298,7 +298,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postAllergies()
 	{
 		$pid = Session::get('pid');
@@ -310,10 +310,10 @@ class AjaxCommonController extends BaseController {
 			->where('pid', '=', $pid)
 			->where('allergies_date_inactive', '=', '0000-00-00 00:00:00')
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -337,7 +337,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postAllergiesInactive()
 	{
 		$pid = Session::get('pid');
@@ -349,10 +349,10 @@ class AjaxCommonController extends BaseController {
 			->where('pid', '=', $pid)
 			->where('allergies_date_inactive', '!=', '0000-00-00 00:00:00')
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -376,7 +376,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postImmunizations()
 	{
 		$pid = Session::get('pid');
@@ -387,10 +387,10 @@ class AjaxCommonController extends BaseController {
 		$query = DB::table('immunizations')
 			->where('pid', '=', $pid)
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -413,7 +413,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postDocuments($type)
 	{
 		$type = str_replace('_', ' ', $type);
@@ -421,15 +421,15 @@ class AjaxCommonController extends BaseController {
 		$page = Input::get('page');
 		$limit = Input::get('rows');
 		$sidx = Input::get('sidx');
-		$sord = Input::get('sord'); 
+		$sord = Input::get('sord');
 		$query = DB::table('documents')
 			->where('pid', '=', $pid)
 			->where('documents_type', '=', $type)
 			->get();
-		if($query) { 
+		if($query) {
 			$count = count($query);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -453,7 +453,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postViewDocuments1($id)
 	{
 		$pid = Session::get('pid');
@@ -474,15 +474,15 @@ class AjaxCommonController extends BaseController {
 		$data['id'] = $id;
 		echo json_encode($data);
 	}
-	
+
 	public function postCloseDocument()
 	{
 		unlink(Input::get('document_filepath'));
 		echo 'OK';
 	}
-	
+
 	public function postPatientInstructions($eid)
-	{	
+	{
 		$html = $this->page_plan($eid)->render();
 		$name = "plan_" . time() . "_" . Session::get('user_id') . ".pdf";
 		$data['filepath'] = __DIR__."/../../public/temp/" . $name;
@@ -493,7 +493,7 @@ class AjaxCommonController extends BaseController {
 		$data['html'] = '<iframe src="' . asset('temp/' . $name) . '" width="770" height="425" style="border: none;"></iframe>';
 		echo json_encode($data);
 	}
-	
+
 	public function postFormsGrid()
 	{
 		$pid = Session::get('pid');
@@ -515,10 +515,10 @@ class AjaxCommonController extends BaseController {
 			$query->where('age', '!=', 'adult');
 		}
 		$result = $query->get();
-		if($result) { 
+		if($result) {
 			$count = count($result);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -564,7 +564,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postGetForm($id)
 	{
 		$row = DB::table('templates')->where('template_id', '=', $id)->first();
@@ -572,14 +572,14 @@ class AjaxCommonController extends BaseController {
 		$data['scoring'] = $row->scoring;
 		echo json_encode($data);
 	}
-	
+
 	public function postGetFormData($id)
 	{
 		$row = DB::table('forms')->where('forms_id', '=', $id)->first();
 		$data = unserialize($row->forms_content);
 		echo $data;
 	}
-	
+
 	public function postSaveFormData()
 	{
 		$data = array(
@@ -600,7 +600,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo "Form saved and submitted to your provider!";
 	}
-	
+
 	public function postGrowthChart($style)
 	{
 		$pid = Session::get('pid');
@@ -876,28 +876,28 @@ class AjaxCommonController extends BaseController {
 			exit (0);
 		}
 	}
-	
-	public function cmp($a, $b) 
+
+	public function cmp($a, $b)
 	{
 		return $a["Age"] - $b["Age"];
 	}
-	
-	public function cmp1($a, $b) 
+
+	public function cmp1($a, $b)
 	{
 		if ($a["Length"] == $b["Length"]) {
 			return 0;
 		}
 		return ($a["Length"] < $b["Length"]) ? -1 : 1;
 	}
-	
-	public function cmp2($a, $b) 
+
+	public function cmp2($a, $b)
 	{
 		if ($a["Height"] == $b["Height"]) {
 			return 0;
 		}
 		return ($a["Height"] < $b["Height"]) ? -1 : 1;
 	}
-	
+
 	public function bluebutton($id)
 	{
 		$result = Documents::find($id);
@@ -906,30 +906,30 @@ class AjaxCommonController extends BaseController {
 		$data['js'] = File::get(__DIR__.'/../../public/js/bluebutton1.js');
 		return View::make('bluebutton', $data);
 	}
-	
+
 	public function postOpennotes()
 	{
 		$query = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
 		echo $query->opennotes;
 	}
-	
+
 	public function getModalView2($eid)
 	{
 		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, false);
 	}
-	
+
 	public function getModalView2Mobile($eid)
 	{
 		return $this->encounters_view($eid, Session::get('pid'), Session::get('practice_id'), true, false, true);
 	}
-	
+
 	public function getTmessagesView($t_messages_id)
 	{
 		$row = DB::table('t_messages')->where('t_messages_id', '=', $t_messages_id)->first();
-		$text = '<br><strong>Date:</strong>  ' . date('Y-m-d', $this->human_to_unix($row->t_messages_dos)) . '<br><br><strong>Subject:</strong>  ' . $row->t_messages_subject . '<br><br><strong>Message:</strong> ' . $row->t_messages_message; 
+		$text = '<br><strong>Date:</strong>  ' . date('Y-m-d', $this->human_to_unix($row->t_messages_dos)) . '<br><br><strong>Subject:</strong>  ' . $row->t_messages_subject . '<br><br><strong>Message:</strong> ' . $row->t_messages_message;
 		return $text;
 	}
-	
+
 	public function checkapi($practicehandle)
 	{
 		if ($practicehandle == '0') {
@@ -945,7 +945,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo $result;
 	}
-	
+
 	public function registerapi()
 	{
 		if (Input::get('practicehandle') == '0') {
@@ -1042,7 +1042,7 @@ class AjaxCommonController extends BaseController {
 		$this->audit('Update');
 		return $return;
 	}
-	
+
 	public function postPracticeApi()
 	{
 		$url_check = false;
@@ -1112,12 +1112,12 @@ class AjaxCommonController extends BaseController {
 			$return['status'] = 'y';
 			$return['message'] = 'Practice added with NOSH integration.';
 			$return['message'] .= '  Response from server: ' . $result['status'];
-			$return['url'] = Input::get('practice_url'); 
+			$return['url'] = Input::get('practice_url');
 		}
 		//$this->send_mail('emails.apiregister', $data_message, 'NOSH ChartingSystem API Registration', Input::get('email'), '1');
 		echo json_encode($return);
 	}
-	
+
 	public function postConnectedPractices()
 	{
 		$pid = Session::get('pid');
@@ -1127,10 +1127,10 @@ class AjaxCommonController extends BaseController {
 		$sord = Input::get('sord');
 		$query = DB::table('practiceinfo')->where('patient_centric', '=', 'yp');
 		$result = $query->get();
-		if($result) { 
+		if($result) {
 			$count = count($result);
-			$total_pages = ceil($count/$limit); 
-		} else { 
+			$total_pages = ceil($count/$limit);
+		} else {
 			$count = 0;
 			$total_pages = 0;
 		}
@@ -1151,7 +1151,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo json_encode($response);
 	}
-	
+
 	public function postMobileFormAction($table, $action, $row_id, $row_index)
 	{
 		$date_convert_array = array(
@@ -1303,13 +1303,13 @@ class AjaxCommonController extends BaseController {
 		$arr['response'] = 'OK';
 		echo json_encode($arr);
 	}
-	
+
 	public function postGetProviderNosh()
 	{
 		$query = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
 		echo $query->practice_api_url;
 	}
-	
+
 	public function postGetPatientResources()
 	{
 		$query = DB::table('uma')->groupBy('resource_set_id')->get();
@@ -1369,7 +1369,7 @@ class AjaxCommonController extends BaseController {
 		}
 		echo $html;
 	}
-	
+
 	public function postGetPatientResources1()
 	{
 		$query = DB::table('uma')->groupBy('resource_set_id')->get();
@@ -1377,7 +1377,7 @@ class AjaxCommonController extends BaseController {
 		if ($query) {
 			$i = 0;
 			$row_id = '';
-			foreach ($query as $row) { 
+			foreach ($query as $row) {
 				if ($row->resource_set_id != $row_id) {
 					$name_arr = explode('/', $row->scope);
 					$name = $name_arr[5];
@@ -1422,13 +1422,13 @@ class AjaxCommonController extends BaseController {
 		}
 		echo $html;
 	}
-	
+
 	public function postGetPatientResourceUsers($resource_set_id)
 	{
 		$result = $this->get_uma_policy($resource_set_id);
 		echo $result;
 	}
-	
+
 	public function postSendUmaInvite()
 	{
 		$resource_set_ids = implode(',', Input::get('resources'));
@@ -1444,23 +1444,34 @@ class AjaxCommonController extends BaseController {
 		$mesg  = $this->send_mail('emails.apiregister', $data_message, 'URGENT: Invitation to access the personal electronic medical record of ' . Session::get('displayname'), Input::get('email'), '1');
 		echo 'Invitation sent to ' . Input::get('email') . '!';
 	}
-	
+
 	public function postRemovePatientResourceUser()
 	{
-		$query = DB::connection('oic')->table('claim_to_policy')->where('policy_id', '=', Input::get('policy_id'))->get();
-		foreach ($query as $row) {
-			DB::connection('oic')->table('claim')->where('id', '=', $row->claim_id)->delete();
-			DB::connection('oic')->table('claim_to_policy')->where('policy_id', '=', Input::get('policy_id'))->where('claim_id', '=', $row->claim_id)->delete();
-		}
-		DB::connection('oic')->table('policy')->where('id', '=', Input::get('policy_id'))->delete();
-		DB::connection('oic')->table('policy_scope')->where('owner_id', '=', Input::get('policy_id'))->delete();
+		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $practice->uma_client_id;
+		$client_secret = $practice->uma_client_secret;
+		$refresh_token = $practice->uma_refresh_token;
+		$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc1->refresh($refresh_token,true);
+		$response = $oidc1->delete_policy(Input::get('policy_id'));
 		$result = $this->get_uma_policy(Input::get('resource_set_id'));
 		echo $result;
 	}
-	
+
 	public function postEditPolicy()
 	{
-		$result['message'] = $this->uma_policy(Input::get('resource_set_id'),Input::get('email'),Input::get('scopes'),Input::get('policy_id'));
+		$scopes = explode(' ', Input::get('scopes'));
+		if (Input::get('action') == 'edit') {
+			$scopes[] = 'edit';
+		}
+		if (Input::get('action') == 'show') {
+			$key = array_search('edit', $scopes);
+			if($key!==false){
+			    unset($scopes[$key]);
+			}
+		}
+		$result['message'] = $this->uma_policy(Input::get('resource_set_id'),Input::get('email'),$scopes,Input::get('policy_id'));
 		$result['html'] = $this->get_uma_policy(Input::get('resource_set_id'));
 		echo json_encode($result);
 	}

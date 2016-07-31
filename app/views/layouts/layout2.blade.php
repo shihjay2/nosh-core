@@ -27,21 +27,21 @@
 		<script type="text/javascript">
 			document.documentElement.className = 'js';
 			var noshdata = {
-				'user_id': '<?php echo Session::get('user_id'); ?>',
+				'user_id': '<?php echo Session::get("user_id"); ?>',
 				'pid': '',
 				'eid': '',
 				'job_id': '',
-				'practice_id': '<?php echo Session::get('practice_id'); ?>',
+				'practice_id': '<?php echo Session::get("practice_id"); ?>',
 				't_messages_id': '',
 				'alert_id': '',
-				'group_id': '<?php echo Session::get('group_id'); ?>',
-				'calendar': '<?php echo asset('images/calendar.gif','Calendar', array('border' => '0')); ?>',
-				'error': '<?php echo route('home'); ?>',
+				'group_id': '<?php echo Session::get("group_id"); ?>',
+				'calendar': '<?php echo asset("images/calendar.gif","Calendar", array("border" => "0")); ?>',
+				'error': '<?php echo route("home"); ?>',
 				'path': "/<?php $path = explode('/', route('home')); echo $path[3];?>/js/",
-				'logout_url': '<?php echo route('logout'); ?>',
-				'login_url': '<?php echo route('home'); ?>',
+				'logout_url': '<?php echo route("logout"); ?>',
+				'login_url': '<?php echo route("home"); ?>',
 				'login_shake': '',
-				'images': '<?php echo url('images'); ?>/',
+				'images': '<?php echo url("images"); ?>/',
 				'weekends': '',
 				'minTime': '',
 				'maxTime': '',
@@ -56,7 +56,7 @@
 				'mtm_extension': '',
 				'hedis': '',
 				'messaging_dialog_load' : 0,
-				'patient_centric' : '<?php echo Session::get('patient_centric'); ?>'
+				'patient_centric' : '<?php echo Session::get("patient_centric"); ?>'
 			};
 			var gender = {"m":"Male","f":"Female","u":"Undifferentiated"};
 			var marital = {"":"","Single":"Single","Married":"Married","Common law":"Common law","Domestic partner":"Domestic partner","Registered domestic partner":"Registered domestic partner","Interlocutory":"Interlocutory","Living together":"Living together","Legally Separated":"Legally Separated","Divorced":"Divorced","Separated":"Separated","Widowed":"Widowed","Other":"Other","Unknown":"Unknown","Unmarried":"Unmarried","Unreported":"Unreported"};

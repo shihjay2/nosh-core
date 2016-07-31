@@ -9550,7 +9550,7 @@ class BaseController extends Controller {
 
 	protected function uma_resource_set($url, $name = null, $icon = null, $scopes = null)
 	{
-		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
@@ -9568,7 +9568,7 @@ class BaseController extends Controller {
 
 	protected function uma_permission_request($resource_set_id = null, $scopes = null)
 	{
-		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
@@ -9580,7 +9580,7 @@ class BaseController extends Controller {
 
 	protected function uma_introspect($token)
 	{
-		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
@@ -9626,7 +9626,7 @@ class BaseController extends Controller {
 		return $return;
 	}
 
-	protected function uma_users()
+	protected function old_uma_users()
 	{
 		$query = DB::table('users')->where('id', '=', Session::get('user_id'))->first();
 		$query1 = DB::connection('oic')->table('user_info')->where('sub', '!=', $query->uid)->get();
@@ -9640,7 +9640,7 @@ class BaseController extends Controller {
 		return $return;
 	}
 
-	protected function uma_scopes($resource_set_id)
+	protected function old_uma_scopes($resource_set_id)
 	{
 		$query = DB::table('uma')->where('resource_set_id', '=', $resource_set_id)->get();
 		$html = '';
@@ -9658,6 +9658,64 @@ class BaseController extends Controller {
 	}
 
 	protected function get_uma_policy($resource_set_id)
+	{
+		// $user_data = $this->uma_users();
+		// $html = '<form id="uma_form" class="pure-form pure-form-stacked"><input name="resource_set_id" id="uma_resource_set_id" type="hidden" value="' . $resource_set_id . '"/><label for="uma_email">Add a user with the following scopes for this resource:</label>';
+		// $html .= Form::select('email', $user_data, null, array('id'=>'uma_email','style'=>'width:300px','class'=>'text'));
+		// $html .= $this->uma_scopes($resource_set_id);
+		// $html .= '</form><i id="add_uma_policy_user" class="fa fa-plus fa-fw fa-2x add_uma_user nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add permitted user to this resource" nosh-id="' . $resource_set_id . '"></i>Add User<br>';
+		$html = '';
+		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $practice->uma_client_id;
+		$client_secret = $practice->uma_client_secret;
+		$refresh_token = $practice->uma_refresh_token;
+		$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc1->refresh($refresh_token,true);
+		$response = $oidc1->get_policy($resource_set_id);
+		$uma_scope_array = [
+			'show' => 'View',
+			'edit' => 'Edit'
+		];
+		if ($response[0]['email']) {
+			$html .= '<table class="pure-table pure-table-horizontal"><thead><tr><th>User</th><th>Permssions</th><th>Last Activity</th><th>Action</th></tr></thead>';
+			foreach ($response as $row) {
+				if ($row['name'] == '') {
+					$name = $row['email'];
+				} else {
+					$name = $row['name'] . ' (' . $row['email'] . ')';
+				}
+				$html .= '<tr><td>' . $name . '</td><td><td>';
+				$permissions = '';
+				$raw_permissions = implode(' ', $row['scopes']);
+				foreach ($row['scopes'] as $scope) {
+					if (array_key_exists($scope, $uma_scope_array)) {
+						if ($permissions != '') {
+							$permissions .= ', ';
+						}
+						$permissions .= $uma_scope_array[$scope];
+					}
+				}
+				$html .= '</td><td>';
+				if ($row['last_activity'] !== '') {
+					$last_activity = date("Y-m-d",$row['last_activity']);
+				} else {
+					$last_activity = 'No previous activity';
+				}
+				$html .= $last_activity . '</td><td>';
+				if ($permissions == 'view') {
+					$html .= '<i class="fa fa-plus fa-fw fa-2x add_uma_policy_user nosh_tooltip" style="vertical-align:middle;padding:2px" title="Allow this user to edit this resource" nosh-email="' . $row['email'] . '" nosh-resource-set-id="' . $resource_set_id . '" nosh-policy-id="' . $row['policy_id'] . '" nosh-name="' . $name . '" . nosh-scopes="' . $raw_permissions . '"></i>';
+				} else {
+					$html .= '<i class="fa fa-minus fa-fw fa-2x remove_uma_policy_user nosh_tooltip" style="vertical-align:middle;padding:2px" title="Prevent user from editing this resource" nosh-email="' . $row['email'] . '" nosh-resource-set-id="' . $resource_set_id . '" nosh-policy-id="' . $row['policy_id'] . '" nosh-name="' . $name . '" . nosh-scopes="' . $raw_permissions . '"></i>';
+				}
+				$html .= '<i class="fa fa-times fa-fw fa-2x remove_uma_user nosh_tooltip" style="vertical-align:middle;padding:2px" title="Remove all permissions for this user to access this resource" nosh-sub="' . $row['email'] . '" nosh-resource-set-id="' . $resource_set_id . '" nosh-policy-id="' . $row['policy_id']. '" nosh-name="' . $name . '" . nosh-scopes="' . $raw_permissions . '"></i></td></tr>';
+			}
+			$html .= '</table>';
+		}
+		return $html;
+	}
+
+	protected function old_get_uma_policy($resource_set_id)
 	{
 		$query = DB::connection('oic')->table('policy')->where('resource_set_id', '=', $resource_set_id)->get();
 		$user_data = $this->uma_users();
@@ -9686,6 +9744,39 @@ class BaseController extends Controller {
 	}
 
 	protected function uma_policy($resource_set_id, $email, $scopes, $policy_id='')
+	{
+		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$client_id = $practice->uma_client_id;
+		$client_secret = $practice->uma_client_secret;
+		$refresh_token = $practice->uma_refresh_token;
+		$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc1->refresh($refresh_token,true);
+		$permissions = [
+			'claim' => $email,
+			'scopes' => $scopes
+		];
+		if ($policy_id == '') {
+			$response = $oidc1->policy($resource_set_id, $permissions);
+		} else {
+			$response = $oidc1->update_policy($policy_id, $resource_set_id, $permissions);
+		}
+		if (isset($response['resource_set_id'])) {
+			foreach ($resource_set_array['scopes'] as $scope_item) {
+				$response_data1 = array(
+					'resource_set_id' => $response['resource_set_id'],
+					'scope' => $scope_item,
+					'user_access_policy_uri' => $response['user_access_policy_uri'],
+					'table_id' => $id,
+					'table' => $table
+				);
+				DB::table('uma')->insert($response_data1);
+				$this->audit('Add');
+			}
+		}
+	}
+
+	protected function old_uma_policy($resource_set_id, $email, $scopes, $policy_id='')
 	{
 		$query = DB::connection('oic')->table('user_info')->where('email', '=', $email)->first();
 		if ($query) {
@@ -9834,7 +9925,7 @@ class BaseController extends Controller {
 				)
 			);
 		}
-		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;

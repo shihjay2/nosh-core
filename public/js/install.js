@@ -38,7 +38,7 @@ $(document).ready(function() {
 		var bValid = true;
 		$("#install").find("[required]").each(function() {
 			var input_id = $(this).attr('id');
-			var id1 = $("#" + input_id); 
+			var id1 = $("#" + input_id);
 			var text = $("label[for='" + input_id + "']").html();
 			bValid = bValid && checkEmpty(id1, text);
 			if (input_id == 'email') {
@@ -78,7 +78,7 @@ $(document).ready(function() {
 		var bValid = true;
 		$("#install_patient_form").find("[required]").each(function() {
 			var input_id = $(this).attr('id');
-			var id1 = $("#" + input_id); 
+			var id1 = $("#" + input_id);
 			var text = $("label[for='" + input_id + "']").html();
 			bValid = bValid && checkEmpty(id1, text);
 			if (input_id == 'email1') {
@@ -121,7 +121,7 @@ $(document).ready(function() {
 						if (data != 'OK') {
 							$.jGrowl(data);
 						} else {
-							window.location = noshdata.url;
+							window.location = noshdata.url_patient_centric;
 						}
 					}
 				});
@@ -130,11 +130,11 @@ $(document).ready(function() {
 			}
 		}
 	});
-	$("#install_choose_dialog").dialog({ 
-		bgiframe: true, 
-		autoOpen: false, 
-		height: 200, 
-		width: 450, 
+	$("#install_choose_dialog").dialog({
+		bgiframe: true,
+		autoOpen: false,
+		height: 200,
+		width: 450,
 		draggable: false,
 		resizable: false,
 		closeOnEscape: false,

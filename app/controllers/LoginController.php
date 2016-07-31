@@ -6,9 +6,9 @@ class LoginController extends BaseController {
 	/**
 	* Authentication of users
 	*/
-	
+
 	protected $layout = 'layouts.layout2';
-	
+
 	public function action()
 	{
 		$errors = new MessageBag();
@@ -113,7 +113,7 @@ class LoginController extends BaseController {
 			}
 		}
 	}
-	
+
 	public function logout()
 	{
 		Auth::logout();
@@ -124,14 +124,14 @@ class LoginController extends BaseController {
 		$this->layout->script = $this->js_assets('base');
 		$this->layout->content = View::make('logout');
 	}
-	
+
 	public function oidc_register_client()
 	{
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		if ($practice->patient_centric == 'y') {
 			$patient = DB::table('demographics')->first();
 			$dob = date('m/d/Y', strtotime($patient->DOB));
-			$client_name = 'PatientNOSH for ' . $patient->firstname . ' ' . $patient->lastname . ' (DOB: ' . $dob . ')'; 
+			$client_name = 'PatientNOSH for ' . $patient->firstname . ' ' . $patient->lastname . ' (DOB: ' . $dob . ')';
 		} else {
 			$client_name = 'PracticeNOSH for ' . $practice->practice_name;
 		}
@@ -151,13 +151,13 @@ class LoginController extends BaseController {
 		$this->audit('Update');
 		return Redirect::intended('/');
 	}
-	
+
 	public function oidc_check_patient_centric()
 	{
 		$query = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		echo $query->patient_centric;
 	}
-	
+
 	public function oidc()
 	{
 		$open_id_url = 'https://noshchartingsystem.com/openid-connect-server-webapp/';
@@ -380,7 +380,7 @@ class LoginController extends BaseController {
 			}
 		}
 	}
-	
+
 	public function oidc_api()
 	{
 		//$client_id = '5b8e4e18-fbfa-4ef2-8e49-074e571be425';
@@ -435,7 +435,7 @@ class LoginController extends BaseController {
 		}
 		return Response::json($response, $statusCode);
 	}
-	
+
 	public function practice_choose()
 	{
 		if (Input::server("REQUEST_METHOD") == "POST") {
@@ -570,7 +570,7 @@ class LoginController extends BaseController {
 			}
 		}
 	}
-	
+
 	public function uma_invitation_request()
 	{
 		$this->layout->style = $this->css_assets();
@@ -580,11 +580,11 @@ class LoginController extends BaseController {
 		Session::put('version', $practice->version);
 		$this->layout->content = View::make('uma_invitation_request', $arr);
 	}
-	
+
 	// Patient-centric, UMA login
 	public function uma_auth()
 	{
-		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
@@ -620,98 +620,6 @@ class LoginController extends BaseController {
 			//$user = User::where('firstname', '=', $firstname)->where('email', '=', $email)->where('lastname', '=', $lastname)->where('active', '=', '1')->first();
 		}
 		if ($user) {
-			// Add refresh token, if there is one
-			if ($oidc->getRefreshToken() != '') {
-				$refresh_data['uma_refresh_token'] = $oidc->getRefreshToken();
-				DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
-				// Register scopes, if none are set yet
-				$uma = DB::table('uma')->first();
-				if (!$uma) {
-					$resource_set_array[] = array(
-						'name' => 'Patient',
-						'icon' => 'https://noshchartingsystem.com/i-patient.png',
-						'scopes' => array(
-							URL::to('/') . '/fhir/Patient/1',
-							URL::to('/') . '/fhir/Patient?identifier=1',
-							URL::to('/') . '/fhir/Patient?_id=1',
-							URL::to('/') . '/fhir/Medication',
-							URL::to('/') . '/fhir/Practitioner'
-						)
-					);
-					$resource_set_array[] = array(
-						'name' => 'Condition',
-						'icon' => 'https://noshchartingsystem.com/i-condition.png',
-						'scopes' => array(
-							URL::to('/') . '/fhir/Condition/?subject:Patient=1'
-						)
-					);
-					$resource_set_array[] = array(
-						'name' => 'Medication List',
-						'icon' => 'https://noshchartingsystem.com/i-pharmacy.png',
-						'scopes' => array(
-							URL::to('/') . '/fhir/MedicationStatement/?subject:Patient=1'
-						)
-					);
-					$resource_set_array[] = array(
-						'name' => 'Allergy',
-						'icon' => 'https://noshchartingsystem.com/i-allergy.png',
-						'scopes' => array(
-							URL::to('/') . '/fhir/AllergyIntolerance/?subject:Patient=1'
-						)
-					);
-					$resource_set_array[] = array(
-						'name' => 'Immunization',
-						'icon' => 'https://noshchartingsystem.com/i-immunization.png',
-						'scopes' => array(
-							URL::to('/') . '/fhir/Immunization/?subject:Patient=1'
-						)
-					);
-					$resource_set_array[] = array(
-						'name' => 'Encounter',
-						'icon' => 'https://noshchartingsystem.com/i-medical-records.png',
-						'scopes' => array(
-							URL::to('/') . '/fhir/Encounter/?subject:Patient=1'
-						)
-					);
-					$resource_set_array[] = array(
-						'name' => 'Family History',
-						'icon' => 'https://noshchartingsystem.com/i-family-practice.png',
-						'scopes' => array(
-							URL::to('/') . '/fhir/FamilyHistory/?subject:Patient=1'
-						)
-					);
-					$resource_set_array[] = array(
-						'name' => 'Binary Files',
-						'icon' => 'https://noshchartingsystem.com/i-file.png',
-						'scopes' => array(
-							URL::to('/') . '/fhir/Binary/?subject:Patient=1'
-						)
-					);
-					$resource_set_array[] = array(
-						'name' => 'Observation',
-						'icon' => 'https://noshchartingsystem.com/i-cardiology.png',
-						'scopes' => array(
-							URL::to('/') . '/fhir/Observation/?subject:Patient=1'
-						)
-					);
-					$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
-					$oidc1->refresh($refresh_data['uma_refresh_token'],true);
-					foreach ($resource_set_array as $resource_set_item) {
-						$response = $oidc1->resource_set($resource_set_item['name'], $resource_set_item['icon'], $resource_set_item['scopes']);
-						if (isset($response['resource_set_id'])) {
-							foreach ($resource_set_item['scopes'] as $scope_item) {
-								$response_data1 = array(
-									'resource_set_id' => $response['resource_set_id'],
-									'scope' => $scope_item,
-									'user_access_policy_uri' => $response['user_access_policy_uri']
-								);
-								DB::table('uma')->insert($response_data1);
-								$this->audit('Add'); 
-							}
-						}
-					}
-				}
-			}
 			Auth::login($user);
 			$practice = Practiceinfo::find($user->practice_id);
 			Session::put('user_id', $user->id);
@@ -860,13 +768,13 @@ class LoginController extends BaseController {
 			return Redirect::intended('/');
 		}
 	}
-	
+
 	public function uma_register_client()
 	{
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
 		$client_name = 'Practice NOSH for ' . $practice->practice_name;
 		$patient = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();
-		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', $patient->url);
+		$open_id_url = str_replace('/nosh', '/', $patient->url);
 		$url = route('uma_get_refresh_token');
 		$oidc = new OpenIDConnectClient($open_id_url);
 		$oidc->setClientName($client_name);
@@ -882,11 +790,11 @@ class LoginController extends BaseController {
 		$this->audit('Update');
 		return Redirect::to('chart');
 	}
-	
+
 	public function uma_get_refresh_token()
 	{
 		$patient = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();
-		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', $patient->url);
+		$open_id_url = str_replace('/nosh', '/', $patient->url);
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $patient->uma_client_id;
 		$client_secret = $patient->uma_client_secret;
@@ -911,10 +819,10 @@ class LoginController extends BaseController {
 		}
 		return Redirect::to('chart');
 	}
-	
+
 	public function uma_logout()
 	{
-		$open_id_url = str_replace('/nosh', '/uma-server-webapp/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
@@ -926,7 +834,7 @@ class LoginController extends BaseController {
 		Session::forget('uma_auth_access_token');
 		return Redirect::intended('logout');
 	}
-	
+
 	public function oidc_logout()
 	{
 		$open_id_url = 'https://noshchartingsystem.com/openid-connect-server-webapp/';
@@ -941,7 +849,7 @@ class LoginController extends BaseController {
 		Session::forget('oidc_auth_access_token');
 		return Redirect::intended('logout');
 	}
-	
+
 	public function googleoauth()
 	{
 		$file = File::get(__DIR__."/../../.google");
@@ -970,7 +878,7 @@ class LoginController extends BaseController {
 			exit;
 		}
 	}
-	
+
 	public function reset_demo()
 	{
 		$config_file = __DIR__."/../../.env.php";
