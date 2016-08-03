@@ -117,7 +117,7 @@ class InstallController extends BaseController {
 					$oidc->addScope('profile');
 					$oidc->addScope('offline_access');
 					$oidc->addScope('uma_protection');
-					$oidc->authenticate(true);
+					$oidc->authenticate(true,'user1');
 					$user_data['uid']  = $oidc->requestUserInfo('sub');
 					DB::table('users')->where('id', '=', '2')->update($user_data);
 					$access_token = $oidc->getAccessToken();
