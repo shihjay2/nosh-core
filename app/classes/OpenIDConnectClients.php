@@ -780,7 +780,7 @@ class OpenIDConnectClient
 		} else {
 			$registration_endpoint = $this->getProviderConfigValue('registration_endpoint', $uma);
 			if ($rs == true) {
-				$send_array = (object)array(
+				$send_array = array(
 					'redirect_uris' => array(
 						$this->getRedirectURL(),
 						str_replace('uma_auth', 'uma_api', $this->getRedirectURL()),
@@ -795,7 +795,7 @@ class OpenIDConnectClient
 					'claims_redirect_uris' => array($this->getRedirectURL())
 				);
 			} else {
-				$send_array = (object)array(
+				$send_array = array(
 					'redirect_uris' => array($this->getRedirectURL(),
 						str_replace('uma_auth', 'uma_api', $this->getRedirectURL())
 					),
