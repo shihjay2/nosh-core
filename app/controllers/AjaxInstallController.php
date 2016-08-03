@@ -68,6 +68,7 @@ class AjaxInstallController extends BaseController {
 			'active' => 'Y',
 			'patient_centric' => $patient_centric
 		);
+		DB::table('practiceinfo')->insert($data2);
 		// Insert patient
 		if ($type == 'patient') {
 			$dob = date('Y-m-d', strtotime(Input::get('DOB')));
