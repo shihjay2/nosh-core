@@ -584,7 +584,7 @@ class LoginController extends BaseController {
 	// Patient-centric, UMA login
 	public function uma_auth()
 	{
-		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
@@ -774,7 +774,7 @@ class LoginController extends BaseController {
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', Session::get('practice_id'))->first();
 		$client_name = 'Practice NOSH for ' . $practice->practice_name;
 		$patient = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();
-		$open_id_url = str_replace('/nosh', '/', $patient->url);
+		$open_id_url = str_replace('/nosh', '', $patient->url);
 		$url = route('uma_get_refresh_token');
 		$oidc = new OpenIDConnectClient($open_id_url);
 		$oidc->setClientName($client_name);
@@ -794,7 +794,7 @@ class LoginController extends BaseController {
 	public function uma_get_refresh_token()
 	{
 		$patient = DB::table('demographics_relate')->where('pid', '=', Session::get('pid'))->where('practice_id', '=', Session::get('practice_id'))->first();
-		$open_id_url = str_replace('/nosh', '/', $patient->url);
+		$open_id_url = str_replace('/nosh', '', $patient->url);
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $patient->uma_client_id;
 		$client_secret = $patient->uma_client_secret;
@@ -822,7 +822,7 @@ class LoginController extends BaseController {
 
 	public function uma_logout()
 	{
-		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;

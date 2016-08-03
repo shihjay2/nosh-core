@@ -9550,7 +9550,7 @@ class BaseController extends Controller {
 
 	protected function uma_resource_set($url, $name = null, $icon = null, $scopes = null)
 	{
-		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
@@ -9568,7 +9568,7 @@ class BaseController extends Controller {
 
 	protected function uma_permission_request($resource_set_id = null, $scopes = null)
 	{
-		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
@@ -9580,7 +9580,7 @@ class BaseController extends Controller {
 
 	protected function uma_introspect($token)
 	{
-		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
@@ -9665,7 +9665,7 @@ class BaseController extends Controller {
 		// $html .= $this->uma_scopes($resource_set_id);
 		// $html .= '</form><i id="add_uma_policy_user" class="fa fa-plus fa-fw fa-2x add_uma_user nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add permitted user to this resource" nosh-id="' . $resource_set_id . '"></i>Add User<br>';
 		$html = '';
-		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
@@ -9745,7 +9745,7 @@ class BaseController extends Controller {
 
 	protected function uma_policy($resource_set_id, $email, $scopes, $policy_id='')
 	{
-		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
@@ -9925,7 +9925,7 @@ class BaseController extends Controller {
 				)
 			);
 		}
-		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;

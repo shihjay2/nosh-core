@@ -74,7 +74,7 @@ class InstallController extends BaseController {
 	public function uma_patient_centric()
 	{
 		$query = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
-		$open_id_url = str_replace('/nosh', '/', URL::to('/'));
+		$open_id_url = str_replace('/nosh', '', URL::to('/'));
 		if ($query->patient_centric == 'y') {
 			if ($query->uma_client_id == '') {
 				// Register as resource server
