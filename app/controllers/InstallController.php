@@ -135,7 +135,7 @@ class InstallController extends BaseController {
 								URL::to('/') . '/fhir/Patient',
 								URL::to('/') . '/fhir/Medication',
 								URL::to('/') . '/fhir/Practitioner',
-								'show',
+								'view',
 								'edit'
 							)
 						);
@@ -144,7 +144,7 @@ class InstallController extends BaseController {
 							'icon' => 'https://noshchartingsystem.com/i-condition.png',
 							'scopes' => array(
 								URL::to('/') . '/fhir/Condition',
-								'show',
+								'view',
 								'edit'
 							)
 						);
@@ -153,7 +153,7 @@ class InstallController extends BaseController {
 							'icon' => 'https://noshchartingsystem.com/i-pharmacy.png',
 							'scopes' => array(
 								URL::to('/') . '/fhir/MedicationStatement',
-								'show',
+								'view',
 								'edit'
 							)
 						);
@@ -162,7 +162,7 @@ class InstallController extends BaseController {
 							'icon' => 'https://noshchartingsystem.com/i-allergy.png',
 							'scopes' => array(
 								URL::to('/') . '/fhir/AllergyIntolerance',
-								'show',
+								'view',
 								'edit'
 							)
 						);
@@ -171,7 +171,7 @@ class InstallController extends BaseController {
 							'icon' => 'https://noshchartingsystem.com/i-immunizations.png',
 							'scopes' => array(
 								URL::to('/') . '/fhir/Immunization',
-								'show',
+								'view',
 								'edit'
 							)
 						);
@@ -180,7 +180,7 @@ class InstallController extends BaseController {
 							'icon' => 'https://noshchartingsystem.com/i-medical-records.png',
 							'scopes' => array(
 								URL::to('/') . '/fhir/Encounter',
-								'show',
+								'view',
 								'edit'
 							)
 						);
@@ -189,7 +189,7 @@ class InstallController extends BaseController {
 							'icon' => 'https://noshchartingsystem.com/i-family-practice.png',
 							'scopes' => array(
 								URL::to('/') . '/fhir/FamilyHistory',
-								'show',
+								'view',
 								'edit'
 							)
 						);
@@ -198,7 +198,7 @@ class InstallController extends BaseController {
 							'icon' => 'https://noshchartingsystem.com/i-file.png',
 							'scopes' => array(
 								URL::to('/') . '/fhir/Binary',
-								'show',
+								'view',
 								'edit'
 							)
 						);
@@ -207,7 +207,7 @@ class InstallController extends BaseController {
 							'icon' => 'https://noshchartingsystem.com/i-cardiology.png',
 							'scopes' => array(
 								URL::to('/') . '/fhir/Observation',
-								'show',
+								'view',
 								'edit'
 							)
 						);

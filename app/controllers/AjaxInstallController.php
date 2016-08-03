@@ -107,7 +107,7 @@ class AjaxInstallController extends BaseController {
 				'group_id' => '100',
 				'active'=> '1',
 				'practice_id' => '1',
-				'password' => $pt_password
+				'password' => $this->gen_uuid()
 			);
 			$patient_user_id = DB::table('users')->insertGetId($patient_data2);
 			$patient_data3 = array(
