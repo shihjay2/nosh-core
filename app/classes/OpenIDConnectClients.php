@@ -778,7 +778,7 @@ class OpenIDConnectClient
 				'logo_uri' => 'https://www.noshchartingsystem.com/SAAS-Logo.jpg'
 			);
 		} else {
-			$registration_endpoint = $this->getProviderConfigValue('dynamic_client_endpoint', $uma);
+			$registration_endpoint = $this->getProviderConfigValue('registration_endpoint', $uma);
 			if ($rs == true) {
 				$send_array = (object)array(
 					'redirect_uris' => array(
