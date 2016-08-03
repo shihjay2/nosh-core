@@ -93,6 +93,7 @@ class InstallController extends BaseController {
 				$oidc->addScope('uma_protection');
 				$oidc->addScope('uma_authorization');
 				$oidc->addGrantType('authorization_code');
+				$oidc->addGrantType('password');
 				$oidc->addGrantType('client_credentials');
 				$oidc->addGrantType('implicit');
 				$oidc->addGrantType('jwt-bearer');
