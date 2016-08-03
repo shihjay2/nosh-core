@@ -881,6 +881,12 @@ class LoginController extends BaseController {
 
 	public function reset_demo()
 	{
+		$practice = Practiceinfo::find('1');
+		$patients = DB::table('demographics')->get();
+		foreach ($patients as $patient) {
+			$directory = $practice->documents_dir . $patient->pid;
+			$this->deltree($directory, false);
+		}
 		$config_file = __DIR__."/../../.env.php";
 		$config = require($config_file);
 		$file = '/noshdocuments/demo.sql';
