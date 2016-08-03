@@ -78,7 +78,8 @@ class InstallController extends BaseController {
 		if ($query->patient_centric == 'y') {
 			if ($query->uma_client_id == '') {
 				// Register as resource server
-				$client_name = 'Patient NOSH for ' .  Input::get('firstname') . ' ' . Input::get('lastname') . ', DOB: ' . date('Y-m-d', strtotime(Input::get('DOB')));
+				$patient = DB::table('demographics')->where('pid', '=', '1')->first();
+				$client_name = 'Patient NOSH for ' .  $patient->firstname . ' ' . $patient->lastname . ', DOB: ' . date('Y-m-d', strtotime($patient->DOB));
 				$url = route('uma_auth');
 				$oidc = new OpenIDConnectClient($open_id_url);
 				$oidc->setClientName($client_name);
