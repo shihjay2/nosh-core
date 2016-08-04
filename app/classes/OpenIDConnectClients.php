@@ -140,6 +140,11 @@ class OpenIDConnectClient
 	private $refreshToken;
 
 	/**
+	* @var string if we acquire an id token it will be stored here
+	*/
+	private $idToken;
+
+	/**
 	 * @var array holds scopes
 	 */
 	private $scopes = array();
@@ -223,6 +228,9 @@ class OpenIDConnectClient
 
 				// Clean up the session a little
 				unset($_SESSION['openid_connect_nonce']);
+
+				// Save the id token
+				$this->idToken = $token_json->id_token;
 
 				// Save the access token
 				$this->accessToken = $token_json->access_token;
@@ -604,9 +612,8 @@ class OpenIDConnectClient
 		}
 		$user_info_endpoint = $this->getProviderConfigValue("userinfo_endpoint");
 		$schema = 'openid';
-		$user_info_endpoint .= "?schema=" . $schema
-			. "&access_token=" . $this->accessToken;
-		$user_json = json_decode($this->fetchURL($user_info_endpoint));
+		$user_info_endpoint .= "?schema=" . $schema;
+		$user_json = json_decode($this->fetchURL($user_info_endpoint, null, $this->accessToken));
 		$this->userInfo = $user_json;
 		if (array_key_exists($attribute, $this->userInfo)) {
 			return $this->userInfo->$attribute;
