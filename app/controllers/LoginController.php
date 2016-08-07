@@ -135,7 +135,7 @@ class LoginController extends BaseController {
 		} else {
 			$client_name = 'PracticeNOSH for ' . $practice->practice_name;
 		}
-		$open_id_url = 'https://noshchartingsystem.com/openid-connect-server-webapp/';
+		$open_id_url = 'https://noshchartingsystem.com/oidc';
 		$url = route('oidc');
 		$oidc = new OpenIDConnectClient($open_id_url);
 		$oidc->setClientName($client_name);
@@ -160,7 +160,7 @@ class LoginController extends BaseController {
 
 	public function oidc()
 	{
-		$open_id_url = 'https://noshchartingsystem.com/openid-connect-server-webapp/';
+		$open_id_url = 'https://noshchartingsystem.com/oidc';
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->openidconnect_client_id;
 		$client_secret = $practice->openidconnect_client_secret;

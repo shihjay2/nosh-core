@@ -233,6 +233,6 @@ class InstallController extends BaseController {
 				}
 			}
 		}
-		return Redirect::to('home');
+		return Redirect::to('/');
 	}
 }
