@@ -298,7 +298,7 @@
 </div>
 <div id="add_practice_dialog" title="Add a Practice">
 	<form id="add_practice_form" class="pure-form pure-form-stacked">
-		<label for="add_practice_practice_name">Practice Name (for search):</label>
+		<label for="add_practice_practice_name">Provider/Practice Name (for search):</label>
 		<input type="text" id="add_practice_practice_name" name="practice_name" style="width:95%" class="text"/>
 		<label for="add_practice_state">Practice State (for search):</label>
 		<select id="add_practice_state" name="practice_state" style="width:95%" class="text"></select>

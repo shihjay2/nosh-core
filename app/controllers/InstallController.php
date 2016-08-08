@@ -126,7 +126,6 @@ class InstallController extends BaseController {
 						DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
 						$this->audit('Update');
 					}
-				} else {
 					// Register resource sets
 					$uma = DB::table('uma')->first();
 					if (!$uma) {
@@ -214,7 +213,7 @@ class InstallController extends BaseController {
 							)
 						);
 						$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
-						$oidc->refresh($query->uma_refresh_token,true);
+						$oidc->refresh($refresh_data['uma_refresh_token'],true);
 						foreach ($resource_set_array as $resource_set_item) {
 							$response = $oidc1->resource_set($resource_set_item['name'], $resource_set_item['icon'], $resource_set_item['scopes']);
 							if (isset($response['resource_set_id'])) {
