@@ -212,10 +212,8 @@ class InstallController extends BaseController {
 								'edit'
 							)
 						);
-						$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
-						$oidc->refresh($refresh_data['uma_refresh_token'],true);
 						foreach ($resource_set_array as $resource_set_item) {
-							$response = $oidc1->resource_set($resource_set_item['name'], $resource_set_item['icon'], $resource_set_item['scopes']);
+							$response = $oidc->resource_set($resource_set_item['name'], $resource_set_item['icon'], $resource_set_item['scopes']);
 							if (isset($response['resource_set_id'])) {
 								foreach ($resource_set_item['scopes'] as $scope_item) {
 									$response_data1 = array(
