@@ -1361,6 +1361,10 @@ class AjaxCommonController extends BaseController {
 						$title = 'This resource is your list of associated medical documents in PDF format';
 						$resource = 'Documents';
 					}
+					if ($name == 'Observation') {
+						$title = 'This resource is your list of vital signs and test results';
+						$resource = 'Observation';
+					}
 					$html .= '<tr class="uma_table1"><td><span class="nosh_tooltip" title="' . $title . '">' . $resource . '</span></td><td><i class="fa fa-pencil-square-o fa-fw fa-2x view_uma_users nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add/Edit Permitted Users" nosh-id="' . $row->resource_set_id . '"></i></td></tr>';
 					$row_id = $row->resource_set_id;
 				}
@@ -1377,6 +1381,7 @@ class AjaxCommonController extends BaseController {
 		if ($query) {
 			$i = 0;
 			$row_id = '';
+			$html = '';
 			foreach ($query as $row) {
 				if ($row->resource_set_id != $row_id) {
 					$name_arr = explode('/', $row->scope);
@@ -1410,6 +1415,9 @@ class AjaxCommonController extends BaseController {
 					}
 					if ($name == 'Binary') {
 						$resource = 'Documents';
+					}
+					if ($name == 'Observation') {
+						$resource = 'Observation';
 					}
 					$html .= '<label for="mdnosh_provider_' . $i . '" class="pure-checkbox" style="display:block;margin-left:20px;">';
 					$html .= Form::checkbox('resources[]', $row->resource_set_id, true, ['id' => 'mdnosh_resource_' . $i, 'style' => 'float:left; margin-left:-20px; margin-right:7px;', 'class' => 'mdnosh_resource_select']);
