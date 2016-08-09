@@ -1454,6 +1454,11 @@ class AjaxCommonController extends BaseController {
 		$refresh_token = $practice->uma_refresh_token;
 		$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc1->refresh($refresh_token,true);
+		if ($oidc1->getRefreshToken() != '') {
+			$refresh_data['uma_refresh_token'] = $oidc1->getRefreshToken();
+			DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
+			$this->audit('Update');
+		}
 		$response = $oidc1->delete_policy(Input::get('policy_id'));
 		$result = $this->get_uma_policy(Input::get('resource_set_id'));
 		echo $result;

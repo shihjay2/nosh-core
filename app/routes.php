@@ -517,6 +517,11 @@ Route::filter('auth.token', function()
 		$rpt = str_replace('Bearer ', '', $payload);
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc->refresh($practice->uma_refresh_token,true);
+		if ($oidc->getRefreshToken() != '') {
+			$refresh_data['uma_refresh_token'] = $oidc->getRefreshToken();
+			DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
+			$this->audit('Update');
+		}
 		$result_rpt = $oidc->introspect($rpt);
 		if ($result_rpt['active'] == false) {
 			// Inactive RPT, Request Permission Ticket
@@ -550,6 +555,11 @@ Route::filter('auth.token', function()
 				}
 				$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 				$oidc->refresh($practice->uma_refresh_token,true);
+				if ($oidc->getRefreshToken() != '') {
+					$refresh_data['uma_refresh_token'] = $oidc->getRefreshToken();
+					DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
+					$this->audit('Update');
+				}
 				$permission_ticket = $oidc->permission_request($query->resource_set_id, $scopes);
 				if (isset($permission_ticket['error'])) {
 					$response = [
@@ -601,6 +611,11 @@ Route::filter('auth.token', function()
 			}
 			$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 			$oidc->refresh($practice->uma_refresh_token,true);
+			if ($oidc->getRefreshToken() != '') {
+				$refresh_data['uma_refresh_token'] = $oidc->getRefreshToken();
+				DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
+				$this->audit('Update');
+			}
 			$permission_ticket = $oidc->permission_request($query->resource_set_id, $scopes);
 			if (isset($permission_ticket['error'])) {
 				$response = [

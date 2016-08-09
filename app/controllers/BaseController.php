@@ -9574,6 +9574,11 @@ class BaseController extends Controller {
 		$client_secret = $practice->uma_client_secret;
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc->refresh($practice->uma_refresh_token,true);
+		if ($oidc->getRefreshToken() != '') {
+			$refresh_data['uma_refresh_token'] = $oidc->getRefreshToken();
+			DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
+			$this->audit('Update');
+		}
 		$response = $oidc->permission_request($resource_set_id, $scopes);
 		return $response;
 	}
@@ -9586,6 +9591,11 @@ class BaseController extends Controller {
 		$client_secret = $practice->uma_client_secret;
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc->refresh($practice->uma_refresh_token,true);
+		if ($oidc->getRefreshToken() != '') {
+			$refresh_data['uma_refresh_token'] = $oidc->getRefreshToken();
+			DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
+			$this->audit('Update');
+		}
 		$response = $oidc->introspect($token);
 		return $response;
 	}
@@ -9672,6 +9682,11 @@ class BaseController extends Controller {
 		$refresh_token = $practice->uma_refresh_token;
 		$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc1->refresh($refresh_token,true);
+		if ($oidc1->getRefreshToken() != '') {
+			$refresh_data['uma_refresh_token'] = $oidc1->getRefreshToken();
+			DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
+			$this->audit('Update');
+		}
 		$response = $oidc1->get_policy($resource_set_id);
 		$uma_scope_array = [
 			'show' => 'View',
@@ -9752,6 +9767,11 @@ class BaseController extends Controller {
 		$refresh_token = $practice->uma_refresh_token;
 		$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc1->refresh($refresh_token,true);
+		if ($oidc1->getRefreshToken() != '') {
+			$refresh_data['uma_refresh_token'] = $oidc1->getRefreshToken();
+			DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
+			$this->audit('Update');
+		}
 		$permissions = [
 			'claim' => $email,
 			'scopes' => $scopes
@@ -9932,6 +9952,11 @@ class BaseController extends Controller {
 		$refresh_token = $practice->uma_refresh_token;
 		$oidc1 = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
 		$oidc1->refresh($refresh_token,true);
+		if ($oidc1->getRefreshToken() != '') {
+			$refresh_data['uma_refresh_token'] = $oidc1->getRefreshToken();
+			DB::table('practiceinfo')->where('practice_id', '=', '1')->update($refresh_data);
+			$this->audit('Update');
+		}
 		$response = $oidc1->resource_set($resource_set_array['name'], $resource_set_array['icon'], $resource_set_array['scopes']);
 		if (isset($response['resource_set_id'])) {
 			foreach ($resource_set_array['scopes'] as $scope_item) {
