@@ -9692,7 +9692,7 @@ class BaseController extends Controller {
 			'show' => 'View',
 			'edit' => 'Edit'
 		];
-		if ($response[0]['email']) {
+		if (isset($response[0]['email'])) {
 			$html .= '<table class="pure-table pure-table-horizontal"><thead><tr><th>User</th><th>Permssions</th><th>Last Activity</th><th>Action</th></tr></thead>';
 			foreach ($response as $row) {
 				if ($row['name'] == '') {
