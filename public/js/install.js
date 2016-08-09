@@ -153,4 +153,6 @@ $(document).ready(function() {
 	$("#firstname").val($.cookie('pnosh_firstname'));
 	$("#lastname").val($.cookie('pnosh_lastname'));
 	$("#DOB").val($.cookie('pnosh_dob'));
+	$("#email1").val($.cookie('pnosh_email1'));
+	$("#pt_username").val($.cookie('pnosh_username'));
 });
