@@ -155,4 +155,9 @@ $(document).ready(function() {
 	$("#DOB").val($.cookie('pnosh_dob'));
 	$("#email1").val($.cookie('pnosh_email'));
 	$("#pt_username").val($.cookie('pnosh_username'));
+	$.removeCookie("pnosh_firstname");
+	$.removeCookie("pnosh_lastname");
+	$.removeCookie("pnosh_dob");
+	$.removeCookie("pnosh_email");
+	$.removeCookie("pnosh_username");
 });
