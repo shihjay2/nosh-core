@@ -93,17 +93,9 @@ $(document).ready(function() {
 			$("#conf_password1").addClass("ui-state-error");
 			bValid = false;
 		}
-		var c = $("#pt_password").val();
-		var d = $("#pt_conf_password").val();
-		if (c != d) {
-			$.jGrowl('Passwords do not match!');
-			$("#pt_password").addClass("ui-state-error");
-			$("#pt_conf_password").addClass("ui-state-error");
-			bValid = false;
-		}
-		var e = $("#username1").val();
-		var f = $("#pt_username").val();
-		if (e == f) {
+		var c = $("#username1").val();
+		var d = $("#pt_username").val();
+		if (c == d) {
 			$.jGrowl('Usernames cannot be the same!');
 			$("#username1").addClass("ui-state-error");
 			$("#pt_username").addClass("ui-state-error");
@@ -158,4 +150,7 @@ $(document).ready(function() {
 		$("#password").focus();
 		$("#install_choose_dialog").dialog('close');
 	}).tooltip();
+	$("#firstname").val($.cookie('pnosh_firstname'));
+	$("#lastname").val($.cookie('pnosh_lastname'));
+	$("#DOB").val($.cookie('pnosh_dob'));
 });

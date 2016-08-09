@@ -88,14 +88,6 @@
 					<?php echo Form::text('pt_username','', array('id'=>'pt_username','required','style'=>'width:500px','class'=>'text'));?>
 				</div>
 				<div class="pure-control-group">
-					<?php echo Form::label('pt_password','Portal Password:');?>
-					<?php echo Form::password('pt_password', array('id'=>'pt_password','required','style'=>'width:500px','class'=>'text'));?>
-				</div>
-				<div class="pure-control-group">
-					<?php echo Form::label('pt_conf_password', 'Portal Password Confirm:');?>
-					<?php echo Form::password('pt_conf_password', array('id'=>'pt_conf_password','required','style'=>'width:500px','class'=>'text'));?>
-				</div>
-				<div class="pure-control-group">
 					<?php echo Form::label('lastname','Last Name:');?>
 					<?php echo Form::text('lastname','', array('id'=>'lastname','required','style'=>'width:500px','class'=>'text'));?>
 				</div>
