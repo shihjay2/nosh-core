@@ -9741,23 +9741,11 @@ class BaseController extends Controller {
 			'scopes' => $scopes
 		];
 		if ($policy_id == '') {
-			$response = $oidc1->policy($resource_set_id, $permissions);
+			$oidc1->policy($resource_set_id, $permissions);
 		} else {
-			$response = $oidc1->update_policy($policy_id, $resource_set_id, $permissions);
+			$oidc1->update_policy($policy_id, $resource_set_id, $permissions);
 		}
-		if (isset($response['resource_set_id'])) {
-			foreach ($resource_set_array['scopes'] as $scope_item) {
-				$response_data1 = array(
-					'resource_set_id' => $response['resource_set_id'],
-					'scope' => $scope_item,
-					'user_access_policy_uri' => $response['user_access_policy_uri'],
-					'table_id' => $id,
-					'table' => $table
-				);
-				DB::table('uma')->insert($response_data1);
-				$this->audit('Add');
-			}
-		}
+		return true;
 	}
 
 	protected function old_uma_policy($resource_set_id, $email, $scopes, $policy_id='')

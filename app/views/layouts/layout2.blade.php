@@ -168,7 +168,7 @@
 			<div id="swipe"></div>
 		</div>
 		<div id="uma_dialog" title="">
-			<i class="fa fa-users fa-fw fa-2x nosh_tooltip dashboard_manage_practice" style="vertical-align:middle;padding:2px" title="Add or manage users to access your chart"></i> <a href="#" class="dashboard_manage_practice">Add or manage users to access your chart</a><br>
+			<div style="margin:15px;"><i class="fa fa-users fa-fw fa-2x nosh_tooltip dashboard_manage_practice" style="vertical-align:middle;padding:2px" title="Add or manage users to access your chart"></i> <a href="#" class="dashboard_manage_practice">Add or manage users to access your chart</a><br></div>
 			<div class="pure-g">
 				<div class="pure-u-1-3" id="uma_resources"></div>
 				<div class="pure-u-2-3" id="uma_users"></div>

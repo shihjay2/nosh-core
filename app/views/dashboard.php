@@ -290,8 +290,7 @@
 	</div>
 </div>
 <div id="manage_practice_dialog" title="Connected Practices and Apps">
-	<i class="fa fa-plus fa-fw fa-2x send_uma_invite" style="vertical-align:middle;padding:2px"></i> <a href="#" class="send_uma_invite">Send an invitation to a medical provider to use your chart</a><br>
-	<i class="fa fa-openid fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="<?php $url = str_replace('/nosh', '/uma-server-webapp/manage/admin/clients', URL::to('/')); echo $url; ?>" target="_blank">Manage all clients (applications and providers) connected to your NOSH</a><br><br>
+	<div style="margin:15px;"><i class="fa fa-plus fa-fw fa-2x send_uma_invite" style="vertical-align:middle;padding:2px"></i> <a href="#" class="send_uma_invite">Send an invitation to a medical provider to use your chart</a><br></div>
 	<table id="manage_practice_list" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="manage_practice_list_pager" class="scroll" style="text-align:center;"></div><br>
 	<button type="button" id="dashboard_delete_practice" class="nosh_button_delete">Remove Practice</button>

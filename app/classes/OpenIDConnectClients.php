@@ -1069,7 +1069,7 @@ class OpenIDConnectClient
 			$return['error_description'] = $json_response->{'error_description'};
 			throw new OpenIDConnectClientException($json_response->{'error_description'});
 		}
-		$return['message'] = 'Policy with ID ' . $json_response->{'_id'} . ' added';
+		$return['message'] = 'Policy Added';
 		return $return;
 	}
 
