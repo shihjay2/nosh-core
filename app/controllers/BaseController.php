@@ -9664,7 +9664,7 @@ class BaseController extends Controller {
 				} else {
 					$name = $row['name'] . ' (' . $row['email'] . ')';
 				}
-				$html .= '<tr><td>' . $name . '</td><td><td>';
+				$html .= '<tr><td>' . $name . '</td><td>';
 				$permissions = '';
 				$raw_permissions = implode(' ', $row['scopes']);
 				foreach ($row['scopes'] as $scope) {
