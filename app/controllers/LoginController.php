@@ -235,7 +235,7 @@ class LoginController extends BaseController {
 				$practice_id = false;
 				$practice_npi_array_null = array();
 				if ($practice_npi != '') {
-					$practice_npi_array = explode(',', $practice_npi);
+					$practice_npi_array = explode(' ', $practice_npi);
 					foreach ($practice_npi_array as $practice_npi_item) {
 						$practice_query = DB::table('practiceinfo')->where('npi', '=', $practice_npi_item)->first();
 						if ($practice_query) {
@@ -832,7 +832,7 @@ class LoginController extends BaseController {
 
 	public function oidc_logout()
 	{
-		$open_id_url = 'https://noshchartingsystem.com/openid-connect-server-webapp/';
+		$open_id_url = 'https://noshchartingsystem.com/oidc';
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;

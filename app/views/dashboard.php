@@ -333,7 +333,7 @@
 <div id="send_uma_invite_dialog" title="Invite a Provider to Access your Chart">
 	<div id="send_uma_invite_div1">
 		<form id="send_uma_invite_form1" class="pure-form">
-			<label for="mdnosh_provider_search_input">Practice Name (for search):</label>
+			<label for="mdnosh_provider_search_input">Practice/Provider Name (for search):</label>
 			<input type="text" id="mdnosh_provider_search_input" name="term" style="width:60%" class="text" required/>
 			<button type="button" id="send_uma_invite_form1_submit" class="nosh_button_search">Search</button>
 		</form><br>
