@@ -541,7 +541,7 @@ Route::filter('auth.token', function()
 				$url = implode('/', $sliced);
 			}
 			$query = DB::table('uma')->where('scope', '=', $url)->first();
-			$as_uri = str_replace('/nosh', '/', URL::to('/'));
+			$as_uri = str_replace('/nosh', '', URL::to('/'));
 			$header = [
 				'WWW-Authenticate' => 'UMA realm="pNOSH_UMA", as_uri="' . $as_uri . '"'
 			];
