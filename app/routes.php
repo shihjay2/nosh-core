@@ -320,7 +320,7 @@ Route::filter('update', function()
 Route::filter('google', function()
 {
 	$row = Practiceinfo::find(1);
-	if ($row->google_refresh_token == '' && Session::get('group_id') == '1') {
+	if ($row->google_refresh_token == '') {
 		if (route('home') != 'http://localhost/nosh') {
 			return Redirect::to('googleoauth');
 		}
