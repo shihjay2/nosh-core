@@ -9653,7 +9653,7 @@ class BaseController extends Controller {
 		}
 		$response = $oidc1->get_policy($resource_set_id);
 		$uma_scope_array = [
-			'show' => 'View',
+			'view' => 'View',
 			'edit' => 'Edit'
 		];
 		if (isset($response[0]['email'])) {
@@ -9675,14 +9675,14 @@ class BaseController extends Controller {
 						$permissions .= $uma_scope_array[$scope];
 					}
 				}
-				$html .= '</td><td>';
+				$html .= $permissions . '</td><td>';
 				if ($row['last_activity'] !== '') {
 					$last_activity = date("Y-m-d",$row['last_activity']);
 				} else {
 					$last_activity = 'No previous activity';
 				}
 				$html .= $last_activity . '</td><td>';
-				if ($permissions == 'view') {
+				if ($permissions == 'View') {
 					$html .= '<i class="fa fa-plus fa-fw fa-2x add_uma_policy_user nosh_tooltip" style="vertical-align:middle;padding:2px" title="Allow this user to edit this resource" nosh-email="' . $row['email'] . '" nosh-resource-set-id="' . $resource_set_id . '" nosh-policy-id="' . $row['policy_id'] . '" nosh-name="' . $name . '" . nosh-scopes="' . $raw_permissions . '"></i>';
 				} else {
 					$html .= '<i class="fa fa-minus fa-fw fa-2x remove_uma_policy_user nosh_tooltip" style="vertical-align:middle;padding:2px" title="Prevent user from editing this resource" nosh-email="' . $row['email'] . '" nosh-resource-set-id="' . $resource_set_id . '" nosh-policy-id="' . $row['policy_id'] . '" nosh-name="' . $name . '" . nosh-scopes="' . $raw_permissions . '"></i>';
