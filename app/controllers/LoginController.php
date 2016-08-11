@@ -189,7 +189,6 @@ class LoginController extends BaseController {
 		}
 		if ($user) {
 			Auth::login($user);
-			$this->syncuser($access_token);
 			$practice = Practiceinfo::find($user->practice_id);
 			Session::put('user_id', $user->id);
 			Session::put('group_id', $user->group_id);
