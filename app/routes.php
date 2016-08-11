@@ -508,7 +508,7 @@ Route::filter('auth.basic', function()
 Route::filter('auth.token', function()
 {
 	$payload = Request::header('Authorization');
-	$open_id_url = str_replace('/nosh', '/', URL::to('/'));
+	$open_id_url = str_replace('/nosh', '', URL::to('/'));
 	$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 	$client_id = $practice->uma_client_id;
 	$client_secret = $practice->uma_client_secret;
@@ -597,7 +597,7 @@ Route::filter('auth.token', function()
 			$url = implode('/', $sliced);
 		}
 		$query = DB::table('uma')->where('scope', '=', $url)->first();
-		$as_uri = str_replace('/nosh', '/', URL::to('/'));
+		$as_uri = str_replace('/nosh', '', URL::to('/'));
 		$header = [
 			'WWW-Authenticate' => 'UMA realm = "pNOSH_UMA", as_uri = "' . $as_uri . '"'
 		];
