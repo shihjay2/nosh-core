@@ -472,6 +472,9 @@ $(document).ready(function() {
 					noshdata.messaging_dialog_load = 0;
 					$('#dialog_load').dialog('close');
 					$("#messaging_dialog").dialog('open');
+					if ($("#change_secret_answer_dialog").dialog('isOpen')) {
+						$("#change_secret_answer_dialog").dialog('moveToTop');
+					}
 				}
 			}
 		}, 10);
