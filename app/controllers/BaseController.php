@@ -9722,7 +9722,7 @@ class BaseController extends Controller {
 		return $html;
 	}
 
-	protected function uma_policy($resource_set_id, $email, $scopes, $policy_id='')
+	protected function uma_policy($resource_set_id, $email, $name, $scopes, $policy_id='')
 	{
 		$open_id_url = str_replace('/nosh', '', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
@@ -9738,6 +9738,7 @@ class BaseController extends Controller {
 		}
 		$permissions = [
 			'claim' => $email,
+			'name' => $name,
 			'scopes' => $scopes
 		];
 		if ($policy_id == '') {

@@ -227,8 +227,11 @@ class LoginController extends BaseController {
 							$scopes[] = $uma_row->scope;
 						}
 					}
-					$this->uma_policy($resource_set_id, $email, $scopes);
+					$this->uma_policy($resource_set_id, $email, $invite_query->name, $scopes);
 				}
+				// Remove invite
+				DB::table('uma_invitation')->where('id', '=', $invite_query->id)->delete();
+				$this->audit('Delete');
 				// Get Practice NPI from Oauth credentials and check if practice already loaded
 				$practice_npi = $oidc->requestUserInfo('practice_npi');
 				$practice_id = false;

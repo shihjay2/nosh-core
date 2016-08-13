@@ -883,6 +883,27 @@ $(document).ready(function() {
 			 	height: "100%",
 			 	jsonReader: { repeatitems : false, id: "0" }
 			}).navGrid('#manage_practice_list_pager',{search:false,edit:false,add:false,del:false});
+			$("#invitation_list").jqGrid('GridUnload');
+			$("#invitation_list").jqGrid({
+				url:"ajaxcommon/invited-users",
+				datatype: "json",
+				mtype: "POST",
+				colNames:['ID','Name','E-mail address'],
+				colModel:[
+					{name:'id',index:'id',width:1,hidden:true},
+					{name:'name',index:'name',width:400},
+					{name:'email',index:'email',width:400}
+				],
+				rowNum:10,
+				rowList:[10,20,30],
+				pager: $('#invitation_list_pager'),
+				sortname: 'id',
+			 	viewrecords: true,
+			 	sortorder: "asc",
+			 	caption:"Invited Users",
+			 	height: "100%",
+			 	jsonReader: { repeatitems : false, id: "0" }
+			}).navGrid('#invitation_list_pager',{search:false,edit:false,add:false,del:false});
 		},
 		position: { my: 'center', at: 'center', of: '#maincontent' }
 	});

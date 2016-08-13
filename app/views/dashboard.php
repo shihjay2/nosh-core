@@ -291,6 +291,8 @@
 </div>
 <div id="manage_practice_dialog" title="Connected Practices and Apps">
 	<div style="margin:15px;"><i class="fa fa-plus fa-fw fa-2x send_uma_invite" style="vertical-align:middle;padding:2px"></i> <a href="#" class="send_uma_invite">Send an invitation to a medical provider to use your chart</a><br></div>
+	<table id="invitation_list" class="scroll" cellpadding="0" cellspacing="0"></table>
+	<div id="invitation_list_pager" class="scroll" style="text-align:center;"></div><br>
 	<table id="manage_practice_list" class="scroll" cellpadding="0" cellspacing="0"></table>
 	<div id="manage_practice_list_pager" class="scroll" style="text-align:center;"></div><br>
 	<button type="button" id="dashboard_delete_practice" class="nosh_button_delete">Remove Practice</button>
@@ -321,7 +323,7 @@
 <div id="hieofone_dialog" title="Transfer credentials to mdNOSH Gateway">
 	By clicking OK, your login credentials will be transferred automatically to mdNOSH Gateway.<br><br>
 	By using mdNOSH Gateway as your login provider, you will be able to use your username and password to any PatientNOSH instances.<br><br>
-	<a href="https://noshchartingsystem.com/nosh-sso" target="_blank">Click here for more information</a>.<br><br>
+	<a href="https://noshchartingsystem.com/oidc" target="_blank">Click here for more information</a>.<br><br>
 	<div id="hieofone_error"></div>
 	<div id="hieofone_username_div">
 		<form class="pure-form">
@@ -345,6 +347,7 @@
 		<h3>With access to these resources:</h3>
 		<form id="send_uma_invite_form2" class="pure-form">
 			<input type="hidden" id="mdnosh_email_final" name="email" required/>
+			<input type="hidden" id="mdnosh_name_final" name="name" required/>
 			<div id="send_uma_invite_div3"></div>
 		</form>
 	</div>

@@ -4219,7 +4219,9 @@ $(document).on('click', ".mdnosh_email_select", function() {
 	var id1 = id.replace("mdnosh_email_","mdnosh_email_label_span_");
 	var a = $("#"+id1).html();
 	var b = $(this).val();
+	var name = $(this).attr('mdnosh-name');
 	$("#mdnosh_email_final").val(b);
+	$("#mdnosh_name_final").val(name);
 	$("#send_uma_invite_provider").html(a);
 	$("#send_uma_invite_div1").hide();
 	$("#send_uma_invite_div2").show();

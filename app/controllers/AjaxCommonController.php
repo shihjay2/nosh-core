@@ -1152,6 +1152,40 @@ class AjaxCommonController extends BaseController {
 		echo json_encode($response);
 	}
 
+	public function postInvitedUsers()
+	{
+		$pid = Session::get('pid');
+		$page = Input::get('page');
+		$limit = Input::get('rows');
+		$sidx = Input::get('sidx');
+		$sord = Input::get('sord');
+		$query = DB::table('uma_invitation')->where('invitation_timeout', '>', time())->first();
+		$result = $query->get();
+		if($result) {
+			$count = count($result);
+			$total_pages = ceil($count/$limit);
+		} else {
+			$count = 0;
+			$total_pages = 0;
+		}
+		if ($page > $total_pages) $page=$total_pages;
+		$start = $limit*$page - $limit;
+		if($start < 0) $start = 0;
+		$query->orderBy($sidx, $sord)
+			->skip($start)
+			->take($limit);
+		$query1 = $query->get();
+		$response['page'] = $page;
+		$response['total'] = $total_pages;
+		$response['records'] = $count;
+		if ($query1) {
+			$response['rows'] = $query1;
+		} else {
+			$response['rows'] = '';
+		}
+		echo json_encode($response);
+	}
+
 	public function postMobileFormAction($table, $action, $row_id, $row_index)
 	{
 		$date_convert_array = array(
@@ -1442,6 +1476,7 @@ class AjaxCommonController extends BaseController {
 		$resource_set_ids = implode(',', Input::get('resources'));
 		$data = array(
 			'email' => Input::get('email'),
+			'name' => Input::get('name'),
 			'invitation_timeout' => time() + 259200,
 			'resource_set_ids' => $resource_set_ids
 		);

@@ -3554,7 +3554,7 @@ class AjaxSearchController extends BaseController {
 				$i = 0;
 				foreach ($result['message'] as $row) {
 					$return .= '<label for="mdnosh_provider_' . $i . '" class="pure-checkbox" style="display:block;margin-left:20px;">';
-					$return .= Form::radio('mdnosh_email', $row['email'], false, ['id' => 'mdnosh_email_' . $i, 'style' => 'float:left; margin-left:-20px; margin-right:7px;', 'class' => 'mdnosh_email_select']);
+					$return .= Form::radio('mdnosh_email', $row['email'], false, ['id' => 'mdnosh_email_' . $i, 'style' => 'float:left; margin-left:-20px; margin-right:7px;', 'class' => 'mdnosh_email_select', 'mdnosh-name' => $row['given_name'] . ' ' . $row['family_name']]);
 					$return .= ' <span id="mdnosh_email_label_span_' . $i . '">' . $row['label'] . '</span>';
 					$return .= '</label>';
 					$i++;
