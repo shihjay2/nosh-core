@@ -1104,6 +1104,7 @@ $(document).ready(function() {
 								$("#send_uma_invite_form2").clearForm();
 								$('#send_uma_invite_results').html('');
 								$("#send_uma_invite_dialog").dialog('close');
+								reload_grid("invitation_list");
 							}
 						});
 					} else {
