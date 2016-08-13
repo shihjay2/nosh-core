@@ -869,9 +869,9 @@ $(document).ready(function() {
 				colNames:['ID','Practice','API Key','Status'],
 				colModel:[
 					{name:'practice_id',index:'practice_id',width:1,hidden:true},
-					{name:'practice_name',index:'practice_name',width:200},
-					{name:'api_key',index:'api_key',width:100},
-					{name:'practice_registration_timeout',index:'practice_registration_timeout',width:100,formatter:practicestatus}
+					{name:'practice_name',index:'practice_name',width:400},
+					{name:'api_key',index:'api_key',width:200},
+					{name:'practice_registration_timeout',index:'practice_registration_timeout',width:200,formatter:practicestatus}
 				],
 				rowNum:10,
 				rowList:[10,20,30],
