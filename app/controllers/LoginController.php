@@ -891,7 +891,8 @@ class LoginController extends BaseController {
 		$command1 = "mysql -u " . $config['mysql_username'] . " -p". $config['mysql_password'] . " oidc < " . $file1;
 		system($command);
 		system($command1);
-		$open_id_url = str_replace('/nosh', '', URL::to('/'));
-		return Redirect::to($open_id_url);
+		//$open_id_url = str_replace('/nosh', '', URL::to('/'));
+		$mdnosh_url = 'https://noshchartingsystem.com/oidc/reset_demo';
+		return Redirect::to($mdnosh_url);
 	}
 }

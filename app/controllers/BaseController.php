@@ -9638,7 +9638,7 @@ class BaseController extends Controller {
 		// $html .= Form::select('email', $user_data, null, array('id'=>'uma_email','style'=>'width:300px','class'=>'text'));
 		// $html .= $this->uma_scopes($resource_set_id);
 		// $html .= '</form><i id="add_uma_policy_user" class="fa fa-plus fa-fw fa-2x add_uma_user nosh_tooltip" style="vertical-align:middle;padding:2px" title="Add permitted user to this resource" nosh-id="' . $resource_set_id . '"></i>Add User<br>';
-		$html = '';
+		$html = 'No authorized providers accessing this resource yet.';
 		$open_id_url = str_replace('/nosh', '', URL::to('/'));
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
@@ -9657,7 +9657,7 @@ class BaseController extends Controller {
 			'edit' => 'Edit'
 		];
 		if (isset($response[0]['email'])) {
-			$html .= '<table class="pure-table pure-table-horizontal"><thead><tr><th>User</th><th>Permssions</th><th>Last Activity</th><th>Action</th></tr></thead>';
+			$html = '<table class="pure-table pure-table-horizontal"><thead><tr><th>User</th><th>Permssions</th><th>Last Activity</th><th>Action</th></tr></thead>';
 			foreach ($response as $row) {
 				if ($row['name'] == '') {
 					$name = $row['email'];

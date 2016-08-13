@@ -43,7 +43,7 @@ table {
 table.form {
 	text-align: left;
 }
- 
+
 
 /*
 * Elements
@@ -103,7 +103,7 @@ table.form {
 	padding: 5px;
 	text-align: left;
 	background: #FFFFFF;
-	margin: 0; 
+	margin: 0;
 	border:0;
 	overflow: auto;
 	height: 520px;
@@ -111,14 +111,14 @@ table.form {
 
 #mainborder_full {
 	position: relative;
-	float: left; 
-	margin: 0px; 
+	float: left;
+	margin: 0px;
 	padding: 3px;
 	width: 98%;
 }
 
 #mainborder {
-	margin: 0px; 
+	margin: 0px;
 	padding: 3px;
 }
 
@@ -231,7 +231,7 @@ table.form {
 	z-index: 2000;
 }
 
-#medications{ 
+#medications{
 	z-index: 5000;
 }
 
@@ -325,9 +325,9 @@ div#encounter_template table td, div#encounter_template table th {
 	font-weight : bold !important
 }
 
-.myAltRowClass { 
-	color: red; 
-	background-image: none; 
+.myAltRowClass {
+	color: red;
+	background-image: none;
 }
 
 .wrapper {
@@ -370,4 +370,3 @@ div#encounter_template table td, div#encounter_template table th {
 .js {
 	display: none;
 }
-

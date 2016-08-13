@@ -211,7 +211,7 @@
 							<?php echo Session::get('displayname') . ' ';?>&nbsp|&nbsp
 							<?php echo date('M j, Y') . ' ';?>&nbsp
 							<?php if(Session::get('patient_centric') == 'y' || Session::get('patient_centric') == 'yp') {?>
-								<i class="fa fa-share-square-o fa-fw fa-lg nosh_tooltip" style="vertical-align:middle;padding:2px" id="share_command" title="Share your Chart"></i>
+								<i class="fa fa-share-square-o fa-fw fa-lg nosh_tooltip" style="vertical-align:middle;padding:2px;color:green;" id="share_command" title="Share your Chart"></i>
 							<?php }?>
 							<i class="fa fa-lock fa-fw fa-lg nosh_tooltip" style="vertical-align:middle;padding:2px" id="logout_command" title="Logout"></i>
 						</div>
