@@ -9676,7 +9676,7 @@ class BaseController extends Controller {
 					}
 				}
 				$html .= $permissions . '</td><td>';
-				if ($row['last_activity'] !== '') {
+				if ($row['last_activity'] !== '' && $row['last_activity'] !== '0' && isset($row['last_activity'])) {
 					$last_activity = date("Y-m-d",$row['last_activity']);
 				} else {
 					$last_activity = 'No previous activity';
