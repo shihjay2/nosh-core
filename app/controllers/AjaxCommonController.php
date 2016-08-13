@@ -1159,7 +1159,7 @@ class AjaxCommonController extends BaseController {
 		$limit = Input::get('rows');
 		$sidx = Input::get('sidx');
 		$sord = Input::get('sord');
-		$query = DB::table('uma_invitation')->where('invitation_timeout', '>', time())->first();
+		$query = DB::table('uma_invitation')->where('invitation_timeout', '>', time());
 		$result = $query->get();
 		if($result) {
 			$count = count($result);
