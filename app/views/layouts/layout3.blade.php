@@ -71,7 +71,7 @@
 				'notification_alert': '',
 				'messaging_dialog_load': 0,
 				'patient_centric': '<?php echo Session::get("patient_centric"); ?>',
-				'url_hieofoneas': "<?php echo str_replace('/nosh', '', URL::to('/')); ?>"
+				'url_hieofoneas': '<?php echo Session::get("url_hieofoneas"); ?>'
 			};
 			var medcache = {};
 			var medcache1 = {};

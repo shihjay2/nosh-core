@@ -65,6 +65,7 @@ class LoginController extends BaseController {
 					Session::put('rcopia', $practice->rcopia_extension);
 					Session::put('mtm_extension', $practice->mtm_extension);
 					Session::put('patient_centric', $practice->patient_centric);
+					Session::put('url_hieofoneas', '');
 					setcookie("login_attempts", 0, time()+900, '/');
 					if ($practice->patient_centric == 'n') {
 						return Redirect::intended('/');
@@ -74,6 +75,8 @@ class LoginController extends BaseController {
 							$this->setpatient($pid->pid);
 							return Redirect::intended('chart');
 						} else {
+							$url_hieofoneas = str_replace('/nosh', '/resources/' . $practice->uma_client_id, URL::to('/'));
+							Session::put('url_hieofoneas', $url_hieofoneas);
 							return Redirect::intended('/');
 						}
 					}
