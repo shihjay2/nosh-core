@@ -11,7 +11,7 @@
 |
 */
 
-Route::any('/', array('as' => 'home', 'before' => 'force.ssl|version_check|installfix|googlecheck|needinstall|update|openid|auth|google|pnosh', 'uses' => 'HomeController@dashboard'));
+Route::any('/', array('as' => 'home', 'before' => 'force.ssl|version_check|installfix|googlecheck|needinstall|update|openid|pnosh_install|auth|google|pnosh', 'uses' => 'HomeController@dashboard'));
 Route::any('login', array('as' => 'login', 'before' => 'force.ssl', 'uses' => 'LoginController@action'));
 Route::any('mobile', array('as' => 'mobile', 'before' => 'force.ssl|version_check|installfix|needinstall|update|openid|auth.mobile', 'uses' => 'MobileController@dashboard'));
 Route::any('login_mobile', array('as' => 'login_mobile', 'before' => 'force.ssl', 'uses' => 'MobileController@action'));
@@ -341,6 +341,16 @@ Route::filter('openid', function()
 		$row = Practiceinfo::find(1);
 		if ($row->openidconnect_client_id == '') {
 			return Redirect::to('oidc_register_client');
+		}
+	}
+});
+
+Route::filter('pnosh_install', function()
+{
+	$row = Practiceinfo::find(1);
+	if ($row->patient_centric == 'y') {
+		if ($row->uma_refresh_token == '') {
+			return Redirect::to('uma_patient_centric');
 		}
 	}
 });

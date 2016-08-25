@@ -4079,22 +4079,23 @@ $(document).on('click', '.timeline_event', function() {
 });
 $(document).on('click', '#share_command', function() {
 	if (noshdata.group_id == '100') {
-		$.ajax({
-			type: "POST",
-			url: "ajaxcommon/get-patient-resources",
-			success: function(data){
-				$("#uma_resources").html(data);
-				$(".nosh_tooltip").tooltip();
-				$('#uma_frame_action').hide();
-				$('#uma_dialog').dialog('option', {
-					height: $("#maincontent").height(),
-					width: $("#maincontent").width(),
-					title: 'Registered Resources',
-					position: { my: 'left top', at: 'left top', of: '#maincontent' }
-				});
-				$("#uma_dialog").dialog('open');
-			}
-		});
+		window.open(nosdata.url_hieofoneas);
+		// $.ajax({
+		// 	type: "POST",
+		// 	url: "ajaxcommon/get-patient-resources",
+		// 	success: function(data){
+		// 		$("#uma_resources").html(data);
+		// 		$(".nosh_tooltip").tooltip();
+		// 		$('#uma_frame_action').hide();
+		// 		$('#uma_dialog').dialog('option', {
+		// 			height: $("#maincontent").height(),
+		// 			width: $("#maincontent").width(),
+		// 			title: 'Registered Resources',
+		// 			position: { my: 'left top', at: 'left top', of: '#maincontent' }
+		// 		});
+		// 		$("#uma_dialog").dialog('open');
+		// 	}
+		// });
 	} else {
 		$.ajax({
 			type: "POST",

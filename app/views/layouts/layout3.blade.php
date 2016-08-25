@@ -69,8 +69,9 @@
 				'hedis': '',
 				'notification_appt': '',
 				'notification_alert': '',
-				'messaging_dialog_load' : 0,
-				'patient_centric' : '<?php echo Session::get("patient_centric"); ?>'
+				'messaging_dialog_load': 0,
+				'patient_centric': '<?php echo Session::get("patient_centric"); ?>',
+				'url_hieofoneas': "<?php echo str_replace('/nosh', '', URL::to('/')); ?>"
 			};
 			var medcache = {};
 			var medcache1 = {};

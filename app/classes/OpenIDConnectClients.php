@@ -1151,7 +1151,7 @@ class OpenIDConnectClient
 		$requesting_party_claims_endpoint = $this->getProviderConfigValue('requesting_party_claims_endpoint',true);
 		$state = $this->generateRandString();
 		$_SESSION['rpt_state'] = $state;
-		$requesting_party_claims_endpoint .= "?ticket=" . $permission_ticket . "&redirect_uri=" . $this->getRedirectURL() . "&client_id=" . $this->clientID . "&state=" . $state;
+		$requesting_party_claims_endpoint .= "?ticket=" . $permission_ticket . "&claims_redirect_uri=" . $this->getRedirectURL() . "&client_id=" . $this->clientID . "&state=" . $state;
 		$this->redirect($requesting_party_claims_endpoint);
 	}
 

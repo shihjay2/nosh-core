@@ -55,8 +55,9 @@
 				'default_template' : '',
 				'mtm_extension': '',
 				'hedis': '',
-				'messaging_dialog_load' : 0,
-				'patient_centric' : '<?php echo Session::get("patient_centric"); ?>'
+				'messaging_dialog_load': 0,
+				'patient_centric': '<?php echo Session::get("patient_centric"); ?>',
+				'url_hieofoneas': "<?php echo str_replace('/nosh', '', URL::to('/')); ?>"
 			};
 			var gender = {"m":"Male","f":"Female","u":"Undifferentiated"};
 			var marital = {"":"","Single":"Single","Married":"Married","Common law":"Common law","Domestic partner":"Domestic partner","Registered domestic partner":"Registered domestic partner","Interlocutory":"Interlocutory","Living together":"Living together","Legally Separated":"Legally Separated","Divorced":"Divorced","Separated":"Separated","Widowed":"Widowed","Other":"Other","Unknown":"Unknown","Unmarried":"Unmarried","Unreported":"Unreported"};
