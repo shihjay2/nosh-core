@@ -4079,7 +4079,7 @@ $(document).on('click', '.timeline_event', function() {
 });
 $(document).on('click', '#share_command', function() {
 	if (noshdata.group_id == '100') {
-		window.open(noshdata.url_hieofoneas);
+		//window.open(noshdata.url_hieofoneas);
 		$.ajax({
 			type: "POST",
 			url: "ajaxcommon/get-patient-resources",
