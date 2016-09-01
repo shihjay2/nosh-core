@@ -5548,6 +5548,317 @@ class BaseController extends Controller {
 		}
 	}
 
+	protected function hl7billing($eid)
+	{
+		$practiceInfo = Practiceinfo::find(Session::get('practice_id'));
+		$encounterInfo = Encounters::find($eid);
+		$row = Demographics::find($pid);
+		$query = DB::table('billing_core')
+			->where('eid', '=', $eid)
+			->where('cpt', 'NOT LIKE', "sp%")
+			->orderBy('cpt_charge', 'desc')
+			->get();
+		$query1 = DB::table('billing')->where('eid', '=', $eid)->first();
+		$insurance_id_1 = $query1->insurance_id_1;
+		$insurance_id_2 = $query1->insurance_id_2;
+		$result1 = Insurance::find($insurance_id_1);
+		$result2 = Addressbook::find($result1->address_id);
+		if ($insurance_id_2 !== '' && $insurance_id_2 !== '0') {
+			$result3 = Insurance::find($insurance_id_2);
+		}
+		$provider = $encounterInfo->encounter_provider;
+		$user_row = User::where('displayname', '=', $provider)->where('group_id', '=', '2')->first();
+		$result4 = Providers::find($user_row->id);
+		$result6 = Assessment::find($eid);
+
+
+
+		$bill_Box11C = $result1->insurance_plan_name;
+		$bill_Box11C = $this->string_format($bill_Box11C, 29);
+		$bill_Box1A = $result1->insurance_id_num;
+		$bill_Box1A = $this->string_format($bill_Box1A, 29);
+		$bill_Box4 = $result1->insurance_insu_lastname . ', ' . $result1->insurance_insu_firstname;
+		$bill_Box4 = $this->string_format($bill_Box4, 29);
+		$bill_payor_id = $result2->insurance_plan_payor_id;
+		$bill_payor_id = $this->string_format($bill_payor_id, 5);
+		if ($result2->street_address2 == '') {
+			$bill_ins_add1 = $result2->street_address1;
+		} else {
+			$bill_ins_add1 = $result2->street_address1 . ', ' . $result2->street_address2;
+		}
+		$bill_ins_add1 = $this->string_format($bill_ins_add1, 29);
+		$bill_ins_add2 = $result2->city . ', ' . $result2->state . ' ' . $result2->zip;
+		$bill_ins_add2 = $this->string_format($bill_ins_add2, 29);
+
+
+		$hl7 = "MSH|^~\&|QDX|" . strtoupper($pname) . "|||" . $date . "00||DFT^P03|" . $date . "00|P|2.3.1|x0D|^" . strtoupper($pname);
+		$hl7 .= "\r";
+		$hl7 .= "EVN|P03|" . $date;
+		$hl7 .= "\r";
+
+		$date = date('YmdHi');
+		foreach ($query as $result) {
+
+			$hl7 .= "FT1|1|||20080528114700||CG|73630|||1||||||^^^^407^^^^test location||I||1^mie^mie^^^IN|||783933|1^mie^mie^^^IN|73630|RT~GA";
+			$hl7 .= "\r";
+			$hl7 .= "PR1|1|CPT|73630||20080528114700|||||||1^mie^mie^^^IN||||RT~GA";
+			$hl7 .= "\r";
+			$hl7 .= "DG1|2|ICD9|959.7|Foot injury||F|||||||||0|1^mie^mie^^^IN|D";
+
+
+			$template = file_get_contents(__DIR__.'/../../public/billing.txt');
+			$search = array(
+				"^Bx11c**********************^",
+				"^Pay^",
+				"^InsuranceAddress***********^",
+				"^InsuranceAddress2**********^",
+				"^Bx1****************************************^",
+				"^Bx1a***********************^",
+				"^Bx2***********************^",
+				"^Bx3a****^",
+				"^Bx3b^",
+				"^Bx4************************^",
+				"^Bx5a**********************^",
+				"^Bx6**********^",
+				"^Bx7a***********************^",
+				"^Bx5b******************^",
+				"^5^",
+				"^Bx7b*****************^",
+				"^7*^",
+				"^Bx5d******^",
+				"^Bx5e********^",
+				"^Bx8b*******^",
+				"^Bx7d******^",
+				"^Bx7e********^",
+				"^Bx9***********************^",
+				"^Bx10*************^",
+				"^Bx11***********************^",
+				"^Bx9a**********************^",
+				"^Bx10a^",
+				"^Bx11a***^",
+				"^Bx11aa^",
+				"^Bx10b^",
+				"^b^",
+				"^Bx11b**********************^",
+				"^Bx9c**********************^",
+				"^Bx10c^",
+				"^Bx9d**********************^",
+				"^Bx10d************^",
+				"^B11d^",
+				"^Bx17********************^",
+				"^Bx17a**********^",
+				"@",
+				"^Bx21a*^",
+				"^Bx21b*^",
+				"^Bx21c*^",
+				"^Bx21d*^",
+				"^Bx21e*^",
+				"^Bx21f*^",
+				"^Bx21g*^",
+				"^Bx21h*^",
+				"^Bx21i*^",
+				"^Bx21j*^",
+				"^Bx21k*^",
+				"^Bx21l*^",
+				"^DOS1F*^",
+				"^DOS1T*^",
+				"^a1*^",
+				"^CT1*^",
+				"^d1*******^",
+				"^e1^",
+				"^f1****^",
+				"^g1*^",
+				"^j1*******^",
+				"^DOS2F*^",
+				"^DOS2T*^",
+				"^a2*^",
+				"^CT2*^",
+				"^d2*******^",
+				"^e2^",
+				"^f2****^",
+				"^g2*^",
+				"^j2*******^",
+				"^DOS3F*^",
+				"^DOS3T*^",
+				"^a3*^",
+				"^CT3*^",
+				"^d3*******^",
+				"^e3^",
+				"^f3****^",
+				"^g3*^",
+				"^j3*******^",
+				"^DOS4F*^",
+				"^DOS4T*^",
+				"^a4*^",
+				"^CT4*^",
+				"^d4*******^",
+				"^e4^",
+				"^f4****^",
+				"^g4*^",
+				"^j4*******^",
+				"^DOS5F*^",
+				"^DOS5T*^",
+				"^a5*^",
+				"^CT5*^",
+				"^d5*******^",
+				"^e5^",
+				"^f5****^",
+				"^g5*^",
+				"^j5*******^",
+				"^DOS6F*^",
+				"^DOS6T*^",
+				"^a6*^",
+				"^CT6*^",
+				"^d6*******^",
+				"^e6^",
+				"^f6****^",
+				"^g6*^",
+				"^j6*******^",
+				"^Bx25*********^",
+				"^Bx26********^",
+				"^Bx27^",
+				"^Bx28***^",
+				"^Bx29**^",
+				"^Bx30**^",
+				"^Bx33a******^",
+				"^Bx32a*******************^",
+				"^Bx33b**********************^",
+				"^Bx32b*******************^",
+				"^Bx33c**********************^",
+				"^Bx32c*******************^",
+				"^Bx33d**********************^",
+				"^Bx31***************^",
+				"^Bx32d***^",
+				"^Bx33e***^"
+			);
+			$replace = array(
+				$result->bill_Box11C,
+				$result->bill_payor_id,
+				$result->bill_ins_add1,
+				$result->bill_ins_add2,
+				$result->bill_Box1,
+				$result->bill_Box1A,
+				$result->bill_Box2,
+				$result->bill_Box3A,
+				$result->bill_Box3B,
+				$result->bill_Box4,
+				$result->bill_Box5A,
+				$result->bill_Box6,
+				$result->bill_Box7A,
+				$result->bill_Box5B,
+				$result->bill_Box5C,
+				$result->bill_Box7B,
+				$result->bill_Box7C,
+				$result->bill_Box5D,
+				$result->bill_Box5E,
+				$result->bill_Box8B,
+				$result->bill_Box7D,
+				$result->bill_Box7E,
+				$result->bill_Box9,
+				$result->bill_Box10,
+				$result->bill_Box11,
+				$result->bill_Box9A,
+				$result->bill_Box10A,
+				$result->bill_Box11A1,
+				$result->bill_Box11A2,
+				$result->bill_Box10B1,
+				$result->bill_Box10B2,
+				$result->bill_Box11B,
+				$result->bill_Box9C,
+				$result->bill_Box10C,
+				$result->bill_Box9D,
+				"                   ",
+				$result->bill_Box11D,
+				$result->bill_Box17,
+				$result->bill_Box17A,
+				$result->bill_Box21A,
+				$result->bill_Box21_1,
+				$result->bill_Box21_2,
+				$result->bill_Box21_3,
+				$result->bill_Box21_4,
+				$result->bill_Box21_5,
+				$result->bill_Box21_6,
+				$result->bill_Box21_7,
+				$result->bill_Box21_8,
+				$result->bill_Box21_9,
+				$result->bill_Box21_10,
+				$result->bill_Box21_11,
+				$result->bill_Box21_12,
+				$result->bill_DOS1F,
+				$result->bill_DOS1T,
+				$result->bill_Box24B1,
+				$result->bill_Box24D1,
+				$result->bill_Modifier1,
+				$result->bill_Box24E1,
+				$result->bill_Box24F1,
+				$result->bill_Box24G1,
+				$result->bill_Box24J1,
+				$result->bill_DOS2F,
+				$result->bill_DOS2T,
+				$result->bill_Box24B2,
+				$result->bill_Box24D2,
+				$result->bill_Modifier2,
+				$result->bill_Box24E2,
+				$result->bill_Box24F2,
+				$result->bill_Box24G2,
+				$result->bill_Box24J2,
+				$result->bill_DOS3F,
+				$result->bill_DOS3T,
+				$result->bill_Box24B3,
+				$result->bill_Box24D3,
+				$result->bill_Modifier3,
+				$result->bill_Box24E3,
+				$result->bill_Box24F3,
+				$result->bill_Box24G3,
+				$result->bill_Box24J3,
+				$result->bill_DOS4F,
+				$result->bill_DOS4T,
+				$result->bill_Box24B4,
+				$result->bill_Box24D4,
+				$result->bill_Modifier4,
+				$result->bill_Box24E4,
+				$result->bill_Box24F4,
+				$result->bill_Box24G4,
+				$result->bill_Box24J4,
+				$result->bill_DOS5F,
+				$result->bill_DOS5T,
+				$result->bill_Box24B5,
+				$result->bill_Box24D5,
+				$result->bill_Modifier5,
+				$result->bill_Box24E5,
+				$result->bill_Box24F5,
+				$result->bill_Box24G5,
+				$result->bill_Box24J5,
+				$result->bill_DOS6F,
+				$result->bill_DOS6T,
+				$result->bill_Box24B6,
+				$result->bill_Box24D6,
+				$result->bill_Modifier6,
+				$result->bill_Box24E6,
+				$result->bill_Box24F6,
+				$result->bill_Box24G6,
+				$result->bill_Box24J6,
+				$result->bill_Box25,
+				$result->bill_Box26,
+				$result->bill_Box27,
+				$result->bill_Box28,
+				$result->bill_Box29,
+				$result->bill_Box30,
+				$result->bill_Box33A,
+				$result->bill_Box32A,
+				$result->bill_Box33B,
+				$result->bill_Box32B,
+				$result->bill_Box33C,
+				$result->bill_Box32C,
+				$result->bill_Box33D,
+				$result->bill_Box31,
+				$result->bill_Box32D,
+				$result->bill_Box33E
+			);
+			$new_template .= str_replace($search, $replace, $template);
+		}
+	}
+
 	protected function getWeightChart($pid)
 	{
 		$query = DB::table('vitals')

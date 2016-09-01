@@ -3538,7 +3538,7 @@ class AjaxSearchController extends BaseController {
 
 	public function postMdNosh()
 	{
-		$url = 'https://noshchartingsystem.com/oidc/providersearch?term=' . Input::get('term');
+		$url = 'http://noshchartingsystem.com/oidc/providersearch?term=' . Input::get('term');
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_HEADER, 0);

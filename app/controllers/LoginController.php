@@ -137,7 +137,7 @@ class LoginController extends BaseController {
 		} else {
 			$client_name = 'PracticeNOSH for ' . $practice->practice_name;
 		}
-		$open_id_url = 'https://noshchartingsystem.com/oidc';
+		$open_id_url = 'http://noshchartingsystem.com/oidc';
 		$url = route('oidc');
 		$oidc = new OpenIDConnectClient($open_id_url);
 		$oidc->setClientName($client_name);
@@ -162,7 +162,7 @@ class LoginController extends BaseController {
 
 	public function oidc()
 	{
-		$open_id_url = 'https://noshchartingsystem.com/oidc';
+		$open_id_url = 'http://noshchartingsystem.com/oidc';
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->openidconnect_client_id;
 		$client_secret = $practice->openidconnect_client_secret;
@@ -838,7 +838,7 @@ class LoginController extends BaseController {
 
 	public function oidc_logout()
 	{
-		$open_id_url = 'https://noshchartingsystem.com/oidc';
+		$open_id_url = 'http://noshchartingsystem.com/oidc';
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$client_id = $practice->uma_client_id;
 		$client_secret = $practice->uma_client_secret;
@@ -899,7 +899,7 @@ class LoginController extends BaseController {
 		system($command);
 		system($command1);
 		//$open_id_url = str_replace('/nosh', '', URL::to('/'));
-		$mdnosh_url = 'https://noshchartingsystem.com/oidc/reset_demo';
+		$mdnosh_url = 'http://noshchartingsystem.com/oidc/reset_demo';
 		return Redirect::to($mdnosh_url);
 	}
 }

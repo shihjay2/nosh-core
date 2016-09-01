@@ -323,7 +323,7 @@
 <div id="hieofone_dialog" title="Transfer credentials to mdNOSH Gateway">
 	By clicking OK, your login credentials will be transferred automatically to mdNOSH Gateway.<br><br>
 	By using mdNOSH Gateway as your login provider, you will be able to use your username and password to any PatientNOSH instances.<br><br>
-	<a href="https://noshchartingsystem.com/oidc" target="_blank">Click here for more information</a>.<br><br>
+	<a href="http://noshchartingsystem.com/oidc" target="_blank">Click here for more information</a>.<br><br>
 	<div id="hieofone_error"></div>
 	<div id="hieofone_username_div">
 		<form class="pure-form">
