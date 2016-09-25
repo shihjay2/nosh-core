@@ -1482,9 +1482,38 @@ class AjaxCommonController extends BaseController {
 		);
 		DB::table('uma_invitation')->insert($data);
 		$this->audit('Add');
+		// $invite_url = 'http://textbelt.com/text';
+		// $message2 = http_build_query([
+		// 	'number' => Input::get('email'),
+		// ]);
+		// $ch1 = curl_init();
+		// curl_setopt($ch1, CURLOPT_URL, $invite_url);
+		// curl_setopt($ch1, CURLOPT_POST, 1);
+		// curl_setopt($ch1, CURLOPT_POSTFIELDS, $message);
+		// curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+		// $output1 = curl_exec ($ch1);
+		// curl_close ($ch1);
 		$data_message['temp_url'] = URL::to('oidc');
 		$data_message['patient'] = Session::get('displayname');
-		$mesg  = $this->send_mail('emails.apiregister', $data_message, 'URGENT: Invitation to access the personal electronic medical record of ' . Session::get('displayname'), Input::get('email'), '1');
+		if (filter_var(Input::get('email'), FILTER_VALIDATE_EMAIL)) {
+			$mesg  = $this->send_mail('emails.apiregister', $data_message, 'URGENT: Invitation to access the personal electronic medical record of ' . Session::get('displayname'), Input::get('email'), '1');
+		} else {
+
+			$message = "You've been invited to use" . $data_message['patient'] . "'s personal health record.  Go to " . $data_message['temp_url'] . " to register";
+			$url = 'http://textbelt.com/text';
+			$message1 = http_build_query([
+				'number' => Input::get('email'),
+				'message' => $message
+			]);
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $message1);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			$output = curl_exec ($ch);
+			curl_close ($ch);
+			return $output;
+		}
 		echo 'Invitation sent to ' . Input::get('email') . '!';
 	}
 

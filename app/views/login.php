@@ -15,8 +15,9 @@
 						</div>
 					</div>
 					<div class="pure-u-1">Login with OpenID Connect.</div><div class="pure-u-1"><br><br></div>
-					<div class="pure-u-1-2"><?php echo link_to_route('uma_auth', "I'm the Patient", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
-					<div class="pure-u-1-2"><?php echo link_to_route('oidc', "I'm a Provider", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
+					<div class="pure-u-1-3"><?php echo link_to_route('uma_auth', "I'm the Patient", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
+					<div class="pure-u-1-3"><?php echo link_to_route('uma_auth', "I'm a Provider", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
+					<div class="pure-u-1-3"><?php echo link_to_route('oidc', "I'm a Provider using mdNOSH Gateway", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
 					<div class="pure-u-1"><br><br><a href="#" id="open_regular_box">Standard Login for Administrator</a></div>
 					<?php if (route('home') == 'https://shihjay.xyz/nosh' || route('home') == 'https://agropper.xyz/nosh') { ?>
 						<div class="pure-u-1"><br><br><?php echo link_to_route('reset_demo', "Reset Demo", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
@@ -33,7 +34,7 @@
 						<div id="error_text">
 							<?php if ($error = $errors->first("password")) { echo $error . "<br><br>"; } ?>
 							<?php if (isset($attempts)) { echo $attempts . "<br><br>"; } ?>
-						</div> 
+						</div>
 						<div align="center">
 							<input type="submit" id="login_button" value="Login" name="login" class="ui-button ui-state-default ui-corner-all"/>
 							<br><br>
@@ -55,7 +56,7 @@
 					<div id="error_text">
 						<?php if ($error = $errors->first("password")) { echo $error . "<br><br>"; } ?>
 						<?php if (isset($attempts)) { echo $attempts . "<br><br>"; } ?>
-					</div> 
+					</div>
 					<div align="center">
 						<input type="submit" id="login_button" value="Login" name="login" class="ui-button ui-state-default ui-corner-all"/>
 					</div>

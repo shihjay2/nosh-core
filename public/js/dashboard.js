@@ -1143,4 +1143,44 @@ $(document).ready(function() {
 			$.jGrowl("Please complete the form");
 		}
 	});
+	$("#send_uma_invite_form2_submit").click(function(){
+		var bValid = true;
+		$("#send_uma_invite_form2").find("[required]").each(function() {
+			var input_id = $(this).attr('id');
+			var id1 = $("#" + input_id);
+			var text = $("label[for='" + input_id + "']").html();
+			bValid = bValid && checkEmpty(id1, text);
+		});
+		if (bValid) {
+			var a = $("#mdnosh_email_input").val();
+			var name = $("#mdnosh_name_input").val();
+			$("#mdnosh_email_final").val(a);
+			$("#mdnosh_name_final").val(name);
+			$("#send_uma_invite_provider").html(name);
+			$("#send_uma_invite_div1").hide();
+			$("#send_uma_invite_div2").show();
+		} else {
+			$.jGrowl("Please complete the form");
+		}
+	});
+	$("#send_uma_invite_form3_submit").click(function(){
+		var bValid = true;
+		$("#send_uma_invite_form3").find("[required]").each(function() {
+			var input_id = $(this).attr('id');
+			var id1 = $("#" + input_id);
+			var text = $("label[for='" + input_id + "']").html();
+			bValid = bValid && checkEmpty(id1, text);
+		});
+		if (bValid) {
+			var a = $("#mdnosh_sms_input").val();
+			var name = $("#mdnosh_name1_input").val();
+			$("#mdnosh_email_final").val(a);
+			$("#mdnosh_name_final").val(name);
+			$("#send_uma_invite_provider").html(name);
+			$("#send_uma_invite_div1").hide();
+			$("#send_uma_invite_div2").show();
+		} else {
+			$.jGrowl("Please complete the form");
+		}
+	});
 });

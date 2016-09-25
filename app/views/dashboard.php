@@ -334,11 +334,34 @@
 </div>
 <div id="send_uma_invite_dialog" title="Invite a Provider to Access your Chart">
 	<div id="send_uma_invite_div1">
-		<form id="send_uma_invite_form1" class="pure-form">
-			<label for="mdnosh_provider_search_input">Practice/Provider Name (for search):</label>
-			<input type="text" id="mdnosh_provider_search_input" name="term" style="width:60%" class="text" required/>
-			<button type="button" id="send_uma_invite_form1_submit" class="nosh_button_search">Search</button>
-		</form><br>
+		<fieldset class="ui-corner-all">
+			<legend>Invite Provider from mdNOSH Gateway</legend>
+			<form id="send_uma_invite_form1" class="pure-form">
+				<label for="mdnosh_provider_search_input">Practice/Provider Name (for search):</label>
+				<input type="text" id="mdnosh_provider_search_input" name="term" style="width:60%" class="text" required/>
+				<button type="button" id="send_uma_invite_form1_submit" class="nosh_button_search">Search</button>
+			</form>
+		</fieldset><br>
+		<fieldset class="ui-corner-all">
+			<legend>Invite Provider using an Email Address</legend>
+			<form id="send_uma_invite_form2" class="pure-form">
+				<label for="mdnosh_email_input">Provider Email Address:</label>
+				<input type="text" id="mdnosh_email_input" name="term" style="width:60%" class="text" required/>
+				<label for="mdnosh_name_input">Provider Name:</label>
+				<input type="text" id="mdnosh_name_input" name="term" style="width:60%" class="text" required/>
+				<button type="button" id="send_uma_invite_form2_submit" class="nosh_button_search">Submit</button>
+			</form>
+		</fieldset><br>
+		<fieldset class="ui-corner-all">
+			<legend>Invite Provider using SMS</legend>
+			<form id="send_uma_invite_form3" class="pure-form">
+				<label for="mdnosh_sms_input">Provider SMS Number:</label>
+				<input type="text" id="mdnosh_sms_input" name="term" style="width:60%" class="text" required/>
+				<label for="mdnosh_name1_input">Provider Name:</label>
+				<input type="text" id="mdnosh_name1_input" name="term" style="width:60%" class="text" required/>
+				<button type="button" id="send_uma_invite_form3_submit" class="nosh_button_search">Submit</button>
+			</form>
+		</fieldset><br>
 		<div id="send_uma_invite_results"></div>
 	</div>
 	<div id="send_uma_invite_div2">
