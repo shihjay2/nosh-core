@@ -353,7 +353,9 @@
 					<label for="mdnosh_name_input">Provider Name:</label>
 					<input type="text" id="mdnosh_name_input" name="term" style="width:60%" class="text" required/>
 				</div>
-				<button type="button" id="send_uma_invite_form2_submit" class="nosh_button_search">Submit</button>
+				<div class="pure-controls">
+					<button type="button" id="send_uma_invite_form2_submit" class="nosh_button_search">Submit</button>
+				</div>
 			</form>
 		</fieldset><br>
 		<fieldset class="ui-corner-all">
@@ -367,7 +369,9 @@
 					<label for="mdnosh_name1_input">Provider Name:</label>
 					<input type="text" id="mdnosh_name1_input" name="term" style="width:60%" class="text" required/>
 				</div>
-				<button type="button" id="send_uma_invite_form3_submit" class="nosh_button_search">Submit</button>
+				<div class="pure-controls">
+					<button type="button" id="send_uma_invite_form3_submit" class="nosh_button_search">Submit</button>
+				</div>
 			</form>
 		</fieldset><br>
 		<div id="send_uma_invite_results"></div>
