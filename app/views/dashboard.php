@@ -344,21 +344,29 @@
 		</fieldset><br>
 		<fieldset class="ui-corner-all">
 			<legend>Invite Provider using an Email Address</legend>
-			<form id="send_uma_invite_form2" class="pure-form">
-				<label for="mdnosh_email_input">Provider Email Address:</label>
-				<input type="text" id="mdnosh_email_input" name="term" style="width:60%" class="text" required/>
-				<label for="mdnosh_name_input">Provider Name:</label>
-				<input type="text" id="mdnosh_name_input" name="term" style="width:60%" class="text" required/>
+			<form id="send_uma_invite_form2" class="pure-form pure-form-aligned">
+				<div class="pure-control-group">
+					<label for="mdnosh_email_input">Provider Email Address:</label>
+					<input type="text" id="mdnosh_email_input" name="term" style="width:60%" class="text" required/>
+				</div>
+				<div class="pure-control-group">
+					<label for="mdnosh_name_input">Provider Name:</label>
+					<input type="text" id="mdnosh_name_input" name="term" style="width:60%" class="text" required/>
+				</div>
 				<button type="button" id="send_uma_invite_form2_submit" class="nosh_button_search">Submit</button>
 			</form>
 		</fieldset><br>
 		<fieldset class="ui-corner-all">
 			<legend>Invite Provider using SMS</legend>
-			<form id="send_uma_invite_form3" class="pure-form">
-				<label for="mdnosh_sms_input">Provider SMS Number:</label>
-				<input type="text" id="mdnosh_sms_input" name="term" style="width:60%" class="text" required/>
-				<label for="mdnosh_name1_input">Provider Name:</label>
-				<input type="text" id="mdnosh_name1_input" name="term" style="width:60%" class="text" required/>
+			<form id="send_uma_invite_form3" class="pure-form pure-form-aligned">
+				<div class="pure-control-group">
+					<label for="mdnosh_sms_input">Provider SMS Number:</label>
+					<input type="text" id="mdnosh_sms_input" name="term" style="width:60%" class="text" required/>
+				</div>
+				<div class="pure-control-group">
+					<label for="mdnosh_name1_input">Provider Name:</label>
+					<input type="text" id="mdnosh_name1_input" name="term" style="width:60%" class="text" required/>
+				</div>
 				<button type="button" id="send_uma_invite_form3_submit" class="nosh_button_search">Submit</button>
 			</form>
 		</fieldset><br>
