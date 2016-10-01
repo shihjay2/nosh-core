@@ -106,7 +106,7 @@
 						<h4>Welcome <?php echo $displayname;?>.</h4>
 						<?php if(Session::get('patient_centric') == 'y') {?>
 							<!-- <br><i class="fa fa-plus-square fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="Manage practices so that a provider can document their encounters with you.  Mangage apps that are connected to your patient NOSH."> <a href="#" class="dashboard_manage_practice">Your connected practices and apps.</a></span> -->
-							<br><i class="fa fa-share-square-o fa-fw fa-2x nosh_tooltip send_uma_invite" style="vertical-align:middle;padding:2px;color:green;" title="Share your Chart"></i><span class="nosh_tooltip" title="Manage practices so that a provider can document their encounters with you.  Mangage apps that are connected to your patient NOSH."> <a href="#" class="send_uma_invite">Share your chart.</a></span>
+							<br><i class="fa fa-share-square-o fa-fw fa-2x nosh_tooltip send_uma_invite" style="vertical-align:middle;padding:2px;color:green;" title="Share your Chart"></i><span class="nosh_tooltip" title="Manage practices so that a provider can document their encounters with you.  Mangage apps that are connected to your patient NOSH."> <a href="#" class="send_uma_invite">Share your chart.</a></span><br>
 						<?php }?>
 						<i class="fa fa-envelope fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="Send a message to your provider here too!"> <a href="#" id="dashboard_messaging">View your messages.</a></span>
 						<?php if(Session::get('patient_centric') == 'n') {?>
