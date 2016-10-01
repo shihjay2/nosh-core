@@ -21,7 +21,7 @@
 	"require": {
 		"php" : ">=5.4.0",
 		"d11wtq/boris": "1.0.8",
-		"laravel/framework": "4.1.*",
+		"laravel/framework": "4.2.*",
 		"raahul/larryfour": "1.*",
 		"soapbox/laravel-formatter": "dev-master",
 		"barryvdh/laravel-snappy": "0.1.x",

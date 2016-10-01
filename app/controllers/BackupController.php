@@ -6,7 +6,7 @@ class BackupController extends BaseController
 	/**
 	* NOSH ChartingSystem Backup and Updating System, to be run as a cron job
 	*/
-	
+
 	public function backup()
 	{
 		$config_file = __DIR__."/../../.env.php";
@@ -28,7 +28,7 @@ class BackupController extends BaseController
 		DB::delete('delete from extensions_log where DATE_SUB(CURDATE(), INTERVAL 30 DAY) >= timestamp');
 		File::cleanDirectory(__DIR__."/../../public/temp");
 	}
-	
+
 	public function update_system()
 	{
 		$current_version = File::get(__DIR__."/../../.version");
@@ -70,7 +70,8 @@ class BackupController extends BaseController
 					}
 				}
 			}
-			Artisan::call('migrate');
+			define('STDIN',fopen("php://stdin","r"));
+			Artisan::call('migrate', array('--force' => true));
 			File::put(__DIR__."/../../.version", $result[0]['sha']);
 			echo "System Updated with version " . $result[0]['sha'] . " from " . $current_version;
 		} else {

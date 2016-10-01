@@ -16,7 +16,7 @@ class HomeController extends BaseController {
 	*/
 
 	protected $layout = 'layouts.layout2';
-	
+
 	public function dashboard()
 	{
 		$user_id = Session::get('user_id');
@@ -203,7 +203,7 @@ class HomeController extends BaseController {
 			$this->layout->content .= View::make('graph')->render();
 		}
 	}
-	
+
 	public function schedule()
 	{
 		$practice_id = Session::get('practice_id');
@@ -220,21 +220,21 @@ class HomeController extends BaseController {
 		$this->layout->script = $this->js_assets('base');
 		$this->layout->content .= View::make('schedule_widget', $data)->render();
 	}
-	
+
 	public function view_fax($id)
 	{
 		$result = Received::find($id);
 		$file_path = $result->filePath;
 		return Response::download($file_path);
 	}
-	
+
 	public function view_scan($id)
 	{
 		$result = Scans::find($id);
 		$file_path = $result->filePath;
 		return Response::download($file_path);
 	}
-	
+
 	public function export_address_csv()
 	{
 		$query = DB::table('addressbook')->get();
@@ -255,13 +255,13 @@ class HomeController extends BaseController {
 		File::put($file_path, $csv);
 		return Response::download($file_path);
 	}
-	
+
 	public function print_individual_chart($pid)
 	{
 		$file = $this->print_chart($pid, 'file', '', 'all');
 		return Response::download($file);
 	}
-	
+
 	public function pnosh_provider_redirect()
 	{
 		$this->setpatient('1');
@@ -293,5 +293,101 @@ class HomeController extends BaseController {
 			$this->audit('Update');
 		}
 		return Redirect::to('chart');
+	}
+
+	public function uma_register()
+	{
+		if (Input::server("REQUEST_METHOD") == "POST") {
+			$rules = [
+				'email' => 'required|email'
+			];
+			$validator = Validator::make(Input::all(), $rules);
+			if ($validator->fails()) {
+				 return Redirect::to('uma_register')->withErrors($validator);
+			}
+			Session::forget('type');
+			Session::forget('client_id');
+			Session::forget('url');
+			$domain = explode('@', Input::get('email'));
+			// webfinger
+			$url = 'https://' . $domain[1] . '/.well-known/webfinger';
+			$query_string = 'resource=acct:' . Input::get('email') . '&rel=http://openid.net/specs/connect/1.0/issuer';
+			$url .= '?' . $query_string ;
+			$ch = curl_init();
+			curl_setopt($ch,CURLOPT_URL, $url);
+			curl_setopt($ch,CURLOPT_FAILONERROR,1);
+			curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+			curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+			curl_setopt($ch,CURLOPT_TIMEOUT, 60);
+			curl_setopt($ch,CURLOPT_CONNECTTIMEOUT ,0);
+			$result = curl_exec($ch);
+			$result_array = json_decode($result, true);
+			curl_close($ch);
+			if (isset($result_array['subject'])) {
+				$as_uri = $result_array['links']['href'];
+				$client_name = 'mdNOSH Gateway';
+				$url1 = route('uma_auth');
+				$oidc = new OpenIDConnectClient($as_uri);
+				$oidc->setClientName($client_name);
+				$oidc->setRedirectURL($url1);
+				$oidc->addScope('openid');
+				$oidc->addScope('email');
+				$oidc->addScope('profile');
+				$oidc->addScope('address');
+				$oidc->addScope('phone');
+				$oidc->addScope('offline_access');
+				$oidc->addScope('uma_authorization');
+				$oidc->addScope('uma_protection');
+				$oidc->register(true);
+				$client_id = $oidc->getClientID();
+				$client_secret = $oidc->getClientSecret();
+				$data1 = [
+					'hieofone_as_picture' => $client_id,
+					'hieofone_as_client_secret' => $client_secret,
+					'hieofone_as_url' => $as_uri
+				];
+				DB::table('demographics')->where('pid', '=', Session::get('pid'))->update($data1);
+				Session::put('pnosh_client_id', $client_id);
+				Session::put('pnosh_client_secret', $client_secret);
+				Session::put('pnosh_url', $as_uri);
+				Session::put('pnosh_id', $id);
+				Session::save();
+				return Redirect::to('uma_auth');
+			} else {
+				return Redirect::to('uma_register')->withErrors(['email' => 'Try again']);
+			}
+		} else {
+			return View::make('uma_register');
+		}
+	}
+
+	public function uma_auth(Request $request)
+	{
+		$url = route('uma_auth');
+		$open_id_url = Session::get('pnosh_url');
+		$client_id = Session::get('pnosh_client_id');
+		$client_secret = Session::get('pnosh_client_secret');
+		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc->setRedirectURL($url);
+		$oidc->addScope('openid');
+		$oidc->addScope('email');
+		$oidc->addScope('profile');
+		$oidc->addScope('offline_access');
+		$oidc->addScope('uma_authorization');
+		$oidc->addScope('uma_protection');
+		$oidc->authenticate(true);
+		$refresh_data['refresh_token'] = $oidc->getRefreshToken();
+		$name = $oidc->requestUserInfo('name');
+		$birthday = $oidc->requestUserInfo('birthday');
+		$refresh_data['hieofone_as_name'] = $name . '(DOB: ' . $birthday . ')';
+		$refresh_data['hieofone_as_picture'] = $oidc->requestUserInfo('picture');
+		DB::table('demographics')->where('pid', '=', Session::get('pid'))->update($refresh_data);
+		$access_token = $oidc->getAccessToken();
+		$data1['content'] = '<h3>Registration successful!</h3><ul>';
+		$data1['content'] .= '<li>You can now invite physicians in the Directory to your pNOSH patient-centered EHR.</li>';
+		$data1['content'] .= '<li>You have registered your FHIR resources in the mdNOSH EHR for sharing via your HIE of One Authorizaion Server</li>';
+		$data1['content'] .= '<h3>You may now close this window or <a href="' . $request->session()->get('pnosh_url') .'/nosh">click here</a> to go to your pNOSH health record.</h3>';
+		$data1['title'] = 'Patient Registration for mdNOSH Gateway Response';
+		return view('home', $data1);
 	}
 }

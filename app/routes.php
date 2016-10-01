@@ -141,6 +141,8 @@ Route::group(array('before' => 'force.ssl|acl3'), function() {
 	Route::post('signatureupload', array('as' => 'signatureupload', 'uses' => 'AjaxDashboardController@signatureupload'));
 });
 Route::group(array('before' => 'force.ssl|acl4'), function() {
+	Route::any('uma_register', array('as' => 'uma_register', 'uses' => 'HomeController@uma_register'));
+	Route::any('uma_auth', array('as' => 'uma_auth', 'uses' => 'HomeController@uma_auth'));
 });
 Route::group(array('before' => 'force.ssl|acl5'), function() {
 	Route::post('practicelogoupload', array('as' => 'practicelogoupload', 'uses' => 'AjaxSetupController@practicelogoupload'));
@@ -305,10 +307,11 @@ Route::filter('installfix', function()
 
 Route::filter('update', function()
 {
+	define('STDIN',fopen("php://stdin","r"));
 	if (!Schema::hasTable('migrations')) {
-		Artisan::call('migrate:install');
+		Artisan::call('migrate:install', array('--force' => true));
 	}
-	Artisan::call('migrate');
+	Artisan::call('migrate', array('--force' => true));
 	$current_version = "1.8.4";
 	$row = Practiceinfo::find(1);
 	// Check version number

@@ -111,6 +111,7 @@
 						<br><i class="fa fa-user fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="patient_demographics">Edit your demographics and insurance.</a>
 						<?php if(Session::get('patient_centric') == 'n') {?>
 							<br><i class="fa fa-check-square-o fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="Your provider may want you to fill out forms for the practice.  Do this here!"> <a href="#" id="dashboard_forms">Fill out forms.</a></span>
+							<br><i class="fa fa-child fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i> <a href="<?php echo route("uma_register"); ?>">Connect this portal to your HIE of One Authorization Server</a>
 						<?php }?>
 						<br><i class="fa fa-clock-o fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="View your health history in a timeline fashion."> <a href="#" id="timeline_chart">Your health timeline.</a></span>
 						<br><i class="fa fa-user-md fa-fw fa-2x" style="vertical-align:middle;padding:2px"></i><span class="nosh_tooltip" title="Your patient instructions for your previous encounters with your provider."> <a href="#" id="dashboard_encounters">Your past office visits.</a></span>
@@ -344,7 +345,7 @@
 		</fieldset><br>
 		<fieldset class="ui-corner-all">
 			<legend>Invite Provider using an Email Address</legend>
-			<form id="send_uma_invite_form2" class="pure-form pure-form-aligned">
+			<form id="send_uma_invite_form3" class="pure-form pure-form-aligned">
 				<div class="pure-control-group">
 					<label for="mdnosh_email_input">Provider Email Address:</label>
 					<input type="text" id="mdnosh_email_input" name="term" style="width:60%" class="text" required/>
@@ -354,13 +355,13 @@
 					<input type="text" id="mdnosh_name_input" name="term" style="width:60%" class="text" required/>
 				</div>
 				<div class="pure-controls">
-					<button type="button" id="send_uma_invite_form2_submit" class="nosh_button_search">Submit</button>
+					<button type="button" id="send_uma_invite_form3_submit" class="nosh_button_search">Submit</button>
 				</div>
 			</form>
 		</fieldset><br>
 		<fieldset class="ui-corner-all">
 			<legend>Invite Provider using SMS</legend>
-			<form id="send_uma_invite_form3" class="pure-form pure-form-aligned">
+			<form id="send_uma_invite_form4" class="pure-form pure-form-aligned">
 				<div class="pure-control-group">
 					<label for="mdnosh_sms_input">Provider SMS Number:</label>
 					<input type="text" id="mdnosh_sms_input" name="term" style="width:60%" class="text" required/>
@@ -370,7 +371,7 @@
 					<input type="text" id="mdnosh_name1_input" name="term" style="width:60%" class="text" required/>
 				</div>
 				<div class="pure-controls">
-					<button type="button" id="send_uma_invite_form3_submit" class="nosh_button_search">Submit</button>
+					<button type="button" id="send_uma_invite_form4_submit" class="nosh_button_search">Submit</button>
 				</div>
 			</form>
 		</fieldset><br>

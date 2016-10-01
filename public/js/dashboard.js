@@ -1143,9 +1143,9 @@ $(document).ready(function() {
 			$.jGrowl("Please complete the form");
 		}
 	});
-	$("#send_uma_invite_form2_submit").click(function(){
+	$("#send_uma_invite_form3_submit").click(function(){
 		var bValid = true;
-		$("#send_uma_invite_form2").find("[required]").each(function() {
+		$("#send_uma_invite_form3").find("[required]").each(function() {
 			var input_id = $(this).attr('id');
 			var id1 = $("#" + input_id);
 			var text = $("label[for='" + input_id + "']").html();
@@ -1163,9 +1163,9 @@ $(document).ready(function() {
 			$.jGrowl("Please complete the form");
 		}
 	});
-	$("#send_uma_invite_form3_submit").click(function(){
+	$("#send_uma_invite_form4_submit").click(function(){
 		var bValid = true;
-		$("#send_uma_invite_form3").find("[required]").each(function() {
+		$("#send_uma_invite_form4").find("[required]").each(function() {
 			var input_id = $(this).attr('id');
 			var id1 = $("#" + input_id);
 			var text = $("label[for='" + input_id + "']").html();
