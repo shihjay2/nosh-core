@@ -565,9 +565,9 @@ class LoginController extends BaseController {
 						$arr['practice_npi_select'] .= '<label for="practice_npi_select">Practice NPI:</label>';
 						$arr['practice_npi_select'] .= Form::select('practice_npi_select', $form_select_array, null, array('id'=>'practice_npi_select','required','style'=>'width:90%','class'=>'text'));
 						$arr['practice_npi_select'] .= '</div>';
+						$arr['button'] = '<input type="submit" id="practice_submit_button" value="Select Practice" name="select practice" class="ui-button ui-state-default ui-corner-all"/>';
 					} else {
 						$arr['page_comment'] = "<div align='center'>Enter your NPI and a practice NPI you want to associate with this patient's NOSH service.<br><br></div>";
-						$arr['page_comment'] .= "<div>" . Session::get('username') . "," . Session::get('uid') . "," . Session::get('email') . "</div>";
 						$arr['practice_npi_select'] = '<div class="pure-control-group" align="center">';
 						$arr['practice_npi_select'] .= '<label for="npi">NPI:</label>';
 						$arr['practice_npi_select'] .= Form::text('npi', null, array('id'=>'npi','required','style'=>'width:90%','class'=>'text'));
@@ -576,6 +576,7 @@ class LoginController extends BaseController {
 						$arr['practice_npi_select'] .= '<label for="practice_npi_select">Practice NPI:</label>';
 						$arr['practice_npi_select'] .= Form::text('practice_npi_select', null, array('id'=>'practice_npi_select','required','style'=>'width:90%','class'=>'text'));
 						$arr['practice_npi_select'] .= '</div>';
+						$arr['button'] = '<input type="submit" id="practice_submit_button" value="Add Practice" name="select practice" class="ui-button ui-state-default ui-corner-all"/>';
 					}
 					$this->layout->style = $this->css_assets();
 					$this->layout->script = $this->js_assets('base');
