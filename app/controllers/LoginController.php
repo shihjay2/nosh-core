@@ -527,7 +527,7 @@ class LoginController extends BaseController {
 			);
 			DB::table('providers')->insert($data1);
 			$this->audit('Add');
-			$this->syncuser(Session::get('oidc_auth_access_token'));
+			//$this->syncuser(Session::get('oidc_auth_access_token'));
 			$user1 = User::where('id', '=', $id)->first();
 			Auth::login($user1);
 			$practice1 = Practiceinfo::find($user1->practice_id);
