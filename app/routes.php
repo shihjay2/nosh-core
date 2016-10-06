@@ -189,6 +189,7 @@ Route::get('mtmheaderpdf/{pid}', array("as" => "mtmheaderpdf", function($pid)
 Route::get('backup', array('as' => 'backup', 'uses' => 'BackupController@backup'));
 Route::post('backuprestore', array('as' => 'backuprestore', 'uses' => 'BackupController@restore'));
 Route::get('googleoauth', array('as' => 'googleoauth', 'uses' => 'LoginController@googleoauth'));
+Route::get('google_auth', array('as' => 'google_auth', 'uses' => 'LoginController@google_auth'));
 Route::get('oidc', array('as' => 'oidc', 'uses' => 'LoginController@oidc'));
 Route::get('oidc_register_client', array('as' => 'oidc_register_client', 'uses' => 'LoginController@oidc_register_client'));
 Route::get('oidc_check_patient_centric', array('as' => 'oidc_check_patient_centric', 'uses' => 'LoginController@oidc_check_patient_centric'));

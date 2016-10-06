@@ -515,9 +515,14 @@ class LoginController extends BaseController {
 			);
 			$id = DB::table('users')->insertGetId($data);
 			$this->audit('Add');
+			if (Input::has('npi')) {
+				$npi = Input::get('npi');
+			} else {
+				$npi = Session::get('npi');
+			}
 			$data1 = array(
 				'id' => $id,
-				'npi' => Session::get('npi'),
+				'npi' => $npi,
 				'practice_id' => $practice_id
 			);
 			DB::table('providers')->insert($data1);
@@ -549,14 +554,26 @@ class LoginController extends BaseController {
 		} else {
 			if (Session::has('practice_choose')) {
 				if (Session::get('practice_choose') == 'y') {
-					$practice_npi_array1 = explode(',', Session::get('practice_npi_array'));
-					$form_select_array = array();
-					foreach ($practice_npi_array1 as $practice_npi_item1) {
-						$form_select_array[$practice_npi_item1] = $practice_npi_item1;
+					if (Session::has('practice_npi_array')) {
+						$practice_npi_array1 = explode(',', Session::get('practice_npi_array'));
+						$form_select_array = array();
+						foreach ($practice_npi_array1 as $practice_npi_item1) {
+							$form_select_array[$practice_npi_item1] = $practice_npi_item1;
+						}
+						$arr['practice_npi_select'] = '<div class="pure-control-group">';
+						$arr['practice_npi_select'] .= '<label for="practice_npi_select">Practice NPI:</label>';
+						$arr['practice_npi_select'] .= Form::select('practice_npi_select', $form_select_array, null, array('id'=>'practice_npi_select','required','style'=>'width:300px','class'=>'text'));
+						$arr['practice_npi_select'] .= '</div>';
+					} else {
+						$arr['practice_npi_select'] = '<div class="pure-control-group">';
+						$arr['practice_npi_select'] .= '<label for="npi">NPI:</label>';
+						$arr['practice_npi_select'] .= Form::text('npi', null, array('id'=>'npi','required','style'=>'width:300px','class'=>'text'));
+						$arr['practice_npi_select'] .= '</div>';
+						$arr['practice_npi_select'] = '<div class="pure-control-group">';
+						$arr['practice_npi_select'] .= '<label for="practice_npi_select">Practice NPI:</label>';
+						$arr['practice_npi_select'] .= Form::text('practice_npi_select', null, array('id'=>'practice_npi_select','required','style'=>'width:300px','class'=>'text'));
+						$arr['practice_npi_select'] .= '</div>';
 					}
-					$arr['practice_npi_select'] = '<div class="pure-control-group">';
-					$arr['practice_npi_select'] .= '<label for="practice_npi_select">Practice NPI:</label>';
-					$arr['practice_npi_select'] .= Form::select('practice_npi_select',$form_select_array, null, array('id'=>'practice_npi_select','required','style'=>'width:300px','class'=>'text'));
 					$this->layout->style = $this->css_assets();
 					$this->layout->script = $this->js_assets('base');
 					$this->layout->script .= HTML::script('/js/practice_choose.js');
@@ -849,6 +866,90 @@ class LoginController extends BaseController {
 		$oidc->revoke();
 		Session::forget('oidc_auth_access_token');
 		return Redirect::intended('logout');
+	}
+
+	public function google_auth()
+	{
+		$file = File::get(__DIR__."/../../.google");
+		$file_arr = json_decode($file, true);
+		$client_id = $file_arr['web']['client_id'];
+		$client_secret = $file_arr['web']['client_secret'];
+		$open_id_url = 'https://accounts.google.com/o/oauth2/v2/auth';
+		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
+		$url = route('google_auth');
+		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
+		$oidc->setRedirectURL($url);
+		$oidc->addScope('openid');
+		$oidc->addScope('email');
+		$oidc->addScope('profile');
+		$oidc->authenticate();
+		$name = $oidc->requestUserInfo('name');
+		$email = $oidc->requestUserInfo('email');
+		//$npi = $oidc->requestUserInfo('npi');
+		$access_token = $oidc->getAccessToken();
+		$user = User::where('uid', '=', $oidc->requestUserInfo('sub'))->first();
+		if ($user) {
+			Auth::login($user);
+			$practice = Practiceinfo::find($user->practice_id);
+			Session::put('user_id', $user->id);
+			Session::put('group_id', $user->group_id);
+			Session::put('practice_id', $user->practice_id);
+			Session::put('version', $practice->version);
+			Session::put('practice_active', $practice->active);
+			Session::put('displayname', $user->displayname);
+			Session::put('documents_dir', $practice->documents_dir);
+			Session::put('rcopia', $practice->rcopia_extension);
+			Session::put('mtm_extension', $practice->mtm_extension);
+			Session::put('patient_centric', $practice->patient_centric);
+			Session::put('oidc_auth_access_token', $access_token);
+			setcookie("login_attempts", 0, time()+900, '/');
+			return Redirect::intended('/');
+		} else {
+			// If patient-centric, confirm if user request is registered to pNOSH first
+			if ($practice->patient_centric == 'y') {
+				// Flush out all previous errored attempts.
+				if (Session::has('uma_error')) {
+					Session::forget('uma_error');
+				}
+				// Check if there is an invite first
+				$invite_query = DB::table('uma_invitation')->where('email', '=', $email)->where('invitation_timeout', '>', time())->first();
+				if (!$invite_query) {
+					// No invitation, expired invitation, or access
+					return Redirect::to('uma_invitation_request');
+				}
+				$name_arr = explode(' ', $invite_query->name);
+				// Add resources associated with new provider user to pNOSH UMA Server
+				$resource_set_id_arr = explode(',', $invite_query->resource_set_ids);
+				foreach ($resource_set_id_arr as $resource_set_id) {
+					$uma_query = DB::table('uma')->where('resource_set_id', '=', $resource_set_id)->get();
+					$scopes = array();
+					if ($uma_query) {
+						// Register all scopes for resource sets for now
+						foreach ($uma_query as $uma_row) {
+							$scopes[] = $uma_row->scope;
+						}
+					}
+					$this->uma_policy($resource_set_id, $email, $invite_query->name, $scopes);
+				}
+				// Remove invite
+				DB::table('uma_invitation')->where('id', '=', $invite_query->id)->delete();
+				$this->audit('Delete');
+				Session::put('firstname', $name_arr[0]);
+				Session::put('lastname', $name_arr[1]);
+				Session::put('username', $oidc->requestUserInfo('sub'));
+				Session::put('middle', '');
+				Session::put('displayname', $name);
+				Session::put('email', $email);
+				Session::put('npi', '');
+				Session::put('practice_choose', 'y');
+				Session::put('uid', $oidc->requestUserInfo('sub'));
+				Session::put('oidc_auth_access_token', $access_token);
+				return Redirect::to('practice_choose');
+			} else {
+				// No registered mdNOSH user for this NOSH instance - punt back to login page.
+				return Redirect::intended('/');
+			}
+		}
 	}
 
 	public function googleoauth()

@@ -1493,7 +1493,8 @@ class AjaxCommonController extends BaseController {
 		// curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
 		// $output1 = curl_exec ($ch1);
 		// curl_close ($ch1);
-		$data_message['temp_url'] = URL::to('oidc');
+		// $data_message['temp_url'] = URL::to('oidc');
+		$data_message['temp_url'] = URL::to('/');
 		$data_message['patient'] = Session::get('displayname');
 		if (filter_var(Input::get('email'), FILTER_VALIDATE_EMAIL)) {
 			$mesg  = $this->send_mail('emails.apiregister', $data_message, 'URGENT: Invitation to access the personal electronic medical record of ' . Session::get('displayname'), Input::get('email'), '1');
