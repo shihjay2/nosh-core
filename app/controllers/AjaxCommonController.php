@@ -1513,7 +1513,7 @@ class AjaxCommonController extends BaseController {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			$output = curl_exec ($ch);
 			curl_close ($ch);
-			return $output;
+			//return $output;
 		}
 		echo 'Invitation sent to ' . Input::get('email') . '!';
 	}
