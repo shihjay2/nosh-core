@@ -4218,6 +4218,7 @@ $(document).on('click', ".send_uma_invite", function() {
 	});
 	$("#send_uma_invite_div1").show();
 	$("#send_uma_invite_div2").hide();
+	$('.ui-button:contains("Send Invitation")').hide();
 	$("#send_uma_invite_dialog").dialog('open');
 });
 $(document).on('click', ".mdnosh_email_select", function() {

@@ -1159,6 +1159,7 @@ $(document).ready(function() {
 			$("#send_uma_invite_provider").html(name);
 			$("#send_uma_invite_div1").hide();
 			$("#send_uma_invite_div2").show();
+			$('.ui-button:contains("Send Invitation")').show();
 		} else {
 			$.jGrowl("Please complete the form");
 		}
@@ -1179,6 +1180,7 @@ $(document).ready(function() {
 			$("#send_uma_invite_provider").html(name);
 			$("#send_uma_invite_div1").hide();
 			$("#send_uma_invite_div2").show();
+			$('.ui-button:contains("Send Invitation")').show();
 		} else {
 			$.jGrowl("Please complete the form");
 		}
