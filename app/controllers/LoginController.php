@@ -572,7 +572,7 @@ class LoginController extends BaseController {
 						$arr['practice_npi_select'] .= '</div>';
 						$arr['button'] = '<input type="submit" id="practice_submit_button" value="Select Practice" name="select practice" class="ui-button ui-state-default ui-corner-all"/>';
 					} else {
-						$arr['page_comment'] = "<div align='center'>Enter your NPI and a practice NPI you want to associate with this patient's NOSH service.<br><br></div>";
+						$arr['page_comment'] = "<div align='center'>Enter your NPI and a practice NPI you want to associate with this patient's NOSH service.<br>You can verify your NPI number <a href='http://npinumberlookup.org/' target='_blank'>here</a><br><br></div>";
 						$arr['practice_npi_select'] = '<div class="pure-control-group" align="center">';
 						$arr['practice_npi_select'] .= '<label for="npi">NPI:</label>';
 						$arr['practice_npi_select'] .= Form::text('npi', null, array('id'=>'npi','required','style'=>'width:90%','class'=>'text'));
