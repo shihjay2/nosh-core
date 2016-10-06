@@ -12,7 +12,7 @@
 */
 
 Route::any('/', array('as' => 'home', 'before' => 'force.ssl|version_check|installfix|googlecheck|needinstall|update|openid|pnosh_install|auth|google|pnosh', 'uses' => 'HomeController@dashboard'));
-Route::any('login{type?}', array('as' => 'login', 'before' => 'force.ssl', 'uses' => 'LoginController@action'));
+Route::any('login/{type?}', array('as' => 'login', 'before' => 'force.ssl', 'uses' => 'LoginController@action'));
 Route::any('mobile', array('as' => 'mobile', 'before' => 'force.ssl|version_check|installfix|needinstall|update|openid|auth.mobile', 'uses' => 'MobileController@dashboard'));
 Route::any('login_mobile', array('as' => 'login_mobile', 'before' => 'force.ssl', 'uses' => 'MobileController@action'));
 Route::get('start/{practicehandle}', function($practicehandle = null)

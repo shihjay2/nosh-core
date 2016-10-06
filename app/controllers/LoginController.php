@@ -100,6 +100,8 @@ class LoginController extends BaseController {
 			$data['patient_centric'] = $practice1->patient_centric;
 			if ($type == 'provider') {
 				$data['pnosh_provider'] = 'y';
+			} else {
+				$data['pnosh_provider'] = 'n';
 			}
 			if((array_key_exists('login_attempts', $_COOKIE)) && ($_COOKIE['login_attempts'] >= 5)){
 				$data['attempts'] = "You have reached the number of limits to login.  Wait 15 minutes then try again.";
