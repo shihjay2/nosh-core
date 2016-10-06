@@ -9,7 +9,7 @@ class LoginController extends BaseController {
 
 	protected $layout = 'layouts.layout2';
 
-	public function action()
+	public function action($type='all')
 	{
 		$errors = new MessageBag();
 		if ($old = Input::old("errors")) {
@@ -98,6 +98,9 @@ class LoginController extends BaseController {
 				$data['practice_id'] = $practice_id;
 			}
 			$data['patient_centric'] = $practice1->patient_centric;
+			if ($type == 'provider') {
+				$data['pnosh_provider'] = 'y';
+			}
 			if((array_key_exists('login_attempts', $_COOKIE)) && ($_COOKIE['login_attempts'] >= 5)){
 				$data['attempts'] = "You have reached the number of limits to login.  Wait 15 minutes then try again.";
 				$this->layout->style = $this->css_assets();
