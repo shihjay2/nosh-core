@@ -4197,7 +4197,7 @@ $(document).on('click', '.remove_uma_user', function() {
 });
 $(document).on('click', ".dashboard_manage_practice", function() {
 	$('#manage_practice_dialog').dialog('option', {
-		height: $("#maincontent").height(),
+		// height: $("#maincontent").height(),
 		width: $("#maincontent").width(),
 		position: { my: 'left top', at: 'left top', of: '#maincontent' }
 	});
@@ -4205,7 +4205,7 @@ $(document).on('click', ".dashboard_manage_practice", function() {
 });
 $(document).on('click', ".send_uma_invite", function() {
 	$('#send_uma_invite_dialog').dialog('option', {
-		height: $("#maincontent").height(),
+		// height: $("#maincontent").height(),
 		width: $("#maincontent").width(),
 		position: { my: 'left top', at: 'left top', of: '#maincontent' }
 	});
