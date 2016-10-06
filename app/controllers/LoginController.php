@@ -874,7 +874,7 @@ class LoginController extends BaseController {
 		$file_arr = json_decode($file, true);
 		$client_id = $file_arr['web']['client_id'];
 		$client_secret = $file_arr['web']['client_secret'];
-		$open_id_url = 'https://accounts.google.com/o/oauth2/v2/auth';
+		$open_id_url = 'https://accounts.google.com';
 		$practice = DB::table('practiceinfo')->where('practice_id', '=', '1')->first();
 		$url = route('google_auth');
 		$oidc = new OpenIDConnectClient($open_id_url, $client_id, $client_secret);
