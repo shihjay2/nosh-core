@@ -15,7 +15,9 @@
 						</div>
 					</div>
 					<div class="pure-u-1">Login with OpenID Connect.</div><div class="pure-u-1"><br><br></div>
-					<div class="pure-u-1"><?php echo link_to_route('uma_auth', "I'm the Patient", $parameters = array(), $attributes = array('class'=>'nosh_button'));?><br><br></div>
+					<?php if ($pnosh_provider == 'n') {?>
+						<div class="pure-u-1"><?php echo link_to_route('uma_auth', "I'm the Patient", $parameters = array(), $attributes = array('class'=>'nosh_button'));?><br><br></div>
+					<?php }?>
 					<?php if ($pnosh_provider == 'y') {?>
 						<!-- <div class="pure-u-1"><?php echo link_to_route('uma_auth', "I'm a Provider", $parameters = array(), $attributes = array('class'=>'nosh_button'));?><br><br></div> -->
 						<div class="pure-u-1"><?php echo link_to_route('oidc', "Login using mdNOSH Gateway", $parameters = array(), $attributes = array('class'=>'nosh_button'));?><br><br></div>

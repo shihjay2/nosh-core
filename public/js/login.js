@@ -7,14 +7,14 @@ $(document).ready(function() {
 	$("#login_button").button();
 	$.ajax({
 		type: "POST",
-		url: "ajaxlogin/practices",
+		url: noshdata.login_url + "/ajaxlogin/practices",
 		dataType: "json",
 		success: function(data){
 			$("#practice_id").addOption(data.message);
 			$("#practice_id").val(noshdata.practice_id);
 			$.ajax({
 				type: "POST",
-				url: "ajaxlogin/practice-logo/" + noshdata.practice_id,
+				url: noshdata.login_url + "/ajaxlogin/practice-logo/" + noshdata.practice_id,
 				success: function(data){
 					$("#login_practice_logo").html(data);
 				}
@@ -25,7 +25,7 @@ $(document).ready(function() {
 		var a = $("#practice_id").val();
 		$.ajax({
 			type: "POST",
-			url: "ajaxlogin/practice-logo/" + a,
+			url: noshdata.login_url + "/ajaxlogin/practice-logo/" + a,
 			success: function(data){
 				$("#login_practice_logo").html(data);
 			}
@@ -73,7 +73,7 @@ $(document).ready(function() {
 			if(str){
 				$.ajax({
 					type: "POST",
-					url: "ajaxlogin/register-user",
+					url: noshdata.login_url + "/ajaxlogin/register-user",
 					data: str,
 					dataType: "json",
 					success: function(data){
@@ -118,7 +118,7 @@ $(document).ready(function() {
 		if (a) {
 			$.ajax({
 				type: "POST",
-				url: "ajaxlogin/forgot-password/" + a,
+				url: noshdata.login_url + "/ajaxlogin/forgot-password/" + a,
 				dataType: "json",
 				success: function(data){
 					if (data.response == "You are not a registered user." || data.response == "You need to setup a secret question and answer.  Contact the practice administrator to manually reset your password." || data.response == "Use HIEofOne to reset your password.") {
@@ -145,7 +145,7 @@ $(document).ready(function() {
 			if(str){
 				$.ajax({
 					type: "POST",
-					url: "ajaxlogin/forgot-password1",
+					url: noshdata.login_url + "/ajaxlogin/forgot-password1",
 					data: str,
 					dataType: "json",
 					success: function(data){
@@ -185,7 +185,7 @@ $(document).ready(function() {
 					var id = $("#id").val();
 					$.ajax({
 						type: "POST",
-						url: "ajaxlogin/change-password/" + id,
+						url: noshdata.login_url + "/ajaxlogin/change-password/" + id,
 						data: str,
 						success: function(data){
 							$.jGrowl("Password changed.  Please login again.");
@@ -228,7 +228,7 @@ $(document).ready(function() {
 					var id = $("#new_password_id").val();
 					$.ajax({
 						type: "POST",
-						url: "ajaxlogin/change-password/" + id,
+						url: noshdata.login_url + "/ajaxlogin/change-password/" + id,
 						data: str,
 						success: function(data){
 							$.jGrowl("Password created.  Please login again.");
@@ -244,7 +244,7 @@ $(document).ready(function() {
 	$('#username1').focusout(function() {
 		$.ajax({
 			type: "POST",
-			url: "ajaxlogin/check-username",
+			url: noshdata.login_url + "/ajaxlogin/check-username",
 			data: 'username=' + $('#username1').val(),
 			dataType: "json",
 			success: function(data){
