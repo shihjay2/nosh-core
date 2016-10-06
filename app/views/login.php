@@ -23,9 +23,11 @@
 						<div class="pure-u-1"><?php echo link_to_route('oidc', "Login using mdNOSH Gateway", $parameters = array(), $attributes = array('class'=>'nosh_button'));?><br><br></div>
 						<div class="pure-u-1"><?php echo link_to_route('google_auth', "Login using Google", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
 					<?php }?>
-					<div class="pure-u-1"><br><br><a href="#" id="open_regular_box">Standard Login for Administrator</a></div>
+					<?php if ($pnosh_provider == 'n') {?>
+						<div class="pure-u-1"><br><br><a href="#" id="open_regular_box">Standard Login for Administrator</a></div>
+					<?php }?>
 					<?php if (route('home') == 'https://shihjay.xyz/nosh' || route('home') == 'https://agropper.xyz/nosh') { ?>
-						<div class="pure-u-1"><br><br><?php echo link_to_route('reset_demo', "Reset Demo", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
+						<!-- <div class="pure-u-1"><br><br><?php echo link_to_route('reset_demo', "Reset Demo", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div> -->
 					<?php }?>
 				</div>
 				<div id="regular_box" style="display:none">
