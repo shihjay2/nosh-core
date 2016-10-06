@@ -560,18 +560,21 @@ class LoginController extends BaseController {
 						foreach ($practice_npi_array1 as $practice_npi_item1) {
 							$form_select_array[$practice_npi_item1] = $practice_npi_item1;
 						}
+						$arr['page_comment'] = "<div align='center'>Your identity has more than one associated practice NPI's.<br>Choose a practice NPI you want to associate with this patient's NOSH service.<br><br></div>";
 						$arr['practice_npi_select'] = '<div class="pure-control-group">';
 						$arr['practice_npi_select'] .= '<label for="practice_npi_select">Practice NPI:</label>';
-						$arr['practice_npi_select'] .= Form::select('practice_npi_select', $form_select_array, null, array('id'=>'practice_npi_select','required','style'=>'width:300px','class'=>'text'));
+						$arr['practice_npi_select'] .= Form::select('practice_npi_select', $form_select_array, null, array('id'=>'practice_npi_select','required','style'=>'width:90%','class'=>'text'));
 						$arr['practice_npi_select'] .= '</div>';
 					} else {
-						$arr['practice_npi_select'] = '<div class="pure-control-group">';
+						$arr['page_comment'] = "<div align='center'>Enter your NPI and a practice NPI you want to associate with this patient's NOSH service.<br><br></div>";
+						$arr['page_comment'] .= "<div>" . Session::get('username') . "," . Session::get('uid') . "," . Session::get('email') . "</div>";
+						$arr['practice_npi_select'] = '<div class="pure-control-group" align="center">';
 						$arr['practice_npi_select'] .= '<label for="npi">NPI:</label>';
-						$arr['practice_npi_select'] .= Form::text('npi', null, array('id'=>'npi','required','style'=>'width:300px','class'=>'text'));
+						$arr['practice_npi_select'] .= Form::text('npi', null, array('id'=>'npi','required','style'=>'width:90%','class'=>'text'));
 						$arr['practice_npi_select'] .= '</div>';
-						$arr['practice_npi_select'] = '<div class="pure-control-group">';
+						$arr['practice_npi_select'] .= '<div class="pure-control-group" align="center">';
 						$arr['practice_npi_select'] .= '<label for="practice_npi_select">Practice NPI:</label>';
-						$arr['practice_npi_select'] .= Form::text('practice_npi_select', null, array('id'=>'practice_npi_select','required','style'=>'width:300px','class'=>'text'));
+						$arr['practice_npi_select'] .= Form::text('practice_npi_select', null, array('id'=>'practice_npi_select','required','style'=>'width:90%','class'=>'text'));
 						$arr['practice_npi_select'] .= '</div>';
 					}
 					$this->layout->style = $this->css_assets();
