@@ -569,7 +569,7 @@ class LoginController extends BaseController {
 						$arr['practice_npi_select'] = '<div class="pure-control-group">';
 						$arr['practice_npi_select'] .= '<label for="practice_npi_select">Practice NPI:</label>';
 						$arr['practice_npi_select'] .= Form::select('practice_npi_select', $form_select_array, null, array('id'=>'practice_npi_select','required','style'=>'width:90%','class'=>'text'));
-						$arr['practice_npi_select'] .= '</div>';
+						$arr['practice_npi_select'] .= '</div><br><br>';
 						$arr['button'] = '<input type="submit" id="practice_submit_button" value="Select Practice" name="select practice" class="ui-button ui-state-default ui-corner-all"/>';
 					} else {
 						$arr['page_comment'] = "<div align='center'>Enter your NPI and a practice NPI you want to associate with this patient's NOSH service.<br>You can verify your NPI number <a href='http://npinumberlookup.org/' target='_blank'>here</a><br><br></div>";
@@ -580,7 +580,7 @@ class LoginController extends BaseController {
 						$arr['practice_npi_select'] .= '<div class="pure-control-group" align="center">';
 						$arr['practice_npi_select'] .= '<label for="practice_npi_select">Practice NPI:</label>';
 						$arr['practice_npi_select'] .= Form::text('practice_npi_select', null, array('id'=>'practice_npi_select','required','style'=>'width:90%','class'=>'text'));
-						$arr['practice_npi_select'] .= '</div>';
+						$arr['practice_npi_select'] .= '</div><br><br>';
 						$arr['button'] = '<input type="submit" id="practice_submit_button" value="Add Practice" name="select practice" class="ui-button ui-state-default ui-corner-all"/>';
 					}
 					$this->layout->style = $this->css_assets();
@@ -1008,6 +1008,8 @@ class LoginController extends BaseController {
 		$command1 = "mysql -u " . $config['mysql_username'] . " -p". $config['mysql_password'] . " oidc < " . $file1;
 		system($command);
 		system($command1);
+		Auth::logout();
+		Session::flush();
 		//$open_id_url = str_replace('/nosh', '', URL::to('/'));
 		$mdnosh_url = 'http://noshchartingsystem.com/oidc/reset_demo';
 		return Redirect::to($mdnosh_url);
