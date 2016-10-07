@@ -969,7 +969,7 @@ class LoginController extends BaseController {
 		$params = [
 			'redirect_uri' => URL::to('uma_logout')
 		];
-		$open_id_url .= '?' . http_build_query($params, null, '&');
+		$open_id_url .= '/remote_logout?' . http_build_query($params, null, '&');
 		return Redirect::to($open_id_url);
 	}
 
