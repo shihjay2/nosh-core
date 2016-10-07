@@ -967,7 +967,7 @@ class LoginController extends BaseController {
 		$oidc->revoke();
 		Session::forget('uma_auth_access_token');
 		$params = [
-			'redirect_uri' => URL::to('uma_logout')
+			'redirect_uri' => URL::to('logout')
 		];
 		$open_id_url .= '/remote_logout?' . http_build_query($params, null, '&');
 		return Redirect::to($open_id_url);
