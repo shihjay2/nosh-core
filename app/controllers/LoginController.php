@@ -711,7 +711,7 @@ class LoginController extends BaseController {
 						}
 					}
 					$practice_data = array(
-						'npi' => $practice_npi_array_null[0],
+						'npi' => $practice_npi,
 						'practice_name' => $practicename,
 						'street_address1' => $street_address1,
 						'city' => $city,
