@@ -520,10 +520,10 @@ class LoginController extends BaseController {
 			);
 			$id = DB::table('users')->insertGetId($data);
 			$this->audit('Add');
-			if (Input::has('npi')) {
-				$npi = Input::get('npi');
-			} else {
+			if (Session::has('npi')) {
 				$npi = Session::get('npi');
+			} else {
+				$npi = Input::get('practice_npi_select');
 			}
 			$data1 = array(
 				'id' => $id,
@@ -574,11 +574,7 @@ class LoginController extends BaseController {
 					} else {
 						$arr['page_comment'] = "<div align='center'>Enter your NPI and a practice NPI you want to associate with this patient's NOSH service.<br>You can verify your NPI number <a href='http://npinumberlookup.org/' target='_blank'>here</a><br><br></div>";
 						$arr['practice_npi_select'] = '<div class="pure-control-group" align="center">';
-						$arr['practice_npi_select'] .= '<label for="npi">NPI:</label>';
-						$arr['practice_npi_select'] .= Form::text('npi', null, array('id'=>'npi','required','style'=>'width:90%','class'=>'text'));
-						$arr['practice_npi_select'] .= '</div>';
-						$arr['practice_npi_select'] .= '<div class="pure-control-group" align="center">';
-						$arr['practice_npi_select'] .= '<label for="practice_npi_select">Practice NPI:</label>';
+						$arr['practice_npi_select'] .= '<label for="practice_npi_select">NPI:</label>';
 						$arr['practice_npi_select'] .= Form::text('practice_npi_select', null, array('id'=>'practice_npi_select','required','style'=>'width:90%','class'=>'text'));
 						$arr['practice_npi_select'] .= '</div><br><br>';
 						$arr['button'] = '<input type="submit" id="practice_submit_button" value="Add Practice" name="select practice" class="ui-button ui-state-default ui-corner-all"/>';
@@ -663,23 +659,15 @@ class LoginController extends BaseController {
 			setcookie("login_attempts", 0, time()+900, '/');
 			return Redirect::intended('/');
 		} else {
-			$practice_npi = $oidc->requestUserInfo('practice_npi');
+			$practice_npi = $npi;
 			$practice_id = false;
 			if ($practice_npi != '') {
-				$practice_npi_array = explode(',', $practice_npi);
-				$practice_npi_array_null = array();
-				foreach ($practice_npi_array as $practice_npi_item) {
-					$practice_query = DB::table('practiceinfo')->where('npi', '=', $practice_npi_item)->first();
-					if ($practice_query) {
-						$practice_id = $practice_query->practice_id;
-					} else {
-						$practice_npi_array_null[] = $practice_npi_item;
-					}
+				$practice_query = DB::table('practiceinfo')->where('npi', '=', $practice_npi)->first();
+				if ($practice_query) {
+					$practice_id = $practice_query->practice_id;
 				}
-			}
-			if ($practice_id == false) {
-				if (count($practice_npi_array_null) == 1) {
-					$url = 'http://docnpi.com/api/index.php?ident=' . $practice_npi_array_null[0] . '&is_ident=true&format=aha';
+				if ($practice_id == false) {
+					$url = 'http://docnpi.com/api/index.php?ident=' . $practice_npi . '&is_ident=true&format=aha';
 					$ch = curl_init();
 					curl_setopt($ch,CURLOPT_URL, $url);
 					curl_setopt($ch,CURLOPT_FAILONERROR,1);
@@ -740,20 +728,9 @@ class LoginController extends BaseController {
 					);
 					$practice_id = DB::table('practiceinfo')->insertGetId($practice_data);
 					$this->audit('Add');
-				} else {
-					Session::put('practice_npi_array', implode(',', $practice_npi_array_null));
-					Session::put('firstname', $firstname);
-					Session::put('lastname', $lastname);
-					Session::put('username', $oidc->requestUserInfo('sub'));
-					Session::put('middle', $oidc->requestUserInfo('middle_name'));
-					Session::put('displayname', $oidc->requestUserInfo('name'));
-					Session::put('email', $email);
-					Session::put('npi', $npi);
-					Session::put('practice_choose', 'y');
-					Session::put('uid', $oidc->requestUserInfo('sub'));
-					Session::put('uma_auth_access_token', $access_token);
-					return Redirect::to('practice_choose');
 				}
+			} else {
+				return Redirect::to('uma_invitation_request');
 			}
 			$data = array(
 				'username' => $oidc->requestUserInfo('sub'),
@@ -793,6 +770,136 @@ class LoginController extends BaseController {
 			Session::put('uma_auth_access_token', $access_token);
 			setcookie("login_attempts", 0, time()+900, '/');
 			return Redirect::intended('/');
+			// $practice_npi = $oidc->requestUserInfo('practice_npi');
+			// $practice_id = false;
+			// if ($practice_npi != '') {
+			// 	$practice_npi_array = explode(',', $practice_npi);
+			// 	$practice_npi_array_null = array();
+			// 	foreach ($practice_npi_array as $practice_npi_item) {
+			// 		$practice_query = DB::table('practiceinfo')->where('npi', '=', $practice_npi_item)->first();
+			// 		if ($practice_query) {
+			// 			$practice_id = $practice_query->practice_id;
+			// 		} else {
+			// 			$practice_npi_array_null[] = $practice_npi_item;
+			// 		}
+			// 	}
+			// }
+			// if ($practice_id == false) {
+			// 	if (count($practice_npi_array_null) == 1) {
+			// 		$url = 'http://docnpi.com/api/index.php?ident=' . $practice_npi_array_null[0] . '&is_ident=true&format=aha';
+			// 		$ch = curl_init();
+			// 		curl_setopt($ch,CURLOPT_URL, $url);
+			// 		curl_setopt($ch,CURLOPT_FAILONERROR,1);
+			// 		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+			// 		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+			// 		curl_setopt($ch,CURLOPT_TIMEOUT, 15);
+			// 		$data1 = curl_exec($ch);
+			// 		curl_close($ch);
+			// 		$html = new Htmldom($data1);
+			// 		$practicename = '';
+			// 		$address = '';
+			// 		$street_address1 = '';
+			// 		$city = '';
+			// 		$state = '';
+			// 		$zip = '';
+			// 		if (isset($html)) {
+			// 			$li = $html->find('li',0);
+			// 			if (isset($li)) {
+			// 				$nomatch = $li->innertext;
+			// 				if ($nomatch != ' no matching results ') {
+			// 					$name_item = $li->find('span[class=org]',0);
+			// 					$practicename = $name_item->innertext;
+			// 					$address_item = $li->find('span[class=address]',0);
+			// 					$address = $address_item->innertext;
+			// 				}
+			// 			}
+			// 		}
+			// 		if ($address != '') {
+			// 			$address_array = explode(',', $address);
+			// 			if (isset($address_array[0])) {
+			// 				$street_address1 = trim($address_array[0]);
+			// 			}
+			// 			if (isset($address_array[1])) {
+			// 				$zip = trim($address_array[1]);
+			// 			}
+			// 			if (isset($address_array[2])) {
+			// 				$city = trim($address_array[2]);
+			// 			}
+			// 			if (isset($address_array[3])) {
+			// 				$state = trim($address_array[3]);
+			// 			}
+			// 		}
+			// 		$practice_data = array(
+			// 			'npi' => $practice_npi_array_null[0],
+			// 			'practice_name' => $practicename,
+			// 			'street_address1' => $street_address1,
+			// 			'city' => $city,
+			// 			'state' => $state,
+			// 			'zip' => $zip,
+			// 			'documents_dir' => $practice->documents_dir,
+			// 			'version' => $practice->version,
+			// 			'active' => 'Y',
+			// 			'fax_type' => '',
+			// 			'vivacare' => '',
+			// 			'patient_centric' => 'yp',
+			// 			'smtp_user' => $practice->smtp_user,
+			// 			'smtp_pass' => $practice->smtp_pass
+			// 		);
+			// 		$practice_id = DB::table('practiceinfo')->insertGetId($practice_data);
+			// 		$this->audit('Add');
+			// 	} else {
+			// 		Session::put('practice_npi_array', implode(',', $practice_npi_array_null));
+			// 		Session::put('firstname', $firstname);
+			// 		Session::put('lastname', $lastname);
+			// 		Session::put('username', $oidc->requestUserInfo('sub'));
+			// 		Session::put('middle', $oidc->requestUserInfo('middle_name'));
+			// 		Session::put('displayname', $oidc->requestUserInfo('name'));
+			// 		Session::put('email', $email);
+			// 		Session::put('npi', $npi);
+			// 		Session::put('practice_choose', 'y');
+			// 		Session::put('uid', $oidc->requestUserInfo('sub'));
+			// 		Session::put('uma_auth_access_token', $access_token);
+			// 		return Redirect::to('practice_choose');
+			// 	}
+			// }
+			// $data = array(
+			// 	'username' => $oidc->requestUserInfo('sub'),
+			// 	'firstname' => $firstname,
+			// 	'middle' => $oidc->requestUserInfo('middle_name'),
+			// 	'lastname' => $lastname,
+			// 	'displayname' => $oidc->requestUserInfo('name'),
+			// 	'email' => $email,
+			// 	'group_id' => '2',
+			// 	'active'=> '1',
+			// 	'practice_id' => $practice_id,
+			// 	'secret_question' => 'Use HIEofOne to reset your password!',
+			// 	'uid' => $oidc->requestUserInfo('sub')
+			// );
+			// $id = DB::table('users')->insertGetId($data);
+			// $this->audit('Add');
+			// $data1 = array(
+			// 	'id' => $id,
+			// 	'npi' => $npi,
+			// 	'practice_id' => $practice_id
+			// );
+			// DB::table('providers')->insert($data1);
+			// $this->audit('Add');
+			// $user1 = User::where('id', '=', $id)->first();
+			// Auth::login($user1);
+			// $practice1 = Practiceinfo::find($user1->practice_id);
+			// Session::put('user_id', $user1->id);
+			// Session::put('group_id', $user1->group_id);
+			// Session::put('practice_id', $user1->practice_id);
+			// Session::put('version', $practice1->version);
+			// Session::put('practice_active', $practice1->active);
+			// Session::put('displayname', $user1->displayname);
+			// Session::put('documents_dir', $practice1->documents_dir);
+			// Session::put('rcopia', $practice1->rcopia_extension);
+			// Session::put('mtm_extension', $practice1->mtm_extension);
+			// Session::put('patient_centric', $practice1->patient_centric);
+			// Session::put('uma_auth_access_token', $access_token);
+			// setcookie("login_attempts", 0, time()+900, '/');
+			// return Redirect::intended('/');
 		}
 	}
 
@@ -949,7 +1056,6 @@ class LoginController extends BaseController {
 				Session::put('middle', '');
 				Session::put('displayname', $name);
 				Session::put('email', $email);
-				Session::put('npi', '');
 				Session::put('practice_choose', 'y');
 				Session::put('uid', $oidc->requestUserInfo('sub'));
 				Session::put('oidc_auth_access_token', $access_token);
