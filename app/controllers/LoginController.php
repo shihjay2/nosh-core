@@ -1049,6 +1049,12 @@ class LoginController extends BaseController {
 					return Redirect::to('uma_invitation_request');
 				}
 				$name_arr = explode(' ', $invite_query->name);
+				$firstname = $name_arr[0];
+				if (count($name_arr) == 1) {
+					$lastname = $name_arr[0];
+				} else {
+					$lastname = $name_arr[1];
+				}
 				// Add resources associated with new provider user to pNOSH UMA Server
 				$resource_set_id_arr = explode(',', $invite_query->resource_set_ids);
 				foreach ($resource_set_id_arr as $resource_set_id) {
@@ -1065,8 +1071,8 @@ class LoginController extends BaseController {
 				// Remove invite
 				DB::table('uma_invitation')->where('id', '=', $invite_query->id)->delete();
 				$this->audit('Delete');
-				Session::put('firstname', $name_arr[0]);
-				Session::put('lastname', $name_arr[1]);
+				Session::put('firstname', $firstname);
+				Session::put('lastname', $lastname);
 				Session::put('username', $oidc->requestUserInfo('sub'));
 				Session::put('middle', '');
 				Session::put('displayname', $name);
