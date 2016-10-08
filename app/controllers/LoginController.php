@@ -985,7 +985,18 @@ class LoginController extends BaseController {
 		$oidc->setAccessToken(Session::get('oidc_auth_access_token'));
 		$oidc->revoke();
 		Session::forget('oidc_auth_access_token');
-		return Redirect::intended('logout');
+		$params = [
+			'redirect_uri' => URL::to('logout')
+		];
+		$open_id_url .= '/remote_logout?' . http_build_query($params, null, '&');
+		return Redirect::to($open_id_url);
+	}
+
+	public function remote_logout()
+	{
+		Auth::logout();
+		Session::flush();
+		return Redirect::to(Input::get('redirect_uri'));
 	}
 
 	public function google_auth()

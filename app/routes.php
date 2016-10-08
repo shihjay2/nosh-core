@@ -156,6 +156,7 @@ Route::group(array('before' => 'force.ssl|acl6'), function() {
 Route::get('logout', array('as' => 'logout', 'before' => 'force.ssl|needinstall|logout_type', 'uses' => 'LoginController@logout'));
 Route::get('uma_logout', array('as' => 'uma_logout', 'before' => 'force.ssl|needinstall', 'uses' => 'LoginController@uma_logout'));
 Route::get('oidc_logout', array('as' => 'oidc_logout', 'before' => 'force.ssl|needinstall', 'uses' => 'LoginController@oidc_logout'));
+Route::get('remote_logout', array('as' => 'remote_logout', 'before' => 'force.ssl|needinstall', 'uses' => 'LoginController@remote_logout'));
 Route::get('logout_mobile', array('as' => 'logout_mobile', 'before' => 'force.ssl', 'uses' => 'MobileController@logout'));
 Route::get('reminder', array('as' => 'reminder', 'uses' => 'ReminderController@reminder'));
 Route::get('fax', array('as' => 'fax', 'uses' => 'FaxController@fax'));
