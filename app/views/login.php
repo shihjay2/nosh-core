@@ -20,7 +20,7 @@
 					<?php }?>
 					<?php if ($pnosh_provider == 'y') {?>
 						<!-- <div class="pure-u-1"><?php echo link_to_route('uma_auth', "I'm a Provider", $parameters = array(), $attributes = array('class'=>'nosh_button'));?><br><br></div> -->
-						<div class="pure-u-1"><?php echo link_to_route('oidc', "Login using mdNOSH Gateway", $parameters = array(), $attributes = array('class'=>'nosh_button'));?><br><br></div>
+						<div class="pure-u-1"><?php echo link_to_route('oidc', "Login using mdNOSH", $parameters = array(), $attributes = array('class'=>'nosh_button'));?><br><br></div>
 						<div class="pure-u-1"><?php echo link_to_route('google_auth', "Login using Google", $parameters = array(), $attributes = array('class'=>'nosh_button'));?></div>
 					<?php }?>
 					<?php if ($pnosh_provider == 'n') {?>
