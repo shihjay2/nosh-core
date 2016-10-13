@@ -2158,7 +2158,7 @@ $(document).ready(function() {
 	if (noshdata.patient_centric == 'y' || noshdata.patient_centric == 'yp') {
 		setTimeout(function() {
 			$.ajax({
-				type: "POST",
+				type: "GET",
 				url: "ajaxcommon/check-demo",
 				success: function(data){
 					if (data !== 'OK') {
