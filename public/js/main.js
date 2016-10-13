@@ -2156,13 +2156,17 @@ $(document).ready(function() {
 		});
 	}
 	if (noshdata.patient_centric == 'y' || noshdata.patient_centric == 'yp') {
+		noshdata.check_demo = false;
 		setInterval(function() {
 			$.ajax({
 				type: "GET",
 				url: "ajaxcommon/check-demo",
 				success: function(data){
 					if (data !== 'OK') {
-						alert(data);
+						if (noshdata.check_demo === false) {
+							alert(data);
+							noshdata.check_demo = true;
+						}
 					}
 				}
 			});
