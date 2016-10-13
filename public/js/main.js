@@ -2156,7 +2156,7 @@ $(document).ready(function() {
 		});
 	}
 	if (noshdata.patient_centric == 'y' || noshdata.patient_centric == 'yp') {
-		setTimeout(function() {
+		setInterval(function() {
 			$.ajax({
 				type: "GET",
 				url: "ajaxcommon/check-demo",
