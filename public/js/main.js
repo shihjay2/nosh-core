@@ -2155,6 +2155,19 @@ $(document).ready(function() {
 			}
 		});
 	}
+	if (noshdata.patient_centric == 'y' || noshdata.patient_centric == 'yp') {
+		setTimeout(function() {
+			$.ajax({
+				type: "POST",
+				url: "ajaxcommon/check-demo",
+				success: function(data){
+					if (data !== 'OK') {
+						alert(data);
+					}
+				}
+			});
+		}, 3000);
+	}
 });
 $(document).on("click", "#encounter_panel", function() {
 	noshdata.encounter_active = 'y';

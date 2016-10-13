@@ -1553,4 +1553,26 @@ class AjaxCommonController extends BaseController {
 		$result['html'] = $this->get_uma_policy(Input::get('resource_set_id'));
 		echo json_encode($result);
 	}
+
+	public function getCheckDemo()
+	{
+		$return = 'OK';
+		$url = 'https://shihjay.xyz/check_demo';
+		$ch = curl_init();
+		curl_setopt($ch,CURLOPT_URL, $url);
+		curl_setopt($ch,CURLOPT_FAILONERROR,1);
+		curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+		curl_setopt($ch,CURLOPT_TIMEOUT, 15);
+		$response = curl_exec($ch);
+		curl_close($ch);
+		if ($response !== 'OK') {
+			$arr = explode(',', $response);
+			if ($arr[1] !== Request::getClientIp()) {
+				// Alert
+				$return = 'You have ' . $arr[0] . ' minutes left to finish the demo.';
+			}
+		}
+		return $return;
+	}
 }
