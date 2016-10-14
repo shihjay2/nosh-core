@@ -689,7 +689,12 @@ class LoginController extends BaseController {
 							$nomatch = $li->innertext;
 							if ($nomatch != ' no matching results ') {
 								$name_item = $li->find('span[class=org]',0);
-								$practicename = $name_item->innertext;
+								if (isset($name_item)) {
+									$practicename = $name_item->innertext;
+								} else {
+									$name_item1 = $li->find('span[class=name_ind]',0);
+									$practicename = $name_item1->innertext;
+								}
 								$address_item = $li->find('span[class=address]',0);
 								$address = $address_item->innertext;
 							}
