@@ -2,7 +2,7 @@
 	<div id="users_accordion">
 		<h3>Active Users</h3>
 		<div>
-			<?php if (route('home') == 'https://noshchartingsystem.com/nosh') {?>
+			<?php if (route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://cloud.noshchartingsystem.com/nosh') {?>
 				<div id="practice_upgrade1" style="display:none;"><a href="https://noshchartingsystem.com/registerpractice/upgrade/<?php echo Session::get('practice_id');?>">Upgrade your practice for more providers.</a></div>
 			<?php }?>
 			<table id="provider_list" class="scroll" cellpadding="0" cellspacing="0"></table>
@@ -32,7 +32,7 @@
 		</div>
 		<h3>Inactive Users</h3>
 		<div>
-			<?php if (route('home') == 'https://noshchartingsystem.com/nosh') {?>
+			<?php if (route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://cloud.noshchartingsystem.com/nosh') {?>
 				<div id="practice_upgrade1" style="display:none;"><a href="https://noshchartingsystem.com/registerpractice/upgrade/<?php echo Session::get('practice_id');?>">Upgrade your practice for more providers.</a></div>
 			<?php }?>
 			<table id="provider_list_inactive" class="scroll" cellpadding="0" cellspacing="0"></table>

@@ -30,10 +30,10 @@
 								<br><i class="fa fa-clock-o fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="dashboard_admin_schedule">Schedule<?php if($schedule_needed == 'y') {?><span id="schedule_needed" style="font-weight:bold;color:red;"> This needs to be setup before using!</span><?php }?></a>
 							<?php }?>
 							<br><i class="fa fa-list fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="dashboard_logs">View system logs</a>
-							<?php if(Session::get('practice_active') == 'Y') { if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh') {?>
+							<?php if(Session::get('practice_active') == 'Y') { if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh' || route('home') == 'https://cloud.noshchartingsystem.com/nosh') {?>
 								<br><i class="fa fa-times fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="https://noshchartingsystem.com/registerpractice/cancel_subscription/<?php echo Session::get('practice_id'); ?>">Cancel Subscriptions</a>
 							<?php }}?>
-							<?php if(Session::get('practice_active') == 'N') { if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh') {?>
+							<?php if(Session::get('practice_active') == 'N') { if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh' || route('home') == 'https://cloud.noshchartingsystem.com/nosh') {?>
 								<br><i class="fa fa-refresh fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="https://noshchartingsystem.com/registerpractice/restart_subscription/<?php echo Session::get('practice_id'); ?>">Restart Subscriptions</a>
 							<?php }}?>
 						<?php }?>
@@ -52,7 +52,7 @@
 							<?php if(Session::get('patient_centric') == 'yp') {?>
 								<br><i class="fa fa-cogs fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" class="dashboard_setup">Practice Setup</a>
 							<?php }?>
-							<?php if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh') {?>
+							<?php if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh' || route('home') == 'https://cloud.noshchartingsystem.com/nosh') {?>
 								<br><i class="fa fa-exchange fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="hieofone_sso">Transfer your credentials to mdNOSH - a Single-Sign-On Solution for Medical Providers</a>
 							<?php }?>
 						<?php }?>
@@ -80,7 +80,7 @@
 							<?php if($saas_admin == "y") { ?>
 								<br><i class="fa fa-cloud-upload fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="import_entire">Import from NOSH in the Cloud</a>
 								<br><i class="fa fa-database fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="restore_database_link">Restore the database</a>
-								<?php if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh') {?>
+								<?php if(route('home') == 'https://noshchartingsystem.com/nosh' || route('home') == 'https://www.noshchartingsystem.com/nosh' || route('home') == 'https://cloud.noshchartingsystem.com/nosh') {?>
 									<br><i class="fa fa-wrench fa-fw fa-3x" style="vertical-align:middle;padding:2px"></i> <a href="#" id="manual_cancel_practice">Manually Cancel Practice</a>
 								<?php }?>
 							<?php }?>
