@@ -680,6 +680,7 @@ class AjaxChartController extends BaseController {
 				$this->api_data('update', 'rx_list', 'rxl_id', Input::get('rxl_id'));
 				$arr = "Medication updated!";
 			}
+			$this->goodrx_notification(Input::get('rxl_medication'), Input::get('rxl_dosage') . Input::get('rxl_dosage_unit'));
 			echo $arr;
 		}
 	}

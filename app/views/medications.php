@@ -18,6 +18,7 @@
 	<?php }?>
 </div>
 <div id="edit_medications_dialog" title="">
+	<img src="https://d4fuqqd5l3dbz.cloudfront.net/static/images/powered-by-goodrx-black-xs.png" style="height:30px;vertical-align:text-top;" title="Prescribing a new medicaion will send your patient a link to GoodRX regarding medication pricing and information." class="nosh_tooltip">
 	<form name="edit_rx_form" id="edit_rx_form" class="pure-form pure-form-stacked">
 		<input type="hidden" name="rxl_id" id="rxl_id"/>
 		<input type="hidden" name="rxl_ndcid" id="rxl_ndcid"/>
@@ -41,19 +42,18 @@
 		<div id="messages_rx_main">
 			<div id="orders_rx_header" style="display:none">
 				<?php if(Session::get('rcopia') == 'y') {?>
-					<button type="button" id="rcopia_orders_rx" class="nosh_button">Update from RCopia</button> 
+					<button type="button" id="rcopia_orders_rx" class="nosh_button">Update from RCopia</button>
 				<?php }?>
-				<button type="button" id="save_orders_rx" class="nosh_button_save">Save Prescriptions</button> 
+				<button type="button" id="save_orders_rx" class="nosh_button_save">Save Prescriptions</button>
 				<button type="button" id="cancel_orders_rx_helper"  class="nosh_button_cancel">Cancel</button>
-				<img src="https://d4fuqqd5l3dbz.cloudfront.net/static/images/powered-by-goodrx-black-xs.png" style="height:30px;vertical-align:text-top;" title="Prescribing a new medicaion will send your patient a link to GoodRX regarding medication pricing and information." class="nosh_tooltip">
 				<br><br>
 			</div>
 			<div id="messages_rx_header" style="display:none">
 				<?php if(Session::get('rcopia') == 'y') {?>
-					<button type="button" id="rcopia_rx_helper" class="nosh_button">Update from RCopia</button> 
+					<button type="button" id="rcopia_rx_helper" class="nosh_button">Update from RCopia</button>
 				<?php }?>
-				<button type="button" id="save_rx_helper" class="nosh_button_save">Save Prescriptions to Message</button> 
-				<button type="button" id="cancel_rx_helper"  class="nosh_button_cancel">Cancel</button> 
+				<button type="button" id="save_rx_helper" class="nosh_button_save">Save Prescriptions to Message</button>
+				<button type="button" id="cancel_rx_helper"  class="nosh_button_cancel">Cancel</button>
 				<br><br>
 			</div>
 			<table id="messages_medications" class="scroll" cellpadding="0" cellspacing="0"></table>
@@ -76,6 +76,7 @@
 		</div>
 	</div>
 	<div id="messages_edit_rx_dialog" title="Prescription">
+		<img src="https://d4fuqqd5l3dbz.cloudfront.net/static/images/powered-by-goodrx-black-xs.png" style="height:30px;vertical-align:text-top;" title="Prescribing a new medicaion will send your patient a link to GoodRX regarding medication pricing and information." class="nosh_tooltip">
 		<form name="messages_edit_rx_form" id="messages_edit_rx_form" class="pure-form pure-form-stacked">
 			<input type="hidden" name="rxl_id" id="messages_rxl_id"/>
 			<input type="hidden" name="rxl_ndcid" id="messages_rxl_ndcid"/>
@@ -114,10 +115,10 @@
 		<form name="messages_action_rx_form" id="messages_action_rx_form">
 			<input type="hidden" name="prescribe_id" id="prescribe_id"/>
 			<div id="prescribe_choice"></div><br><br>
-			<button type="button" id="messages_print_medication" class="nosh_button_print">Print Prescription</button> 
+			<button type="button" id="messages_print_medication" class="nosh_button_print">Print Prescription</button>
 			<!--<button type="button" id="messages_eprescribe_medication" class="nosh_button">ePrescribe</button> -->
-			<button type="button" id="messages_fax_medication" class="nosh_button fax_button">Fax</button> 
-			<button type="button" id="messages_done_medication" class="nosh_button">Done</button> 
+			<button type="button" id="messages_fax_medication" class="nosh_button fax_button">Fax</button>
+			<button type="button" id="messages_done_medication" class="nosh_button">Done</button>
 		</form>
 	</div>
 	<div id="messages_rx_fax_dialog" title="Fax Prescription">

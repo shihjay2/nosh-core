@@ -327,11 +327,15 @@ class OpenIDConnectClient
 					$well_known_config_url = rtrim($this->getProviderURL(),"/") . "/.well-known/openid-configuration";
 				}
 			}
-			$value = json_decode($this->fetchURL($well_known_config_url))->{$param};
-			if ($value) {
-				$this->providerConfig[$param] = $value;
+			$value = json_decode($this->fetchURL($well_known_config_url), true);
+			if (isset($value[$param])) {
+				$this->providerConfig[$param] = $value[$param];
 			} else {
-				throw new OpenIDConnectClientException("The provider {$param} has not been set. Make sure your provider has a well known configuration available.");
+				if ($param == 'registration_endpoint' && $uma == true) {
+					return false;
+				} else {
+					throw new OpenIDConnectClientException("The provider {$param} has not been set. Make sure your provider has a well known configuration available.");
+				}
 			}
 		}
 		return $this->providerConfig[$param];
@@ -790,6 +794,13 @@ class OpenIDConnectClient
 			);
 		} else {
 			$registration_endpoint = $this->getProviderConfigValue('registration_endpoint', $uma);
+			if ($registration_endpoint == false) {
+				// check for old UMA endpoint
+				$registration_endpoint = $this->getProviderConfigValue('dynamic_client_endpoint', $uma);
+			}
+			if ($registration_endpoint == false) {
+				throw new OpenIDConnectClientException("The provider {$param} has not been set. Make sure your provider has a well known configuration available.");
+			}
 			if ($rs == true) {
 				$send_array = array(
 					'redirect_uris' => array(
